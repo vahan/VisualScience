@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * This module creates several user lists, which may be viewed as pages and blocks.
+ * User lists may be displayed alphabetically, beginning with A-Z, by newest, by role, or as a list of users who have posted content of a certain type.
+ */
+
+require_once 'includes/visualscience.search.inc';
+require_once 'includes/visualscience.settings.inc';
+require_once 'includes/visualscience.utils.inc';
+require_once 'includes/visualscience.tabs.inc';
+
+
+/**
+ * TODO: feature: change the current search, get the results directly from the DB (in process, Vahan)
+ * TODO: bug: inner not does not work!
+ * TODO: bug: very quickly check/uncheck fields to show. Then user lsit columns are brocken
+ * TODO: bug: set currect email text and subject
+ * TODO: feature: add the list of users to whom the message is being sent to the message sending page;
+ * TODO: feature: make the search box the default active field
+ * FIXED: bug: fix positions when ajax is in process
+ * TODO: bug: after clicking on letters autocomplete does not work
+ * DONE: bug: empty search returns nothing, should return a complete list
+ * DONE: feature: after loading a search search is not done, still there is a need to refine the search
+ * FIXED: bug: if nothing is found a full list is returned, but should return nothing
+ * TODO: bug: sometimes the search load/save puts a wrong url - additional "q=userlist", FIXED at 22.06.2011, see line 259.
+ * TODO: feature: save shown fields with the saved search
+ * TODO: change all inner links to use l() functionuser
+ * TODO: the help text on top doesn't make too much sence. Especially the part with blocks and permissions.
+ * 
+ * FIXED: bug 1: after ajax search, the bottom links to access paginated search are not updated. If you try to click on them you get an error msg.
+ * FIXED: bug 2: authenticated role does not show up?  See get_user_role in includes\user_list.utils.inc
+ * FIXED: bug 3: no-more 'select all' checkbox after an ajax request?
+ * 
+ * DONE: feature 1: We need to create an easier and more powerful way to handle to ajax search. We need to be able to use boolean logic: OR, AND, NOT  
+ * DONE: feature 2: add button search/reset next to the ajax search
+ * TODO: feature 3: we leave on a side the 'selected_users' table. Instead we display all the users within a box which has a vertical scroll bar
+ * DONE: feature 4: The ajax search will hide what we don't want to see on a particular moment              
+ * DONE: feature 5: save the query strings on the server, so that we immediately found our old search results with updated users.
+ * TODO: feature 6: we will need to test it with huge amount of users to see how well it performs...
+ * DONE: feature 7: userlist/export/ create automatic exports for roles
+ * FIXED: BUG when loading search on urls with ?q
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function visualscience_menu () {
+  $items['admin/settings/visualscience'] = array(
+    'title' => 'Visual Science',
+    'description' => 'Change the format and types of search and menus that appear on the site.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('visualscience_admin_settings'),
+    'access arguments' => array('administer visualscience'),
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+  );
+  
+  $items['admin/visualscience'] = array(
+    'title' => 'Visual Science',
+    'description' => 'Visual Science',
+    'page callback' => 'visualscience_redirect_to_visualscience',
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  // Create the visualscience page
+  if (variable_get('visualscience_provide_page', TRUE)) {
+    
+    $items['visualscience'] = array(
+      'title' => 'Visual Science',
+      'access arguments' => array('access visualscience'),
+      'page callback' => '_visualscience_page',
+      'type' => MENU_NORMAL_ITEM,
+    );
+    
+    //Create menu tabs
+    $tabs = module_invoke_all("science_view");
+    foreach ($tabs as $tab) {
+      $items['visualscience/'.$tab->tid] = array(
+        'title' => $tab->title,
+        'access arguments' => array('access visualscience'),
+        'page callback' => 'visualscience_show_tab',
+        'type' => MENU_LOCAL_TASK,
+        'weight' => $tab->weight,
+      );
+    }
+  }
+  
+  return $items;
+}
+
+/**
+ * 
+ * Enter description here ...
+ */
+function _visualscience_page () {
+  return drupal_render(drupal_get_form('visualscience_search_form')).theme_visualscience_menu();
+}
+
+/**
+ * 
+ * Enter description here ...
+ */
+function visualscience_theme () {
+  return array(
+    'visualscience_search' => array(
+      'arguments' => array('content', NULL),
+    ),
+    'visualscience_menu' => array(
+      'arguments' => array('content', NULL),
+    ),
+  );
+}
+
+/**
+ * 
+ * Enter description here ...
+ * @param array $items
+ */
+function theme_visualscience_menu () {
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
+  drupal_add_library('system', 'ui.autocomplete');
+  drupal_add_library('system', 'ui.datepicker');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
+  $output = '';
+  $output .= "<div class=\"menu visualscience_menu\">\n<ul>\n". $output .'</ul></div>';
+  return $output;
+}
+

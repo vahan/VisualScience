@@ -1,0 +1,118 @@
+.visualscience_menu ul {
+  padding: 0; margin: 0;
+    border-bottom: 1px solid #CCC;
+}
+
+.visualscience_menu ul li {
+  list-style-type: none;
+  list-style-image: none;
+  float: left;
+}
+
+.visualscience_menu ul:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+#search-more-options {
+    clear: both;
+    visibility: hidden;
+    overflow: hidden;
+    height: 0px;
+}
+
+#more-options-link {
+    clear: both;
+    display: block;
+    cursor: pointer;
+}
+
+span.highlight {
+    font-weight: bold;
+}
+
+span.autocomplete_row_0 {
+    background: #eee;
+    display: block;
+}
+
+span.autocomplete_row_1 {
+    background: #fff;
+    display: block;
+}
+
+span.preselected {
+    background: #ddd;
+}
+
+
+.ui-menu .ui-menu-item a {
+    padding: 1px;
+    margin: 0;	
+}
+
+.ui-menu .ui-menu-item a span {
+    vertical-align: center;	
+}
+
+.ui-menu .ui-menu-item input {
+    vertical-align: center; 
+}
+
+#datepicker {
+	position: absolute;
+	z-index: 1000;
+	display: none;
+}
+
+.visualscience_menu ul {
+	display: inline-block;
+}
+
+.visualscience_menu ul li {
+	padding: 5px;
+}
+
+#search-box-table {
+	margin-bottom: 1px;	
+}
+
+#search-box-table .form-item {
+	margin: 0 auto;
+}
+
+#search-box-table #edit-search-button {
+	margin: 0 auto;
+}
+
+#search-box-table .form-item label {
+	margin: 0 auto;
+}
+
+#save-load-table #edit-search-name {
+	margin: 0 auto;	
+}
+
+#save-load-table .form-item {
+	margin: 0 auto;
+}
+
+#search-box-table td, #actions-table td, #save-load-table td {
+	vertical-align: middle;
+}
+
+#visualscience-form #users_div {
+	width: 633px;
+	overflow: auto;
+	margin: 0 auto;	
+}
+
+
+
+/* Hides from IE-mac \*/
+* html .visualscience_menu ul {height: 1%;}
+.visualscience_menu ul {display: block;}
+/* End hide from IE-mac */

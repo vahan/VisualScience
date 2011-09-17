@@ -1,0 +1,9 @@
+; $Id:
+name = VisualScience
+description = Provides various searching and viewing ways for qScience.
+version = VERSION
+core = 7.x
+
+version = "7.x-1.x-dev"
+project = "drupal"
+
