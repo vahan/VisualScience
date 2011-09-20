@@ -22,7 +22,7 @@ class Tab {
    * @param int $weight		tab weight in the menu
    */
   function __construct($title, $url, $content, $weight) {
-    $this->title = $title;
+    $this->title = t($title);
     $this->url = $url;
     $this->content = $content;
     $this->weight = $weight;

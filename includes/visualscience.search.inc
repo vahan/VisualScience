@@ -21,6 +21,7 @@
  * Creates the search form
  */
 function visualscience_search_form($form, &$form_state) {
+  global $user;
   $def_value = "";
   //search load
   if (isset($_GET['s'])) {
@@ -28,7 +29,7 @@ function visualscience_search_form($form, &$form_state) {
     if ($search->uid != $user->uid) exit(0); //Security check =)
     $url_combine = visualscience_is_clean_url() ? "?" : "&";
     $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "visualscience")+strlen("visualscience"));
-    drupal_goto($url.(!empty($search->url) ? "/" : "").$search->url.$url_combine."search=".urlencode($search->search));
+    drupal_goto($url.$url_combine."search=".urlencode($search->search));
   }
   
   if (isset($_GET['search'])) {
@@ -153,8 +154,7 @@ function visualscience_search_form($form, &$form_state) {
  * @return					renderable array
  */
 function visualscience_search_callback($form, $form_state) {
-  variable_set("search_result", visualscience_search($form_state['values']['text']));
-  $_GET["q"] = "visualscience"; //TODO: what is this?
+  $_GET["q"] = "visualscience"; //TODO: what/why is this?
   return $form['users']['tabs'];
 }
 

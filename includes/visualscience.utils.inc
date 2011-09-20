@@ -12,7 +12,7 @@
  * @return       data names wich are used for the search
  */
 function visualscience_get_user_data() {
-  return array('uid', 'name', 'mail', 'status', 'data', 'created');
+  return array('name', 'mail', 'status', 'created');
 }
 
 /**

@@ -71,16 +71,31 @@ function visualscience_menu() {
     'title' => 'Visual Science',
     'description' => 'Visual Science',
     'page callback' => '_visualscience_page',
-    //'page arguments' => array(drupal_render(drupal_get_form('visualscience_search_form')).theme_visualscience_menu()),
+    'page arguments' => array(count($tabs)>0?$tabs[0]->content:"", count($tabs)>0?$tabs[0]->url:NULL),
     'access callback' => TRUE,
     'weight' => 30,
   );
+  /*if (count($tabs) > 0) { //TODO: show the first tab as the default
+    $min_tab = $tabs[0];
+    $min_ind = 0;
+    foreach ($tabs as $ind => $tab) {
+      if ($tab->weight < $min_tab->weight) {
+        $min_tab = $tab;
+        $min_ind = $ind;
+      }
+    }
+    $items['visualscience/default'] = array(
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'title' => $min_tab->title,
+      'weight' => $min_tab->weight,
+    );
+  }*/
   foreach($tabs as $tab) {
     $items["visualscience/".$tab->url] = array(
       'type' => MENU_LOCAL_TASK,
       'title' => $tab->title,
-      'page callback' => '_visualscience_menu_page',
-      'page arguments' => array($tab->content),
+      'page callback' => '_visualscience_page',
+      'page arguments' => array($tab->content, $tab->url),
       'access callback' => TRUE,
       'weight' => $tab->weight,
     );
@@ -88,8 +103,8 @@ function visualscience_menu() {
   $items["visualscience/test"] = array(
     'type' => MENU_LOCAL_TASK,
     'title' => "Test",
-    'page callback' => '_visualscience_menu_page',
-    'page arguments' => array("<div>TEST</div>"),
+    'page callback' => '_visualscience_page',
+    'page arguments' => array("<div>TEST</div>", "test"),
     'access callback' => TRUE,
     'weight' => 10,
   );
@@ -99,20 +114,10 @@ function visualscience_menu() {
 
 /**
  * 
- * Enter description here ...
- */
-function _visualscience_page() {
-  $output = drupal_render(drupal_get_form('visualscience_search_form')).theme_visualscience_menu();
-
-  return $output;
-}
-
-/**
- * 
  * Used to create menu tabs
  */
-function _visualscience_menu_page($content, $args=array()) {
-  $output =  _visualscience_page().'<div>' . $content . '</div>';
+function _visualscience_page($content, $tab_id) {
+  $output = drupal_render(drupal_get_form('visualscience_search_form')).'<div id="visualscience_tab_'.$tab_id.'">'.$content.'</div>';
   
   return $output;
 }
@@ -127,33 +132,9 @@ function visualscience_theme() {
       'arguments' => array('content', NULL),
     ),
     'visualscience_menu' => array(
-      'arguments' => array('content', NULL),
+      'arguments' => array(array()),
     ),
   );
-}
-
-/**
- * 
- * Enter description here ...
- * @param array $items
- */
-function theme_visualscience_menu() {
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
-  drupal_add_library('system', 'ui.autocomplete');
-  drupal_add_library('system', 'ui.datepicker');
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
-  $output = '';
-  $output .= "<div class=\"menu visualscience_menu\" id=\"tabs_div\">\n<ul>\n". $output .'</ul></div>';
-  return $output;
-}
-
-/**
- * 
- * show the selected tab
- * @return	the content of the selected tab
- */
-function visualscience_show_tab($tab) {
-  return "<div>".$tab->content."</div>";
 }
 
 
