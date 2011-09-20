@@ -13,7 +13,7 @@ require_once 'includes/visualscience.tabs.inc';
 
 
 /**
- * TODO: feature: change the current search, get the results directly from the DB (in process, Vahan)
+ * TODO: feature: change the current search, get the results directly from the DB(in process, Vahan)
  * TODO: bug: inner not does not work!
  * TODO: bug: very quickly check/uncheck fields to show. Then user lsit columns are brocken
  * TODO: bug: set currect email text and subject
@@ -46,7 +46,7 @@ require_once 'includes/visualscience.tabs.inc';
 /**
  * Implementation of hook_menu().
  */
-function visualscience_menu () {
+function visualscience_menu() {
   $items['admin/settings/visualscience'] = array(
     'title' => 'Visual Science',
     'description' => 'Change the format and types of search and menus that appear on the site.',
@@ -66,28 +66,34 @@ function visualscience_menu () {
   );
   
   // Create the visualscience page
-  if (variable_get('visualscience_provide_page', TRUE)) {
-    
-    $items['visualscience'] = array(
-      'title' => 'Visual Science',
-      'access arguments' => array('access visualscience'),
-      'page callback' => '_visualscience_page',
-      'type' => MENU_NORMAL_ITEM,
+  $tabs = module_invoke_all("science_view"); //Each module that wants to have a view in VisualScience must implement hook_science_view
+  $items['visualscience'] = array(
+    'title' => 'Visual Science',
+    'description' => 'Visual Science',
+    'page callback' => '_visualscience_page',
+    //'page arguments' => array(drupal_render(drupal_get_form('visualscience_search_form')).theme_visualscience_menu()),
+    'access callback' => TRUE,
+    'weight' => 30,
+  );
+  foreach($tabs as $tab) {
+    $items["visualscience/".$tab->url] = array(
+      'type' => MENU_LOCAL_TASK,
+      'title' => $tab->title,
+      'page callback' => '_visualscience_menu_page',
+      'page arguments' => array($tab->content),
+      'access callback' => TRUE,
+      'weight' => $tab->weight,
     );
-    
-    //Create menu tabs
-    $tabs = module_invoke_all("science_view");
-    foreach ($tabs as $tab) {
-      $items['visualscience/'.$tab->tid] = array(
-        'title' => $tab->title,
-        'access arguments' => array('access visualscience'),
-        'page callback' => 'visualscience_show_tab',
-        'type' => MENU_LOCAL_TASK,
-        'weight' => $tab->weight,
-      );
-    }
   }
-  
+  $items["visualscience/test"] = array(
+    'type' => MENU_LOCAL_TASK,
+    'title' => "Test",
+    'page callback' => '_visualscience_menu_page',
+    'page arguments' => array("<div>TEST</div>"),
+    'access callback' => TRUE,
+    'weight' => 10,
+  );
+
   return $items;
 }
 
@@ -95,17 +101,29 @@ function visualscience_menu () {
  * 
  * Enter description here ...
  */
-function _visualscience_page () {
-  return drupal_render(drupal_get_form('visualscience_search_form')).theme_visualscience_menu();
+function _visualscience_page() {
+  $output = drupal_render(drupal_get_form('visualscience_search_form')).theme_visualscience_menu();
+
+  return $output;
+}
+
+/**
+ * 
+ * Used to create menu tabs
+ */
+function _visualscience_menu_page($content, $args=array()) {
+  $output =  _visualscience_page().'<div>' . $content . '</div>';
+  
+  return $output;
 }
 
 /**
  * 
  * Enter description here ...
  */
-function visualscience_theme () {
+function visualscience_theme() {
   return array(
-    'visualscience_search' => array(
+    'visualscience_searchbox' => array(
       'arguments' => array('content', NULL),
     ),
     'visualscience_menu' => array(
@@ -119,13 +137,39 @@ function visualscience_theme () {
  * Enter description here ...
  * @param array $items
  */
-function theme_visualscience_menu () {
+function theme_visualscience_menu() {
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_library('system', 'ui.autocomplete');
   drupal_add_library('system', 'ui.datepicker');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
   $output = '';
-  $output .= "<div class=\"menu visualscience_menu\">\n<ul>\n". $output .'</ul></div>';
+  $output .= "<div class=\"menu visualscience_menu\" id=\"tabs_div\">\n<ul>\n". $output .'</ul></div>';
   return $output;
 }
 
+/**
+ * 
+ * show the selected tab
+ * @return	the content of the selected tab
+ */
+function visualscience_show_tab($tab) {
+  return "<div>".$tab->content."</div>";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?>

@@ -16,12 +16,11 @@
  */
 
 
-
 /**
  * 
  * Creates the search form
  */
-function visualscience_search_form ($form, &$form_state) {
+function visualscience_search_form($form, &$form_state) {
   $def_value = "";
   //search load
   if (isset($_GET['s'])) {
@@ -153,8 +152,9 @@ function visualscience_search_form ($form, &$form_state) {
  * @param array $form_state	refernce on the array representing the state of the form
  * @return					renderable array
  */
-function visualscience_search_callback ($form, $form_state) {
-  $_GET["q"] = "visualscience";
+function visualscience_search_callback($form, $form_state) {
+  variable_set("search_result", visualscience_search($form_state['values']['text']));
+  $_GET["q"] = "visualscience"; //TODO: what is this?
   return $form['users']['tabs'];
 }
 
@@ -165,7 +165,7 @@ function visualscience_search_callback ($form, $form_state) {
  * @param array $form_state refernce on the array representing the state of the form
  * @return           		modified form 
  */
-function visualscience_search_save_callback ($form, $form_state) {
+function visualscience_search_save_callback($form, $form_state) {
   global $user;
   $search_name = $form_state['values']['search_name'] != '' ? $form_state['values']['search_name'] : 'default';
   $search_text = $form_state['values']['text'];
@@ -185,7 +185,7 @@ function visualscience_search_save_callback ($form, $form_state) {
  * Returns the name of the table where the saved searches are stored.
  * @return	the name of the table where the saved searches are stored.
  */
-function visualscience_get_save_table_name () {
+function visualscience_get_save_table_name() {
   return 'visualscience_searches';
 }
 
@@ -194,7 +194,7 @@ function visualscience_get_save_table_name () {
  * Returns an array of the current user's saved searches.
  * @return  all the saved searched of the logged in user.
  */
-function visualscience_get_all_searches () {
+function visualscience_get_all_searches() {
   global $user;
   $save_schema = drupal_get_schema(visualscience_get_save_table_name());
   $result = db_select($save_schema['name'], 's')
@@ -215,7 +215,7 @@ function visualscience_get_all_searches () {
  * @param string $search_name	the name of the saved search.
 * @return						array with the following keys: 'sid', 'uid', 'name', 'search', 'url'.
  */
-function visualscience_get_search ($search_name) {
+function visualscience_get_search($search_name) {
   global $user;
   $save_schema = drupal_get_schema(visualscience_get_save_table_name());
   $result = db_select($save_schema['name'], 's')
@@ -235,17 +235,13 @@ function visualscience_get_search ($search_name) {
  * @param string $search	user written text to be used for the search
  * @return					array of user objects
  */
-function visualscience_search ($search) {
+function visualscience_search($search) {
   $users = array();
   //visualscience_search_query($search);
   $result = db_query(visualscience_search_query($search))->fetchAll();
-  
   foreach ($result as $obj) {
     $users[] = user_load($obj->uid);
   }
-  
-  //p($users);
-  
   return $users;
 }
 
@@ -257,7 +253,7 @@ function visualscience_search ($search) {
  * 
  * TODO: inner not() is not handled properly
  */
-function visualscience_search_query ($search) {
+function visualscience_search_query($search) {
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
   $query = "";
   $field_names = array();
@@ -371,9 +367,9 @@ function visualscience_search_query ($search) {
  * @param string $search	the string to be search for
  * @return					SQL query condition
  */
-function visualscience_search_in_all_query ($search) {
+function visualscience_search_in_all_query($search) {
   $query = "";
-  $data = visualscience_get_all_user_data();
+  $data = visualscience_get_user_data();
   $is_first = true;
   foreach ($data as $column) {
     if (!$is_first) $query .= " OR ";
@@ -396,7 +392,7 @@ function visualscience_search_in_all_query ($search) {
  * @param string $column	column in wich to search
  * @return					a string of SQL WHERE condition interval for the searched dates
  */
-function visualscience_search_date_condition ($dates, $column) {
+function visualscience_search_date_condition($dates, $column) {
   $query = "";
   if (count($dates) == 0) return "";
   if (!empty($dates[0])) {
@@ -415,7 +411,7 @@ function visualscience_search_date_condition ($dates, $column) {
  * 
  * Returns a string of SQL JOIN comands for all the fields
  */
-function visualscience_search_role_joins () {
+function visualscience_search_role_joins() {
   $query = "LEFT JOIN users_roles ON users.uid=users_roles.uid LEFT JOIN role ON users_roles.rid=role.rid "; //JOIN commands for roles
   return $query;
 }
@@ -426,7 +422,7 @@ function visualscience_search_role_joins () {
  * @param array $field_names	array of field names that are used in the search
  * @return						string of SQL JOIN commands
  */
-function visualscience_search_field_joins ($field_names) {
+function visualscience_search_field_joins($field_names) {
   $query = "";
   $i = 0;
   foreach ($field_names as $field_name) {
@@ -442,7 +438,7 @@ function visualscience_search_field_joins ($field_names) {
  * Return an array of all possible logical operators (and|or|not)
  * @return	array("and", "or", "not")
  */
-function visualscience_get_operators () {  
+function visualscience_get_operators() {  
   return array("and", "or", "not");
 }
 

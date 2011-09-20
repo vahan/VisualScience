@@ -7,24 +7,26 @@
  *
  */
 class Tab {
-  private $tid; //tab id
   private $title;
+  private $url;
   private $content;
   private $weight;
+  private static $tabs;
   
   /**
    * 
    * Class constructor
-   * @param int $tid      tab id
-   * @param string $title    tab title
-   * @param string $content  tab HTML content 
-   * @param int $weight    tab weight in the menu
+   * @param string $title	tab title
+   * @param string $url		tab url identifier
+   * @param string $content	content of the tab
+   * @param int $weight		tab weight in the menu
    */
-  function __construct($tid, $title, $content, $weight) {
+  function __construct($title, $url, $content, $weight) {
     $this->title = $title;
+    $this->url = $url;
     $this->content = $content;
     $this->weight = $weight;
-    $this->tid = $tid;
+    self::$tabs[$this->url] = $this; //stock all tabs in an array
   }
   
   /**
@@ -45,16 +47,19 @@ class Tab {
   public function __set($varName, $varValue) {
     //Keep empty
   }
-}
-
-
-/**
- * 
- * Hook function for adding tabs, must be overridden by modules that want to have their tabs in this module
- * @return  a Tab objects
- */
-function hook_add_tab() {
   
+  /**
+   * 
+   * Used to show the tab's content
+   */
+  public function show() {
+    p("Tab -> show");
+    return $this->content;
+  }
+  
+  public static function get_tabs() {
+    return self::$tabs;
+  }
 }
 
 /**
@@ -62,33 +67,33 @@ function hook_add_tab() {
  * Used to show the tab content
  * @param Tab $tab  the tab object to be shown
  */
-function visualscience_show_tab() {
-  $tid = arg(1); //Get the current tab id from the url path
-  $tab = visualscience_get_tab($tid);
+/*function visualscience_show_tab() {
+  $tab_name = arg(1); //Get the current tab id from the url path
+  $tab = visualscience_get_tab($tab_name);
   
   return $tab->content;
-}
+}*/
 
 /**
  * 
  * Loads the specified tab from the DB
- * @param int $tid	tid of the tab to be found
- * @return  		the found Tab object, otherwise FALSE
+ * @param string $tab_name	name of the tab to be found
+ * @return  				the found Tab object, otherwise FALSE
  */
-function visualscience_get_tab($tid) {
-  $query = "SELECT * FROM  WHERE ".visualscience_get_tabs_table_name()." tid = :tid";
-  $result = db_query($query, array(':tid' => $tid));
+/*function visualscience_get_tab($tab_name) {
+  $query = "SELECT * FROM  WHERE ".visualscience_get_tabs_table_name()." name = :name";
+  $result = db_query($query, array(':name' => $tab_name));
   if (empty($result[0])) return FALSE;
-  return new Tab($result[0]->tid, $result[0]->title, $result[0]->content, $result[0]->weight);
-}
+  return new Tab($result[0]->title, $result[0]->content, $result[0]->weight);
+}*/
 
 /**
  * 
  * Returns the name of the DB table where the tab information is stored
  */
-function visualscience_get_tabs_table_name() {
+/*function visualscience_get_tabs_table_name() {
   return "visualscience_tabs";
-}
+}*/
 
 
 ?>

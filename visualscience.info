@@ -1,4 +1,3 @@
-; $Id:
 name = VisualScience
 description = Provides various searching and viewing ways for qScience.
 version = VERSION

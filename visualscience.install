@@ -44,11 +44,11 @@ function visualscience_schema() {
   );
   
   //table for tabs
-  $schema[visualscience_get_tabs_table_name()] = array(
+  /*$schema[visualscience_get_tabs_table_name()] = array(
     'description' => 'Stores data of the tabs.',
     'fields' => array(
       'tid' => array(
-        'type' => 'int',
+        'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'Tab ID of the tab.',
@@ -70,7 +70,7 @@ function visualscience_schema() {
         'description' => 'tab\'s weight in the menu', 
       ),
     ),
-  );
+  );*/
   
   return $schema;
 }

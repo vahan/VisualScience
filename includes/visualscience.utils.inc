@@ -156,9 +156,16 @@ function visualscience_is_clean_url() {
 }
 
 /**
+ * returns an array containing all fields
+ */
+function visualscience_get_all_fields() {  
+  return field_info_instances('user', 'user');
+}
+
+/**
  * 
  * tired of typing the long line everytime
  */
-function pp($obj) {
+function p($obj) {
   drupal_set_message(print_r($obj, true));
 }
