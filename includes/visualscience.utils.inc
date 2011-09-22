@@ -66,7 +66,7 @@ function visualscience_autocomplete($term = '', $search_type = 'generic') {
         break;
     }
     if (!$resultReady) {
-        drupal_json_output(user_list_get_autocomplete_data($table, $column, $term));
+        drupal_json_output(visualscience_get_autocomplete_data($table, $column, $term));
     } else {
         drupal_json_output($result);
     }
@@ -106,7 +106,7 @@ function visualscience_get_autocomplete_data($table, $column, $term) {
  * @return
  */
 function taxonomy_get_field_autocomplete($field_name, $tag = '') {
-  try {
+try {
     $field = field_info_field($field_name);
 
     // Part of the criteria for the query come from the field's own settings.
@@ -120,12 +120,22 @@ function taxonomy_get_field_autocomplete($field_name, $tag = '') {
     $query->addTag('translatable');
     $query->addTag('term_access');
 
+	$field_table = "field_data_".$field_name;
+
+    $query->fields('t', array("tid", "name"));
+    
     // Select rows that match by term name.
-    $tags_return = $query
-      ->fields('t', array('tid', 'name'))
+    $query
       ->condition('t.vid', $vids)
       ->condition('t.name', '%' . db_like($tag) . '%', 'LIKE')
-      ->range(0, 10)
+      //     ->leftJoin($field_table, "ft", "ft.entity_id=users.uid")
+      //     ->leftJoin($field_table, "ft", "ft.entity_id=users.uid")
+      ->range(0, 10);
+
+    $query
+      ->innerJoin($field_table, 'ft', "ft.".$field_name."_tid=t.tid");
+      
+    $tags_return = $query 
       ->execute()
       ->fetchAllKeyed();
 

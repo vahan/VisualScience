@@ -65,6 +65,14 @@ function visualscience_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   
+  // Autocompletion Url
+  $items['visualscience/autocomplete'] = array(
+        'title' => 'Autocomplete Visual Science',
+        'page callback' => 'visualscience_autocomplete',
+       	'access arguments' => array('access visualscience'),
+        'type' => MENU_CALLBACK,
+  );  
+  
   // Create the visualscience page
   $tabs = module_invoke_all("science_view"); //Each module that wants to have a view in VisualScience must implement hook_science_view
   $items['visualscience'] = array(
@@ -117,8 +125,11 @@ function visualscience_menu() {
  * Used to create menu tabs
  */
 function _visualscience_page($content, $tab_id) {
-  $output = drupal_render(drupal_get_form('visualscience_search_form')).'<div id="visualscience_tab_'.$tab_id.'">'.$content.'</div>';
-  
+  $output = drupal_render(drupal_get_form('visualscience_search_form')).'<div id="visualscience_tab_'.$tab_id.'">'.$content.'</div>';  
+  drupal_add_library('system', 'ui.autocomplete');
+  drupal_add_library('system', 'ui.datepicker');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
   return $output;
 }
 
@@ -136,21 +147,6 @@ function visualscience_theme() {
     ),
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ?>
