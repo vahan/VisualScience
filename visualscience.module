@@ -74,7 +74,7 @@ function visualscience_menu() {
   );  
   
   // Create the visualscience page
-  $tabs = module_invoke_all("science_view"); //Each module that wants to have a view in VisualScience must implement hook_science_view
+  $tabs = module_invoke_all("science_view", visualscience_search("*")); //Each module that wants to have a view in VisualScience must implement hook_science_view
   $items['visualscience'] = array(
     'title' => 'Visual Science',
     'description' => 'Visual Science',

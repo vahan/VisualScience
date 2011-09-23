@@ -254,6 +254,7 @@ function visualscience_search($search) {
  * TODO: inner not() is not handled properly
  */
 function visualscience_search_query($search) {
+  if ($search === "*") return "SELECT users.uid FROM users";
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
   $query = "";
   $field_names = array();
