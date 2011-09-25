@@ -16,218 +16,7 @@
  */
 
 
-/**
- * 
- * Creates the search form
- */
-function visualscience_search_form($form, &$form_state) {
-  global $user;
-  $def_value = "";
-  //search load
-  if (isset($_GET['s'])) {
-    $search = visualscience_get_search($_GET['s']);
-    if ($search->uid != $user->uid) exit(0); //Security check =)
-    $url_combine = visualscience_is_clean_url() ? "?" : "&";
-    $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "visualscience")+strlen("visualscience"));
-    drupal_goto($url.$url_combine."search=".urlencode($search->search));
-  }
-  
-  if (isset($_GET['search'])) {
-    $def_value = urldecode($_GET['search']);
-    $form_state['values']['text'] = $def_value; //make the search be refined after loading
-  }
-  //end of search load
-  
-  $form_state['page_num'] = 1;
-  
-  $form['search'] = array(
-    '#title' => t('Refine Search'),
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-  );
-  
-  $form['search']['text'] = array(
-    '#title' => t(''),
-    '#type' => 'textfield',
-    '#ajax' => array(
-      // #ajax has two required keys: callback and wrapper.
-      // 'callback' is a function that will be called when this element changes.
-      'callback' => 'visualscience_search_callback',
-      // 'wrapper' is the HTML id of the page element that will be replaced.
-      'wrapper' => 'tabs_div',
-      // There are also several optional keys - see ajax_example_autocheckboxes
-      // below for details on 'method', 'effect' and 'speed' and
-      // ajax_example_dependent_dropdown for 'event'.
-      'event' => 'die', //bug 1, see visualscience.module. Kill all events to add only ENTER button
-      'keypress' => TRUE, //Search when ENTER is pressed
-       ),
-       '#default_value' => $def_value,
-       '#maxlength' => 1024,
-       '#prefix' => "<table id='search-box-table'><tr><td style='padding-right: 3px;'>",
-       '#suffix' => "<div id='datepicker'></div></td>"
-  );
-  
-  $form['search']['search_button'] = array(
-    '#value' => t('Go'),
-    '#type' => 'button',
-    '#ajax' => array(
-      'callback' => 'visualscience_search_callback',
-      'wrapper' => 'tabs_div',
-       ),
-       '#submit' => array(),
-    '#validate' => array(),
-       '#prefix' => '<td style="padding-left: 0; width: 100%">',
-       '#suffix' => '</td>',
-  );
-
-  $form['search']['help'] = array(
-    '#type' => 'item',
-    '#title' => l(t("Help"), "admin/help/visualscience"),
-       '#prefix' => '<td>',
-       '#suffix' => '</td></tr></table>',
-  );
-  
-  
-  $form['search']['save'] = array(
-    '#title' => t('Save or Load'),
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#prefix' => '<div id="save">',
-    '#suffix' => '</div>',
-  );
-  
-  $form['search']['save']['search_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t(''),
-    '#size' => '20',
-       '#maxlength' => 64,
-    '#prefix' => '<table id="save-load-table"><tr><td>',
-    '#suffix' => '</td>',
-  );
-  
-  $form['search']['save']['button_save'] = array(
-    '#value' => t('Save Search'),
-    '#type' => 'button',
-    '#ajax' => array(
-      'callback' => 'visualscience_search_save_callback',
-      'wrapper' => 'save',
-       ),
-       '#submit' => array(),
-    '#validate' => array(),
-       '#prefix' => '<td style="width: 100%">',
-    '#suffix' => '</td><td><nobr>or load:</nobr></td>',
-  );
-  
-  $options = array(0 => 'select');
-  $searches = visualscience_get_all_searches();
-  foreach ($searches as $search) {
-    $options[$search->name] = t($search->name);
-  }
-  
-  $is_clean_url = visualscience_is_clean_url() ? 1 : 0;
-  
-  $form['search']['save']['load'] = array(
-    '#type' => 'select',
-    '#options' => $options,
-    '#attributes' => array ('onchange' => '{
-      if (this.selectedIndex == 0) return;
-      if ('.$is_clean_url.' > 0) {
-        window.location = window.location.href.substring(0, window.location.href.indexOf("?",0))+"?s="+this.options[this.selectedIndex].value;
-      } else {
-        window.location = window.location.href+"&s="+this.options[this.selectedIndex].value;
-      }
-    }'),
-    '#prefix' => '<td>',
-    '#suffix' => '</td></tr></table>',
-  );
-  
-  return $form;
-}
-
-/**
- * 
- * Ajax callback for the search.
- * @param array $form		the form for wich this function is used.
- * @param array $form_state	refernce on the array representing the state of the form
- * @return					renderable array
- */
-function visualscience_search_callback($form, $form_state) {
-  $_GET["q"] = "visualscience"; //TODO: what/why is this?
-  return $form['users']['tabs'];
-}
-
-/**
- * 
- * Ajax callback for search saving 
- * @param array $form    	the form for wich this function is used.
- * @param array $form_state refernce on the array representing the state of the form
- * @return           		modified form 
- */
-function visualscience_search_save_callback($form, $form_state) {
-  global $user;
-  $search_name = $form_state['values']['search_name'] != '' ? $form_state['values']['search_name'] : 'default';
-  $search_text = $form_state['values']['text'];
-  
-  $save_schema = drupal_get_schema(visualscience_get_save_table_name());
-  $result = visualscience_get_search($search_name);
-
-  if (count($result) == 0) {  
-    db_query("INSERT INTO {".$save_schema['name']."} (uid, name, search) VALUES ($user->uid, '$search_name', '$search_text')");
-  } else {
-    db_query("UPDATE ".$save_schema['name']." SET search='$search_text' WHERE name='$search_name'");
-  }
-  return $form['users']['save'];
-}
-
-/**
- * Returns the name of the table where the saved searches are stored.
- * @return	the name of the table where the saved searches are stored.
- */
-function visualscience_get_save_table_name() {
-  return 'visualscience_searches';
-}
-
-/**
- * 
- * Returns an array of the current user's saved searches.
- * @return  all the saved searched of the logged in user.
- */
-function visualscience_get_all_searches() {
-  global $user;
-  $save_schema = drupal_get_schema(visualscience_get_save_table_name());
-  $result = db_select($save_schema['name'], 's')
-        ->fields('s', array('sid', 'uid', 'name', 'search'))
-        ->condition("uid", $user->uid)
-        ->execute();
-
-  $searches = array();
-  foreach ($result as $row) {
-    array_push($searches, $row);
-  }
-  return $searches;
-}
-
-/**
- * 
- * Returns an array with saved search details.
- * @param string $search_name	the name of the saved search.
-* @return						array with the following keys: 'sid', 'uid', 'name', 'search', 'url'.
- */
-function visualscience_get_search($search_name) {
-  global $user;
-  $save_schema = drupal_get_schema(visualscience_get_save_table_name());
-  $result = db_select($save_schema['name'], 's')
-        ->fields('s', array('sid', 'uid', 'name', 'search'))
-        ->condition("name", $search_name)
-        ->condition("uid", $user->uid)
-        ->execute();
-
-  foreach ($result as $row) {
-    return $row;
-  }
-}
+include_once 'visualscience.search_form.inc';
 
 /**
  * 
@@ -242,6 +31,7 @@ function visualscience_search($search) {
   foreach ($result as $obj) {
     $users[] = user_load($obj->uid);
   }
+  variable_set("visualscience_list", $users);
   return $users;
 }
 
@@ -305,7 +95,7 @@ function visualscience_search_query($search) {
           $dates[1] = ""; //end date
         }
         $column = "users.created";
-      } elseif (in_array(strstr($column, "=", true), visualscience_get_all_user_data())) { //for other keywords use `users`
+      } elseif (in_array(strstr($column, "=", true), visualscience_get_user_data())) { //for other keywords use `users`
         $column = "users.".$column;
       } else { //for not keywords search in manually added fields
         array_push($field_names, strstr($column, "=", true));
