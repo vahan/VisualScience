@@ -6,7 +6,7 @@
  * The visualization must be done by separate modules, which will be shown as tabs. To do so your module must implement the following:
  * 1. Implement hook_science_title() - just returns the title of the tab
  * 2. Implement hook_science_tab($list) - return the HTMLed visualization of the given list
- * 3. keep all the content inside <div id="visualscince_MODULENAME">...</div> - this is needed to update the search result using AJAX
+ * 3. keep all the content inside <div id="visualscince_MODULENAME">...</div> - this is needed to update the tab according to the search (using AJAX)
  * 
  */
 
