@@ -77,30 +77,33 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
   );  
   
-  // Create the visualscience page
-  $items['visualscience'] = array(
-    'title' => 'Visual Science',
-    'description' => 'Visual Science description',
-    'page callback' => '_visualscience_page',
-    'access callback' => TRUE,
-    'weight' => 30,
-  );
+
   $tabs = module_implements("science_title"); //Each module that wants to have a view in VisualScience must implement hook_science_view
-  $weight = 0;
+  $weight = -1;
   foreach($tabs as $tab_name) {
+    $weight++;
     $tab_title = module_invoke($tab_name, 'science_title');
-    /*if ($weight == 0) { //TODO: create a default tab
+    if ($weight == 0) { //TODO: create a default tab
+      // Create the visualscience page
+      $items['visualscience'] = array(
+        'title' => 'Visual Science',
+        'description' => 'Visual Science description',
+        'page callback' => '_visualscience_page',
+      	'page arguments' => array($tab_name),
+        'access callback' => TRUE,
+        'weight' => 30,
+      );
       $items['visualscience/default'] = array(
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'title' => $tab_title,
         'weight' => $weight,
       );
-      $weight++;
-    }*/
+      continue;
+    }
     $items["visualscience/".$tab_name] = array(
       'type' => MENU_LOCAL_TASK,
       'title' => $tab_title,
-      'page callback' => '_visualscience_tab',
+      'page callback' => '_visualscience_page',
       'page arguments' => array($tab_name),
       'access callback' => TRUE,
       'weight' => $weight,
@@ -122,16 +125,15 @@ function visualscience_menu() {
  * 
  * Creates the visualscience page
  */
-function _visualscience_page() {
+function _visualscience_page($tab_name) {
   drupal_add_library('system', 'ui.autocomplete');
   drupal_add_library('system', 'ui.datepicker');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
   
+  $list = $list = variable_get("visualscience_list", visualscience_search("*"));
   $output = drupal_render(drupal_get_form('visualscience_search_form'));
-  $list = visualscience_search("*");
-  $tab_name = "user_list"; //TODO: set the default tab
-  $output .= "<div id='visualscience_$tab_name' class='$tab_name'>".module_invoke($tab_name, 'science_tab', $list)."</div>";
+  $output .= module_invoke($tab_name, 'science_tab', $list);
   
   return $output;
 }
@@ -141,13 +143,13 @@ function _visualscience_page() {
  * Used to create menu tabs
  * @param string $tab_name	name of the tab to shown, if NULL the default tab is shown
  */
-function _visualscience_tab($tab_name) {
+/*function _visualscience_tab($tab_name) {
   variable_set("visualscience_current_tab", $tab_name);
   $list = variable_get("visualscience_list");
   $output = drupal_render(drupal_get_form('visualscience_search_form'));
   $output .= module_invoke($tab_name, 'science_tab', $list);
   return $output;
-}
+}*/
 
 /**
  * 
