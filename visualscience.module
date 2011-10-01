@@ -2,8 +2,12 @@
 
 /**
  * @file
- * This module creates several user lists, which may be viewed as pages and blocks.
- * User lists may be displayed alphabetically, beginning with A-Z, by newest, by role, or as a list of users who have posted content of a certain type.
+ * This module is used to search and visualize users/nodes.
+ * The visualization must be done by separate modules, which will be shown as tabs. To do so your module must implement the following:
+ * 1. Implement hook_science_title() - just returns the title of the tab
+ * 2. Implement hook_science_tab($list) - return the HTMLed visualization of the given list
+ * 3. keep all the content inside <div id="visualscince_MODULENAME">...</div> - this is needed to update the search result using AJAX
+ * 
  */
 
 require_once 'includes/visualscience.search.inc';
@@ -141,7 +145,7 @@ function _visualscience_tab($tab_name) {
   variable_set("visualscience_current_tab", $tab_name);
   $list = variable_get("visualscience_list");
   $output = drupal_render(drupal_get_form('visualscience_search_form'));
-  $output .= "<div id='visualscience_$tab_name' class='$tab_name'>".module_invoke($tab_name, 'science_tab', $list)."</div>";
+  $output .= module_invoke($tab_name, 'science_tab', $list);
   return $output;
 }
 

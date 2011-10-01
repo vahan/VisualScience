@@ -144,7 +144,7 @@ function visualscience_search_callback($form, $form_state) {
   $text = trim($form_state['values']['text']);
   $list = visualscience_search($text);
   $current_tab = variable_get("visualscience_current_tab");
-  return module_invoke($current_tab, "science_tab", $list);
+  return module_invoke($current_tab, 'science_tab', $list);
 }
 
 /**
