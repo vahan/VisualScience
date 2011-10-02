@@ -1,7 +1,6 @@
 <?php
 
 include_once 'includes/visualscience.utils.inc';
-include_once 'includes/visualscience.tabs.inc';
 include_once 'includes/visualscience.search.inc';
 
 /**

@@ -13,7 +13,6 @@
 require_once 'includes/visualscience.search.inc';
 require_once 'includes/visualscience.settings.inc';
 require_once 'includes/visualscience.utils.inc';
-require_once 'includes/visualscience.tabs.inc';
 
 
 /**
@@ -83,7 +82,7 @@ function visualscience_menu() {
   foreach($tabs as $tab_name) {
     $weight++;
     $tab_title = module_invoke($tab_name, 'science_title');
-    if ($weight == 0) { //TODO: create a default tab
+    if ($weight == 0) {
       // Create the visualscience page
       $items['visualscience'] = array(
         'title' => 'Visual Science',
@@ -93,7 +92,7 @@ function visualscience_menu() {
         'access callback' => TRUE,
         'weight' => 30,
       );
-      $items['visualscience/default'] = array(
+      $items['visualscience/default'] = array( //create a default tab
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'title' => $tab_title,
         'weight' => $weight,
@@ -131,7 +130,9 @@ function _visualscience_page($tab_name) {
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
   
-  $list = $list = variable_get("visualscience_list", visualscience_search("*"));
+  //variable_set('visualscience_current_tab', $tab_name);
+  $list = variable_get('visualscience_list', visualscience_search('*'));
+  //if ($list == NULL) $list = visualscience_search("*");
   $output = drupal_render(drupal_get_form('visualscience_search_form'));
   $output .= module_invoke($tab_name, 'science_tab', $list);
   
