@@ -76,13 +76,21 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
   );  
   
-
+  $items['visualscience'] = array(
+    'title' => 'Visual Science',
+    'description' => 'Visual Science description',
+    'page callback' => '_visualscience_page',
+    'page arguments' => array(FALSE),
+    'access callback' => TRUE,
+    'weight' => 30,
+  );
+      
   $tabs = module_implements("science_title"); //Each module that wants to have a view in VisualScience must implement hook_science_view
   $weight = -1;
   foreach($tabs as $tab_name) {
     $weight++;
     $tab_title = module_invoke($tab_name, 'science_title');
-    if ($weight == 0) {
+    /*if ($weight == 0) {
       // Create the visualscience page
       $items['visualscience'] = array(
         'title' => 'Visual Science',
@@ -98,7 +106,7 @@ function visualscience_menu() {
         'weight' => $weight,
       );
       continue;
-    }
+    }*/
     $items["visualscience/".$tab_name] = array(
       'type' => MENU_LOCAL_TASK,
       'title' => $tab_title,
@@ -129,12 +137,28 @@ function _visualscience_page($tab_name) {
   drupal_add_library('system', 'ui.datepicker');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
-  
-  //variable_set('visualscience_current_tab', $tab_name);
-  $list = variable_get('visualscience_list', visualscience_search('*'));
+      
+  //correct the current tab, as sometimes it's set to wrong values. TODO: it's wierd, isn't it?
+  /*$tab_name = NULL;
+  p(arg(1));
+  $arg = arg(1);
+  $tabs = module_implements("science_title");
+  p($tabs);
+  if (isset($arg) && in_array($arg, $tabs)) $tab_name = $arg;*/
+  p('tab is '.$tab_name);
+  if ($tab_name) {
+    variable_set('visualscience_current_tab', $tab_name);
+  }
+  elseif(!in_array('autocomplete', arg())) { //persistent variables souldn't be deleted at autocomplete
+    //variable_set('visualscience_debugger', implode(', ', arg()).'/n/t delete');
+    variable_del('visualscience_current_tab');
+    variable_del('visualscience_list');
+  }
+
+  $list = variable_get('visualscience_list');
   //if ($list == NULL) $list = visualscience_search("*");
   $output = drupal_render(drupal_get_form('visualscience_search_form'));
-  $output .= module_invoke($tab_name, 'science_tab', $list);
+  if (isset($tab_name)) $output .= module_invoke($tab_name, 'science_tab', $list);
   
   return $output;
 }

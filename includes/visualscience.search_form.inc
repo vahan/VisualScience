@@ -42,7 +42,7 @@ function visualscience_search_form($form, &$form_state) {
       // 'callback' is a function that will be called when this element changes.
       'callback' => 'visualscience_search_callback',
       // 'wrapper' is the HTML id of the page element that will be replaced.
-      'wrapper' => "visualscience_".variable_get("visualscience_current_tab"),
+      'wrapper' => "visualscience-".variable_get("visualscience_current_tab"),
       // There are also several optional keys - see ajax_example_autocheckboxes
       // below for details on 'method', 'effect' and 'speed' and
       // ajax_example_dependent_dropdown for 'event'.
@@ -144,8 +144,9 @@ function visualscience_search_callback($form, $form_state) {
   $text = trim($form_state['values']['text']);
   $list = visualscience_search($text);
   $current_tab = variable_get("visualscience_current_tab");
+  variable_set('visualscience_list', $list);
   
-  return module_invoke($current_tab, 'science_tab', $list, true);
+  return module_invoke($current_tab, 'science_tab', $list);
 }
 
 /**

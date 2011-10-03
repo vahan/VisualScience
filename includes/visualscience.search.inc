@@ -31,7 +31,6 @@ function visualscience_search($search) {
   foreach ($result as $obj) {
     $users[] = user_load($obj->uid);
   }
-  variable_set('visualscience_list', $users);
   return $users;
 }
 
