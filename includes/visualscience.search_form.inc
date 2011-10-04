@@ -48,11 +48,11 @@ function visualscience_search_form($form, &$form_state) {
       // ajax_example_dependent_dropdown for 'event'.
       'event' => 'die', //bug 1, see visualscience.module. Kill all events to add only ENTER button
       'keypress' => TRUE, //Search when ENTER is pressed
-       ),
-       '#default_value' => $def_value,
-       '#maxlength' => 1024,
-       '#prefix' => "<table id='search-box-table'><tr><td style='padding-right: 3px;'>",
-       '#suffix' => "<div id='datepicker'></div></td>"
+      ),
+      '#default_value' => $def_value,
+      '#maxlength' => 1024,
+      '#prefix' => "<table id='search-box-table'><tr><td style='padding-right: 3px;'>",
+      '#suffix' => "<div id='datepicker'></div></td>"
   );
   
   $form['search']['search_button'] = array(
@@ -61,11 +61,11 @@ function visualscience_search_form($form, &$form_state) {
     '#ajax' => array(
   		'callback' => 'visualscience_search_callback',
   		'wrapper' => "visualscience_".variable_get("visualscience_current_tab"),
-        ),
-		'#submit' => array(),
-  		'#validate' => array(),
-  		'#prefix' => '<td style="padding-left: 0; width: 100%">',
-  		'#suffix' => '</td>',
+    ),
+	'#submit' => array(),
+	'#validate' => array(),
+	'#prefix' => '<td style="padding-left: 0; width: 100%">',
+	'#suffix' => '</td>',
   );
 
   $form['search']['help'] = array(

@@ -137,7 +137,7 @@ function _visualscience_page($tab_name) {
   drupal_add_library('system', 'ui.datepicker');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
-      
+  
   //correct the current tab, as sometimes it's set to wrong values. TODO: it's wierd, isn't it?
   /*$tab_name = NULL;
   p(arg(1));
@@ -145,7 +145,7 @@ function _visualscience_page($tab_name) {
   $tabs = module_implements("science_title");
   p($tabs);
   if (isset($arg) && in_array($arg, $tabs)) $tab_name = $arg;*/
-  p('tab is '.$tab_name);
+  //p('tab is '.$tab_name);
   if ($tab_name) {
     variable_set('visualscience_current_tab', $tab_name);
   }
