@@ -59,8 +59,8 @@ function visualscience_search_form($form, &$form_state) {
     '#value' => t('Go'),
     '#type' => 'button',
     '#ajax' => array(
-  		'callback' => 'visualscience_search_callback',
-  		'wrapper' => "visualscience_".variable_get("visualscience_current_tab"),
+      'callback' => 'visualscience_search_callback',
+      'wrapper' => "visualscience-".variable_get("visualscience_current_tab"),
     ),
 	'#submit' => array(),
 	'#validate' => array(),
