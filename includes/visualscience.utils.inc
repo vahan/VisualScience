@@ -12,7 +12,25 @@
  * @return       data names wich are used for the search
  */
 function visualscience_get_user_data() {
-  return array('name', 'mail', 'status', 'created');
+  return array('name', 'mail', 'role', 'status', 'created');
+}
+
+/**
+ * 
+ * Helper function, returns which node data to search 
+ * @return       data names wich are used for the search
+ */
+function visualscience_get_node_data() {
+  return array('type', 'language', 'title', 'created');
+}
+
+/**
+ * 
+ * Returns the appropriate search data
+ * @param string $table	the DB table wich data is searched. Possible values are "users" and "node"
+ */
+function visualscience_get_data($table) {
+  return $table=="users"?visualscience_get_user_data():($table=="node"?visualscience_get_node_data():FALSE);
 }
 
 /**

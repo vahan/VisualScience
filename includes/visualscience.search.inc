@@ -24,14 +24,16 @@ include_once 'visualscience.search_form.inc';
  * @param string $search	user written text to be used for the search
  * @return					array of user objects
  */
-function visualscience_search($search) {
-  $users = array();
+function visualscience_search($search, $table="users") {
+  variable_set('visualscience_search_table', $table);
+  $id = $table[0]."id";
+  $list = array();
   //visualscience_search_query($search);
-  $result = db_query(visualscience_search_query($search))->fetchAll();
+  $result = db_query(visualscience_search_query($search, $table, $id))->fetchAll();
   foreach ($result as $obj) {
-    $users[] = user_load($obj->uid);
+    $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
   }
-  return $users;
+  return $list;
 }
 
 /**
@@ -42,8 +44,8 @@ function visualscience_search($search) {
  * 
  * TODO: inner not() is not handled properly
  */
-function visualscience_search_query($search) {
-  if ($search === "*") return "SELECT users.uid FROM {users}";
+function visualscience_search_query($search, $table, $id) {
+  if ($search === "*") return "SELECT $table.$id FROM {".$table."}";
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
   $query = "";
   $field_names = array();
@@ -54,7 +56,7 @@ function visualscience_search_query($search) {
     foreach ($fields as $field) {
       $field_names[] = substr($field['field_name'], strlen("field_"));
     }
-    $query = visualscience_search_in_all_query($search);
+    $query = visualscience_search_in_all_query($search, $table, $id);
   } else {
     //p($search);
     while (strlen($str) > 0) {
@@ -93,9 +95,9 @@ function visualscience_search_query($search) {
           $dates[0] = $inner_str; //start date
           $dates[1] = ""; //end date
         }
-        $column = "users.created";
-      } elseif (in_array(strstr($column, "=", true), visualscience_get_user_data())) { //for other keywords use `users`
-        $column = "users.".$column;
+        $column = "$table.created";
+      } elseif (in_array(strstr($column, "=", true), visualscience_get_data($table))) { //for other keywords use $table
+        $column = $table.".".$column;
       } else { //for not keywords search in manually added fields
         array_push($field_names, strstr($column, "=", true));
         //p("ACHTUNG! ".$column." ".strlen());
@@ -146,7 +148,7 @@ function visualscience_search_query($search) {
     }
   }
   $query = str_replace("=", " LIKE ", $query); //use LIKE statement
-  $query = "SELECT users.uid FROM {users} users ".visualscience_search_role_joins().visualscience_search_field_joins($field_names)." WHERE ".$query; //Add the first part of the query
+  $query = "SELECT $table.$id FROM {".$table."} $table ".($table==="users"?visualscience_search_role_joins().visualscience_search_field_joins($field_names):"")." WHERE ".$query; //Add the first part of the query. Use role and field joins only for users
   //p("query -> ".$query);
   return $query;  
 }
@@ -157,17 +159,18 @@ function visualscience_search_query($search) {
  * @param string $search	the string to be search for
  * @return					SQL query condition
  */
-function visualscience_search_in_all_query($search) {
+function visualscience_search_in_all_query($search, $table, $id) {
   $query = "";
-  $data = visualscience_get_user_data();
+  $data = visualscience_get_data($table);
   $is_first = true;
   foreach ($data as $column) {
     if (!$is_first) $query .= " OR ";
     else $is_first = false;
-    if ($column == "role") $column = "role.name";
-    else $column = "users.".$column;
+    if ($table == "users" && $column == "role") $column = "role.name";
+    else $column = "$table.".$column;
     $query .= "(".$column."='%".$search."%')";
   }
+  if ($table != "users") return $query;
   $fields = visualscience_get_all_fields();
   for ($i=0; $i<count($fields); ++$i) {
     $query .= " OR (TTD_".$i.".name='%".$search."%')";

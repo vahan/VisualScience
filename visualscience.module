@@ -153,6 +153,7 @@ function _visualscience_page($tab_name) {
     //variable_set('visualscience_debugger', implode(', ', arg()).'/n/t delete');
     variable_del('visualscience_current_tab');
     variable_del('visualscience_list');
+    variable_del('visualscience_search_table');
   }
 
   $list = variable_get('visualscience_list');

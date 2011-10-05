@@ -64,8 +64,16 @@ function visualscience_search_form($form, &$form_state) {
     ),
 	'#submit' => array(),
 	'#validate' => array(),
-	'#prefix' => '<td style="padding-left: 0; width: 100%">',
+	'#prefix' => '<td style="padding-left: 0;">',
 	'#suffix' => '</td>',
+  );
+  
+  $form['search']['table'] = array(
+    '#type' => 'radios',
+    '#options' => array('users'=>t('Users'), 'node'=>t('Nodes')),
+  	'#default_value' => 'users',
+  	'#prefix' => '<td style="padding-left: 0; width: 100%">',
+  	'#suffix' => '</td>',
   );
 
   $form['search']['help'] = array(
@@ -142,7 +150,8 @@ function visualscience_search_form($form, &$form_state) {
 function visualscience_search_callback($form, $form_state) {
   $_GET["visualscience_q"] = "visualscience"; //TODO: what/why is this?
   $text = trim($form_state['values']['text']);
-  $list = visualscience_search($text);
+  $table = $form_state['values']['table'];
+  $list = visualscience_search($text, $table);
   $current_tab = variable_get("visualscience_current_tab");
   variable_set('visualscience_list', $list);
   
