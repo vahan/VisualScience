@@ -43,7 +43,7 @@ function visualscience_search($search) {
  * TODO: inner not() is not handled properly
  */
 function visualscience_search_query($search) {
-  if ($search === "*") return "SELECT users.uid FROM users";
+  if ($search === "*") return "SELECT users.uid FROM {users}";
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
   $query = "";
   $field_names = array();
@@ -146,7 +146,7 @@ function visualscience_search_query($search) {
     }
   }
   $query = str_replace("=", " LIKE ", $query); //use LIKE statement
-  $query = "SELECT users.uid FROM {users} ".visualscience_search_role_joins().visualscience_search_field_joins($field_names)." WHERE ".$query; //Add the first part of the query
+  $query = "SELECT users.uid FROM {users} users ".visualscience_search_role_joins().visualscience_search_field_joins($field_names)." WHERE ".$query; //Add the first part of the query
   //p("query -> ".$query);
   return $query;  
 }
@@ -202,7 +202,7 @@ function visualscience_search_date_condition($dates, $column) {
  * Returns a string of SQL JOIN comands for all the fields
  */
 function visualscience_search_role_joins() {
-  $query = "LEFT JOIN {users_roles} ON users.uid=users_roles.uid LEFT JOIN {role} ON users_roles.rid=role.rid "; //JOIN commands for roles
+  $query = "LEFT JOIN {users_roles} users_roles ON users.uid=users_roles.uid LEFT JOIN {role} role ON users_roles.rid=role.rid "; //JOIN commands for roles
   return $query;
 }
 
@@ -217,7 +217,7 @@ function visualscience_search_field_joins($field_names) {
   $i = 0;
   foreach ($field_names as $field_name) {
     $field_table = "field_data_field_".$field_name;
-    $query .= "LEFT JOIN {".$field_table."} ON ".$field_table.".entity_id=users.uid LEFT JOIN {taxonomy_term_data} TTD_".$i." ON ".$field_table.".field_".$field_name."_tid=TTD_".$i.".tid ";
+    $query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid LEFT JOIN {taxonomy_term_data} TTD_".$i." ON ".$field_table.".field_".$field_name."_tid=TTD_".$i.".tid ";
     $i++;
   }
   return $query;

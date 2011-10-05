@@ -13,15 +13,15 @@ function visualscience_search_form($form, &$form_state) {
   global $user;
   $def_value = "";
   //search load
-  if (isset($_GET['visualscience_s'])) {
-    $search = visualscience_get_search($_GET['visualscience_s']);
+  if (isset($_GET['s'])) {
+    $search = visualscience_get_search($_GET['s']);
     if ($search->uid != $user->uid) exit(0); //Security check =)
     $url_combine = visualscience_is_clean_url() ? "?" : "&";
-    $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "visualscience")+strlen("visualscience"));
+    $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "user_list")+strlen("user_list"));
     drupal_goto($url.$url_combine."search=".urlencode($search->search));
   }
-  if (isset($_GET['visualscience_search'])) {
-    $def_value = urldecode($_GET['visualscience_search']);
+  if (isset($_GET['search'])) {
+    $def_value = urldecode($_GET['search']);
     $form_state['values']['text'] = $def_value; //make the search be refined after loading
   }
   //end of search load
