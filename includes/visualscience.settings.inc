@@ -46,7 +46,7 @@ function visualscience_perm() {
 }
 
 
-function visualscience_admin_settings() {
+function visualscience_settings_form() {
   $form = array();
 
   $form['visualscience_default_number'] = array(
