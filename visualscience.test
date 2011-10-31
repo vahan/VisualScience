@@ -16,7 +16,7 @@ class VisualScienceTestCase extends DrupalWebTestCase {
     parent::setUp('visualscience');
     //parent::setUp();
     $this->privileged_user = $this->drupalCreateUser(array(
-    	'access visualscience',
+    	'administer visualscience',
       ));
     $this->drupalLogin($this->privileged_user);
     
@@ -31,10 +31,10 @@ class VisualScienceTestCase extends DrupalWebTestCase {
   public function testVisualScienceSearch() {
     $users = visualscience_search("vahan");
     
-    debug($users);
+    //debug($users);
     
     $this->assertEqual(count($users), 1, "Checking that there is 1 Vahan user");
-    $this->assertEqual(0, 1);
+    //$this->assertEqual(0, 1);
   }
   
   
