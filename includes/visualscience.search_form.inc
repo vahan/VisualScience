@@ -83,6 +83,14 @@ function visualscience_search_form($form, &$form_state) {
   	'#suffix' => '</td></tr></table>',
   );
   
+  //TODO: create a normal settings page 
+  /*$form['search']['settings'] = array(
+    '#type' => 'item',
+    '#title' => l(t("Settings"),"admin/settings/visualscience"),
+    '#prefix' => '<td>',
+    '#suffix' => '</td></tr></table>',
+  );*/
+  
   $form['search']['save'] = array(
     '#title' => t('Save or Load'),
     '#type' => 'fieldset',

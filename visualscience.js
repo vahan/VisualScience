@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Functions used in visualscience module
  */

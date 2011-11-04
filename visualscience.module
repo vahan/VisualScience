@@ -54,7 +54,7 @@ function visualscience_menu() {
     'title' => 'Visual Science',
     'description' => 'Change the format and types of search and menus that appear on the site.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('visualscience_admin_settings'),
+    'page arguments' => array('visualscience_settings_form'),
     'access arguments' => array('administer visualscience'),
     'type' => MENU_CALLBACK,
     'access callback' => TRUE,

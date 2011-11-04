@@ -38,15 +38,18 @@ function visualscience_help($path, $arg) {
 }
 
 /**
- * Implementes hook_perm()
+ * Implementes hook_permission()
  * 
  */
-function visualscience_perm() {
-  return array('access visualscience', 'administer visualscience');
+function visualscience_permission() {
+  return array(
+  	'access visualscience' => array('title' => t('Access VisualScience page')), 
+  	'administer visualscience' => array('title' => t('Administer VisualScience settings')),
+  );
 }
 
 
-function visualscience_admin_settings() {
+function visualscience_settings_form() {
   $form = array();
 
   $form['visualscience_default_number'] = array(
