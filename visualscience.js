@@ -124,10 +124,10 @@ jQuery(document).ready(function() {
 	    		// TODO find a better solution
 	    		// checking if clean urls are used or not
 	    		if (location.href.indexOf("?q=") != -1) {
-	    			urlAdd = "?q=";
+	    			urlAdd = "?q=visualscience/";
 	    		}
 	    	
-	    		var url = location.href.substring(0,location.href.lastIndexOf("?q=")) + urlAdd + "visualscience/autocomplete/" + request.term + "/" + request.search_type;
+	    		var url = location.href.substring(0,location.href.lastIndexOf("?q=")) + urlAdd + "autocomplete/" + request.term + "/" + request.search_type;
 	    	
 	    		jQuery.ajax({
 	    		  url: url,
