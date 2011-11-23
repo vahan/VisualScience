@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * Functions used in visualscience module
  */
@@ -22,6 +21,9 @@ var autocompleteCurrentTypeIsTheSame = true;
 // The insertion position for the autocomplete
 var autocompleteCaretPosition = 0;
 
+// the number of the current open search dialog
+var currentDialogNumber = 0;
+
 // The AND and OR signs
 // TODO for now works only for the first sign in the array. exend it so that it works for all of them
 var andSign = " && ";
@@ -31,6 +33,12 @@ var AndRegEx = new RegExp("( AND )","ig")
 var OrRegEx = new RegExp("( OR )","ig")
 
 jQuery(document).ready(function() {
+	jQuery(".visualscience-user_list").contentChange(function() {
+		var thisId = jQuery(this).attr("id");
+		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+		openDialog(dialogNumber);
+	});
+		
 	jQuery("input#edit-text").bind("keyup", function(e) {
 		var code = (e.keyCode ? e.keyCode : e.which);
 		// TODO for FF4 the keycode is somehow 61. Correct this// Turns out that 61 is the keycode for + in other browsers
@@ -393,3 +401,155 @@ function valueInArray(array, value) {
 	}
 	return false;
 }
+
+/**
+ * Function that opens the dialog given the content
+ * @param content the content of the dialog
+ */
+function openDialog(containerId) {
+		// generate the output to go into the dialog
+//		var output="<div class='visualscience-dialog' id='visualscience-dialog-"+currentDialogNumber+"'><div id='container-1-"+currentDialogNumber+"' class='layout-container'>"+jQuery("#visualscience-search-form").html()+jQuery("#"+containerId).html()+"</div></div>";
+		// clear the html in the initial container
+//		jQuery("#"+containerId).html("");
+		// remove the script call
+//		jQuery("body").append(output);
+//		jQuery("#visualscience-dialog-"+currentDialogNumber).find("*").each(function() {
+//			if (jQuery(this).attr("id") != "") {
+//				var newId = jQuery(this).attr("id") + "-" + currentDialogNumber;
+//				jQuery(this).attr("id", newId);
+//			}
+//		});
+//		setVisualScienceDialogs(currentDialogNumber);
+		setVisualScienceDialogs(containerId);
+//		jQuery("#"+containerId).contentChange(function() {
+//			if (jQuery("#"+containerId).html() != "") {
+//				openDialog("visualscience-user_list");
+//			}
+//		})
+}
+
+/**
+ * setDialogs
+ * @param dialog the dialog id to set. If null, sets by classname
+ */
+function setVisualScienceDialogs(dialogNumber) {
+	var selector = ".visualscience-dialog";
+	if (dialogNumber != null) {
+		selector = "#visualscience-dialog-" + dialogNumber;
+	}
+	var title = jQuery("#edit-text").val();
+	if (title == "") {
+		title =  "All users";
+	} else {
+		title = "Searched: " + title;
+	}
+	selector = "#visualscience-container-"+dialogNumber;
+	// Creating the dialogs
+	jQuery(selector).dialog({
+		title: title,
+		autoOpen: true,
+		height: 400, 
+		width: 800, 
+		minHeight: 400, 
+		minWidth: 800,
+		resizable: true,
+		close: function(event, ui) {
+			// TODO End conversations, calls, file transfers, etc...
+			
+			// to check if the dialogs need to be rearranged after closing one
+			var toRearrange = false;
+			var targetDialog = jQuery(event.target);
+			
+			// if the closed dialog was minimized
+			if (targetDialog.parent().hasClass("dialogs-minimized")) {
+				toRearrange = true;
+			}
+			targetDialog.dialog('destroy');
+			setDialogs(event.target.id);
+			
+			// rearrange the minimized dialogs
+			if (toRearrange) {
+				orderMinimized(getMinimizedWidth());				
+			}
+		}
+	});
+	jQuery(selector).dialog("maximize");
+	jQuery(".visualscience-user_list").contentChange(function() {
+		var thisId = jQuery(this).attr("id");
+		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+		openDialog(dialogNumber);
+	});
+	
+}
+
+/**
+ * function to execute when the button to show the map is clicked
+ * @param btn the button objcontentChangeect
+ */
+function lsMapOpen(btn) {
+	var thisId = btn.id;
+	var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+	var htmlToFill = "<div id='container-"+dialogNumber+"-1' class='ui-layout-south' style='height: 100px;'>";
+	htmlToFill += "<div class='ui-layout-center'>";
+	htmlToFill += "<div id='mapcontainer-"+dialogNumber+"-1' class='ui-layout-north' style='width: 100%; height: 100%'></div></div>";
+	htmlToFill += "<div class='ui-layout-west'><div class='watchProgress' id='watchProgress-"+dialogNumber+"-1' class='ui-layout-north'></div><div id='searchResults-"+dialogNumber+"-1' class='ui-layout-north'></div></div>";
+	htmlToFill += "</div>"
+	
+	
+	jQuery("#visualscience-container-"+dialogNumber).append(htmlToFill)
+	jQuery("#container-"+dialogNumber+"-0").addClass("ui-layout-center");
+	jQuery("#container-"+dialogNumber+"-1").layout({ applyDefaultStyles: true }).sizePane("west", 400);
+	jQuery("#visualscience-container-"+dialogNumber).layout({ applyDefaultStyles: true }).sizePane("south", 400);
+	lsSearch(dialogNumber);
+}
+
+/**
+ * Function to watch content change
+ */
+jQuery.fn.contentChange = function(callback){
+    var elms = jQuery(this);
+    elms.each(
+      function(i){
+        var elm = jQuery(this);
+        elm.data("lastContents", elm.html());
+        window.watchContentChange = window.watchContentChange ? window.watchContentChange : [];
+        window.watchContentChange.push({"element": elm, "callback": callback});
+      }
+    )
+    return elms;
+  }
+  setInterval(function(){
+    if(window.watchContentChange){
+      for( i in window.watchContentChange){
+        if(window.watchContentChange[i].element.data("lastContents") != window.watchContentChange[i].element.html()){
+          window.watchContentChange[i].callback.apply(window.watchContentChange[i].element);
+          window.watchContentChange[i].element.data("lastContents", window.watchContentChange[i].element.html())
+        };
+      }
+    }
+  },500);
+
+  
+//TODO create a new search box on the page for further searches
+  
+//TODO get rid of all the tabs (VAHAN)
+  
+//TODO ask Christian to change the z-index behaviour
+  
+//TODO change the event, when the dialog is popped up
+
+//TODO living science map should be in a separate module, and clicking the lsmap should just invoke the hook at that module
+  
+//TODO save the whole interface
+  
+//TODO focusing and key bindings
+  
+//TODO adding/removing new windows
+  
+//TODO use git
+  
+//TODO add skype button
+  
+//TODO change the query parsing scheme to really get the first and last name..
+  
+//TODO get rid of user_list.js

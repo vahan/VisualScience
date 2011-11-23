@@ -104,8 +104,20 @@ span.preselected {
 	vertical-align: middle;
 }
 
+#main-content .visualscience-user_list {
+	display: none;	
+}
 
+.visualscience-dialog {
+	width: 100%;
+	height: 100%;	
+}
 
+.watchProgress {
+	font-style: italic;
+	border-bottom: 1px solid black;
+	margin-bottom: 5px;	
+}
 /* Hides from IE-mac \*/
 * html .visualscience_menu ul {height: 1%;}
 .visualscience_menu ul {display: block;}

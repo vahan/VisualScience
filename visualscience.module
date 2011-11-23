@@ -84,7 +84,7 @@ function visualscience_menu() {
     'access callback' => TRUE,
     'weight' => 30,
   );
-   /*   
+  /*   
   $tabs = module_implements("science_title"); //Each module that wants to have a view in VisualScience must implement hook_science_view
   $weight = -1;
   foreach($tabs as $tab_name) {
@@ -135,20 +135,30 @@ function visualscience_menu() {
 function _visualscience_page($clear = true) {
   drupal_add_library('system', 'ui.autocomplete');
   drupal_add_library('system', 'ui.datepicker');
+  drupal_add_library('system', 'ui.dialog');
+  
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
-    
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.css');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.css');
+  
+  if (!isset($_SESSION["searchNumber"])) {
+  	$_SESSION["searchNumber"] = 0;
+  }
+  
   variable_set('visualscience_current_tab', 'user_list');
-  $output = drupal_render(drupal_get_form('visualscience_search_form'));
+  $output = "<div id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
+  $output .= drupal_render(drupal_get_form('visualscience_search_form'));
   $list = variable_get('visualscience_list');
   $output .= module_invoke('user_list', 'science_tab', $list);
-  
+  $output .= "</div></div>";
   if ($clear) {
     variable_del('visualscience_current_tab');
     variable_del('visualscience_list');
     variable_del('visualscience_search_table');
   }
-
   return $output;
 }
 
