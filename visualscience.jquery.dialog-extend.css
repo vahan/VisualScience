@@ -13,3 +13,5 @@
 .ui-dialog .ui-dialog-titlebar-max{ position: absolute; right: 23px; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-max span { display: block; margin: 1px; }
 .ui-dialog .ui-dialog-titlebar-max:hover, .ui-dialog .ui-dialog-titlebar-min:focus { padding: 0; }
+
+.ui-dialog .ui-dialog-title {white-space: nowrap; overflow: hidden};

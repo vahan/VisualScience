@@ -197,3 +197,15 @@ function visualscience_get_all_fields() {
 function p($obj) {
   drupal_set_message(print_r($obj, true));
 }
+/**
+ * function to load the searchform after 1 has already became a dialog
+ */
+function visualscience_searchform($node) {
+  $_SESSION["searchNumber"] = $_SESSION["searchNumber"] + 1;
+  $output = "<div class='visualscience-container' id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
+  $output .= drupal_render(drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]));
+  $list = variable_get('visualscience_list');
+  $output .= module_invoke('user_list', 'science_tab', $list, $_SESSION["searchNumber"]);
+  $output .= "</div></div>";
+  return $output;
+}

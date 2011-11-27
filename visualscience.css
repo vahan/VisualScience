@@ -62,7 +62,7 @@ span.preselected {
     vertical-align: center; 
 }
 
-#datepicker {
+.vs-datepicker {
 	position: absolute;
 	z-index: 1000;
 	display: none;

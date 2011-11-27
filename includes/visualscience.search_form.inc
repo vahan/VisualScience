@@ -9,7 +9,7 @@
  * 
  * Creates the search form
  */
-function visualscience_search_form($form, &$form_state) {
+function visualscience_search_form($form, &$form_state, $formId) {
   global $user;
   $def_value = "";
   //search load
@@ -20,12 +20,17 @@ function visualscience_search_form($form, &$form_state) {
     $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "user_list")+strlen("user_list"));
     drupal_goto($url.$url_combine."search=".urlencode($search->search));
   }
+  if (!isset($_SESSION["searchNumber"])) {
+  	$_SESSION["searchNumber"] = 0;
+  }
   if (isset($_GET['search'])) {
     $def_value = urldecode($_GET['search']);
     $form_state['values']['text'] = $def_value; //make the search be refined after loading
   }
-  //end of search load
   
+  $idSuffix = substr($formId, strpos($formId, "search_form_") + strlen("search_form_"));
+  
+  //end of search load
   $form_state['page_num'] = 1;
   $form['search'] = array(
     '#title' => t('Refine Search'),
@@ -37,22 +42,24 @@ function visualscience_search_form($form, &$form_state) {
   $form['search']['text'] = array(
     '#title' => t(''),
     '#type' => 'textfield',
+  	'#id' => 'visualscience-search-query-'.$idSuffix,
     '#ajax' => array(
       // #ajax has two required keys: callback and wrapper.
       // 'callback' is a function that will be called when this element changes.
       'callback' => 'visualscience_search_callback',
       // 'wrapper' is the HTML id of the page element that will be replaced.
-      'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-0",
+      'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-".$idSuffix,
       // There are also several optional keys - see ajax_example_autocheckboxes
       // below for details on 'method', 'effect' and 'speed' and
       // ajax_example_dependent_dropdown for 'event'.
       'event' => 'die', //bug 1, see visualscience.module. Kill all events to add only ENTER button
       'keypress' => TRUE, //Search when ENTER is pressed
       ),
+  	  '#attributes' => array('class' => array('visualscience-search-query')),
       '#default_value' => $def_value,
       '#maxlength' => 1024,
       '#prefix' => "<table id='search-box-table'><tr><td style='padding-right: 3px;'>",
-      '#suffix' => "<div id='datepicker'></div></td>"
+      '#suffix' => "<div id='vs-datepicker-".$idSuffix."' class='vs-datepicker'></div></td>"
   );
   
   $form['search']['search_button'] = array(
@@ -60,7 +67,7 @@ function visualscience_search_form($form, &$form_state) {
     '#type' => 'button',
     '#ajax' => array(
       'callback' => 'visualscience_search_callback',
-      'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-0",
+      'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-".$idSuffix,
     ),
 	'#submit' => array(),
 	'#validate' => array(),
@@ -156,14 +163,19 @@ function visualscience_search_form($form, &$form_state) {
  * @return					renderable array
  */
 function visualscience_search_callback($form, $form_state) {
-  $_GET["visualscience_q"] = "visualscience"; //TODO: what/why is this?
+  $_GET["q"] = "visualscience"; //TODO: what/why is this?
+  
+  // get the id of the searched textfield, to determine where to load the results
+  $fieldId = $form['search']['text']['#id'];
+  $idSuffix = substr($fieldId, strpos($fieldId, "query-") + strlen("query-"));
+  
   $text = trim($form_state['values']['text']);
   $table = $form_state['values']['table'];
   $list = visualscience_search($text, $table);
   $current_tab = variable_get("visualscience_current_tab");
   variable_set('visualscience_list', $list);
   
-  return module_invoke($current_tab, 'science_tab', $list);
+  return "<script type='text/javascript' class='.remove_after_loaded'>openDialog(".$idSuffix.")</script>".module_invoke($current_tab, 'science_tab', $list, $idSuffix);
 }
 
 /**

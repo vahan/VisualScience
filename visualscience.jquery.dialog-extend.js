@@ -2,8 +2,6 @@
  * Extending jquery dialog to add minimize functionality
  */
 
-// TODO handle onresize events of the window in case of maximized windows
-
 (function($){
 	var _init = $.ui.dialog.prototype._init;
  
@@ -100,6 +98,8 @@
 			this.uiDialog.css({ 'top': this.options.originalTop,  marginLeft: 0, marginTop: 0, 'left': this.options.originalLeft });
 			//restore the orignal dimensions
 			this.uiDialog.css({width: this.options.originalWidth, height:this.options.originalHeight});
+			this.uiDialog.find(".ui-dialog-content").css({width: "auto", height: this.options.originalHeight - 50});
+			this.uiDialog.find(".ui-dialog-title").css("width",this.options.originalWidth - 90);				
 			//show the dialog content
 			this.element.show();
 		 
@@ -155,7 +155,7 @@
 			this.uiDialog.animate({width: width, height: this.uiDialogTitlebar.height() + 14},200);
 			//this.uiDialog.css({position:"fixed", right:0, left:"auto", bottom: -5, top:"auto"});
 			//collapse dialog
-									
+			this.uiDialog.find(".ui-dialog-title").css("width",width - 60);				
 			//make sure the minimized windows are ordered correctly
 			orderMinimized(width);
 			//swap buttons to show restore
@@ -173,7 +173,7 @@
 			this.uiDialog.draggable( "option", "disabled", true );
 			this.uiDialog.removeClass("ui-state-disabled");
 			this.resizeableHandle.hide();
-		 
+					 
 			//Store the original height/width
 			this.options.originalWidth = this.options.width;
 			this.options.originalHeight = this.options.height;
@@ -190,6 +190,9 @@
 			
 			width = $(document).width() - 20;
 			height = $(window).height() - 60;
+
+			this.uiDialog.find(".ui-dialog-content").css({width: "auto", height: height - 50});
+			this.uiDialog.find(".ui-dialog-title").css("width",width - 60);				
 			//Pratik: Don't think we need this anymore: hide the content
 			//this.element.hide();						
 			//animate to the width, and move to the corner
@@ -229,9 +232,11 @@ function getMinimizedWidth() {
  */
 function orderMinimized(width) {
 	var right = 10;
-	jQuery(".dialogs-minimized").each(function(){2
+	jQuery(".dialogs-minimized").each(function(){
 		var t = jQuery(this);
-		t.css({position: 'fixed', bottom: -5, top: 'auto', left: 'auto', right: right, width: width});
+		var height = t.find(".ui-dialog-titlebar").height() + 14;
+		t.find(".ui-dialog-title").css("width", width - 60);
+		t.css({position: 'fixed', bottom: -5, top: 'auto', left: 'auto', right: right, width: width, height: height});
 		right += width + 5;
 	});
 }
