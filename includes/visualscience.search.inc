@@ -29,9 +29,26 @@ function visualscience_search($search, $table="users") {
   $id = $table[0]."id";
   $list = array();
   //visualscience_search_query($search);
-  $result = db_query(visualscience_search_query($search, $table, $id))->fetchAll();
+  $operator = "";
+  $result = db_query(visualscience_search_query($search, $table, $id, $operator))->fetchAll();
   foreach ($result as $obj) {
     $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
+  }
+  //TODO: remove the next if as soon as you have normal SQL for role search
+  if (strtolower($operator) == "and")
+  {
+    $newlist = array();
+    foreach ($list as $k1=>$v1)
+    {
+      foreach ($list as $k2 => $v2)
+      {
+        if ($k1 == $k2 || in_array($v1, $newlist))
+          continue;
+        if ($v1->uid == $v2->uid)
+          $newlist[$k1] = $v1;
+      }
+    }
+    $list = $newlist;
   }
   return $list;
 }
@@ -43,10 +60,13 @@ function visualscience_search($search, $table="users") {
  * @return					sql query of the search
  * 
  * TODO: inner not() is not handled properly
+ * TODO: remove &$op as soon as you have normal SQL for role search
  */
-function visualscience_search_query($search, $table, $id) {
+function visualscience_search_query($search, $table, $id, &$op) {
   if ($search === "*") return "SELECT $table.$id FROM {".$table."}";
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
+  $str = str_replace(array(" && ", " & "), " and ", $str); //for using &&, & as 'and' logical operators
+  $str = str_replace(array(" || ", " | "), " or ", $str); //for using |, || as 'or' logical operators
   $query = "";
   $field_names = array();
   $field_number = 0; //the incremental number of each searched user created field
@@ -74,7 +94,7 @@ function visualscience_search_query($search, $table, $id) {
       if (strpos($column, ")") === 0) { //after not(..) the closing braket is left with the next column, so it must be removed
         $column = trim(substr($column, 1));
       }
-      do { //handle the operators at the begining of the column. Cycle need for cases like AND NOT(..)
+      do { //handle the operators at the begining of the column. Cycle is needed for cases like AND NOT(..)
         $starting_operator = "";
         foreach ($operators as $op) { //check if $column starts with an operator
           if (stripos($column, $op) === 0) $starting_operator = $op;
@@ -120,9 +140,16 @@ function visualscience_search_query($search, $table, $id) {
           if ($inner_str[$i] === " ") //check the end of word
           {
             //p("space found!");
-            if (in_array($word, visualscience_get_operators())) { //if the current word is a preserved operator (and|or|not)
+            if (in_arrayi($word, visualscience_get_operators())) { //if the current word is a preserved operator (and|or|not)
               //p($word." is an operator!");
               $operator = $word;
+              //TODO: Remove the next shitty lines as soon as you have a normal SQL for role search 
+              $op = $operator;
+              if (strstr($column, "role") && strtolower($operator) == "and")
+              {
+                $op = "and";
+                $operator = "OR";
+              }
               $query .= $column."'%".trim($value)."%'  ".strtoupper($operator)." "; //add to the query: column=value OPERATOR
               $value = ""; //start a new value after operators
             }

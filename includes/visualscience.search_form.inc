@@ -42,7 +42,8 @@ function visualscience_search_form($form, &$form_state) {
       // 'callback' is a function that will be called when this element changes.
       'callback' => 'visualscience_search_callback',
       // 'wrapper' is the HTML id of the page element that will be replaced.
-      'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-0",
+      //'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-list",
+      'wrapper' => variable_get("visualscience_current_tab")."-list",
       // There are also several optional keys - see ajax_example_autocheckboxes
       // below for details on 'method', 'effect' and 'speed' and
       // ajax_example_dependent_dropdown for 'event'.
@@ -60,7 +61,8 @@ function visualscience_search_form($form, &$form_state) {
     '#type' => 'button',
     '#ajax' => array(
       'callback' => 'visualscience_search_callback',
-      'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-0",
+      //'wrapper' => "visualscience-".variable_get("visualscience_current_tab")."-list",
+      'wrapper' => variable_get("visualscience_current_tab")."-list",
     ),
 	'#submit' => array(),
 	'#validate' => array(),
@@ -156,14 +158,14 @@ function visualscience_search_form($form, &$form_state) {
  * @return					renderable array
  */
 function visualscience_search_callback($form, $form_state) {
-  $_GET["visualscience_q"] = "visualscience"; //TODO: what/why is this?
+  $_GET["q"] = "visualscience"; //TODO: -what/why is this? -Magic!
   $text = trim($form_state['values']['text']);
   $table = $form_state['values']['table'];
   $list = visualscience_search($text, $table);
   $current_tab = variable_get("visualscience_current_tab");
   variable_set('visualscience_list', $list);
   
-  return module_invoke($current_tab, 'science_tab', $list);
+  return module_invoke($current_tab, 'get_user_list', $list);
 }
 
 /**

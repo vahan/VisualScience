@@ -192,6 +192,16 @@ function visualscience_get_all_fields() {
 
 /**
  * 
+ * Case insensitive in_array
+ * @param $needle
+ * @param $haystack
+ */
+function in_arrayi($needle, $haystack) {
+  return in_array(strtolower($needle), array_map('strtolower', $haystack));
+}
+
+/**
+ * 
  * tired of typing the long line everytime
  */
 function p($obj) {
