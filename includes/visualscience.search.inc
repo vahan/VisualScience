@@ -28,13 +28,13 @@ function visualscience_search($search, $table="users") {
   variable_set('visualscience_search_table', $table);
   $id = $table[0]."id";
   $list = array();
-  //visualscience_search_query($search);
   $operator = "";
+  //visualscience_search_query($search);
   $result = db_query(visualscience_search_query($search, $table, $id, $operator))->fetchAll();
   foreach ($result as $obj) {
     $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
   }
-  //TODO: remove the next if as soon as you have normal SQL for role search
+  //TODO: remove the next as soon as you have normal SQL for role search
   if (strtolower($operator) == "and")
   {
     $newlist = array();
@@ -143,7 +143,7 @@ function visualscience_search_query($search, $table, $id, &$op) {
             if (in_arrayi($word, visualscience_get_operators())) { //if the current word is a preserved operator (and|or|not)
               //p($word." is an operator!");
               $operator = $word;
-              //TODO: Remove the next shitty lines as soon as you have a normal SQL for role search 
+              //TODO: Remove the next shitty lines as soon as you have a normal SQL for role search
               $op = $operator;
               if (strstr($column, "role") && strtolower($operator) == "and")
               {

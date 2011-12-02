@@ -75,6 +75,15 @@ function visualscience_menu() {
     'access arguments' => array('access visualscience'),
     'type' => MENU_CALLBACK,
   );  
+
+  // Autocompletion Url
+  $items['visualscience/searchform'] = array(
+    'title' => 'Visual Science',
+    'page callback' => 'visualscience_searchform',
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_CALLBACK,
+  );  
+  
   
   $items['visualscience'] = array(
     'title' => 'Visual Science',
@@ -127,6 +136,21 @@ function visualscience_menu() {
 
   return $items;
 }
+/**
+ * 
+ * Function to take care of having multiple instances of the same form on the page
+ * @param $form_id the id of the form
+ * @param $args arguments
+ */
+function visualscience_forms($form_id, $args) {
+  if (strpos($form_id, 'visualscience_search_form') !== FALSE) {
+      $forms[$form_id] = array(
+        'callback' => 'visualscience_search_form',
+      	'callback arguments' => array($form_id),
+      );
+      return $forms;
+   }
+}
 
 /**
  * 
@@ -139,21 +163,24 @@ function visualscience_page($clear = true) {
   
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.js');
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.css');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.css');
-  
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.css');
+
   if (!isset($_SESSION["searchNumber"])) {
   	$_SESSION["searchNumber"] = 0;
   }
   
   variable_set('visualscience_current_tab', 'user_list');
-  $output = "<div id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
-  $output .= drupal_render(drupal_get_form('visualscience_search_form'));
+  $output = "<div class='visualscience-container' id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
+  $output .= drupal_render(drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]));
   $list = variable_get('visualscience_list');
-  $output .= module_invoke('user_list', 'science_tab', $list);
-  $output .= "</div></div>";
+//  if (isset($_GET['search'])) {
+//  	$output .= "<script type='text/javascript' class='.remove_after_loaded'>openDialog(".$_SESSION["searchNumber"].")</script>";
+//  }
+  $output .= module_invoke('user_list', 'science_tab', $list, $_SESSION["searchNumber"]);
+  $output .= "<span id='activate_actions'></span></div></div>";
   if ($clear) {
     variable_del('visualscience_current_tab');
     //variable_del('visualscience_list');
@@ -179,16 +206,50 @@ function visualscience_page($clear = true) {
  * 
  * Enter description here ...
  */
-/*function visualscience_theme() {
+function visualscience_theme() {
   return array(
-    'visualscience_searchbox' => array(
-      'arguments' => array('content', NULL),
-    ),
-    'visualscience_menu' => array(
-      'arguments' => array(array()),
-    ),
+    'visualscience' => array(
+      'variables' => array('output', NULL),
+  	  'template' => 'visualscience',
+    )
   );
-}*/
+}
 
+//function theme_default_out($variables) {
+//	$node = $variables['output'];
+//	return $node;
+//}
+
+function visualscience_preprocess_page(&$vars)
+{
+    if (isset($_GET['ajax']) && $_GET['ajax'] == 1)
+    {
+        $vars['theme_hook_suggestions'][] = 'page__ajax';
+    }
+}
+
+/**
+ * Implements hook_theme_registry_alter()
+**/
+function visualscience_theme_registry_alter(&$theme_registry) {
+  $mod_path = drupal_get_path('module', 'mymodule');
+  $theme_registry_copy = $theme_registry;       // munge on a copy
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'pow', $mod_path);
+  $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
+  $hooks = array('node');
+  foreach ($hooks as $h) {
+    _visualscience_insert_after_first_element($theme_registry[$h]['theme paths'], $mod_path);
+  }
+}
+
+/**
+ * Helper function for re-ordering arrays (needed by theme_registry_alter)
+*/
+function _visualscience_insert_after_first_element(&$a, $element) {
+  if(is_array($a)) {
+    $first_element = array_shift($a);
+    array_unshift($a, $first_element, $element);
+  }
+}
 
 ?>

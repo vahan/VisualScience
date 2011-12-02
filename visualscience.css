@@ -62,7 +62,7 @@ span.preselected {
     vertical-align: center; 
 }
 
-#datepicker {
+.vs-datepicker {
 	position: absolute;
 	z-index: 1000;
 	display: none;
@@ -104,7 +104,7 @@ span.preselected {
 	vertical-align: middle;
 }
 
-#main-content .visualscience-user_list {
+#main .visualscience-user_list {
 	display: none;	
 }
 
@@ -113,10 +113,31 @@ span.preselected {
 	height: 100%;	
 }
 
+.visualscience-user_list {
+	overflow: auto;
+}
+
 .watchProgress {
 	font-style: italic;
 	border-bottom: 1px solid black;
 	margin-bottom: 5px;	
+}
+
+.mapcontainer td, .mapcontainer td:last-child {
+/*	border: none;
+	border-style:hidden;
+	border: 0;
+	border-right: 0;
+	border-top: 0;
+	border-left: 0;*/
+	border: 0px solid red;
+	border-right: 0;
+	border:0;
+	padding: 0;	
+}
+
+.mapcontainer td:first-child {
+	border-left: 0;	
 }
 /* Hides from IE-mac \*/
 * html .visualscience_menu ul {height: 1%;}
