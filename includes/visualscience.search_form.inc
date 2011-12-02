@@ -16,8 +16,8 @@ function visualscience_search_form($form, &$form_state, $formId) {
   if (isset($_GET['s'])) {
     $search = visualscience_get_search($_GET['s']);
     if ($search->uid != $user->uid) exit(0); //Security check =)
-    $url_combine = visualscience_is_clean_url() ? "?" : "&";
-    $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "user_list")+strlen("user_list"));
+    $url_combine = variable_get("clean_url") ? "?" : "&";
+    $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "visualscience")+strlen("visualscience"));
     drupal_goto($url.$url_combine."search=".urlencode($search->search));
   }
   if (!isset($_SESSION["searchNumber"])) {
@@ -134,8 +134,7 @@ function visualscience_search_form($form, &$form_state, $formId) {
   foreach ($searches as $search) {
     $options[$search->name] = t($search->name);
   }
-  
-  $is_clean_url = visualscience_is_clean_url() ? 1 : 0;
+  $is_clean_url = variable_get("clean_url");
   
   $form['search']['save']['load'] = array(
     '#type' => 'select',

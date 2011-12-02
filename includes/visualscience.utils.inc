@@ -175,14 +175,6 @@ try {
   }
 }
 
-/** 
- * 
- * @return  true if Clean Url is enables, otherwise false
- */
-function visualscience_is_clean_url() {
-  return strpos(request_uri(), "q=userlist") === FALSE;
-}
-
 /**
  * returns an array containing all fields
  */
@@ -190,13 +182,6 @@ function visualscience_get_all_fields() {
   return field_info_instances('user', 'user');
 }
 
-/**
- * 
- * tired of typing the long line everytime
- */
-function p($obj) {
-  drupal_set_message(print_r($obj, true));
-}
 /**
  * function to load the searchform after 1 has already became a dialog
  */
@@ -206,6 +191,25 @@ function visualscience_searchform($node) {
   $output .= drupal_render(drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]));
   $list = variable_get('visualscience_list');
   $output .= module_invoke('user_list', 'science_tab', $list, $_SESSION["searchNumber"]);
-  $output .= "</div></div>";
+  // the span is put to activate the actions for the newly loaded textfield
+  $output .= "<span id='activate_actions'></span></div></div>";
   return $output;
+}
+
+/**
+ *
+ * Case insensitive in_array
+ * @param $needle
+ * @param $haystack
+ */
+function in_arrayi($needle, $haystack) {
+ return in_array(strtolower($needle), array_map('strtolower', $haystack));
+}
+
+/**
+ * 
+ * tired of typing the long line everytime
+ */
+function p($obj) {
+  drupal_set_message(print_r($obj, true));
 }

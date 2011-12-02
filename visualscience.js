@@ -21,8 +21,7 @@ var autocompleteCurrentTypeIsTheSame = true;
 // The insertion position for the autocomplete
 var autocompleteCaretPosition = 0;
 
-// the number of the current open search dialog
-var currentDialogNumber = 0;
+var skypeListParticipants = new Array();
 
 // The AND and OR signs
 // TODO for now works only for the first sign in the array. exend it so that it works for all of them
@@ -32,201 +31,22 @@ var orSign = " || ";
 var AndRegEx = new RegExp("( AND )","ig")
 var OrRegEx = new RegExp("( OR )","ig")
 
+var checkActionsInterval;
+
 jQuery(document).ready(function() {
-		
-	jQuery("input.visualscience-search-query").bind("keyup", function(e) {
-		var code = (e.keyCode ? e.keyCode : e.which);
-		var thisId = jQuery(this).attr("id");
-		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
-		// TODO for FF4 the keycode is somehow 61. Correct this// Turns out that 61 is the keycode for + in other browsers
-		// Now would put "[" if you type bot + and =
-		var searchType = getSearchType(jQuery(this).val().substring(0, getCaretPosition(jQuery(this)[0])),getCaretPosition(jQuery(this)[0]));
-		// TODO check for the browser. Somehow the keycode is 107 for a 3.6 version of FF
-		if(code == 187 || code == 61 || code == 107) {
-			jQuery(this).val(jQuery(this).val() + "[");
-		} if (code == 27 || searchType != "date") {
-			jQuery("#vs-datepicker-"+dialogNumber).css("display","none");			
-		} else {
-			jQuery("#vs-datepicker-"+dialogNumber).css("display","block");			
-		}
-	});
+		activateEventHandlers();
+		setAutocompletes();
 	
-//	jQuery("input#edit-text").parent().css("margin-bottom","0px");
-	jQuery("input.visualscience-search-query").bind("keypress", function(e) {
-		var code = (e.keyCode ? e.keyCode : e.which);
-		var thisId = jQuery(this).attr("id");
-		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
-		// If space is pressed, and if there is an item selected, check/uncheck the checkbox next to it
-		if (code == 32) {
-			var autocomplete = jQuery(this).autocomplete("widget");
-			var autocompleteOpen = false;
-			if (autocomplete.css("display") == "block") {
-				var selectedCheckbox = autocomplete.find("a#ui-active-menuitem").find("input");
-				var selectedValue = autocomplete.find("a#ui-active-menuitem").find(".autocomplete-value");
-				if (selectedCheckbox.length > 0) {
-					if (selectedCheckbox.attr("checked") == false) {
-						selectedCheckbox.attr("checked", true);	
-						selectedValue.addClass("selected").removeClass("not-selected");
-						autocompleteCheckedItems[selectedValue.html()] = selectedValue.html();
-					} else {
-						selectedCheckbox.attr("checked", false);								
-						selectedValue.addClass("not-selected").removeClass("selected");
-						autocompleteCheckedItems[selectedValue.html()] = "";
-					}
-					return false;					
-				}
-			};
-		} else if (code == 13) {
-			jQuery("#vs-datepicker-"+dialogNumber).css("display","none");			
-		}
-		// Check for the search type
-	}).bind("click", function(e) {
-	});
-	
-	jQuery(".vs-datepicker").datepicker({
-			onSelect: function(dateText, inst) {
-				var thisId = jQuery(this).attr("id");
-				var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
-				insertResult(dateText, document.getElementById("visualscience-search-query-"+dialogNumber));
-				jQuery(this).css("display", "none");
-				return false;
-			},
-			dateFormat: "dd-mm-yy",
-			changeMonth: true,
-			changeYear: true,
-	});
-
-	jQuery("input.visualscience-search-query").autocomplete({
-		minLength: 0,
-	    source: function(request, response) {
-	    	var inputBox = jQuery(this.element);
-	    	autocompleteRowCount = 0;
-	    	var value = inputBox.val().replace(OrRegEx, orSign).replace(AndRegEx, andSign);
-	    	
-	    	autocompleteCaretPosition = getCaretPosition(inputBox[0]);	    		
-	    		
-	    	var valBefore = value.substring(0, autocompleteCaretPosition);
-
-	    	request.term = getTerm(valBefore);
-    		request.search_type = getSearchType(valBefore, autocompleteCaretPosition);
-	    	if (request.search_type == "date") {
-	    		jQuery("#datepicker").css("display","block");
-	    	} else {
-	    		// If the first autocomplete cycle
-	    		if (autocompletePreviousType == null) {
-	    			// No preselected results should be loaded
-	    			autocompleteCurrentTypeIsTheSame = false;
-				// If the types are not the same
-	    		} else if (autocompletePreviousType != request.search_type) {
-					// No preselected results loaded
-					autocompleteCurrentTypeIsTheSame = false;
-					// And the list should be empty now
-					autocompleteCheckedItems = new Array();
-	    		} else {
-				// Otherwise, if they are the same, let the preselected results be loaded
-	    			autocompleteCurrentTypeIsTheSame = true;
-	    		}
-			
-	    		// Set the previous type equal to the current type
-	    		autocompletePreviousType = request.search_type;
-
-	    		var urlAdd = "";
-	    		// TODO find a better solution
-	    		// checking if clean urls are used or not
-	    		if (location.href.indexOf("?q=") != -1) {
-	    			urlAdd = "?q=visualscience/";
-	    		}
-	    	
-	    		var url = location.href.substring(0,location.href.lastIndexOf("?q=")) + urlAdd + "autocomplete/" + request.term + "/" + request.search_type;
-	    	
-	    		jQuery.ajax({
-	    		  url: url,
-	    		  data: null,
-	    		  success: function( data, status, xhr ) {
-	    			// Adding/moveing the data from autocompleteCheckedItems to the very end
-	    			var dataArray = eval(data);
-	    			// Check if this autocompletion type is the same or not
-	    			// If not the same, we do not load any preselected results
-	    			if (autocompleteCurrentTypeIsTheSame) {
-	    				// For each preselected item
-	    				for (item in autocompleteCheckedItems) {
-	    					// And if it was not already unchecked before
-	    					if (autocompleteCheckedItems[item] != "") {
-	    						// Compare it with the current results
-	    						for (var i = 0; i < dataArray.length; i++) {
-		    	    				// And see if it is in the current results
-	    							if (dataArray[i] == autocompleteCheckedItems[item]) {
-	    								// If yes, remove that value from the current results
-	    								dataArray.splice(i, 1);
-	    							}
-	    						}
-	    						// And put it at the end as a preselected result
-	    						dataArray.push(item);
-	    					}
-	    				}
-	    			}
-					response( dataArray );
-	    		  }
-
-	    		});
-	    	}
-	    },
-	    focus: function( request, response ) {
-	    	// The function that is fired when the cursor goes over 
-	    	// and item in a select box
-			return false;
-		},
-		open: function (request, responce) {			
-			jQuery(this.element).autocomplete("widget").find("input.selected").attr("checked", true);
-			jQuery(this.element).autocomplete("widget").find("input.not-selected").attr("checked", false);
-		},
-		select: function( request, response ) {
-			var inputVal = ""
-			for (item in autocompleteCheckedItems) {
-				if (autocompleteCheckedItems[item] != "") {
-					inputVal += item + andSign;
-				}
-			}
-			if (inputVal == "") {
-	    		inputVal = response.item.value;
-			} else {
-				inputVal = inputVal.substring(0, inputVal.length - andSign.length);
-			}
-			insertResult(inputVal, this);
-			// Insert Result
-			return false;
-		}
-	}).data( "autocomplete" )._renderItem = function( ul, item ) {
-		var inputBox = jQuery(this.element);
-		var itemValue = item.value;
-		// If the values in not in the previously already selected values
-	    var valBefore = inputBox.val().substring(0, getCaretPosition(inputBox[0]));
-	    var term = getTerm(valBefore);
-		
-	    var regex = new RegExp("("+term+")","ig");
-	    if (term != "") {
-	    	itemValue = itemValue.replace(regex,'<span class="highlight">$1</span>');
-	    }
-	    // Here the list is built up, and any html can be insterted
-	    autocompleteRowCount % 2 == 0 ? autocompleteRowCount = 1 : autocompleteRowCount = 0;
-	    
-	    // If the value was already selected in the previous suggestions box, add it with the selected classname
-	    var selectedClass = "selected";
-	    var selectedDecorationClass = "preselected";
-	    if (autocompleteCheckedItems[item.value] ===  undefined || autocompleteCheckedItems[item.value] == "") {
-	    	selectedClass = "not-selected";
-	    	selectedDecorationClass = "not-preselected";
-	    }
-	    
-	    return jQuery( "<li></li>" )
-	    	.data( "item.autocomplete", item )
-	    	.append( "<a onclick='return false;'><span class='autocomplete_row_" + autocompleteRowCount + " " + selectedDecorationClass
-				+ "'><input type='checkbox' class='" + selectedClass + "' />&nbsp;" + itemValue 
-				+ "</span><span class='autocomplete-value " + selectedClass + "' style='display: none;'>" 
-				+ item.value + "</span></a>" )
-			.appendTo( ul );
-	};
+		checkActionsInterval = setInterval(function() {checkActions()},300);
 });
+
+function checkActions() {
+	if (jQuery("#activate_actions").length > 0) {
+		var parentId = jQuery("#activate_actions").parent().parent().attr("id");
+		var dialogNumber = parentId.substring(parentId.lastIndexOf("-")+"-".length,parentId.length);
+		jQuery("#activate_actions").remove();
+	}
+}
 
 /**
  * getTerm(inputString, caretPosition)
@@ -407,14 +227,16 @@ function valueInArray(array, value) {
  * Function that opens the dialog given the content
  * @param content the content of the dialog
  */
-function openDialog(containerId) {
-		setVisualScienceDialogs(containerId);
-		// Remove the script tag that was loaded to call this function
-		jQuery(".remove_after_loaded").remove();
+function openDialog(dialogNumber) {
+	if (!jQuery("#visualscience-container-"+dialogNumber).hasClass('ui-dialog-content')) {
+		jQuery("#visualscience-search-query-"+dialogNumber).autocomplete("destroy");			
+	}
+	setVisualScienceDialogs(dialogNumber);
+	jQuery(".remove_after_loaded").remove();
 }
 
 /**
- * setDialogs
+ * setVisualScienceDialogs
  * @param dialog the dialog id to set. If null, sets by classname
  */
 function setVisualScienceDialogs(dialogNumber) {
@@ -496,30 +318,300 @@ function lsMapOpen(btn) {
 	mainLayout.open("south");
 	
 	lsSearch(dialogNumber);
+//	jQuery("#visualscience-search-query-"+dialogNumber).autocomplete("destroy");
+//	setAutocompletes();
 }
 
+/**
+ * function to execute when the button to show the map is clicked
+ * @param btn the button objcontentChangeect
+ */
+function skypeOpen(btn) {
+	// Checking to see if skype stuff is loaded
+	if (globalContactList) {
+		var thisId = btn.id;
+		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+		skypeListParticipants[dialogNumber] = "";
+		var userListCheckboxes = jQuery("#user_list-list-"+dialogNumber).find(':checkbox:checked').each(function(index){
+			// TODO handle this part to have a better search quiery. Look for the skypename
+			var skypename = jQuery(this).parent().parent().next().next().next().next().next().next().next().text();
+			if (skypename != "") {
+				skypeListParticipants[dialogNumber] += skypename;
+				skypeListParticipants[dialogNumber] += ",";
+			}
+		});
+		var zIndex = 0;
+		jQuery(".dialogs-maximized").each(function() {
+			if (jQuery(this).css("zIndex") > zIndex) {
+				zIndex = jQuery(this).css("zIndex");
+			}
+		});
+		// If there are users with a given skypename among them
+		if (skypeListParticipants[dialogNumber] != "") {
+			skypeListParticipants[dialogNumber] = skypeListParticipants[dialogNumber].substring(0, skypeListParticipants[dialogNumber].length - 1);
+			var dialog = getDialogByParticipants(skypeListParticipants[dialogNumber]);
+			jQuery(dialog).dialog('option',"zIndex", zIndex);
+			jQuery(dialog).dialog('open');			
+		}
+	} else {
+		alert("please login to skype!");
+	}
+}
+/**
+ * Function to activete event handlers for searchbox
+ * @param idSuffix give "" for all, and a number for a specific searchbox
+ */
+function activateEventHandlers() {
+	jQuery(".vs-datepicker").datepicker({
+			onSelect: function(dateText, inst) {
+				var thisId = jQuery(this).attr("id");
+				var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+				insertResult(dateText, document.getElementById("visualscience-search-query-"+dialogNumber));
+				jQuery(this).css("display", "none");
+				return false;
+			},
+			dateFormat: "dd-mm-yy",
+			changeMonth: true,
+			changeYear: true,
+	});
+
+	jQuery(".visualscience-search-query").bind("keyup.autocomplete", function(e) {
+		var code = (e.keyCode ? e.keyCode : e.which);
+		var thisId = jQuery(this).attr("id");
+		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+		// TODO for FF4 the keycode is somehow 61. Correct this// Turns out that 61 is the keycode for + in other browsers
+		// Now would put "[" if you type bot + and =
+		var searchType = getSearchType(jQuery(this).val().substring(0, getCaretPosition(jQuery(this)[0])),getCaretPosition(jQuery(this)[0]));
+		// TODO check for the browser. Somehow the keycode is 107 for a 3.6 version of FF
+		if(code == 187 || code == 61 || code == 107) {
+			jQuery(this).val(jQuery(this).val() + "[");
+		} if (code == 27 || searchType != "date") {
+			jQuery("#vs-datepicker-"+dialogNumber).css("display","none");			
+		} else {
+			jQuery("#vs-datepicker-"+dialogNumber).css("display","block");			
+		}
+	});
+	
+//	jQuery("input#edit-text").parent().css("margin-bottom","0px");
+	jQuery(".visualscience-search-query").bind("keypress.autocomplete", function(e) {
+		var inputBox = jQuery(this);
+		var code = (e.keyCode ? e.keyCode : e.which);
+		var thisId = jQuery(this).attr("id");
+		var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+		// If space is pressed, and if there is an item selected, check/uncheck the checkbox next to it
+		if (code == 32) {
+			var autocomplete = jQuery(this).autocomplete("widget");
+			console.debug(autocomplete);
+			var autocompleteOpen = false;
+			if (autocomplete.css("display") == "block") {
+				var selectedCheckbox = autocomplete.find("a#ui-active-menuitem").find("input");
+				var selectedValue = autocomplete.find("a#ui-active-menuitem").find(".autocomplete-value");
+				if (selectedCheckbox.length > 0) {
+					if (selectedCheckbox.attr("checked") == false) {
+						selectedCheckbox.attr("checked", true);	
+						selectedValue.addClass("selected").removeClass("not-selected");
+						autocompleteCheckedItems[selectedValue.html()] = selectedValue.html();
+					} else {
+						selectedCheckbox.attr("checked", false);								
+						selectedValue.addClass("not-selected").removeClass("selected");
+						autocompleteCheckedItems[selectedValue.html()] = "";
+					}
+					return false;					
+				}
+			};
+		} else if (code == 13) {
+			jQuery("#vs-datepicker-"+dialogNumber).css("display","none");			
+		}
+		// Check for the search type
+	});
+}
+
+/**
+ * Function to set autocomplete(s)
+ * @param idSuffix "" for all, specify a number for a specific dialog
+ */
+function setAutocompletes() {
+	jQuery(".visualscience-search-query").each(function(index, element) {
+		// Check to see if it already doesnt have an autocomplete attached
+		if (!jQuery(this).autocomplete("widget").hasClass("ui-autocomplete-input")) {
+			console.debug("setting autocomplete: " + jQuery(this).attr("id"));
+		jQuery(this).autocomplete({
+			minLength: 0,
+		    source: function(request, response) {
+		    	var inputBox = jQuery(this.element);
+		    	var thisId = inputBox.attr("id");
+		    	var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+		    	autocompleteRowCount = 0;
+		    	var value = inputBox.val().replace(OrRegEx, orSign).replace(AndRegEx, andSign);
+		    	
+		    	autocompleteCaretPosition = getCaretPosition(inputBox[0]);	    		
+		    		
+		    	var valBefore = value.substring(0, autocompleteCaretPosition);
+
+		    	request.term = getTerm(valBefore);
+	    		request.search_type = getSearchType(valBefore, autocompleteCaretPosition);
+		    	if (request.search_type == "date") {
+		    		jQuery("#vs-datepicker-"+dialogNumber).css("display","block");
+		    	} else {
+		    		// If the first autocomplete cycle
+		    		if (autocompletePreviousType == null) {
+		    			// No preselected results should be loaded
+		    			autocompleteCurrentTypeIsTheSame = false;
+					// If the types are not the same
+		    		} else if (autocompletePreviousType != request.search_type) {
+						// No preselected results loaded
+						autocompleteCurrentTypeIsTheSame = false;
+						// And the list should be empty now
+						autocompleteCheckedItems = new Array();
+		    		} else {
+					// Otherwise, if they are the same, let the preselected results be loaded
+		    			autocompleteCurrentTypeIsTheSame = true;
+		    		}
+				
+		    		// Set the previous type equal to the current type
+		    		autocompletePreviousType = request.search_type;
+
+		    		var urlAdd = "";
+		    		// TODO find a better solution
+		    		// checking if clean urls are used or not
+		    		if (location.href.indexOf("?q=") != -1) {
+		    			urlAdd = "?q=visualscience/";
+		    		}
+		    	
+		    		var url = location.href.substring(0,location.href.lastIndexOf("?q=")) + urlAdd + "autocomplete/" + request.term + "/" + request.search_type;
+		    	
+		    		jQuery.ajax({
+		    		  url: url,
+		    		  data: null,
+		    		  success: function( data, status, xhr ) {
+		    			// Adding/moveing the data from autocompleteCheckedItems to the very end
+		    			var dataArray = eval(data);
+		    			// Check if this autocompletion type is the same or not
+		    			// If not the same, we do not load any preselected results
+		    			if (autocompleteCurrentTypeIsTheSame) {
+		    				// For each preselected item
+		    				for (item in autocompleteCheckedItems) {
+		    					// And if it was not already unchecked before
+		    					if (autocompleteCheckedItems[item] != "") {
+		    						// Compare it with the current results
+		    						for (var i = 0; i < dataArray.length; i++) {
+			    	    				// And see if it is in the current results
+		    							if (dataArray[i] == autocompleteCheckedItems[item]) {
+		    								// If yes, remove that value from the current results
+		    								dataArray.splice(i, 1);
+		    							}
+		    						}
+		    						// And put it at the end as a preselected result
+		    						dataArray.push(item);
+		    					}
+		    				}
+		    			}
+						response( dataArray );
+		    		  }
+
+		    		});
+		    	}
+		    },
+		    focus: function( request, response ) {
+		    	// The function that is fired when the cursor goes over 
+		    	// and item in a select box
+				return false;
+			},
+			open: function (request, response) {
+				jQuery(this).autocomplete("widget").find("input.selected").attr("checked", true);
+				jQuery(this).autocomplete("widget").find("input.not-selected").attr("checked", false);
+			},
+			select: function( request, response ) {
+				var inputVal = ""
+				for (item in autocompleteCheckedItems) {
+					if (autocompleteCheckedItems[item] != "") {
+						inputVal += item + andSign;
+					}
+				}
+				if (inputVal == "") {
+		    		inputVal = response.item.value;
+				} else {
+					inputVal = inputVal.substring(0, inputVal.length - andSign.length);
+				}
+				insertResult(inputVal, this);
+				// Insert Result
+				return false;
+			}
+		}).data( "autocomplete" )._renderItem = function( ul, item ) {
+			var inputBox = jQuery(this.element);
+			var itemValue = item.value;
+			// If the values in not in the previously already selected values
+		    var valBefore = inputBox.val().substring(0, getCaretPosition(inputBox[0]));
+		    var term = getTerm(valBefore);
+			
+		    var regex = new RegExp("("+term+")","ig");
+		    if (term != "") {
+		    	itemValue = itemValue.replace(regex,'<span class="highlight">$1</span>');
+		    }
+		    // Here the list is built up, and any html can be insterted
+		    autocompleteRowCount % 2 == 0 ? autocompleteRowCount = 1 : autocompleteRowCount = 0;
+		    
+		    // If the value was already selected in the previous suggestions box, add it with the selected classname
+		    var selectedClass = "selected";
+		    var selectedDecorationClass = "preselected";
+		    if (autocompleteCheckedItems[item.value] ===  undefined || autocompleteCheckedItems[item.value] == "") {
+		    	selectedClass = "not-selected";
+		    	selectedDecorationClass = "not-preselected";
+		    }
+		    
+		    return jQuery( "<li></li>" )
+		    	.data( "item.autocomplete", item )
+		    	.append( "<a onclick='return false;'><span class='autocomplete_row_" + autocompleteRowCount + " " + selectedDecorationClass
+					+ "'><input type='checkbox' class='" + selectedClass + "' />&nbsp;" + itemValue 
+					+ "</span><span class='autocomplete-value " + selectedClass + "' style='display: none;'>" 
+					+ item.value + "</span></a>" )
+				.appendTo( ul );
+		};
+		}
+	});
+}
 
 /** FOR THE PRESENTATION **/
 
-//TODO activate actions for the new searchbox, like autocomplete
-  
-//TODO the style of previously selected autocomplete row is changed, but checkbox is not selected  
-  
-//TODO loading a saved search doesnt work
-  
-//TODO add skype button
+//TODO change the query parsing scheme to really get the first and last name, and the skypename
 
-//TODO ask Christian to change the z-index behaviour
+/** FOR MONDAY **/
+
+//TODO ask Christian to change the z-index behaviour, zoom in/out spoils positioning
 
 //TODO put urls to the articles
 
-//TODO clean the userlist
+//TODO loading a saved search doesnt work/ something happened, it also doesn't load the saved fields-to-show data
+
+//TODO make sure the anonymous user does not show up
+
+//TODO minimize all maximized dialogs, when skype is opened
+
+/** FURTHER DEVELOPMENT & BUGS**/
+
+//TODO autocomplete: when inserting something in between, it crashes....
+
+//TODO try using jQuery's live()
+
+//TODO after loading the map, autocomplete goes behind the dialog
+
+//TODO when putting the columns-to-show in the database, also take care of the id of the table, because if you have
+//two tables at the same time with which you tweak around, after you perform a search on either of those, you will get
+//not neccessarily the fields specified for that one, but actually the fields determined by the last check/uncheck event
+
+//TODO styling - clone the scroll on top, and also the behavour of the following table headers should be fixed
+
+//TODO ajax doesn't work on a newly loaded page if the GO button is clicked, with enter it works
 
 //TODO check everything for clean urls
-  
-/** FURTHER DEVELOPMENT **/
 
-//TODO move rearrange and getwidth function in the dialog specific functions, so that they are
+//TODO datepicker behavior when clicked on the textfield, it doesnt close or open (should it be like this??)
+
+//TODO minimization does not rearrange correctly
+
+//TODO more actions on minimize, like closing autocompletes, and also unfocusing boxes, but do this without messing up the extension code
+
+//TODO move rearrangeMinimized and getwidth function in the dialog specific functions, so that they are
 // called like .dialog("getWidht")
   
 //TODO sorting doesnt work
@@ -534,10 +626,6 @@ function lsMapOpen(btn) {
   
 //TODO focusing and key bindings
    
-//TODO use git  
-  
-//TODO change the query parsing scheme to really get the first and last name..
-  
 //TODO get rid of user_list.js
 
 //TODO enable double click for maximize/restore

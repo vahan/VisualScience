@@ -167,7 +167,7 @@ function _visualscience_page($clear = true) {
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.css');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.dialog-extend.css');
-  
+
   if (!isset($_SESSION["searchNumber"])) {
   	$_SESSION["searchNumber"] = 0;
   }
@@ -176,8 +176,11 @@ function _visualscience_page($clear = true) {
   $output = "<div class='visualscience-container' id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
   $output .= drupal_render(drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]));
   $list = variable_get('visualscience_list');
+//  if (isset($_GET['search'])) {
+//  	$output .= "<script type='text/javascript' class='.remove_after_loaded'>openDialog(".$_SESSION["searchNumber"].")</script>";
+//  }
   $output .= module_invoke('user_list', 'science_tab', $list, $_SESSION["searchNumber"]);
-  $output .= "</div></div>";
+  $output .= "<span id='activate_actions'></span></div></div>";
   if ($clear) {
     variable_del('visualscience_current_tab');
     variable_del('visualscience_list');
