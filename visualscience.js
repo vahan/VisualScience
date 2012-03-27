@@ -323,7 +323,7 @@ function lsMapOpen(btn) {
 }
 
 /**
- * function to execute when the button to show the map is clicked
+ * function to execute when the button to start skype conv. is clicked
  * @param btn the button objcontentChangeect
  */
 function skypeOpen(btn) {
@@ -355,6 +355,37 @@ function skypeOpen(btn) {
 		}
 	} else {
 		alert("please login to skype!");
+	}
+}
+/**
+ * function to execute when the button to show the map is clicked
+ * @param btn the button objcontentChangeect
+ */
+function opentokCreate(btn) {
+	var thisId = btn.id;
+	var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
+	var opentokParticipants = new Array();
+	var userListCheckboxes = jQuery("#user_list-list-"+dialogNumber).find(':checkbox:checked').each(function(index){
+		// TODO handle this part to have a better search quiery. Look for the username and email
+		var username = jQuery(this).parent().parent().next().text();
+		var email = jQuery(this).parent().parent().next().next().text();
+		if (username != "") {
+			opentokListParticipants[dialogNumber] += username;
+			opentokListParticipants[dialogNumber] += ",";
+		}
+	});
+	var zIndex = 0;
+	jQuery(".dialogs-maximized").each(function() {
+		if (jQuery(this).css("zIndex") > zIndex) {
+			zIndex = jQuery(this).css("zIndex");
+		}
+	});
+	// If there are users with a given skypename among them
+	if (skypeListParticipants[dialogNumber] != "") {
+		skypeListParticipants[dialogNumber] = skypeListParticipants[dialogNumber].substring(0, skypeListParticipants[dialogNumber].length - 1);
+		var dialog = getDialogByParticipants(skypeListParticipants[dialogNumber]);
+		jQuery(dialog).dialog('option',"zIndex", zIndex);
+		jQuery(dialog).dialog('open');			
 	}
 }
 /**
@@ -574,6 +605,7 @@ function setAutocompletes() {
 /** FOR THE PRESENTATION **/
 
 //TODO change the query parsing scheme to really get the first and last name, and the skypename
+// FINISH THE FUNCTION IN USER_LIST.js
 
 /** FOR MONDAY **/
 
