@@ -30,7 +30,6 @@ function visualscience_search($search, $table="users") {
   $list = array();
   $operator = "";
   $q = visualscience_search_query($search, $table, $id, $operator);
-  drupal_set_message($q);
   $result = db_query($q)->fetchAll();
   foreach ($result as $obj) {
     $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
@@ -205,7 +204,6 @@ function visualscience_search_in_all_query($search, $table, $id) {
   if ($table != "users") 
     return $query;
   $fields = visualscience_get_all_fields();
-  p($fields);
   foreach ($fields as $field_name) {
     $query .= " OR (field_data_".$field_name.".".$field_name."_value='%".$search."%')";
   }
