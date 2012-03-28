@@ -63,7 +63,7 @@ function visualscience_search($search, $table="users") {
  * TODO: remove &$op as soon as you have normal SQL for role search
  */
 function visualscience_search_query($search, $table, $id, &$op) {
-  if ($search === "*" || trim($search) === "") return "SELECT $table.$id FROM {".$table."}";
+  if ($search === "*" || trim($search) === "") return "SELECT $table.$id FROM {".$table."} $table";
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
   $str = str_replace(array(" && ", " & "), " and ", $str); //for using &&, & as 'and' logical operators
   $str = str_replace(array(" || ", " | "), " or ", $str); //for using |, || as 'or' logical operators
