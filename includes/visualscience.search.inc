@@ -29,8 +29,9 @@ function visualscience_search($search, $table="users") {
   $id = $table[0]."id";
   $list = array();
   $operator = "";
-  //visualscience_search_query($search);
-  $result = db_query(visualscience_search_query($search, $table, $id, $operator))->fetchAll();
+  $q = visualscience_search_query($search, $table, $id, $operator);
+  drupal_set_message($q);
+  $result = db_query($q)->fetchAll();
   foreach ($result as $obj) {
     $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
   }
@@ -63,7 +64,7 @@ function visualscience_search($search, $table="users") {
  * TODO: remove &$op as soon as you have normal SQL for role search
  */
 function visualscience_search_query($search, $table, $id, &$op) {
-  if ($search === "*") return "SELECT $table.$id FROM {".$table."}";
+  if ($search === "*" || trim($search) === "") return "SELECT $table.$id FROM {".$table."}";
   $str = str_replace("\"", "\" ", $search); //temporary copy of the search string. There must be a space after each double-quote. The processed part is removed after each iteration.
   $str = str_replace(array(" && ", " & "), " and ", $str); //for using &&, & as 'and' logical operators
   $str = str_replace(array(" || ", " | "), " or ", $str); //for using |, || as 'or' logical operators
@@ -121,7 +122,7 @@ function visualscience_search_query($search, $table, $id, &$op) {
       } else { //for not keywords search in manually added fields
         array_push($field_names, strstr($column, "=", true));
         //p("ACHTUNG! ".$column." ".strlen());
-        $column = "TTD_$field_number.name=";
+        $column = "field_data_field_".strstr($column, "=", true).".field_".strstr($column, "=", true)."_value=";
         $field_number++;
       }
       //p("modified column -> ".$column);
@@ -247,7 +248,8 @@ function visualscience_search_field_joins($field_names) {
   $i = 0;
   foreach ($field_names as $field_name) {
     $field_table = "field_data_field_".$field_name;
-    $query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid LEFT JOIN {taxonomy_term_data} TTD_".$i." ON ".$field_table.".field_".$field_name."_tid=TTD_".$i.".tid ";
+    //$query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid LEFT JOIN {taxonomy_term_data} TTD_".$i." ON ".$field_table.".field_".$field_name."_tid=TTD_".$i.".tid ";
+    $query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid ";
     $i++;
   }
   return $query;

@@ -182,9 +182,9 @@ function visualscience_page($clear = true) {
   $output .= module_invoke('user_list', 'science_tab', $list, $_SESSION["searchNumber"]);
   $output .= "<span id='activate_actions'></span></div></div>";
   if ($clear) {
-    variable_del('visualscience_current_tab');
+    //variable_del('visualscience_current_tab');
     //variable_del('visualscience_list');
-    variable_del('visualscience_search_table');
+    //variable_del('visualscience_search_table');
   }
   return $output;
 }
