@@ -178,8 +178,15 @@ try {
 /**
  * returns an array containing all fields
  */
-function visualscience_get_all_fields() {  
-  return field_info_instances('user', 'user');
+function visualscience_get_all_fields() {
+  $fields = field_info_instances('user', 'user');
+  $field_names = array();
+  foreach ($fields as $name => $value) {
+    if (strpos($name, "field_") !== 0)
+      continue;
+    array_push($field_names, $name);
+  }
+  return $field_names;
 }
 
 /**

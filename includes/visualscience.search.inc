@@ -30,7 +30,7 @@ function visualscience_search($search, $table="users") {
   $list = array();
   $operator = "";
   $q = visualscience_search_query($search, $table, $id, $operator);
-  //drupal_set_message($q);
+  drupal_set_message($q);
   $result = db_query($q)->fetchAll();
   foreach ($result as $obj) {
     $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
@@ -75,7 +75,7 @@ function visualscience_search_query($search, $table, $id, &$op) {
     //p("search in all query");
     $fields = visualscience_get_all_fields();
     foreach ($fields as $field) {
-      $field_names[] = substr($field['field_name'], strlen("field_"));
+      $field_names[] = substr($field, strlen("field_"));
     }
     $query = visualscience_search_in_all_query($search, $table, $id);
   } else {
@@ -192,16 +192,22 @@ function visualscience_search_in_all_query($search, $table, $id) {
   $data = visualscience_get_data($table);
   $is_first = true;
   foreach ($data as $column) {
-    if (!$is_first) $query .= " OR ";
-    else $is_first = false;
-    if ($table == "users" && $column == "role") $column = "role.name";
-    else $column = "$table.".$column;
+    if (!$is_first) 
+      $query .= " OR ";
+    else 
+      $is_first = false;
+    if ($table == "users" && $column == "role") 
+      $column = "role.name";
+    else 
+      $column = "$table.".$column;
     $query .= "(".$column."='%".$search."%')";
   }
-  if ($table != "users") return $query;
+  if ($table != "users") 
+    return $query;
   $fields = visualscience_get_all_fields();
-  for ($i=0; $i<count($fields); ++$i) {
-    $query .= " OR (TTD_".$i.".name='%".$search."%')";
+  p($fields);
+  foreach ($fields as $field_name) {
+    $query .= " OR (field_data_".$field_name.".".$field_name."_value='%".$search."%')";
   }
   return $query;
 }
