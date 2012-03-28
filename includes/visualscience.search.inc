@@ -30,7 +30,7 @@ function visualscience_search($search, $table="users") {
   $list = array();
   $operator = "";
   $q = visualscience_search_query($search, $table, $id, $operator);
-  drupal_set_message($q);
+  //drupal_set_message($q);
   $result = db_query($q)->fetchAll();
   foreach ($result as $obj) {
     $list[] = $table=="users"?user_load($obj->uid):node_load($obj->nid);
