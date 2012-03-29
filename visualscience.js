@@ -276,7 +276,9 @@ function setVisualScienceDialogs(dialogNumber) {
 				if (targetDialog.parent().hasClass("dialogs-minimized")) {
 					toRearrange = true;
 				}
-				targetDialog.remove();
+
+				jQuery(this).dialog('destroy');
+				jQuery(this).parent().remove();
 			
 				// rearrange the minimized dialogs
 				if (toRearrange) {
