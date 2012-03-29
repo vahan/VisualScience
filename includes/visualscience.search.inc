@@ -121,7 +121,11 @@ function visualscience_search_query($search, $table, $id, &$op) {
       } else { //for not keywords search in manually added fields
         array_push($field_names, strstr($column, "=", true));
         //p("ACHTUNG! ".$column." ".strlen());
-        $column = "field_data_field_".strstr($column, "=", true).".field_".strstr($column, "=", true)."_value=";
+        if (db_field_exists("field_data_field_".strstr($column, "=", true), "field_".strstr($column, "=", true)."_value")) {
+          $column = "field_data_field_".strstr($column, "=", true).".field_".strstr($column, "=", true)."_value=";
+        }
+        else
+          $column = "TTD_$field_number.name=";
         $field_number++;
       }
       //p("modified column -> ".$column);
@@ -176,7 +180,7 @@ function visualscience_search_query($search, $table, $id, &$op) {
   }
   $query = str_replace("=", " LIKE ", $query); //use LIKE statement
   $query = "SELECT $table.$id FROM {".$table."} $table ".($table==="users"?visualscience_search_role_joins().visualscience_search_field_joins($field_names):"")." WHERE ".$query; //Add the first part of the query. Use role and field joins only for users
-  //p("query -> ".$query);
+  p("query -> ".$query);
   return $query;  
 }
 
@@ -252,8 +256,10 @@ function visualscience_search_field_joins($field_names) {
   $i = 0;
   foreach ($field_names as $field_name) {
     $field_table = "field_data_field_".$field_name;
-    //$query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid LEFT JOIN {taxonomy_term_data} TTD_".$i." ON ".$field_table.".field_".$field_name."_tid=TTD_".$i.".tid ";
-    $query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid ";
+    if (db_field_exists($field_table, "field_".$field_name."_value"))
+      $query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid ";
+    else
+      $query .= "LEFT JOIN {".$field_table."} ".$field_table." ON $field_table.entity_id=users.uid LEFT JOIN {taxonomy_term_data} TTD_".$i." ON ".$field_table.".field_".$field_name."_tid=TTD_".$i.".tid ";
     $i++;
   }
   return $query;
@@ -267,6 +273,8 @@ function visualscience_search_field_joins($field_names) {
 function visualscience_get_operators() {  
   return array("and", "or", "not");
 }
+
+
 
 
 
