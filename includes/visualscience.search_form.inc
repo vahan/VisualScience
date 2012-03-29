@@ -79,7 +79,7 @@ function visualscience_search_form($form, &$form_state, $formId) {
     '#type' => 'radios',
     '#options' => array('users'=>t('Users'), 'node'=>t('Nodes')),
   	'#default_value' => 'users',
-  	'#prefix' => '<td style="padding-left: 0; width: 100%">',
+  	'#prefix' => '<td style="padding-left: 0; width: 100%; visibility: hidden">', //TODO: temporarily hidden
   	'#suffix' => '</td>',
   );
 
