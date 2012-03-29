@@ -208,8 +208,16 @@ function visualscience_search_in_all_query($search, $table, $id) {
   if ($table != "users") 
     return $query;
   $fields = visualscience_get_all_fields();
-  foreach ($fields as $field_name) {
-    $query .= " OR (field_data_".$field_name.".".$field_name."_value='%".$search."%')";
+  
+  for ($i=0; $i<count($fields); ++$i) {
+    p("table: field_data_".$fields[$i]);
+    p("column: ".$fields[$i]."_value");
+    if (db_field_exists("field_data_".$fields[$i], $fields[$i]."_value")) {
+      $query .= " OR (field_data_".$fields[$i].".".$fields[$i]."_value='%".$search."%')";
+    }
+    else {
+      $query .= " OR (TTD_".$i.".name='%".$search."%')";
+    }
   }
   return $query;
 }
