@@ -180,7 +180,6 @@ function visualscience_search_query($search, $table, $id, &$op) {
   }
   $query = str_replace("=", " LIKE ", $query); //use LIKE statement
   $query = "SELECT $table.$id FROM {".$table."} $table ".($table==="users"?visualscience_search_role_joins().visualscience_search_field_joins($field_names):"")." WHERE ".$query; //Add the first part of the query. Use role and field joins only for users
-  p("query -> ".$query);
   return $query;  
 }
 
@@ -210,8 +209,6 @@ function visualscience_search_in_all_query($search, $table, $id) {
   $fields = visualscience_get_all_fields();
   
   for ($i=0; $i<count($fields); ++$i) {
-    p("table: field_data_".$fields[$i]);
-    p("column: ".$fields[$i]."_value");
     if (db_field_exists("field_data_".$fields[$i], $fields[$i]."_value")) {
       $query .= " OR (field_data_".$fields[$i].".".$fields[$i]."_value='%".$search."%')";
     }
