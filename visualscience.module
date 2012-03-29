@@ -76,7 +76,7 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
   );  
 
-  // Autocompletion Url
+  // The Url to realod the searchform on the original page
   $items['visualscience/searchform'] = array(
     'title' => 'Visual Science',
     'page callback' => 'visualscience_searchform',

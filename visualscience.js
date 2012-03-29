@@ -28,8 +28,8 @@ var skypeListParticipants = new Array();
 var andSign = " && ";
 var orSign = " || ";
 
-var AndRegEx = new RegExp("( AND )","ig")
-var OrRegEx = new RegExp("( OR )","ig")
+var AndRegEx = new RegExp("( AND )","ig");
+var OrRegEx = new RegExp("( OR )","ig");
 
 var checkActionsInterval;
 
@@ -37,7 +37,7 @@ jQuery(document).ready(function() {
 		activateEventHandlers();
 		setAutocompletes();
 	
-		checkActionsInterval = setInterval(function() {checkActions()},300);
+		checkActionsInterval = setInterval(function() {checkActions();},300);
 });
 
 function checkActions() {
@@ -292,7 +292,8 @@ function setVisualScienceDialogs(dialogNumber) {
 			  url: "?q=visualscience/searchform&ajax=1",
 			  context: document.body,
 			  success: function(data, textStatus, jqXHR){
-				  jQuery("#content").html(data);
+				  // TODO this is not a nice way, it is template dependent.. so try to find the good way..
+				  jQuery("#main-content").html(data);
 			  }
 		});
 	}
@@ -405,7 +406,7 @@ function activateEventHandlers() {
 			},
 			dateFormat: "dd-mm-yy",
 			changeMonth: true,
-			changeYear: true,
+			changeYear: true
 	});
 
 	jQuery(".visualscience-search-query").bind("keyup.autocomplete", function(e) {
@@ -555,7 +556,7 @@ function setAutocompletes() {
 				jQuery(this).autocomplete("widget").find("input.not-selected").attr("checked", false);
 			},
 			select: function( request, response ) {
-				var inputVal = ""
+				var inputVal = "";
 				for (item in autocompleteCheckedItems) {
 					if (autocompleteCheckedItems[item] != "") {
 						inputVal += item + andSign;

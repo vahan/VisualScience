@@ -104,8 +104,12 @@ span.preselected {
 	vertical-align: middle;
 }
 
-#main .visualscience-user_list {
+.visualscience-user_list {
 	display: none;	
+}
+
+.ui-dialog .visualscience-user_list {
+	display: block;	
 }
 
 .visualscience-dialog {
