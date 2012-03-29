@@ -306,7 +306,7 @@ function setVisualScienceDialogs(dialogNumber) {
 function lsMapOpen(btn) {
 	var thisId = btn.id;
 	var dialogNumber = thisId.substring(thisId.lastIndexOf("-")+"-".length,thisId.length);
-	var htmlToFill = "<div id='container-"+dialogNumber+"-1' class='ui-layout-south' style='height: 200px;'>";
+	var htmlToFill = "<div id='container-"+dialogNumber+"-1' class='ui-layout-south' style='height: 400px;'>";
 	htmlToFill += "<div class='ui-layout-center'>";
 	htmlToFill += "<div id='mapcontainer-"+dialogNumber+"-1' class='mapcontainer' style='width: 100%; height: 100%'></div></div>";
 	htmlToFill += "<div class='ui-layout-west'><div class='watchProgress' id='watchProgress-"+dialogNumber+"-1' class='ui-layout-north'></div><div id='searchResults-"+dialogNumber+"-1' class='searchResults'></div></div>";
@@ -315,9 +315,9 @@ function lsMapOpen(btn) {
 	
 	jQuery("#visualscience-container-"+dialogNumber).append(htmlToFill);
 	jQuery("#container-"+dialogNumber+"-0").addClass("ui-layout-center");
-	jQuery("#container-"+dialogNumber+"-1").layout({ applyDefaultStyles: true }).sizePane("west", 400);
+	jQuery("#container-"+dialogNumber+"-1").layout({ applyDefaultStyles: true }).sizePane("west", 800);
 	var mainLayout = jQuery("#visualscience-container-"+dialogNumber).layout({ applyDefaultStyles: true });
-	mainLayout.sizePane("south", 250);
+	mainLayout.sizePane("south", 400);
 	mainLayout.open("south");
 	
 	lsSearch(dialogNumber);
