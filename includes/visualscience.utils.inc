@@ -79,7 +79,7 @@ function visualscience_autocomplete($term = '', $search_type = 'generic') {
         break;
       default:
         // $search_type should match with the name of the field
-        $result = taxonomy_get_field_autocomplete("field_".$search_type, $term);
+        $result = get_field_autocomplete("field_".$search_type, $term);
         $resultReady = TRUE;
         break;
     }
@@ -117,62 +117,78 @@ function visualscience_get_autocomplete_data($table, $column, $term) {
 }
 
 /**
- * taxonomy_get_field_autocomplete
+ * get_field_autocomplete
  * Function to get the taxonomy field names as an array, given the field name
  * @param string $field_name
  * @param string $tag
  * @return
  */
-function taxonomy_get_field_autocomplete($field_name, $tag = '') {
-try {
-    $field = field_info_field($field_name);
+function get_field_autocomplete($field_name, $tag = '') {
+	try {
+		$field = field_info_field($field_name);
+		if ($field['type'] != "taxonomy_term_reference") {
+			$tabledatas = $field['storage']['details']['sql']['FIELD_LOAD_CURRENT'];
+			$tablenames = array();
+			$valuefields = array();
+			foreach ($tabledatas as $tablename => $value_format) {
+				$tablenames[] = $tablename;
+				$valuefields[] = $value_format['value'];
+			}
+			$query = db_select($tablenames[0], 't');
+			$query->fields('t', array('entity_id', $valuefields[0]));
+			$query
+			->condition('t.'.$valuefields[0], '%' . db_like($tag) . '%', 'LIKE')
+			->range(0, 10);
+			$tags_return = $query
+			->execute()
+			->fetchAllKeyed();
+		} else {
+			// Part of the criteria for the query come from the field's own settings.
+			$vids = array();
+			$vocabularies = taxonomy_vocabulary_get_names();
+			foreach ($field['settings']['allowed_values'] as $tree) {
+				$vids[] = $vocabularies[$tree['vocabulary']]->vid;
+			}
 
-    // Part of the criteria for the query come from the field's own settings.
-    $vids = array();
-    $vocabularies = taxonomy_vocabulary_get_names();
-    foreach ($field['settings']['allowed_values'] as $tree) {
-      $vids[] = $vocabularies[$tree['vocabulary']]->vid;
-    }
+			$query = db_select('taxonomy_term_data', 't');
+			$query->addTag('translatable');
+			$query->addTag('term_access');
 
-    $query = db_select('taxonomy_term_data', 't');
-    $query->addTag('translatable');
-    $query->addTag('term_access');
+			$field_table = "field_data_".$field_name;
 
-	$field_table = "field_data_".$field_name;
+			$query->fields('t', array("tid", "name"));
 
-    $query->fields('t', array("tid", "name"));
-    
-    // Select rows that match by term name.
-    $query
-      ->condition('t.vid', $vids)
-      ->condition('t.name', '%' . db_like($tag) . '%', 'LIKE')
-      //     ->leftJoin($field_table, "ft", "ft.entity_id=users.uid")
-      //     ->leftJoin($field_table, "ft", "ft.entity_id=users.uid")
-      ->range(0, 10);
+			// Select rows that match by term name.
+			$query
+			->condition('t.vid', $vids)
+			->condition('t.name', '%' . db_like($tag) . '%', 'LIKE')
+			//     ->leftJoin($field_table, "ft", "ft.entity_id=users.uid")
+			//     ->leftJoin($field_table, "ft", "ft.entity_id=users.uid")
+			->range(0, 10);
 
-    $query
-      ->innerJoin($field_table, 'ft', "ft.".$field_name."_tid=t.tid");
-      
-    $tags_return = $query 
-      ->execute()
-      ->fetchAllKeyed();
+			$query
+			->innerJoin($field_table, 'ft', "ft.".$field_name."_tid=t.tid");
 
-    $term_matches = array();
-    foreach ($tags_return as $tid => $name) {
-      $n = $name;
-      // Term names containing commas or quotes must be wrapped in quotes.
-      if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
-        $n = '"' . str_replace('"', '""', $name) . '"';
-      }
-      else {
-        $term_matches[] = check_plain($name);
-      }
-    }
-    return $term_matches;
-  } catch (Exception $e) {
-    // If there is no such field name, or in case of any other exception
-    return array();
-  }
+			$tags_return = $query
+			->execute()
+			->fetchAllKeyed();
+		}
+		$term_matches = array();
+		foreach ($tags_return as $tid => $name) {
+			$n = $name;
+			// Term names containing commas or quotes must be wrapped in quotes.
+			if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
+				$n = '"' . str_replace('"', '""', $name) . '"';
+			}
+			else {
+				$term_matches[] = check_plain($name);
+			}
+		}
+		return $term_matches;
+	} catch (Exception $e) {
+		// If there is no such field name, or in case of any other exception
+		return array();
+	}
 }
 
 /**
