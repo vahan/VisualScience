@@ -135,13 +135,14 @@ function get_field_autocomplete($field_name, $tag = '') {
 				$valuefields[] = $value_format['value'];
 			}
 			$query = db_select($tablenames[0], 't');
-			$query->fields('t', array('entity_id', $valuefields[0]));
+			$query->fields('t', array($valuefields[0]));
+			$query->distinct(TRUE);
 			$query
 			->condition('t.'.$valuefields[0], '%' . db_like($tag) . '%', 'LIKE')
 			->range(0, 10);
 			$tags_return = $query
 			->execute()
-			->fetchAllKeyed();
+			->fetchCol();
 		} else {
 			// Part of the criteria for the query come from the field's own settings.
 			$vids = array();
