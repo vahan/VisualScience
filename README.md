@@ -28,7 +28,7 @@ This will result in a list of scientist from Switzerland and Armenia + everybody
 While typing in the search box, smart autocomplete is provided. 
 +	After typing FIELD_NAME=, "[" is added automatically. 
 +	The list is provided according to your database entries. 
-+	**Multiple options** can be selected by checking (**SPACEBAR** must be used) the **checkboxes** in front of the terms. 
++	**Multiple options** can be selected by checking (SPACEBAR must be used) the **checkboxes** in front of the terms. 
 +	To confirm the selection press ENTER. The multiple selected terms are added with **AND** logical operator. 
 +	For the "date" a calendar is provided.
 
@@ -40,11 +40,4 @@ In the Save field you can save the current search query or load a previously sav
 
 
 ## UserList Module
-In this field a list of the users found by the search is given. You can choose which fields to show/hide by checking/unchecking the appropriate checkbox in the Choose fields to show tab.
-Operations with the selected users
-You can select users from the list and do several operations with them. Send an email by clicking the Enter the message button; you can enter the message in the next page. Export to CSV button exports the list of the selected users to a CSV file.
-Settings
-You can use the Settings link to go to the admin page and change the settings. 
-
-
-*
+This is the main visualization module for visualscience. The search results are displayed via the UserList module. It is easily extendible to add different actions and visualisation mechanisms to the list of results. For more information see the UserList module itself
