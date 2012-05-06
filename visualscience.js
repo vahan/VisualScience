@@ -309,7 +309,7 @@ function lsMapOpen(btn) {
 	var htmlToFill = "<div id='container-"+dialogNumber+"-1' class='ui-layout-south' style='height: 400px;'>";
 	htmlToFill += "<div class='ui-layout-center'>";
 	htmlToFill += "<div id='mapcontainer-"+dialogNumber+"-1' class='mapcontainer' style='width: 100%; height: 100%'></div></div>";
-	htmlToFill += "<div class='ui-layout-west'><div class='watchProgress' id='watchProgress-"+dialogNumber+"-1' class='ui-layout-north'></div><div id='searchResults-"+dialogNumber+"-1' class='searchResults'></div></div>";
+	htmlToFill += "<div class='ui-layout-west'><div class='watchProgress' id='watchProgress-"+dialogNumber+"-1' class='ui-layout-north'></div><div id='searchResults-"+dialogNumber+"-1' class='searchResults'></div><div class='ls-pagination' id='ls-pagination-"+dialogNumber+"-1'></div></div>";
 	htmlToFill += "</div></div>";
 	
 	

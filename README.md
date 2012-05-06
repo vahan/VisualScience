@@ -7,6 +7,7 @@ Features include:
 +	Smart Autocomplete (query building tool)
 +	Save/Load Searches
 +	Multiple Visualisation Mechamisms & Extendability (see **UserList** module)
++	Multiple Searches on the same page (Window-based system)
 
 ## Search
 
