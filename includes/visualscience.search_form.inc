@@ -14,7 +14,7 @@ function visualscience_search_form($form, &$form_state, $formId) {
   $def_value = "";
   //search load
   if (isset($_GET['s'])) {
-    $search = visualscience_get_search($_GET['s']);
+    $search = visualscience_get_search($_GET['search']);
     if ($search->uid != $user->uid) exit(0); //Security check =)
     $url_combine = variable_get("clean_url") ? "?" : "&";
     $url = "http://".$_SERVER['HTTP_HOST'].substr(request_uri(), 0, strrpos(request_uri(), "visualscience")+strlen("visualscience"));
@@ -142,9 +142,9 @@ function visualscience_search_form($form, &$form_state, $formId) {
     '#attributes' => array ('onchange' => '{
       if (this.selectedIndex == 0) return;
       if ('.$is_clean_url.' > 0) {
-        window.location = window.location.href.substring(0, window.location.href.indexOf("?",0))+"?s="+this.options[this.selectedIndex].value;
+        window.location = window.location.href.substring(0, window.location.href.indexOf("?",0))+"?search="+this.options[this.selectedIndex].value;
       } else {
-        window.location = window.location.href+"&s="+this.options[this.selectedIndex].value;
+        window.location = window.location.href+"&search="+this.options[this.selectedIndex].value;
       }
     }'),
     '#prefix' => '<td>',
