@@ -13,7 +13,7 @@ function visualscience_search_form($form, &$form_state, $formId) {
   global $user;
   $def_value = "";
   //search load
-  if (isset($_GET['s'])) {
+  if (isset($_GET['s'])) {//Why 's' instead of 'search' ? Magic !?
     $search = visualscience_get_search($_GET['search']);
     if ($search->uid != $user->uid) exit(0); //Security check =)
     $url_combine = variable_get("clean_url") ? "?" : "&";
@@ -79,7 +79,7 @@ function visualscience_search_form($form, &$form_state, $formId) {
     '#type' => 'radios',
     '#options' => array('users'=>t('Users'), 'node'=>t('Nodes')),
   	'#default_value' => 'users',
-  	'#prefix' => '<td style="padding-left: 0; width: 100%; visibility: hidden">', //TODO: temporarily hidden
+  	'#prefix' => '<td style="padding-left: 0; width: 100%; visibility: hidden;">', //TODO: temporarily hidden
   	'#suffix' => '</td>',
   );
 
