@@ -682,16 +682,18 @@ var tabbedInterface = 'tabbed-interface';
  * It will first chekc if the tabbed itnerface is loaded and load it if not.
  * Then it adds a new tab to the interface, with the result of the search.
  */
-function openTableTab (dialogNumber) {
-	createTabbedInterface(dialogNumber);
-	var title = jQuery("#visualscience-search-query-"+dialogNumber).val();
-	title = (title == '' ? 'All Users' : 'Search: '+title);
+function openUserListTab (dialogNumber) {
+	setTimeout(function(){//(Bad style) The tab creation should be deleted, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
+		createTabbedInterface(dialogNumber);
+		var title = jQuery("#visualscience-search-query-"+dialogNumber).val();
+		title = (title == '' ? 'All Users' : 'Search: '+title);
 	
-	var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
-	addTab(title, '#visualscience-search-tab-content-'+nbTabs);//replace http:// by a local url with fragment identifier(#something)
+		var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
+		addTab(title, '#visualscience-search-tab-content-'+nbTabs);
 	
-	var content = jQuery('#visualscience-user_list-'+dialogNumber).html();
-	jQuery('#visualscience-search-tab-content-'+nbTabs).html(content).css('display', 'block');
+		var content = jQuery('#visualscience-user_list-'+dialogNumber).html();
+		jQuery('#visualscience-search-tab-content-'+nbTabs).html(content).css('display', 'block');
+	}, 1);
 }
 
 /*
