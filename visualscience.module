@@ -160,6 +160,7 @@ function visualscience_page($clear = true) {
   drupal_add_library('system', 'ui.autocomplete');
   drupal_add_library('system', 'ui.datepicker');
   drupal_add_library('system', 'ui.dialog');
+  drupal_add_library('system', 'ui.tabs');
   
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
