@@ -664,3 +664,65 @@ function setAutocompletes() {
 //TODO get rid of user_list.js
 
 //TODO enable double click for maximize/restore
+
+
+
+
+/**
+ * Code for new Design (Sebastien test)
+ */
+//This variable checks if the whole tabbed interface has been created yet.
+var tabbedInterfaceExists = false;
+
+//Variable who contains the name of the actual tabbed interface.
+var tabbedInterface = 'tabbed-interface';
+
+/*
+ * This function is called when the user launches the search from the bar.
+ * It will first chekc if the tabbed itnerface is loaded and load it if not.
+ * Then it adds a new tab to the interface, with the result of the search.
+ */
+function openTableTab (dialogNumber) {
+	createTabbedInterface(dialogNumber);
+	var title = jQuery("#visualscience-search-query-"+dialogNumber).val();
+	title = (title == '' ? 'All Users' : 'Search: '+title);
+	
+	var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
+	addTab(title, '#visualscience-search-tab-content-'+nbTabs);//replace http:// by a local url with fragment identifier(#something)
+	
+	var content = jQuery('#visualscience-user_list-'+dialogNumber).html();
+	jQuery('#visualscience-search-tab-content-'+nbTabs).html(content).css('display', 'block');
+}
+
+/*
+ * This function adds a new tab to the tabbed interface.
+ * The url parameter should be a local url and it can contain a fragment identifier(#something)
+ * The name parameter is the name you want the tab to have.
+ */
+function addTab (name, url) {
+	var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
+	jQuery('#'+tabbedInterface).tabs('add', url, name + '<span class="close-tab-cross" onClick="closeTab(\''+url+'\')">X</span>');
+	jQuery('#'+tabbedInterface).tabs('select', nbTabs);
+}
+
+/*
+ * This function closes the tab indicated by tabIndex.
+ * TabIndex can either be the zero-position of the tab, or the href parameter.
+ */
+function closeTab (tabIndex) {
+	jQuery('#'+tabbedInterface).tabs('remove', tabIndex);
+}
+
+/*
+ * This function creates a tabbed-interface, out of the variable tabbedInterface.
+ * Firstly, it however checks if the interface does not already exists, because otherwise this could create bugs.
+ */
+function createTabbedInterface(dialogNumber) {
+	if (!tabbedInterfaceExists) {
+		tabbedInterfaceExists = true;
+		jQuery('#container-'+dialogNumber+'-0').append('<div id="'+tabbedInterface+'"><ul id="tab-list"></ul></div>');
+		jQuery('#'+tabbedInterface).tabs({
+			cache: true
+		});
+	}
+}
