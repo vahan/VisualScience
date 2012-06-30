@@ -677,6 +677,9 @@ var tabbedInterfaceExists = false;
 //Variable who contains the name of the actual tabbed interface.
 var tabbedInterface = 'tabbed-interface';
 
+//Variable to differentiate each tab from each other
+var tabId = 0;
+
 /*
  * This function is called when the user launches the search from the bar.
  * It will first chekc if the tabbed itnerface is loaded and load it if not.
@@ -691,20 +694,35 @@ function openUserListTab (dialogNumber) {
 		var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
 		addTab(title, '#visualscience-search-tab-content-'+nbTabs);
 		//Insert the table result in a new div
-		var content = createUserTableResult(dialogNumber);//Old, and only eastethic: jQuery('#visualscience-user_list-'+dialogNumber).html();
+		var content = createUserSearchResult(dialogNumber);
 		jQuery('#visualscience-search-tab-content-'+nbTabs).html(content).css('display', 'block');
-		jQuery('#visualscience-user_list-result-'+dialogNumber).tablesorter();
+		jQuery('#visualscience-user_list-result-'+tabId).tablesorter();//Enable the table to be sorted
 	}, 1);
 }
 
-function createUserTableResult (dialogNumber) {
-	var divFinalContent = '<h3>User List</h3><table id="visualscience-user_list-result-'+dialogNumber+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
+function createUserSearchResult (dialogNumber) {
+	var actionBar = createActionBar();
+	var tableUserList = createTableUserList(dialogNumber);
+	return actionBar + tableUserList;
+}
+
+function createActionBar () {
+	return '';
+}
+
+function createTableUserList (dialogNumber) {
+	var divFinalContent = '<h3>User List</h3><table id="visualscience-user_list-result-'+tabId+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
 	var arrayOfUserResults = getArrayFromTable('user_list-list-'+dialogNumber);
 	for (var i=1; i < arrayOfUserResults.length+1; i++) {
 		divFinalContent += '<td>'+arrayOfUserResults[i-1]+'</td>';
 		
-		if (i%6 == 0 && i != arrayOfUserResults.length) {//It is the end of a line, but not the last line or the first one.
-			divFinalContent += '</tr><tr>';
+		if (i%6 == 0 && i != arrayOfUserResults.length) {
+			if (i%2 == 0) {
+				divFinalContent += '</tr><tr class="even">';
+			}
+			else {
+				divFinalContent += '</tr><tr class="odd">';
+			}
 		}
 	}
 	divFinalContent += '</tr></tbody></table>';
@@ -726,6 +744,7 @@ function getArrayFromTable (tableId) {
  * The name parameter is the name you want the tab to have.
  */
 function addTab (name, url) {
+	tabId++;
 	var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
 	jQuery('#'+tabbedInterface).tabs('add', url, name + '<span class="close-tab-cross" onClick="closeTab(\''+url+'\')">X</span>');
 	jQuery('#'+tabbedInterface).tabs('select', nbTabs);
