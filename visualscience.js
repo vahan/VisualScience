@@ -694,24 +694,37 @@ function openUserListTab (dialogNumber) {
 		var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
 		addTab(title, '#visualscience-search-tab-content-'+nbTabs);
 		//Insert the table result in a new div
-		var content = createUserSearchResult(dialogNumber);
+		var idOfThisTab = tabId;
+		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-'+nbTabs).html(content).css('display', 'block');
-		jQuery('#visualscience-user_list-result-'+tabId).tablesorter();//Enable the table to be sorted
+		jQuery('#visualscience-user_list-result-'+idOfThisTab).tablesorter();//Enable the table to be sorted
 	}, 1);
 }
 
-function createUserSearchResult (dialogNumber) {
-	var actionBar = createActionBar();
-	var tableUserList = createTableUserList(dialogNumber);
+/*
+ * This function creates the whole tab, which will be displayed to the user.
+ * It contains :
+ * -the action bar, which is the bar with every buttons(Message, CSV, LS and Conference)
+ * -The table with the result and its options.(Sort table, hide fields, etc...) 
+ */
+function createUserSearchResult (dialogNumber, idOfThisTab) {
+	var actionBar = createActionBar(idOfThisTab);
+	var tableUserList = createTableUserList(dialogNumber, idOfThisTab);
 	return actionBar + tableUserList;
 }
 
-function createActionBar () {
+/*
+ * This creates the action bar, with the different buttons.
+ */
+function createActionBar (idOfThisTab) {
 	return '';
 }
 
-function createTableUserList (dialogNumber) {
-	var divFinalContent = '<h3>User List</h3><table id="visualscience-user_list-result-'+tabId+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
+/*
+ * Creates the table, which can be sorted. 
+ */
+function createTableUserList (dialogNumber, idOfThisTab) {
+	var divFinalContent = '<h3>User List</h3><table id="visualscience-user_list-result-'+idOfThisTab+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
 	var arrayOfUserResults = getArrayFromTable('user_list-list-'+dialogNumber);
 	for (var i=1; i < arrayOfUserResults.length+1; i++) {
 		divFinalContent += '<td>'+arrayOfUserResults[i-1]+'</td>';
@@ -729,6 +742,10 @@ function createTableUserList (dialogNumber) {
 	return divFinalContent;
 }
 
+/*
+ * Transform the content of a table into an array. It doesn't take in account the tr,
+ * so it only returns the value of the table, without any hierarchic order.(NO array in array)
+ */
 function getArrayFromTable (tableId) {
 	var values = new Array();
 	var td = jQuery('#'+tableId+' > tbody > tr > td');
