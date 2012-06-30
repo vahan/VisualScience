@@ -717,8 +717,31 @@ function createUserSearchResult (dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar (idOfThisTab) {
-	return '';
+	var finalDiv = '<h3>Actions</h3><div>';
+	var sendMessage = '<input class="form-submit" value="Send a Message" type="button" onClick="createTabSendMessage();"  />';
+	var csvExport = '<input class="form-submit" value="Export to CSV" type="button" onClick="exportUsersCSV();"  />';
+	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience();"  />';
+	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" />';
+	finalDiv += sendMessage + csvExport + livingscience + conference + '</div>';
+	return finalDiv;
 }
+
+function createTabSendMessage () {
+	alert('More to come later...');
+}
+
+function exportUsersCSV () {
+	alert('Please be patient !');
+}
+
+function createTabLivingScience () {
+	alert('We are working hard you know ?');
+}
+
+function createTabConference () {
+	alert('Come back later.');
+}
+
 
 /*
  * Creates the table, which can be sorted. 
