@@ -147,8 +147,9 @@ span.preselected {
 * html .visualscience_menu ul {height: 1%;}
 .visualscience_menu ul {display: block;}
 /* End hide from IE-mac */
+
 /*
- * Added code for new design
+ * Added code for tab-design
  */
 .close-tab-cross {
 	cursor:pointer;
@@ -157,4 +158,18 @@ span.preselected {
 }
 .close-tab-cross:hover {
 	color:#FF0000;
+}
+
+.action-bar {
+	display:inline-block;
+    padding-left: 12px;
+    padding-top: 12px;
+ 	background-color: #EEEEEE;
+ 	border: 1px solid #BEBFB9;
+ 	
+}
+.action-bar p {
+	padding-left:25px;
+	padding-top:0px;
+	margin-top:0px;
 }

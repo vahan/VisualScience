@@ -717,13 +717,50 @@ function createUserSearchResult (dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar (idOfThisTab) {
-	var finalDiv = '<h3>Actions</h3><div>';
+	var finalDiv = '<div class="action-bar"><h3>Actions</h3><p>to selected users</p>';
 	var sendMessage = '<input class="form-submit" value="Send a Message" type="button" onClick="createTabSendMessage();"  />';
 	var csvExport = '<input class="form-submit" value="Export to CSV" type="button" onClick="exportUsersCSV();"  />';
 	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience();"  />';
 	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" />';
 	finalDiv += sendMessage + csvExport + livingscience + conference + '</div>';
+	makeActionBarMoveable(idOfThisTab);
 	return finalDiv;
+}
+
+/*
+ * Depending on what the user sees, the action bar will be static at the top of the page,
+ * or fixed on the left, when he scrolls down.
+ * TODO: Strangely, the animation is not the same in Firefox and in Chrome. Fixing this may be important for a unified UX.
+ */
+function makeActionBarMoveable (idOfThisTab) {
+	setInterval(function() {
+		if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() <= -220 && jQuery('.action-bar').attr('moveable') != 'true') {
+			jQuery('.action-bar')
+				.css({
+						top:'0px',
+						right: '65%',
+						position:'fixed'
+					})
+				.animate({
+    					right:'62px',
+						top:'75%'
+  				}, 1500 )
+  				.attr('moveable', 'true');
+		}
+		else if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() > -220 && jQuery('.action-bar').attr('moveable') == 'true') {
+			jQuery('.action-bar')
+				.animate({
+    					right:'65%',
+						top:'30%'
+  				}, 1000, function(){
+  					jQuery('.action-bar')
+  						.css({
+  							position:'static'
+  							})
+  						.attr('moveable', 'false');
+  				});
+		}
+	}, 300);
 }
 
 function createTabSendMessage () {
