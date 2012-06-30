@@ -698,7 +698,7 @@ function openUserListTab (dialogNumber) {
 }
 
 function createUserTableResult (dialogNumber) {
-	var divFinalContent = '<h3>User List</h3><table id="visualscience-user_list-result-'+dialogNumber+'" class="sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
+	var divFinalContent = '<h3>User List</h3><table id="visualscience-user_list-result-'+dialogNumber+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
 	var arrayOfUserResults = getArrayFromTable('user_list-list-'+dialogNumber);
 	for (var i=1; i < arrayOfUserResults.length+1; i++) {
 		divFinalContent += '<td>'+arrayOfUserResults[i-1]+'</td>';

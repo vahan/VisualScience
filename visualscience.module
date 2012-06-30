@@ -167,6 +167,7 @@ function visualscience_page($clear = true) {
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.css');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.tablesorter.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.tablesorter.css');
 
   if (!isset($_SESSION["searchNumber"])) {
   	$_SESSION["searchNumber"] = 0;
