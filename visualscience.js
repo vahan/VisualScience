@@ -687,13 +687,36 @@ function openUserListTab (dialogNumber) {
 		createTabbedInterface(dialogNumber);
 		var title = jQuery("#visualscience-search-query-"+dialogNumber).val();
 		title = (title == '' ? 'All Users' : 'Search: '+title);
-	
+		
 		var nbTabs = jQuery('#'+tabbedInterface).tabs('length');
 		addTab(title, '#visualscience-search-tab-content-'+nbTabs);
-	
-		var content = jQuery('#visualscience-user_list-'+dialogNumber).html();
+		//Insert the table result in a new div
+		var content = createUserTableResult(dialogNumber);//Old, and only eastethic: jQuery('#visualscience-user_list-'+dialogNumber).html();
 		jQuery('#visualscience-search-tab-content-'+nbTabs).html(content).css('display', 'block');
 	}, 1);
+}
+
+function createUserTableResult (dialogNumber) {
+	var divFinalContent = '<h3>User List</h3><table class="sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th><input type="checkbox" class="form-checkbox" title="Select all rows in this table"></th><th>Name</th><th>Mail</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody><tr>';
+	var arrayOfUserResults = getArrayFromTable('user_list-list-'+dialogNumber);
+	for (var i=1; i < arrayOfUserResults.length+1; i++) {
+		divFinalContent += '<td>'+arrayOfUserResults[i-1]+'</td>';
+		
+		if (i%6 == 0 && i != arrayOfUserResults.length) {//It is the end of a line, but not the last line or the first one.
+			divFinalContent += '</tr><tr>';
+		}
+	}
+	divFinalContent += '</tr></tbody></table>';
+	return divFinalContent;
+}
+
+function getArrayFromTable (tableId) {
+	var values = new Array();
+	var td = jQuery('#'+tableId+' > tbody > tr > td');
+	td.each(function(i) {
+		values[i] = jQuery(this).html();
+	})
+	return values;
 }
 
 /*
