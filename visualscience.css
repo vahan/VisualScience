@@ -168,8 +168,8 @@ span.preselected {
  	border: 1px solid #BEBFB9;
  	
 }
-.action-bar p {
-	padding-left:25px;
-	padding-top:0px;
-	margin-top:0px;
+.small-addition-in-title {
+	padding-left:8px;
+	font-size:72%;
+	font-weight:normal;
 }

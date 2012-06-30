@@ -717,7 +717,7 @@ function createUserSearchResult (dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar (idOfThisTab) {
-	var finalDiv = '<div class="action-bar"><h3>Actions</h3><p>to selected users</p>';
+	var finalDiv = '<div id="actionBar'+idOfThisTab+'" class="action-bar"><h3>Actions<span class="small-addition-in-title">to selected users</span></h3>';
 	var sendMessage = '<input class="form-submit" value="Send a Message" type="button" onClick="createTabSendMessage();"  />';
 	var csvExport = '<input class="form-submit" value="Export to CSV" type="button" onClick="exportUsersCSV();"  />';
 	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience();"  />';
@@ -734,8 +734,8 @@ function createActionBar (idOfThisTab) {
  */
 function makeActionBarMoveable (idOfThisTab) {
 	setInterval(function() {
-		if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() <= -220 && jQuery('.action-bar').attr('moveable') != 'true') {
-			jQuery('.action-bar')
+		if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() <= -220 && jQuery('#actionBar'+idOfThisTab).attr('moveable') != 'true') {
+			jQuery('#actionBar'+idOfThisTab)
 				.css({
 						top:'0px',
 						right: '65%',
@@ -743,17 +743,17 @@ function makeActionBarMoveable (idOfThisTab) {
 					})
 				.animate({
     					right:'62px',
-						top:'75%'
+						top:'68%'
   				}, 1500 )
   				.attr('moveable', 'true');
 		}
-		else if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() > -220 && jQuery('.action-bar').attr('moveable') == 'true') {
-			jQuery('.action-bar')
+		else if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() > -200 && jQuery('#actionBar'+idOfThisTab).attr('moveable') == 'true') {
+			jQuery('#actionBar'+idOfThisTab)
 				.animate({
     					right:'65%',
 						top:'30%'
   				}, 1000, function(){
-  					jQuery('.action-bar')
+  					jQuery('#actionBar'+idOfThisTab)
   						.css({
   							position:'static'
   							})
