@@ -151,6 +151,10 @@ span.preselected {
 /*
  * Added code for tab-design
  */
+a:hover{
+	cursor:pointer;
+}
+
 .close-tab-cross {
 	cursor:pointer;
 	font-weight:bolder;
@@ -161,10 +165,11 @@ span.preselected {
 }
 
 .action-bar {
+	z-index:100;
 	display:inline-block;
     padding-left: 12px;
     padding-top: 12px;
- 	background-color: #EEEEEE;
+ 	background-color: #FFFFFF;
  	border: 1px solid #BEBFB9;
  	
 }
