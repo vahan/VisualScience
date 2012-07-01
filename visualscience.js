@@ -737,7 +737,7 @@ function makeActionBarMoveable (idOfThisTab) {
 		if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() <= -220 && jQuery('#actionBar'+idOfThisTab).attr('moveable') != 'true') {
 			jQuery('#actionBar'+idOfThisTab)
 				.css({
-						top:'0px',
+						top:'0%',
 						right: '65%',
 						position:'fixed'
 					})
@@ -747,20 +747,22 @@ function makeActionBarMoveable (idOfThisTab) {
   				}, 1500 )
   				.attr('moveable', 'true');
 		}
-		else if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() > -200 && jQuery('#actionBar'+idOfThisTab).attr('moveable') == 'true') {
+		else if (jQuery('#visualscience-user_list-result-'+idOfThisTab).position().top - jQuery(window).scrollTop() > -150 && jQuery('#actionBar'+idOfThisTab).attr('moveable') == 'true') {
 			jQuery('#actionBar'+idOfThisTab)
 				.animate({
-    					right:'65%',
+    					right:'62%',
 						top:'30%'
   				}, 1000, function(){
   					jQuery('#actionBar'+idOfThisTab)
   						.css({
-  							position:'static'
+  							position:'static',
+  							right:'65%',
+  							top:'0%'
   							})
   						.attr('moveable', 'false');
   				});
 		}
-	}, 300);
+	}, 200);
 }
 
 function createTabSendMessage () {
@@ -789,7 +791,7 @@ function createTableUserList (dialogNumber, idOfThisTab) {
 	for (var i=1; i < arrayOfUserResults.length+1; i++) {
 		divFinalContent += '<td>'+arrayOfUserResults[i-1]+'</td>';
 		
-		if (i%6 == 0 && i != arrayOfUserResults.length) {
+		if (i%countColumnsInTable('user_list-list-'+dialogNumber) == 0 && i != arrayOfUserResults.length) {
 			if (i%2 == 0) {
 				divFinalContent += '</tr><tr class="even">';
 			}
@@ -799,7 +801,20 @@ function createTableUserList (dialogNumber, idOfThisTab) {
 		}
 	}
 	divFinalContent += '</tr></tbody></table>';
+	
 	return divFinalContent;
+}
+
+/*
+ * Count and returns the number of columns in a table.
+ * tableId is the id of the table.
+ */
+function countColumnsInTable (tableId) {
+	var colCount = 0;
+    jQuery('#'+tableId+' > thead > tr > th').each(function () {
+            colCount++;
+    });
+    return colCount;
 }
 
 /*
