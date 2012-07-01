@@ -797,17 +797,26 @@ function createTableUserList(dialogNumber, idOfThisTab) {
 	return divFinalContent;
 }
 
+/*
+ * This functin creates the visibility options for the user list search.
+ * firstly it takes every th field from the header table, and generates the checkbox witht these labels.
+ * On the checkbox there is a function that toggles the visibility of the wanted element. 
+ */
 function getTableUserListOptions (tableId, idOfThisTab, nbColsInTable) {
 	var divOptions = '<fieldset class="collapsible collapsed form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper"><div style="max-height: 300px; overflow: auto">';
 	jQuery('#' + tableId + ' > thead > tr > th').each(function(i) {
 		if (jQuery(this).text() != '') {
-			divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-'+jQuery(this).text()+idOfThisTab+'" class="option"><input type="checkbox" onClick="hideColNbFromTable(\'visualscience-user_list-result-'+idOfThisTab+'\','+i+');" checked="checked" class="form-checkbox" name="checkbox-visibility-'+jQuery(this).text()+idOfThisTab+'" id="checkbox-visibility-'+jQuery(this).text()+idOfThisTab+'" /> '+jQuery(this).text()+' </label></div>';
+			divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-'+jQuery(this).text()+idOfThisTab+'" class="option"><input type="checkbox" onClick="toggleColNbFromTable(\'visualscience-user_list-result-'+idOfThisTab+'\','+i+');" checked="checked" class="form-checkbox" name="checkbox-visibility-'+jQuery(this).text()+idOfThisTab+'" id="checkbox-visibility-'+jQuery(this).text()+idOfThisTab+'" /> '+jQuery(this).text()+' </label></div>';
 		}
 	});
 	divOptions += '</div></div></fieldset>';
 	return divOptions;
 }
 
+/*
+ * This creates the thead of the user list search table.
+ * It takes every thead from the hidden table and generates the thead witht that.
+ */
 function createTableUserListHead (idOfThisTab, dialogNumber) {
 	var header = '<h3>User List</h3><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
@@ -817,7 +826,11 @@ function createTableUserListHead (idOfThisTab, dialogNumber) {
 	return header;
 }
 
-function hideColNbFromTable (tableId, colNb) {
+/*
+ * toggles the visibility of a column in a table.
+ * tableId is the id of the table and colNb the number (from 0)  of the col to toggle.
+ */
+function toggleColNbFromTable (tableId, colNb) {
 	jQuery('#'+tableId+' td:nth-child('+(colNb+1)+')').toggle();
 	jQuery('#'+tableId+' th:nth-child('+(colNb+1)+')').toggle();
 }
