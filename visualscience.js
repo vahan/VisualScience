@@ -791,6 +791,10 @@ function exportUsersCSV() {
 	alert('Please be patient !');
 }
 
+/*
+ * In this function we create a new LivingScience tab, with the names the end-user checkd in the userlist.
+ * idOfTheTab is the id of the tab where the livingscience request was sent.
+ */
 function createTabLivingScience(idOfTheTab) {
 	//create the tab
 	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
@@ -804,15 +808,23 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	 * Enable the comments to have a working version, for the other computers and the general version of VisualScience
 	 */
 	var firstFieldNumber = getThWithContent(tableId, 'name');//To delete when comments enabled
-	//var firstFieldToTake = getThWithContent(tableId, 'first_name');
-	//var secondFieldToTake = getThWithContent(tableId, 'last_name');
+	//var firstFieldToTake = getThWithContent('#'+tableId, 'First Name');
+	//var secondFieldToTake = getThWithContent('#'+tableId, 'Last Name');
 	var completeNamesArray = new Array();
-	jQuery(tableId+' > tbody > tr').each(function() {
-		completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
-		//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr > td:nth-child('+secondFieldNumber+')').text());
+	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
+		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
+			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
+			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text());
+		}
 	});
+	return completeNamesArray;
 }
 
+/*
+ * With this function, you get the column number from a table, whose column's th contains fieldContent.
+ * tableId is the id of the table you want to check for the column number.
+ * fieldContent is the content of the th the column should have. 
+ */
 function getThWithContent(tableId, fieldContent) {
 	for (var i=0; i <= countColumnsInTable(tableId); i++) {
 		if (jQuery('#'+tableId+' > thead > tr > th:nth-child('+i+')').text() == fieldContent) {
