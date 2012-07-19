@@ -679,12 +679,19 @@ var tabbedInterface = 'tabbed-interface';
 //Variable to differentiate each tab from each other
 var tabId = 0;
 
+//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results)
+var livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+
+//This is the DialogNumber variable. Setting it global makes everything much more easier to use.
+var dialogNumber;
+
 /*
  * This function is called when the user launches the search from the bar.
  * It will first chekc if the tabbed itnerface is loaded and load it if not.
  * Then it adds a new tab to the interface, with the result of the search.
  */
-function openUserListTab(dialogNumber) {
+function openUserListTab(dialogNumber_) {
+	dialogNumber = dialogNumber_;
 	setTimeout(function() {//(Bad style) The tab creation should be deleted, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
 		createTabbedInterface(dialogNumber);
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
@@ -720,7 +727,7 @@ function createActionBar(idOfThisTab) {
 	var finalDiv = '<div id="actionBar' + idOfThisTab + '" class="action-bar"><h3>Actions<span class="small-addition-in-title">to selected users</span></h3>';
 	var sendMessage = '<input class="form-submit" value="Send a Message" type="button" onClick="createTabSendMessage();"  />';
 	var csvExport = '<input class="form-submit" value="Export to CSV" type="button" onClick="exportUsersCSV();"  />';
-	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience();"  />';
+	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  />';
 	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" />';
 	finalDiv += sendMessage + csvExport + livingscience + conference + '</div>';
 	makeActionBarMoveable(idOfThisTab);//Change this if it doesn't work.
@@ -736,7 +743,7 @@ function makeActionBarMoveable(idOfThisTab) {
 	/*
 	 * The problem with this technique, is that it is triggered too often,
 	 *  and the browser crashes because of the number of alerts... 
-	 * The real challenge is to find a correct event.
+	 * The real challenge is to find a correct event.	
 	 */
 	/*window.onscroll = function () {
 		var actionBar = jQuery('#actionBar' + idOfThisTab);
@@ -782,8 +789,37 @@ function exportUsersCSV() {
 	alert('Please be patient !');
 }
 
-function createTabLivingScience() {
-	alert('We are working hard you know ?');
+function createTabLivingScience(idOfTheTab) {
+	//create the tab
+	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
+	livingscience.searchAuthor(stringQuery, onLivingScienceResults());
+	//create a wait bar
+}
+
+function getSelectedUsersFromSearchTable (idOfTheTab) {
+	/*
+	 * Enable the comments to have a working version, for the other computers and the general version of VisualScience
+	 */
+	var firstFieldNumber = getThWithContent('visualscience-user_list-result-'+dialogNumber, 'name');//To delete when comments enabled
+	//var firstFieldToTake = getThWithContent('visualscience-user_list-result-'+dialogNumber, 'first_name');
+	//var secondFieldToTake = getThWithContent('visualscience-user_list-result-'+dialogNumber, 'last_name');
+	var completeNamesArray = new Array();
+	jQuery('#visualscience-user_list-result-'+dialogNumber+' > tbody > tr').each(function() {
+		completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
+		//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr > td:nth-child('+secondFieldNumber+')').text());
+	});
+}
+
+function getThWithContent(tableId, fieldContent) {
+	for (var i=0; i <= countColumnsInTable(tableId); i++) {
+		if (jQuery('#'+tableId+' > thead > tr > th:nth-child('+i+')').text() == fieldContent) {
+			return i;
+		}
+	}
+}
+
+function onLivingScienceResults (listOfPublications) {
+	
 }
 
 function createTabConference() {
