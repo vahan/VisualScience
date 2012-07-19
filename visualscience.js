@@ -679,8 +679,10 @@ var tabbedInterface = 'tabbed-interface';
 //Variable to differentiate each tab from each other
 var tabId = 0;
 
-//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results)
-var livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
+window.onload = function() {
+	var livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+}
 
 //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 var dialogNumber;
@@ -797,14 +799,15 @@ function createTabLivingScience(idOfTheTab) {
 }
 
 function getSelectedUsersFromSearchTable (idOfTheTab) {
+	var tableId = 'visualscience-user_list-result-'+idOfTheTab;
 	/*
 	 * Enable the comments to have a working version, for the other computers and the general version of VisualScience
 	 */
-	var firstFieldNumber = getThWithContent('visualscience-user_list-result-'+dialogNumber, 'name');//To delete when comments enabled
-	//var firstFieldToTake = getThWithContent('visualscience-user_list-result-'+dialogNumber, 'first_name');
-	//var secondFieldToTake = getThWithContent('visualscience-user_list-result-'+dialogNumber, 'last_name');
+	var firstFieldNumber = getThWithContent(tableId, 'name');//To delete when comments enabled
+	//var firstFieldToTake = getThWithContent(tableId, 'first_name');
+	//var secondFieldToTake = getThWithContent(tableId, 'last_name');
 	var completeNamesArray = new Array();
-	jQuery('#visualscience-user_list-result-'+dialogNumber+' > tbody > tr').each(function() {
+	jQuery(tableId+' > tbody > tr').each(function() {
 		completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
 		//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr > td:nth-child('+secondFieldNumber+')').text());
 	});
