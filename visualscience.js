@@ -723,7 +723,7 @@ function createActionBar(idOfThisTab) {
 	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience();"  />';
 	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" />';
 	finalDiv += sendMessage + csvExport + livingscience + conference + '</div>';
-	makeActionBarMoveable(idOfThisTab);
+	makeActionBarMoveable(idOfThisTab);//Change this if it doesn't work.
 	return finalDiv;
 }
 
@@ -733,6 +733,22 @@ function createActionBar(idOfThisTab) {
  * TODO: Strangely, the animation is not the same in Firefox and in Chrome. Fixing this may be important for a unified UX.
  */
 function makeActionBarMoveable(idOfThisTab) {
+	/*
+	 * The problem with this technique, is that it is triggered too often,
+	 *  and the browser crashes because of the number of alerts... 
+	 * The real challenge is to find a correct event.
+	 */
+	/*window.onscroll = function () {
+		var actionBar = jQuery('#actionBar' + idOfThisTab);
+		if (jQuery(window).scrollTop() >= 650 && actionBar.attr('moveable') != 'true') {
+			actionBar.attr('moveable', 'true');
+			alert('coucou');
+		}
+		else if (jQuery(window).scrollTop() < 650 && actionBar.attr('moveable') == 'true') {
+			actionBar.attr('moveable', 'false');
+		}
+	}
+	*/
 	setInterval(function() {
 		if (jQuery('#visualscience-user_list-result-' + idOfThisTab).position().top - jQuery(window).scrollTop() <= -220 && jQuery('#actionBar' + idOfThisTab).attr('moveable') != 'true') {
 			jQuery('#actionBar' + idOfThisTab).css({
