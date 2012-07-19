@@ -680,12 +680,16 @@ var tabbedInterface = 'tabbed-interface';
 var tabId = 0;
 
 //Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
+var livingscience;
+var db;
 window.onload = function() {
-	var livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+	db = new NDDB();
 }
 
 //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 var dialogNumber;
+
 
 /*
  * This function is called when the user launches the search from the bar.
@@ -705,8 +709,7 @@ function openUserListTab(dialogNumber_) {
 		var idOfThisTab = tabId;
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + nbTabs).html(content).css('display', 'block');
-		jQuery('#visualscience-user_list-result-' + idOfThisTab).tablesorter();
-		//Enable the table to be sorted
+		jQuery('#visualscience-user_list-result-' + idOfThisTab).tablesorter(); //Enables the table to be sorted
 	}, 1);
 }
 
@@ -796,10 +799,12 @@ function exportUsersCSV() {
  * idOfTheTab is the id of the tab where the livingscience request was sent.
  */
 function createTabLivingScience(idOfTheTab) {
-	//create the tab
 	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
-	livingscience.searchAuthor(stringQuery, onLivingScienceResults());
-	//create a wait bar
+	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
+	addTab('LivingScience', '#livingscience-tab-'+nbTabs);
+	livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs); });
+	//TODO: Replace with a Drupal loading picture
+	jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search lauched, please be patient...</h4><img src="images/prelloader.gif" width="100px" alt="loading" /></center>');
 }
 
 function getSelectedUsersFromSearchTable (idOfTheTab) {
@@ -810,14 +815,36 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	var firstFieldNumber = getThWithContent(tableId, 'name');//To delete when comments enabled
 	//var firstFieldToTake = getThWithContent('#'+tableId, 'First Name');
 	//var secondFieldToTake = getThWithContent('#'+tableId, 'Last Name');
+	
 	var completeNamesArray = new Array();
+	var nbRows = 0;
 	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
 			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
+			
 			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text());
 		}
+		nbRows = index;
 	});
-	return completeNamesArray;
+	nbRows++;
+	if (jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') input').is(':checked')) {
+			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
+			
+			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+secondFieldNumber+')').text());
+		}
+	
+	//From now, we will generate a string out of the array, with the names separated with an OR.
+	var string = '';
+	for (var i=0; i < completeNamesArray.length; i++) {
+		if (i == completeNamesArray.length -1) {
+			string += completeNamesArray[i]
+		}
+		else{
+			string += completeNamesArray[i]+' OR ';
+		}
+	}
+	
+	return string;//completeNamesArray;
 }
 
 /*
@@ -833,8 +860,21 @@ function getThWithContent(tableId, fieldContent) {
 	}
 }
 
-function onLivingScienceResults (listOfPublications) {
+function onLivingScienceResults (listOfPublications, idDivUnderTab) {
+	//Replace this line with db.import(listOfPublications), when the NDDB Module will be imported.
+	jQuery('#'+idDivUnderTab).empty();
+	db.import(listOfPublications);
+	console.dir(listOfPublications);
+	var test = db.select('title','=','Cooperation, Norms, and Revolutions: A Unified Game-Theoretical Approach').first();
+	if (!test) {
+		var id = 10;
+		console.log('error');
+	}
+	else {
+		var id = test.nddbid;
+	}
 	
+	livingscience.generateList(id-1, id+1,  idDivUnderTab);//Instead of this, you have to create the livingscience tab
 }
 
 function createTabConference() {
