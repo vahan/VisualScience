@@ -863,7 +863,7 @@ function getThWithContent(tableId, fieldContent) {
 function onLivingScienceResults (listOfPublications, idDivUnderTab) {
 	//Replace this line with db.import(listOfPublications), when the NDDB Module will be imported.
 	jQuery('#'+idDivUnderTab).empty();
-	db.import(listOfPublications);
+	db.importDB(listOfPublications);
 	console.dir(listOfPublications);
 	var test = db.select('title','=','Cooperation, Norms, and Revolutions: A Unified Game-Theoretical Approach').first();
 	if (!test) {
