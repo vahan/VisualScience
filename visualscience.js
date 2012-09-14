@@ -804,7 +804,7 @@ function createTabLivingScience(idOfTheTab) {
 	addTab('LivingScience', '#livingscience-tab-'+nbTabs);
 	livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs); });
 	//TODO: Replace with a Drupal loading picture
-	jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search lauched, please be patient...</h4><img src="images/prelloader.gif" width="100px" alt="loading" /></center>');
+	jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search lauched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
 }
 
 function getSelectedUsersFromSearchTable (idOfTheTab) {
