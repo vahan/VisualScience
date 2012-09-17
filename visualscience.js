@@ -718,6 +718,7 @@ function openUserListTab(dialogNumber_) {
 		var idOfThisTab = tabId;
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + nbTabs).html(content).css('display', 'block');
+		makeActionBarMoveable(idOfThisTab);
 		jQuery('#visualscience-user_list-result-' + idOfThisTab).tablesorter(); //Enables the table to be sorted
 	}, 1);
 }
@@ -731,68 +732,42 @@ function openUserListTab(dialogNumber_) {
 function createUserSearchResult(dialogNumber, idOfThisTab) {
 	var actionBar = createActionBar(idOfThisTab);
 	var tableUserList = createTableUserList(dialogNumber, idOfThisTab);
-	return actionBar + tableUserList;
+	return '<h3>User List</h3>'+actionBar + tableUserList;
 }
 
 /*
  * This creates the action bar, with the different buttons.
  */
 function createActionBar(idOfThisTab) {
-	var finalDiv = '<div id="actionBar' + idOfThisTab + '" class="action-bar"><h3>Actions<span class="small-addition-in-title">to selected users</span></h3>';
-	var sendMessage = '<input class="form-submit" value="Send a Message" type="button" onClick="createTabSendMessage();"  />';
-	var csvExport = '<input class="form-submit" value="Export to CSV" type="button" onClick="exportUsersCSV();"  />';
-	var livingscience = '<input class="form-submit" value="Living Science" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  />';
-	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" />';
-	finalDiv += sendMessage + csvExport + livingscience + conference + '</div>';
-	makeActionBarMoveable(idOfThisTab);//Change this if it doesn't work.
+	var finalDiv = '<div align="center" height="100%" class="action-bar-container"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
+	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage();"  /><br />';
+	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV();"  /><br />';
+	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
+	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" /><br />';
+	finalDiv += sendMessage + csvExport + livingscience + conference + '</div></div>';
 	return finalDiv;
 }
 
 /*
  * Depending on what the user sees, the action bar will be static at the top of the page,
  * or fixed on the left, when he scrolls down.
- * TODO: Strangely, the animation is not the same in Firefox and in Chrome. Fixing this may be important for a unified UX.
  */
+var top_offset;
 function makeActionBarMoveable(idOfThisTab) {
-	/*
-	 * The problem with this technique, is that it is triggered too often,
-	 *  and the browser crashes because of the number of alerts... 
-	 * The real challenge is to find a correct event.	
-	 */
-	/*window.onscroll = function () {
-		var actionBar = jQuery('#actionBar' + idOfThisTab);
-		if (jQuery(window).scrollTop() >= 650 && actionBar.attr('moveable') != 'true') {
-			actionBar.attr('moveable', 'true');
-			alert('coucou');
-		}
-		else if (jQuery(window).scrollTop() < 650 && actionBar.attr('moveable') == 'true') {
-			actionBar.attr('moveable', 'false');
-		}
+	if (!top_offset) {
+		top_offset = jQuery('.action-bar-container').offset().top;
 	}
-	*/
-	setInterval(function() {
-		if (jQuery('#visualscience-user_list-result-' + idOfThisTab).position().top - jQuery(window).scrollTop() <= -220 && jQuery('#actionBar' + idOfThisTab).attr('moveable') != 'true') {
-			jQuery('#actionBar' + idOfThisTab).css({
-				top : '0%',
-				right : '65%',
-				position : 'fixed'
-			}).animate({
-				right : '62px',
-				top : '68%'
-			}, 1500).attr('moveable', 'true');
-		} else if (jQuery('#visualscience-user_list-result-' + idOfThisTab).position().top - jQuery(window).scrollTop() > -150 && jQuery('#actionBar' + idOfThisTab).attr('moveable') == 'true') {
-			jQuery('#actionBar' + idOfThisTab).animate({
-				right : '62%',
-				top : '30%'
-			}, 1000, function() {
-				jQuery('#actionBar' + idOfThisTab).css({
-					position : 'static',
-					right : '65%',
-					top : '0%'
-				}).attr('moveable', 'false');
-			});
-		}
-	}, 200);
+	var el = jQuery('#actionBar'+idOfThisTab);
+	jQuery(window).bind('scroll', function() {
+		var scroll_top = jQuery(window).scrollTop();
+		var threshold = 100; //a threshold so the bar does not stick to the top
+    	if (scroll_top > top_offset - threshold) {
+    		el.css('top', scroll_top - top_offset + threshold);
+    	}
+    	else {
+    	    el.css('top', '');
+    	}
+	});
 }
 
 function createTabSendMessage() {
@@ -885,7 +860,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	lslist.set(listOfPublications);
 	db.importDB(lslist.getPubs());
 	lsDB[thisTabId] = db;
-	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
+	generateLivingScienceFromDB(listOfPublications, idDivUnderTab, thisTabId);
 }
 
 function generateLivingScienceFromDB (database, location, thisTabId) {
@@ -932,13 +907,13 @@ function createTableUserList(dialogNumber, idOfThisTab) {
 			}
 		}
 	}
-	divFinalContent += '</tr></tbody></table>';
+	divFinalContent += '</tr></tbody></table></div>';
 	divFinalContent += getTableUserListOptions('user_list-list-' + dialogNumber, idOfThisTab, nbColsInTable);
 	return divFinalContent;
 }
 
 /*
- * This functin creates the visibility options for the user list search.
+ * This function creates the visibility options for the user list search.
  * firstly it takes every th field from the header table, and generates the checkbox witht these labels.
  * On the checkbox there is a function that toggles the visibility of the wanted element. 
  */
@@ -958,9 +933,9 @@ function getTableUserListOptions (tableId, idOfThisTab, nbColsInTable) {
  * It takes every thead from the hidden table and generates the thead witht that.
  */
 function createTableUserListHead (idOfThisTab, dialogNumber) {
-	var header = '<h3>User List</h3><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
+	var header = '<div width="50%" style="display:inline-block;position:relative;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
-		header += '<th>'+jQuery(this).html()+'</th>';
+		header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 	});
 	header += '</tr></thead><tbody><tr class="odd">';
 	return header;
