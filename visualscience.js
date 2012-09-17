@@ -683,7 +683,7 @@ var tabId = 0;
 var livingscience;
 var db;
 window.onload = function() {
-	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceList(); //Old API: ch.ethz.livingscience.gwtclient.api.LivingScienceSearch()
 	db = new NDDB();
 }
 
@@ -864,17 +864,10 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab) {
 	//Replace this line with db.import(listOfPublications), when the NDDB Module will be imported.
 	jQuery('#'+idDivUnderTab).empty();
 	db.importDB(listOfPublications);
-	console.dir(listOfPublications);
-	var test = db.select('title','=','Cooperation, Norms, and Revolutions: A Unified Game-Theoretical Approach').first();
-	if (!test) {
-		var id = 10;
-		console.log('error');
-	}
-	else {
-		var id = test.nddbid;
-	}
 	
-	livingscience.generateList(id-1, id+1,  idDivUnderTab);//Instead of this, you have to create the livingscience tab
+	//Testing:
+	livingscience.set(listOfPublications);
+	livingscience.generateList(0, 10,  idDivUnderTab);//Instead of this line, you have to create the livingscience tab
 }
 
 function createTabConference() {
