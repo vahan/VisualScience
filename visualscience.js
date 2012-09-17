@@ -886,7 +886,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab) {
 	lsrelations.set(listOfPublications);
 	
 	//generateLSTabDivs:
-	jQuery(idDivUnderTab).html('<div id="lsListId"></div><div id ="lsMapId"></div><div id="lsRelationsId"></div>');
+	jQuery('#' + idDivUnderTab).html('<div id="lsListId"></div><div id ="lsMapId"></div><div id="lsRelationsId"></div>');
 	lslist.generateList(0, 10, 'lsListId');
 	lsmap.setParent('lsMapId');
 	lsrelations.setParent('lsRelationsId');
