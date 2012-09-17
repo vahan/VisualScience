@@ -809,12 +809,15 @@ function exportUsersCSV() {
  */
 function createTabLivingScience(idOfTheTab) {
 	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
-	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-	addTab('LivingScience', '#livingscience-tab-'+nbTabs);
-	var thisTabId = tabId;
-	livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs, thisTabId); });
-	//TODO: Replace with a Drupal loading picture
-	jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search lauched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
+	if (selectedUsers != ''){
+		var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
+		addTab('LivingScience', '#livingscience-tab-'+nbTabs);
+		var thisTabId = tabId;
+		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs, thisTabId); });
+		//TODO: Replace with a Drupal loading picture
+		jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search lauched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
+
+	}
 }
 
 function getSelectedUsersFromSearchTable (idOfTheTab) {
