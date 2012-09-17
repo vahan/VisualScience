@@ -668,7 +668,7 @@ function setAutocompletes() {
 //TODO enable double click for maximize/restore
 
 /**
- * Code for new Design (Sebastien test)
+ * Code for new Design (Sebastien)
  */
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
@@ -686,12 +686,15 @@ var lsmap; //API instance to generate map
 var lsrelations; //API instance to generate relations
 var db;
 window.onload = function() {
+	db = new NDDB();
 	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
 	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
 	lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
 	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
-	db = new NDDB();
 }
+
+//This is the array containing all the databases result from LivingScience
+var lsDB = new Array();
 
 //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 var dialogNumber;
@@ -699,7 +702,7 @@ var dialogNumber;
 
 /*
  * This function is called when the user launches the search from the bar.
- * It will first chekc if the tabbed itnerface is loaded and load it if not.
+ * It will first check if the tabbed interface is loaded and load it if not.
  * Then it adds a new tab to the interface, with the result of the search.
  */
 function openUserListTab(dialogNumber_) {
@@ -808,7 +811,8 @@ function createTabLivingScience(idOfTheTab) {
 	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
 	addTab('LivingScience', '#livingscience-tab-'+nbTabs);
-	livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs); });
+	var thisTabId = tabId;
+	livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs, thisTabId); });
 	//TODO: Replace with a Drupal loading picture
 	jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search lauched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
 }
@@ -872,30 +876,35 @@ function getThWithContent(tableId, fieldContent) {
  * (More infos: https://github.com/nodeGame/NDDB)
  * Then, thanks to this database, we generate the nice table in the div under the tab. 
  */
-function onLivingScienceResults (listOfPublications, idDivUnderTab) {
+function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	//Replace this line with db.import(listOfPublications), when the NDDB Module will be imported.
 	jQuery('#'+idDivUnderTab).empty();
-	//db.importDB(listOfPublications);
-	
-	/*
-	 * Testing purpose:
-	 */
-	//setLSResults():
 	lslist.set(listOfPublications);
-	lsmap.set(listOfPublications);
-	lsrelations.set(listOfPublications);
-	
-	//generateLSTabDivs:
-	jQuery('#' + idDivUnderTab).html('<div id="lsListId"></div><div id ="lsMapId"></div><div id="lsRelationsId"></div>');
-	lslist.generateList(0, 10, 'lsListId');
-	lsmap.setParent('lsMapId');
-	lsrelations.setParent('lsRelationsId');
-	
-	/*
-	Instead of these lines, you have to create the livingscience tab:
-	ls.set(listOfPublications);
-	ls.generateList(0, 10,  idDivUnderTab);
-	*/
+	db.importDB(lslist.getPubs());
+	lsDB[thisTabId] = db;
+	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
+}
+
+function generateLivingScienceFromDB (database, location, thisTabId) {
+	jQuery('#'+location).html('<div id="ls-list-'+thisTabId+'"></div><div id="ls-map-'+thisTabId+'"></div><div id="ls-relations-'+thisTabId+'"></div>');
+	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
+	generateMapDiv(database, 'ls-map-'+thisTabId);
+	generateRelationsDiv(database, 'ls-relations-'+thisTabId);
+}
+
+function generatePublicationsDiv (database, start, howMany, location) {
+	lslist.set(database);
+	lslist.generateList(start, howMany, location);
+}
+
+function generateRelationsDiv (database, location) {
+	lsrelations.set(database);
+	lsrelations.setParent(location);
+}
+
+function generateMapDiv (database, location) {
+	lsmap.set(database);
+	lsmap.setParent(location);
 }
 
 function createTabConference() {
