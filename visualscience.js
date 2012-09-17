@@ -680,10 +680,16 @@ var tabbedInterface = 'tabbed-interface';
 var tabId = 0;
 
 //Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
-var livingscience;
+var livingscience; //API instance to make search
+var lslist; //API instance to generate list
+var lsmap; //API instance to generate map
+var lsrelations; //API instance to generate relations
 var db;
 window.onload = function() {
-	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceList(); //Old API: ch.ethz.livingscience.gwtclient.api.LivingScienceSearch()
+	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+	lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
+	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
 	db = new NDDB();
 }
 
@@ -860,14 +866,36 @@ function getThWithContent(tableId, fieldContent) {
 	}
 }
 
+/*
+ * This function is the callback when a livingscience search is done.
+ * First we get the list of publications, and store them in a NDDB object, which is just a NoSQL database inside JavaScript.
+ * (More infos: https://github.com/nodeGame/NDDB)
+ * Then, thanks to this database, we generate the nice table in the div under the tab. 
+ */
 function onLivingScienceResults (listOfPublications, idDivUnderTab) {
 	//Replace this line with db.import(listOfPublications), when the NDDB Module will be imported.
 	jQuery('#'+idDivUnderTab).empty();
-	db.importDB(listOfPublications);
+	//db.importDB(listOfPublications);
 	
-	//Testing:
-	livingscience.set(listOfPublications);
-	livingscience.generateList(0, 10,  idDivUnderTab);//Instead of this line, you have to create the livingscience tab
+	/*
+	 * Testing purpose:
+	 */
+	//setLSResults():
+	lslist.set(listOfPublications);
+	lsmap.set(listOfPublications);
+	lsrelations.set(listOfPublications);
+	
+	//generateLSTabDivs:
+	jQuery(idDivUnderTab).html('<div id="lsListId"></div><div id ="lsMapId"></div><div id="lsRelationsId"></div>');
+	lslist.generateList(0, 10, 'lsListId');
+	lsmap.setParent('lsMapId');
+	lsrelations.setParent('lsRelationsId');
+	
+	/*
+	Instead of these lines, you have to create the livingscience tab:
+	ls.set(listOfPublications);
+	ls.generateList(0, 10,  idDivUnderTab);
+	*/
 }
 
 function createTabConference() {
@@ -875,7 +903,7 @@ function createTabConference() {
 }
 
 /*
- * Creates the table, which can be sorted.
+ * Creates the table of users, which can be sorted.
  */
 
 function createTableUserList(dialogNumber, idOfThisTab) {
