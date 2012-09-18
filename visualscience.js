@@ -739,7 +739,7 @@ function createUserSearchResult(dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar(idOfThisTab) {
-	var finalDiv = '<div align="center" height="100%" class="action-bar-container"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
+	var finalDiv = '<div align="center" height="10000px" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
 	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage();"  /><br />';
 	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV();"  /><br />';
 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
@@ -755,8 +755,9 @@ function createActionBar(idOfThisTab) {
 var top_offset;
 function makeActionBarMoveable(idOfThisTab) {
 	if (!top_offset) {
-		top_offset = jQuery('.action-bar-container').offset().top;
+		top_offset = jQuery('#action-bar-container'+idOfThisTab).offset().top;
 	}
+	jQuery('#action-bar-container'+idOfThisTab).height(jQuery('#visualscience-user_list-result-'+idOfThisTab).height());
 	var el = jQuery('#actionBar'+idOfThisTab);
 	jQuery(window).bind('scroll', function() {
 		var scroll_top = jQuery(window).scrollTop();
@@ -933,7 +934,7 @@ function getTableUserListOptions (tableId, idOfThisTab, nbColsInTable) {
  * It takes every thead from the hidden table and generates the thead witht that.
  */
 function createTableUserListHead (idOfThisTab, dialogNumber) {
-	var header = '<div width="50%" style="display:inline-block;position:relative;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
+	var header = '<div style="display:inline-block;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
 		header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 	});
