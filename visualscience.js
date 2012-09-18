@@ -719,8 +719,21 @@ function openUserListTab(dialogNumber_) {
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + nbTabs).html(content).css('display', 'block');
 		makeActionBarMoveable(idOfThisTab);
-		jQuery('#visualscience-user_list-result-' + idOfThisTab).tablesorter(); //Enables the table to be sorted
+		jQuery('#visualscience-user_list-result-' + idOfThisTab).tablesorter({
+			headers: {
+				0:{
+					sorter:false
+				}
+			}
+		}); //Enables the table to be sorted
+		makeAllCheckboxInTableSelectable(idOfThisTab);
 	}, 1);
+}
+
+function makeAllCheckboxInTableSelectable (idOfThisTab) {
+	jQuery('#visualscience-user_list-result-'+idOfThisTab+' input[type="checkbox"]').bind('click', function() {
+		
+	});
 }
 
 /*
@@ -739,7 +752,7 @@ function createUserSearchResult(dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar(idOfThisTab) {
-	var finalDiv = '<div align="center" height="10000px" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
+	var finalDiv = '<div align="center" height="10000px" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
 	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage();"  /><br />';
 	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV();"  /><br />';
 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
@@ -936,10 +949,30 @@ function getTableUserListOptions (tableId, idOfThisTab, nbColsInTable) {
 function createTableUserListHead (idOfThisTab, dialogNumber) {
 	var header = '<div style="display:inline-block;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
-		header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
+		//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
+		if (jQuery(this).html().indexOf('form-checkbox') != -1) {
+			header += '<th style="min-width:35px;" onClick="selectAllBoxes('+idOfThisTab+')"><input type="checkbox" id="user-list_master_checkbox-'+idOfThisTab+'" class="form-checkbox" title="Select all rows in this table" /></th>';
+		}
+		else {
+			header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
+		}
 	});
 	header += '</tr></thead><tbody><tr class="odd">';
 	return header;
+}
+
+function selectAllBoxes (idOfThisTab) {
+	var newState;
+	if (jQuery('#user-list_master_checkbox-'+idOfThisTab).attr('checked') == true) {
+		newState = false;
+	}
+	else {
+		newState = true;
+	}
+	jQuery('#user-list_master_checkbox-'+idOfThisTab).attr('checked', newState);
+	jQuery('#visualscience-user_list-result-'+idOfThisTab+' > tbody > tr > td > input[id|="user_list-list"]').each(function() {
+		jQuery(this).attr('checked', newState);		
+	});
 }
 
 /*
