@@ -952,7 +952,7 @@ function createTableUserListHead (idOfThisTab, dialogNumber) {
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
 		//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 		if (jQuery(this).html().indexOf('form-checkbox') != -1) {
-			header += '<th style="min-width:35px;" onClick="selectAllBoxes('+idOfThisTab+')"><input type="checkbox" id="user-list_master_checkbox-'+idOfThisTab+'" class="form-checkbox" title="Select all rows in this table" /></th>';
+			header += '<th style="min-width:35px;" onClick="selectAllBoxes('+idOfThisTab+')"><input type="checkbox" id="user-list_master_checkbox-'+idOfThisTab+'" class="form-checkbox" title="Select all rows in this table" onClick="selectAllBoxes('+idOfThisTab+')" /></th>';
 		}
 		else {
 			header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
