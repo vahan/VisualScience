@@ -719,21 +719,22 @@ function openUserListTab(dialogNumber_) {
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + nbTabs).html(content).css('display', 'block');
 		makeActionBarMoveable(idOfThisTab);
-		jQuery('#visualscience-user_list-result-' + idOfThisTab).tablesorter({
+		makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+	}, 1);
+}
+/*
+ * Automatically turns a table into a sortable table.(jQuery Plugin: Tablesorter 2.0)
+ * the parameter idOfTable is the actual id of the table to be sorted. 
+ * Attention: The first column won't be sortable.(That's the reason for parameter headers:{0...})
+ */
+function makeTableSortable (idOfTable) {
+	jQuery('#'+idOfTable).tablesorter({
 			headers: {
 				0:{
 					sorter:false
 				}
 			}
-		}); //Enables the table to be sorted
-		makeAllCheckboxInTableSelectable(idOfThisTab);
-	}, 1);
-}
-
-function makeAllCheckboxInTableSelectable (idOfThisTab) {
-	jQuery('#visualscience-user_list-result-'+idOfThisTab+' input[type="checkbox"]').bind('click', function() {
-		
-	});
+		});
 }
 
 /*
@@ -970,7 +971,7 @@ function selectAllBoxes (idOfThisTab) {
 		newState = true;
 	}
 	jQuery('#user-list_master_checkbox-'+idOfThisTab).attr('checked', newState);
-	jQuery('#visualscience-user_list-result-'+idOfThisTab+' > tbody > tr > td > input[id|="user_list-list"]').each(function() {
+	jQuery('#visualscience-user_list-result-'+idOfThisTab+' input[id|="user_list-list"]').each(function() {
 		jQuery(this).attr('checked', newState);		
 	});
 }
