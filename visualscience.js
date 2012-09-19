@@ -753,7 +753,7 @@ function createUserSearchResult(dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar(idOfThisTab) {
-	var finalDiv = '<div align="center" height="10000px" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
+	var finalDiv = '<div align="center" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
 	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage();"  /><br />';
 	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV();"  /><br />';
 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
@@ -770,17 +770,18 @@ function makeActionBarMoveable(idOfThisTab) {
 	var top_offset = jQuery('#action-bar-container'+idOfThisTab).offset().top;
 	var tableHeight = jQuery('#visualscience-user_list-result-'+idOfThisTab).height();
 	var actionBarHeight = jQuery('#actionBar'+idOfThisTab).height();
+	var niceVisualAdjustment = 15;
 	jQuery('#action-bar-container'+idOfThisTab).height(tableHeight);
 	var el = jQuery('#actionBar'+idOfThisTab);
 	jQuery(window).bind('scroll', function() {
 		var scroll_top = jQuery(window).scrollTop();
 		var threshold = 100; //a threshold so the bar does not stick to the top
-    	if (scroll_top > top_offset - threshold) {
-    		el.css('top', scroll_top - top_offset + threshold);
+		
+    	if (scroll_top + threshold + actionBarHeight > top_offset + tableHeight) {
+    		el.css('top',tableHeight - actionBarHeight);
     	}
-    	else if (scroll_top + threshold + 2*actionBarHeight > top_offset + tableHeight) {
-    		alert('detected');
-    		el.css('top', scroll_top - top_offset + threshold + tableHeight);
+    	else if (scroll_top > top_offset - threshold) {
+    		el.css('top', scroll_top - top_offset + threshold);
     	}
     	else {
     	    el.css('top', '');
