@@ -766,18 +766,21 @@ function createActionBar(idOfThisTab) {
  * Depending on what the user sees, the action bar will be static at the top of the page,
  * or fixed on the left, when he scrolls down.
  */
-var top_offset;
 function makeActionBarMoveable(idOfThisTab) {
-	if (!top_offset) {
-		top_offset = jQuery('#action-bar-container'+idOfThisTab).offset().top;
-	}
-	jQuery('#action-bar-container'+idOfThisTab).height(jQuery('#visualscience-user_list-result-'+idOfThisTab).height());
+	var top_offset = jQuery('#action-bar-container'+idOfThisTab).offset().top;
+	var tableHeight = jQuery('#visualscience-user_list-result-'+idOfThisTab).height();
+	var actionBarHeight = jQuery('#actionBar'+idOfThisTab).height();
+	jQuery('#action-bar-container'+idOfThisTab).height(tableHeight);
 	var el = jQuery('#actionBar'+idOfThisTab);
 	jQuery(window).bind('scroll', function() {
 		var scroll_top = jQuery(window).scrollTop();
 		var threshold = 100; //a threshold so the bar does not stick to the top
     	if (scroll_top > top_offset - threshold) {
     		el.css('top', scroll_top - top_offset + threshold);
+    	}
+    	else if (scroll_top + threshold + 2*actionBarHeight > top_offset + tableHeight) {
+    		alert('detected');
+    		el.css('top', scroll_top - top_offset + threshold + tableHeight);
     	}
     	else {
     	    el.css('top', '');
