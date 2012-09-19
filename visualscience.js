@@ -770,8 +770,9 @@ function makeActionBarMoveable(idOfThisTab) {
 	var top_offset = jQuery('#action-bar-container'+idOfThisTab).offset().top;
 	var tableHeight = jQuery('#visualscience-user_list-result-'+idOfThisTab).height();
 	var actionBarHeight = jQuery('#actionBar'+idOfThisTab).height();
-	var niceVisualAdjustment = 15;
-	jQuery('#action-bar-container'+idOfThisTab).height(tableHeight);
+	if (tableHeight > actionBarHeight) {
+		jQuery('#action-bar-container'+idOfThisTab).height(tableHeight);		
+	}
 	var el = jQuery('#actionBar'+idOfThisTab);
 	jQuery(window).bind('scroll', function() {
 		var scroll_top = jQuery(window).scrollTop();
@@ -890,7 +891,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	lslist.set(listOfPublications);
 	db.importDB(lslist.getPubs());
 	lsDB[thisTabId] = db;
-	generateLivingScienceFromDB(listOfPublications, idDivUnderTab, thisTabId);
+	generateLivingScienceFromDB(listOfPublications, idDivUnderTab, thisTabId);//Here you have to replace listOfPublication with lsDB[thisTabId]
 }
 
 /*
@@ -901,10 +902,26 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
 function generateLivingScienceFromDB (database, location, thisTabId) {
-	jQuery('#'+location).html('<div id="ls-list-'+thisTabId+'"></div><div id="ls-map-'+thisTabId+'"></div><div id="ls-relations-'+thisTabId+'"></div>');
+	jQuery('#'+location).html('<div><h3>Living Science</h3><p>Here goes all the infos/sorting options.</p></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
+	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
+	
 	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
 	generateMapDiv(database, 'ls-map-'+thisTabId);
 	generateRelationsDiv(database, 'ls-relations-'+thisTabId);
+}
+
+/*
+ * This function sets the layout for the maps and relations div
+ */
+function setWithForMapsAndRelations (listId, mapId, relationsId) {
+	var listWidth = jQuery('#'+listId).width();
+	jQuery('#'+mapId+', #'+relationsId).css({
+		width: listWidth,
+		height: listWidth + listWidth*1/10,
+		display: 'inline-block',
+		margin: '0px',
+		padding: '0px'
+	});
 }
 
 /*
