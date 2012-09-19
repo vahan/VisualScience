@@ -785,10 +785,16 @@ function makeActionBarMoveable(idOfThisTab) {
 	});
 }
 
+/*
+ * This function creates a new Tab where it is possible to send a message to the selected user(s)
+ */
 function createTabSendMessage() {
 	alert('More to come later...');
 }
 
+/*
+ * This function exports all the users to a CSV file.
+ */
 function exportUsersCSV() {
 	alert('Please be patient !');
 }
@@ -810,6 +816,11 @@ function createTabLivingScience(idOfTheTab) {
 	}
 }
 
+/*
+ * This function gets every selected user from the user-list of results. 
+ * It returns a string of full names separated with OR. It is of the form:
+ *  Firstname Lastname OR Firstname Lastname OR Firstname Lastname
+ */
 function getSelectedUsersFromSearchTable (idOfTheTab) {
 	var tableId = 'visualscience-user_list-result-'+idOfTheTab;
 	/*
@@ -878,6 +889,13 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	generateLivingScienceFromDB(listOfPublications, idDivUnderTab, thisTabId);
 }
 
+/*
+ * Generates the content of a LivingScience tab, with the layout and design.
+ * It firstly creates the layout, and then inserts in it the content.
+ * database is the NDDB database or part of database to send,
+ * location is the div where to insert the content (usually the div of the tab.) and
+ * thisTabId is the id of the tab we are working on, or a unique id for different divs.
+ */
 function generateLivingScienceFromDB (database, location, thisTabId) {
 	jQuery('#'+location).html('<div id="ls-list-'+thisTabId+'"></div><div id="ls-map-'+thisTabId+'"></div><div id="ls-relations-'+thisTabId+'"></div>');
 	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
@@ -885,21 +903,41 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 	generateRelationsDiv(database, 'ls-relations-'+thisTabId);
 }
 
+/*
+ * Generates the design of the LS list of publications and puts it into an already existing div.
+ * database is the NDDB data,
+ * start is which entry we want to display first(usually 0),
+ * howMany is the number of entries to display,
+ * and location is where to insert the content once it is created (without #)
+ */
 function generatePublicationsDiv (database, start, howMany, location) {
 	lslist.set(database);
 	lslist.generateList(start, howMany, location);
 }
 
+/*
+ * Generates the design of the LS Relations graph and puts it into an already existing div.
+ * database is the NDDB data,
+ * location is the id without # of where to insert it
+ */
 function generateRelationsDiv (database, location) {
 	lsrelations.set(database);
 	lsrelations.setParent(location);
 }
 
+/*
+ * Generates the design of the LS Map graph and puts it into an already existing div.
+ * database is the NDDB data,
+ * location is the id without # of where to insert it
+ */
 function generateMapDiv (database, location) {
 	lsmap.set(database);
 	lsmap.setParent(location);
 }
 
+/*
+ * Creates a tab for a conference.
+ */
 function createTabConference() {
 	alert('Come back later.');
 }
@@ -962,6 +1000,11 @@ function createTableUserListHead (idOfThisTab, dialogNumber) {
 	return header;
 }
 
+/*
+ * This function selects all checkboxes once you click on the top 
+ * checkbox of a user-list search table. It firstly checks if the 
+ * top box is checked or not, and then apply the state to all the boxes.
+ */
 function selectAllBoxes (idOfThisTab) {
 	var newState;
 	if (jQuery('#user-list_master_checkbox-'+idOfThisTab).attr('checked') == true) {
