@@ -903,17 +903,31 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
 function generateLivingScienceFromDB (database, location, thisTabId) {
-	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Own Ranking</option><option value="year">Date</option><option value="authors">Author</option><option value="title">Title</option><option value="journal">Journal</option><option value="doi">DOI</option><option value="url">URL</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
+	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="title">Title</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	
 	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
-	//generateMapDiv(database, 'ls-map-'+thisTabId);
+	//generateMapDiv(database, 'ls-map-'+thisTabId);               Uncomment once Christian updates the LS API
 	//generateRelationsDiv(database, 'ls-relations-'+thisTabId);
 }
 
 function orderLSResultDatabase (thisTabId) {
 	var orderSetting = jQuery('#sorting-ls-result-'+thisTabId).val();
-	lsDB[thisTabId].sort(orderSetting);
+	switch (orderSetting) {
+		case 'increasing':
+		lsDB[thisTabId].sort('year');
+		break;
+		case 'decreasing':
+		lsDB[thisTabId].sort('year');
+		lsDB[thisTabId].reverse();
+		break;
+		case 'authors':
+		lsDB[thisTabId].sort('authors');
+		break;
+		default:
+		lsDB[thisTabId].sort(orderSetting);
+		break;
+	}
 	generatePublicationsDiv(lsDB[thisTabId], 0, 10, 'ls-list-'+thisTabId);
 }
 
@@ -939,15 +953,24 @@ function setWithForMapsAndRelations (listId, mapId, relationsId) {
  * and location is where to insert the content once it is created (without #)
  */
 function generatePublicationsDiv (database, start, howMany, location) {
-	/* Old code, just for fun
+	/* Old code, to re-use and modify once Christian updates the API
 	lslist.set(database);
 	lslist.generateList(start, howMany, location);
 	*/
-	var html = '';
+	
+	var generatedHtml = '';
 	for (var i=start; i <= start + howMany; i++) {
-		html += database.db[i].title +'<br />';
+		generatedHtml += tablePublication(database.db[i].title, database.db[i].authors, database.db[i].year) + '<br />';
 	}
-	jQuery('#'+location).html(html);
+	jQuery('#'+location).html(generatedHtml);
+}
+
+/*
+ * When you pass the good parameters to this function, it returns you a 
+ * table prefilled to present a publication.
+ */
+function tablePublication (title, authors, year, url, journal, doi) {
+	return '<p><strong>'+title+'</strong> Date: '+year+', authors: '+authors[0].name+'</p>';
 }
 
 /*
