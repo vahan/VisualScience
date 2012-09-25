@@ -903,12 +903,24 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
 function generateLivingScienceFromDB (database, location, thisTabId) {
-	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
+	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></p><p style="display:inline-block;float:right;"><label for="comparison-ls-result-'+thisTabId+'">Compare with</label><select onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	
 	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
 	//generateMapDiv(database, 'ls-map-'+thisTabId);               Uncomment once Christian updates the LS API
 	//generateRelationsDiv(database, 'ls-relations-'+thisTabId);
+}
+
+function getListOfTabsForLSComparison (thisTabId) {
+	var currentTabs = getLSTabs(thisTabId);
+	alert(thisTabId);
+}
+
+function getLSTabs (tabNotWanted) {
+	var tabs = new Array();
+	for (var i=0; i <= lsDB.length; i++) {
+		tabs.push(jQuery('#'+tabbedInterface).tabs());
+	}
 }
 
 function orderLSResultDatabase (thisTabId) {
@@ -934,7 +946,7 @@ function orderLSResultDatabase (thisTabId) {
 		lsDB[thisTabId].sort(orderSetting);
 		break;
 	}
-	generatePublicationsDiv(lsDB[thisTabId], 0, 10, 'ls-list-'+thisTabId);
+	generatePublicationsDiv(lsDB[thisTabId], 0, 20, 'ls-list-'+thisTabId);
 }
 
 /*
@@ -1135,6 +1147,9 @@ function addTab(name, url) {
  */
 function closeTab(tabIndex) {
 	jQuery('#' + tabbedInterface).tabs('remove', tabIndex);
+	//Now we want to delete the database in the array of NDDB
+	var tabNb = parseInt(tabIndex.charAt(tabIndex.length));
+	lsDB[tabNb] = undefined ;
 }
 
 /*
