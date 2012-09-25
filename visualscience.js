@@ -805,10 +805,13 @@ function exportUsersCSV() {
 
 /*
  * In this function we create a new LivingScience tab, with the names the end-user checkd in the userlist.
- * idOfTheTab is the id of the tab where the livingscience request was sent.
+ * idOfTheTab is the id of the tab where the livingscience request was sent. The optional parameter selectedUsers
+ * is usefull when you already know which are the selected users and is a string separated with ORs (and only ORs).
  */
-function createTabLivingScience(idOfTheTab) {
-	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
+function createTabLivingScience(idOfTheTab, selectedUsers) {
+	if (selectedUsers == undefined) {
+		selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
+	}
 	if (selectedUsers != ''){
 		var thisTabId = tabId;
 		addTab('LivingScience: ' + selectedUsers, '#livingscience-tab-'+thisTabId);
@@ -900,7 +903,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
 function generateLivingScienceFromDB (database, location, thisTabId) {
-	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></p><p style="display:inline-block;float:right;"><label for="comparison-ls-result-'+thisTabId+'">Compare with</label><select onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
+	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></p><p style="display:inline-block;float:right;"><label for="comparison-ls-result-'+thisTabId+'">Compare with</label><select onChange="compareLSTabsTogether('+thisTabId+')" onClick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	
 	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
@@ -908,6 +911,20 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 	//generateRelationsDiv(database, 'ls-relations-'+thisTabId);
 }
 
+/*
+ * This function creates a new tab, where two LS search tabs are compared.
+ */
+function compareLSTabsTogether (thisTabId) {
+	var selectedTab = jQuery('#comparison-ls-result-'+thisTabId).val();
+	var nameOfThisTab = getLSTabName(thisTabId);
+	createTabLivingScience('', nameOfThisTab +' OR '+ selectedTab);
+}
+
+/*
+ * This function lists the others tabs as an option to compare with. It is called 
+ * when the user clicks on the scrollable select. It creates the <option> tags in the select
+ * tags.
+ */
 function getListOfTabsForLSComparison (thisTabId) {
 	var currentTabs = getLSTabs(thisTabId);
 	var newSelectList = '<option value="nothing">Select a tab...</option>';
@@ -917,18 +934,35 @@ function getListOfTabsForLSComparison (thisTabId) {
 	jQuery('#comparison-ls-result-'+thisTabId).html(newSelectList);
 }
 
+/*
+ * This function returns all the LS that are actually opened.
+ * If we want not to have a tab in it, the optional parameter 
+ * tabNotWanted is the number of the tab we don't want in the final array.
+ */
 function getLSTabs (tabNotWanted) {
 	var tabs = new Array();
 	for (var i=0; i <= lsDB.length; i++) {
 		if (lsDB[i] != undefined && i != tabNotWanted) {
-			var tabName = jQuery('a[href|="#livingscience-tab-'+i+'"]').text();
-			tabName = tabName.substring(15, tabName.length-1);
+			var tabName = getLSTabName(i);
 			tabs.push(tabName);
 		}
 	}
 	return tabs;
 }
 
+/*
+ * This function returns the name displayed in a LS tab.
+ */
+function getLSTabName (idOfTheTab) {
+	var tabName = jQuery('a[href|="#livingscience-tab-'+idOfTheTab+'"]').text();
+	tabName = tabName.substring(15, tabName.length-1);
+	return tabName;
+}
+/*
+ * This function is called when someone selects how to sort the database.
+ * thisTabId is the id of the tab where the database should be sorted, which is also the 
+ * index of the database in lsDB.
+ */
 function orderLSResultDatabase (thisTabId) {
 	var orderSetting = jQuery('#sorting-ls-result-'+thisTabId).val();
 	switch (orderSetting) {
