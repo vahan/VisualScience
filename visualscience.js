@@ -712,13 +712,11 @@ function openUserListTab(dialogNumber_) {
 		createTabbedInterface(dialogNumber);
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 		title = (title == '' ? 'All Users' : 'Search: ' + title);
-
-		var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-		addTab(title, '#visualscience-search-tab-content-' + nbTabs);
-		//Insert the table result in a new div
 		var idOfThisTab = tabId;
+		addTab(title, '#visualscience-search-tab-content-' + idOfThisTab);
+		//Insert the table result in a new div
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
-		jQuery('#visualscience-search-tab-content-' + nbTabs).html(content).css('display', 'block');
+		jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
 		makeActionBarMoveable(idOfThisTab);
 		makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
 	}, 1);
@@ -812,12 +810,11 @@ function exportUsersCSV() {
 function createTabLivingScience(idOfTheTab) {
 	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers != ''){
-		var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-		addTab('LivingScience', '#livingscience-tab-'+nbTabs);
 		var thisTabId = tabId;
-		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+nbTabs, thisTabId); });
+		addTab('LivingScience', '#livingscience-tab-'+thisTabId);
+		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
-		jQuery('#livingscience-tab-'+nbTabs).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
+		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
 
 	}
 }
@@ -1148,7 +1145,7 @@ function addTab(name, url) {
 function closeTab(tabIndex) {
 	jQuery('#' + tabbedInterface).tabs('remove', tabIndex);
 	//Now we want to delete the database in the array of NDDB
-	var tabNb = parseInt(tabIndex.charAt(tabIndex.length));
+	var tabNb = parseInt(tabIndex.charAt(tabIndex.length-1));
 	lsDB[tabNb] = undefined ;
 }
 
