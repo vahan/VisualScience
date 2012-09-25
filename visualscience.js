@@ -811,7 +811,7 @@ function createTabLivingScience(idOfTheTab) {
 	var selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers != ''){
 		var thisTabId = tabId;
-		addTab('LivingScience', '#livingscience-tab-'+thisTabId);
+		addTab('LivingScience: ' + selectedUsers, '#livingscience-tab-'+thisTabId);
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
@@ -910,14 +910,23 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 
 function getListOfTabsForLSComparison (thisTabId) {
 	var currentTabs = getLSTabs(thisTabId);
-	alert(thisTabId);
+	var newSelectList = '<option value="nothing">Select a tab...</option>';
+	jQuery(currentTabs).each(function(i) {
+		newSelectList += '<option value="'+currentTabs[i]+'">'+currentTabs[i]+'</option>';
+	});
+	jQuery('#comparison-ls-result-'+thisTabId).html(newSelectList);
 }
 
 function getLSTabs (tabNotWanted) {
 	var tabs = new Array();
 	for (var i=0; i <= lsDB.length; i++) {
-		tabs.push(jQuery('#'+tabbedInterface).tabs());
+		if (lsDB[i] != undefined && i != tabNotWanted) {
+			var tabName = jQuery('a[href|="#livingscience-tab-'+i+'"]').text();
+			tabName = tabName.substring(15, tabName.length-1);
+			tabs.push(tabName);
+		}
 	}
+	return tabs;
 }
 
 function orderLSResultDatabase (thisTabId) {
