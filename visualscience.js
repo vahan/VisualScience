@@ -903,7 +903,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
 function generateLivingScienceFromDB (database, location, thisTabId) {
-	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="title">Title</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
+	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	
 	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
@@ -922,7 +922,13 @@ function orderLSResultDatabase (thisTabId) {
 		lsDB[thisTabId].reverse();
 		break;
 		case 'authors':
-		lsDB[thisTabId].sort('authors');
+		jQuery(lsDB[thisTabId].db).each(function(i) {
+			lsDB[thisTabId].db[i].author = lsDB[thisTabId].db[i].authors[0].name;
+		});
+		lsDB[thisTabId].sort('author');
+		break;
+		case 'random':
+		lsDB[thisTabId].shuffle();
 		break;
 		default:
 		lsDB[thisTabId].sort(orderSetting);
