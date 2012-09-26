@@ -680,6 +680,20 @@ var tabbedInterface = 'tabbed-interface';
 //Variable to differentiate each tab from each other
 var tabId = 0;
 
+//Constant: The number of publications displayed by default in LS tab
+var numberOfPublicationsForLivingScience = 25;
+
+//Constant: Where to start the display of the LivingScience publications
+var firstPublicationForLivingScience = 0;
+
+//Options for the NDDB database
+var optionsForNDDB = {
+	tags: {
+		'howMany': numberOfPublicationsForLivingScience,
+		'start': firstPublicationForLivingScience
+	}
+}
+
 //Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
 var livingscience; //API instance to make search
 var lslist; //API instance to generate list
@@ -687,7 +701,7 @@ var lsmap; //API instance to generate map
 var lsrelations; //API instance to generate relations
 var db;
 window.onload = function() {
-	db = new NDDB();
+	db = new NDDB(optionsForNDDB);
 	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
 }
 
@@ -900,13 +914,41 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * location is the div where to insert the content (usually the div of the tab.) and
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
-function generateLivingScienceFromDB (database, location, thisTabId, start, howMany) {
-	jQuery('#'+location).html('<div><h3>Living Science</h3><div id="ls-result-options-'+thisTabId+'"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-'+thisTabId+'\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-'+thisTabId+'" style="display: block;"><table><tbody><tr><td><label for="sorting-ls-result-'+thisTabId+'">Sorting publications by</label></td><td><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onchange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-'+thisTabId+'">N° publications to display</label></td><td><select onchange="changeNumberOfDisplayedLSPublicatoins('+thisTabId+');" name="nb-pubs-ls-result-'+thisTabId+'" id="nb-pubs-ls-result-'+thisTabId+'"><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-'+thisTabId+'">Compare with</label></td><td><select onchange="compareLSTabsTogether('+thisTabId+')" onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-'+thisTabId+'" style="display:inline-block;width:49%;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div><br><div id="ls-relations-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
+function generateLivingScienceFromDB (database, location, thisTabId) {
+	jQuery('#'+location).html('<div><h3>Living Science</h3><div id="ls-result-options-'+thisTabId+'"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-'+thisTabId+'\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-'+thisTabId+'" style="display: none;"><table><tbody><tr><td><label for="sorting-ls-result-'+thisTabId+'">Sorting publications by</label></td><td><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onchange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-'+thisTabId+'">N° publications to display</label></td><td><select onchange="changeNumberOfDisplayedLSPublications('+thisTabId+');" name="nb-pubs-ls-result-'+thisTabId+'" id="nb-pubs-ls-result-'+thisTabId+'"><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-'+thisTabId+'">Compare with</label></td><td><select onchange="compareLSTabsTogether('+thisTabId+')" onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-'+thisTabId+'" style="display:inline-block;width:49%;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div><br><div id="ls-relations-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
+	setParametersForLSDB(thisTabId);
+	actualizeLivingScienceDisplay(database, thisTabId);
 	
+}
+
+function setParametersForLSDB (thisTabId) {
+	jQuery(lsDB[thisTabId].db).each(function(i) {
+		lsDB[thisTabId].db[i].author = lsDB[thisTabId].db[i].authors[0].name;
+	});
+}
+
+/*
+ * Actualizes the display of a LivingScience result. 
+ */
+function actualizeLivingScienceDisplay (database, thisTabId) {
+	var start = lsDB[thisTabId].resolveTag('start');
+	var howMany = lsDB[thisTabId].resolveTag('howMany');
 	generatePublicationsDiv(database, start, howMany, 'ls-list-'+thisTabId);
 	//generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);               Uncomment once Christian updates the LS API
 	generateRelationsDiv(database, start, howMany, 'ls-relations-'+thisTabId);
+}
+
+/*
+ * Changes the number of publications displayed in the list, graph and map of a specified tab.
+ */
+function changeNumberOfDisplayedLSPublications (thisTabId) {
+	var numberOfPublications = jQuery('#nb-pubs-ls-result-'+thisTabId).val();
+	if (numberOfPublications == 'all') {
+		numberOfPublications = lsDB[thisTabId].length;
+	}
+	lsDB[thisTabId].tag('howMany', numberOfPublications);
+	actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 }
 
 /*
@@ -972,19 +1014,19 @@ function orderLSResultDatabase (thisTabId) {
 		lsDB[thisTabId].reverse();
 		break;
 		case 'authors':
-		jQuery(lsDB[thisTabId].db).each(function(i) {
-			lsDB[thisTabId].db[i].author = lsDB[thisTabId].db[i].authors[0].name;
-		});
 		lsDB[thisTabId].sort('author');
 		break;
 		case 'random':
 		lsDB[thisTabId].shuffle();
 		break;
+		case 'own':
+		lsDB[thisTabId].sort('livingscienceID');
+		break;
 		default:
 		lsDB[thisTabId].sort(orderSetting);
 		break;
 	}
-	generateLivingScienceFromDB(lsDB[thisTabId], 'livingscience-tab-'+thisTabId, thisTabId, 0, 50);
+	actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 }
 
 /*
