@@ -887,12 +887,11 @@ function getThWithContent(tableId, fieldContent) {
  * Then, thanks to this database, we generate the nice table in the div under the tab. 
  */
 function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
-	//Replace this line with db.import(listOfPublications), when the NDDB Module will be imported.
 	jQuery('#'+idDivUnderTab).empty();
-	lslist.set(listOfPublications);
-	db.importDB(lslist.getPubs());
+	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+	db.importDB(lslist.getPubs(listOfPublications));
 	lsDB[thisTabId] = db;
-	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);//Here you have to replace listOfPublication with lsDB[thisTabId]
+	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
 }
 
 /*
@@ -906,7 +905,7 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 	jQuery('#'+location).html('<div><h3>Living Science</h3><div><div><p style="display:inline-block;right:0px;position:relative;"><label for="sorting-ls-result-2">Sorting publications by</label><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onChange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></p><p style="display:inline-block;float:right;"><label for="comparison-ls-result-'+thisTabId+'">Compare with</label><select onChange="compareLSTabsTogether('+thisTabId+')" onClick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></p></div></div></div><div><div style="display:inline-block;width:49%;" id="ls-list-'+thisTabId+'"></div><div style="display:inline-block;width:50%;float:right;" align="center"><div id="ls-map-'+thisTabId+'"></div><br /><div id="ls-relations-'+thisTabId+'"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	
-	generatePublicationsDiv(database, 0, 10, 'ls-list-'+thisTabId);
+	generatePublicationsDiv(database, 0, 25, 'ls-list-'+thisTabId);
 	//generateMapDiv(database, 'ls-map-'+thisTabId);               Uncomment once Christian updates the LS API
 	//generateRelationsDiv(database, 'ls-relations-'+thisTabId);
 }
@@ -986,7 +985,7 @@ function orderLSResultDatabase (thisTabId) {
 		lsDB[thisTabId].sort(orderSetting);
 		break;
 	}
-	generatePublicationsDiv(lsDB[thisTabId], 0, 20, 'ls-list-'+thisTabId);
+	generatePublicationsDiv(lsDB[thisTabId], 0, 50, 'ls-list-'+thisTabId);
 }
 
 /*
@@ -1015,20 +1014,11 @@ function generatePublicationsDiv (database, start, howMany, location) {
 	lslist.set(database);
 	lslist.generateList(start, howMany, location);
 	*/
-	
-	var generatedHtml = '';
-	for (var i=start; i <= start + howMany; i++) {
-		generatedHtml += tablePublication(database.db[i].title, database.db[i].authors, database.db[i].year) + '<br />';
+	var publicationsToShow = new Array();
+	for (var i=start; i <= start+howMany; i++) {
+		publicationsToShow.push(database.db[i].livingscienceID);
 	}
-	jQuery('#'+location).html(generatedHtml);
-}
-
-/*
- * When you pass the good parameters to this function, it returns you a 
- * table prefilled to present a publication.
- */
-function tablePublication (title, authors, year, url, journal, doi) {
-	return '<p><strong>'+title+'</strong> Date: '+year+', authors: '+authors[0].name+'</p>';
+	lslist.generateList(publicationsToShow, location);
 }
 
 /*
