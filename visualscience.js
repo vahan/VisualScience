@@ -915,7 +915,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
  * thisTabId is the id of the tab we are working on, or a unique id for different divs.
  */
 function generateLivingScienceFromDB (database, location, thisTabId) {
-	jQuery('#'+location).html('<div><h3>Living Science</h3><div id="ls-result-options-'+thisTabId+'"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-'+thisTabId+'\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-'+thisTabId+'" style="display: none;"><table><tbody><tr><td><label for="sorting-ls-result-'+thisTabId+'">Sorting publications by</label></td><td><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onchange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-'+thisTabId+'">N° publications to display</label></td><td><select onchange="changeNumberOfDisplayedLSPublications('+thisTabId+');" name="nb-pubs-ls-result-'+thisTabId+'" id="nb-pubs-ls-result-'+thisTabId+'"><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-'+thisTabId+'">Compare with</label></td><td><select onchange="compareLSTabsTogether('+thisTabId+')" onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-'+thisTabId+'" style="display:inline-block;width:49%;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div><br><div id="ls-relations-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
+	jQuery('#'+location).html('<div><h3>Living Science</h3><div id="ls-result-options-'+thisTabId+'"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-'+thisTabId+'\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-'+thisTabId+'" style="display: none;"><table><tbody><tr><td><label for="sorting-ls-result-'+thisTabId+'">Sorting publications by</label></td><td><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onchange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-'+thisTabId+'">N° publications to display</label></td><td><select onchange="changeNumberOfDisplayedLSPublications('+thisTabId+');" name="nb-pubs-ls-result-'+thisTabId+'" id="nb-pubs-ls-result-'+thisTabId+'"><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-'+thisTabId+'">Compare with</label></td><td><select onchange="compareLSTabsTogether('+thisTabId+')" onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></td></tr><tr><td><label for="search-ls-result-'+thisTabId+'">Search</label></td><td><input type="text" onchange="searchAndSortNDDB('+thisTabId+');" placeholder="Type your search" id="search-ls-result-'+thisTabId+'" name="search-ls-result-'+thisTabId+'" /></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-'+thisTabId+'" style="display:inline-block;width:49%;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div><br><div id="ls-relations-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
 	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	setParametersForLSDB(thisTabId);
 	actualizeLivingScienceDisplay(database, thisTabId);
@@ -932,8 +932,8 @@ function setParametersForLSDB (thisTabId) {
  * Actualizes the display of a LivingScience result. 
  */
 function actualizeLivingScienceDisplay (database, thisTabId) {
-	var start = lsDB[thisTabId].resolveTag('start');
-	var howMany = lsDB[thisTabId].resolveTag('howMany');
+	var start = database.resolveTag('start');
+	var howMany = database.resolveTag('howMany');
 	generatePublicationsDiv(database, start, howMany, 'ls-list-'+thisTabId);
 	//generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);               Uncomment once Christian updates the LS API
 	generateRelationsDiv(database, start, howMany, 'ls-relations-'+thisTabId);
@@ -953,6 +953,25 @@ function changeNumberOfDisplayedLSPublications (thisTabId) {
 	lsDB[thisTabId].init(options, lsDB[thisTabId]);
 	setParametersForLSDB(thisTabId);
 	actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+}
+
+function searchAndSortNDDB (thisTabId) {
+	var wordToSearch = jQuery('#search-ls-result-'+thisTabId).val().toLowerCase();
+	var howMany = lsDB[thisTabId].resolveTag('howMany');
+	var start = lsDB[thisTabId].resolveTag('start')
+	var optionsNDDB = {tags:{'start':start, 'howMany':howMany}};
+	var resultNDDB = new NDDB(optionsNDDB);
+	for (var i=0; i <= lsDB[thisTabId].length -1; i++) {
+		var authors = lsDB[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
+		var title = lsDB[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
+		var year = lsDB[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
+		var journal = false;//lsDB[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1; 
+		
+		if (authors || title || year || journal) {
+			resultNDDB.insert(lsDB[thisTabId].db[i]);
+		}
+	}
+	actualizeLivingScienceDisplay(resultNDDB, thisTabId);
 }
 
 /*
@@ -1054,12 +1073,14 @@ function setWithForMapsAndRelations (listId, mapId, relationsId) {
  * howMany is the number of entries to display,
  * and location is where to insert the content once it is created (without #)
  */
+var nbb;
 function generatePublicationsDiv (database, start, howMany, location) {
 	var publicationsToShow = new Array();
-	for (var i=start; i <= start+howMany; i++) {
+	for (var i=start; (i <= start+howMany) && (i <= database.length -1) ; i++) {
 		publicationsToShow.push(database.db[i].livingscienceID);
 	}
 	lslist.generateList(publicationsToShow, location);
+	nbb = database;
 }
 
 /*
@@ -1069,7 +1090,7 @@ function generatePublicationsDiv (database, start, howMany, location) {
  */
 function generateRelationsDiv (database, start, howMany, location) {
 	var publicationsToShow = new Array();
-	for (var i=start; i <= start+howMany; i++) {
+	for (var i=start; (i <= start+howMany) && (i <= database.length -1); i++) {
 		publicationsToShow.push(database.db[i].livingscienceID);
 	}
 	lsrelations.set(publicationsToShow, location);
