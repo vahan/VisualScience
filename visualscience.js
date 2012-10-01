@@ -941,6 +941,8 @@ function actualizeLivingScienceDisplay (database, thisTabId) {
 
 /*
  * Changes the number of publications displayed in the list, graph and map of a specified tab.
+ * What we do here is that we recreate a new NDDB, with the new wanted parameters, and the 
+ * previous NDDB as a base.
  */
 function changeNumberOfDisplayedLSPublications (thisTabId) {
 	var numberOfPublications = jQuery('#nb-pubs-ls-result-'+thisTabId).val();
@@ -949,7 +951,7 @@ function changeNumberOfDisplayedLSPublications (thisTabId) {
 	}
 	var options = {tags:{'howMany':numberOfPublications,'start':firstPublicationForLivingScience}};
 	lsDB[thisTabId].init(options, lsDB[thisTabId]);
-	//lsDB[thisTabId].tag('howMany', numberOfPublications);
+	setParametersForLSDB(thisTabId);
 	actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 }
 
