@@ -947,7 +947,9 @@ function changeNumberOfDisplayedLSPublications (thisTabId) {
 	if (numberOfPublications == 'all') {
 		numberOfPublications = lsDB[thisTabId].length;
 	}
-	lsDB[thisTabId].tag('howMany', numberOfPublications);
+	var options = {tags:{'howMany':numberOfPublications,'start':firstPublicationForLivingScience}};
+	lsDB[thisTabId].init(options, lsDB[thisTabId]);
+	//lsDB[thisTabId].tag('howMany', numberOfPublications);
 	actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 }
 
