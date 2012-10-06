@@ -728,9 +728,9 @@ function openUserListTab(dialogNumber_) {
 	setTimeout(function() {//(Bad style) The tab creation should be deleted, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
 		createTabbedInterface(dialogNumber);
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
-		title = (title == '' ? 'All Users' : 'Search: ' + title);
+		title = (title == '' ? 'All Users' : title);
 		var idOfThisTab = tabId;
-		addTab(title, '#visualscience-search-tab-content-' + idOfThisTab);
+		addTab('<img src="sites/all/modules/visualscience/includes/search.png" width="13px" alt="image for visualscience search" /> '+title, '#visualscience-search-tab-content-' + idOfThisTab);
 		//Insert the table result in a new div
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
@@ -867,7 +867,7 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	}
 	if (selectedUsers != ''){
 		var thisTabId = tabId;
-		addTab('LivingScience: ' + selectedUsers, '#livingscience-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ' + selectedUsers, '#livingscience-tab-'+thisTabId);
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
