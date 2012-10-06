@@ -820,8 +820,17 @@ function exportUsersCSV (idOfThisTab) {
 	var finalTable = '<table>';
 	var tableId = 'visualscience-user_list-result-'+idOfThisTab;
 	jQuery('#'+tableId+' > tbody > tr').each(function(index){
+		index++;
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
-			finalTable += '<tr>' + jQuery('#'+tableId+' > tbody > tr:nth-child('+index+')').html() + '</tr>';
+			
+			finalTable += '<tr>';
+			
+			jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td').each(function(cell) {
+				if (cell != 0 && cell != 1) {
+					finalTable += '<td>' + jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+cell+')').html() + '</td>';
+				}
+			});
+			finalTable +='</tr>';
 		}
 	});
 	finalTable += '</table>';
@@ -864,24 +873,14 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	//var secondFieldToTake = getThWithContent('#'+tableId, 'Last Name');
 	
 	var completeNamesArray = new Array();
-	var nbRows = 0;
-	//Here we are going through every line of the table
 	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
+		index++; //That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
 			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
 			
 			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text());
 		}
-		nbRows = index;
 	});
-	nbRows++;
-	//And here we just check for the last line of the table.
-	if (jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') input').is(':checked')) {
-			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
-			
-			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+secondFieldNumber+')').text());
-		}
-	
 	//From now, we will generate a string out of the array, with the names separated with an OR.
 	var string = '';
 	for (var i=0; i < completeNamesArray.length; i++) {
