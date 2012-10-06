@@ -770,10 +770,10 @@ function createUserSearchResult(dialogNumber, idOfThisTab) {
  */
 function createActionBar(idOfThisTab) {
 	var finalDiv = '<div align="center" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
-	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage();"  /><br />';
+	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage('+idOfThisTab+');"  /><br />';
 	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV('+idOfThisTab+');"  /><br />';
 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
-	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" /><br />';
+	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference('+idOfThisTab+');" /><br />';
 	finalDiv += sendMessage + csvExport + livingscience + conference + '</div></div>';
 	return finalDiv;
 }
@@ -809,8 +809,35 @@ function makeActionBarMoveable (idOfThisTab) {
 /*
  * This function creates a new Tab where it is possible to send a message to the selected user(s)
  */
-function createTabSendMessage () {
-	alert('More to come later...');
+function createTabSendMessage (idOfTheTab) {
+	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
+	if (selectedUsers != '') {
+		var thisTabId = tabId;
+		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ' + selectedUsers, '#message-tab-'+thisTabId);
+		
+		//Create the message tab
+		jQuery('#message-tab-'+thisTabId).html('<h3>Message Tab</h3>');
+	}
+	else {
+		alert('Please select at least one user.');
+	}
+}
+
+/*
+ * Creates a tab for a conference.
+ */
+function createTabConference(idOfTheTab) {
+	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
+	if (selectedUsers != '') {
+		var thisTabId = tabId;
+		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ' + selectedUsers, '#conference-tab-'+thisTabId);
+		
+		//Create the message tab
+		jQuery('#conference-tab-'+thisTabId).html('<h3>conference Tab</h3>');
+	}
+	else {
+		alert('Please select at least one user.');
+	}
 }
 
 /*
@@ -1166,13 +1193,6 @@ function generateMapDiv (database,start, howMany, location) {
 	}
 	lsmap.set(publicationsToShow, location);*/
 	jQuery('#'+location).html('<img src="http://travelguide.all-about-switzerland.info/railroads/map_switzerland_cities.gif" width="100%" height="auto" alt="just a map image for test" />');
-}
-
-/*
- * Creates a tab for a conference.
- */
-function createTabConference() {
-	alert('Come back later.');
 }
 
 /*
