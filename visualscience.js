@@ -829,7 +829,6 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	if (selectedUsers != ''){
 		var thisTabId = tabId;
 		addTab('LivingScience: ' + selectedUsers, '#livingscience-tab-'+thisTabId);
-		jQuery('#livingscience-tab-'+thisTabId).css({'display':'inline-block', 'width':'95.4%'});
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
@@ -1264,6 +1263,10 @@ function addTab(name, url) {
 	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
 	jQuery('#' + tabbedInterface).tabs('add', url, name + '<span class="close-tab-cross" onClick="closeTab(\'' + url + '\')">X</span>');
 	jQuery('#' + tabbedInterface).tabs('select', nbTabs);
+	jQuery('#'+tabbedInterface+' > .ui-tabs-panel').css({
+		'display':'inline-block',
+		'width':'95.4%'
+	});
 }
 
 /*
