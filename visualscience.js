@@ -708,8 +708,11 @@ window.onload = function() {
 	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
 }
 
-//This is the array containing all the databases result from LivingScience
+//This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
 var lsDB = new Array();
+
+//The array containing the original result from LS. (as above, but won't be modified)
+var lsDBOriginal = new Array();
 
 //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 var dialogNumber;
@@ -909,6 +912,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();*/
 	db.importDB(lslist.getPubs(listOfPublications));
 	lsDB[thisTabId] = db;
+	lsDBOriginal[thisTabId] = db;
 	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
 }
 
@@ -973,31 +977,31 @@ function searchAndSortNDDB (thisTabId) {
 	var howMany = lsDB[thisTabId].resolveTag('howMany');
 	var start = lsDB[thisTabId].resolveTag('start')
 	var optionsNDDB = {tags:{'start':start, 'howMany':howMany}};
-	var resultNDDB = new NDDB(optionsNDDB);
-	for (var i=0; i <= lsDB[thisTabId].length -1; i++) {
-		var authors = lsDB[thisTabId].db[i].author && lsDB[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
-		var title = lsDB[thisTabId].db[i].title && lsDB[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
-		var year = lsDB[thisTabId].db[i].year && lsDB[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
-		var journal = lsDB[thisTabId].db[i].journal && lsDB[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1; 
+	lsDB[thisTabId] = new NDDB(optionsNDDB);
+	for (var i=0; i <= lsDBOriginal[thisTabId].length -1; i++) {
+		var authors = lsDBOriginal[thisTabId].db[i].author && lsDBOriginal[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
+		var title = lsDBOriginal[thisTabId].db[i].title && lsDBOriginal[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
+		var year = lsDBOriginal[thisTabId].db[i].year && lsDBOriginal[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
+		var journal = lsDBOriginal[thisTabId].db[i].journal && lsDBOriginal[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1; 
 		
 		if (authors || title || year || journal) {
-			resultNDDB.insert(lsDB[thisTabId].db[i]);
+			lsDB[thisTabId].insert(lsDBOriginal[thisTabId].db[i]);
 		}
 	}
 	
 	var wordResult = 'Result';
-	if (resultNDDB.length == 0) {
-		actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+	if (lsDB[thisTabId].length == 0) {
+		actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 		jQuery('#ls-list-'+thisTabId).html('<p align="center"><strong>There is no result for your search.</strong></p>');
 	}
-	else if (resultNDDB.length == 1) {
-		actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+	else if (lsDB[thisTabId].length == 1) {
+		actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 	}
 	else {
-		actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+		actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 		wordResult = 'Results';
 	}
-	jQuery('#search-ls-nb-result-'+thisTabId).html(resultNDDB.length + ' ' + wordResult);
+	jQuery('#search-ls-nb-result-'+thisTabId).html(lsDB[thisTabId].length + ' ' + wordResult);
 }
 
 /*
