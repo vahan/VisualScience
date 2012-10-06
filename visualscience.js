@@ -771,7 +771,7 @@ function createUserSearchResult(dialogNumber, idOfThisTab) {
 function createActionBar(idOfThisTab) {
 	var finalDiv = '<div align="center" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
 	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage();"  /><br />';
-	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV();"  /><br />';
+	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV('+idOfThisTab+');"  /><br />';
 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
 	var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference();" /><br />';
 	finalDiv += sendMessage + csvExport + livingscience + conference + '</div></div>';
@@ -782,7 +782,7 @@ function createActionBar(idOfThisTab) {
  * Depending on what the user sees, the action bar will be static at the top of the page,
  * or fixed on the left, when he scrolls down.
  */
-function makeActionBarMoveable(idOfThisTab) {
+function makeActionBarMoveable (idOfThisTab) {
 	var top_offset = jQuery('#action-bar-container'+idOfThisTab).offset().top;
 	var tableHeight = jQuery('#visualscience-user_list-result-'+idOfThisTab).height();
 	var actionBarHeight = jQuery('#actionBar'+idOfThisTab).height();
@@ -809,15 +809,23 @@ function makeActionBarMoveable(idOfThisTab) {
 /*
  * This function creates a new Tab where it is possible to send a message to the selected user(s)
  */
-function createTabSendMessage() {
+function createTabSendMessage () {
 	alert('More to come later...');
 }
 
 /*
- * This function exports all the users to a CSV file.
+ * This function exports all the users to a CSV file. Currently using a jQuery plugin.(Table2CSV)
  */
-function exportUsersCSV() {
-	alert('Please be patient !');
+function exportUsersCSV (idOfThisTab) {
+	var finalTable = '<table>';
+	var tableId = 'visualscience-user_list-result-'+idOfThisTab;
+	jQuery('#'+tableId+' > tbody > tr').each(function(index){
+		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
+			finalTable += '<tr>' + jQuery('#'+tableId+' > tbody > tr:nth-child('+index+')').html() + '</tr>';
+		}
+	});
+	finalTable += '</table>';
+	alert(finalTable);
 }
 
 /*
@@ -857,6 +865,7 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	
 	var completeNamesArray = new Array();
 	var nbRows = 0;
+	//Here we are going through every line of the table
 	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
 			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
@@ -866,6 +875,7 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 		nbRows = index;
 	});
 	nbRows++;
+	//And here we just check for the last line of the table.
 	if (jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') input').is(':checked')) {
 			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+nbRows+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
 			
