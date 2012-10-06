@@ -853,7 +853,6 @@ function exportUsersCSV (idOfThisTab) {
 			finalTable += newLineCharacter;
 		}
 	});
-	//alert(finalTable);
 	window.open(url + finalTable);
 }
 
