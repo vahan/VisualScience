@@ -793,8 +793,8 @@ function makeActionBarMoveable (idOfThisTab) {
 	jQuery(window).bind('scroll', function() {
 		var scroll_top = jQuery(window).scrollTop();
 		var threshold = 100; //a threshold so the bar does not stick to the top
-		
-    	if (scroll_top + threshold + actionBarHeight > top_offset + tableHeight) {
+		var tabHeight = jQuery('#visualscience-search-tab-content-'+idOfThisTab).height();
+    	if (scroll_top + threshold + actionBarHeight > top_offset + tableHeight && tabHeight > 350) {
     		el.css('top',tableHeight - actionBarHeight);
     	}
     	else if (scroll_top > top_offset - threshold) {
@@ -1319,7 +1319,8 @@ function addTab(name, url) {
 	jQuery('#' + tabbedInterface).tabs('select', nbTabs);
 	jQuery('#'+tabbedInterface+' > .ui-tabs-panel').css({
 		'display':'inline-block',
-		'width':'95.4%'
+		'width':'95.4%',
+		'min-height':'300px'
 	});
 }
 
