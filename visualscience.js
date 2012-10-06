@@ -948,7 +948,7 @@ function actualizeLivingScienceDisplay (database, thisTabId) {
 	var start = database.resolveTag('start');
 	var howMany = database.resolveTag('howMany');
 	generatePublicationsDiv(database, start, howMany, 'ls-list-'+thisTabId);
-	//generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);               Uncomment once Christian updates the LS API
+	generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);
 	generateRelationsDiv(database, start, howMany, 'ls-relations-'+thisTabId);
 }
 
@@ -1128,11 +1128,12 @@ function generateRelationsDiv (database, start, howMany, location) {
  * location is the id without # of where to insert it
  */
 function generateMapDiv (database,start, howMany, location) {
-	var publicationsToShow = new Array();
-	for (var i=start; i <= start+howMany; i++) {
+	/*var publicationsToShow = new Array();
+	for (var i=start; i <= start+howMany; i++) {                   Uncomment when Maps API updated
 		publicationsToShow.push(database.db[i].livingscienceID);
 	}
-	lsmap.set(publicationsToShow, location);
+	lsmap.set(publicationsToShow, location);*/
+	jQuery('#'+location).html('<img src="http://travelguide.all-about-switzerland.info/railroads/map_switzerland_cities.gif" width="100%" height="auto" alt="just a map image for test" />');
 }
 
 /*
