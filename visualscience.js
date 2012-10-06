@@ -1141,10 +1141,11 @@ function orderLSResultDatabase (thisTabId) {
  * This function sets the layout for the maps and relations div
  */
 function setWidthForMapsAndRelations (listId, mapId, relationsId) {
-	var listWidth = jQuery('#'+listId).width();
+	var setWidth = jQuery('#'+tabbedInterface).width()/2;
+	setWidth -= setWidth*1/10;
 	jQuery('#'+mapId+', #'+relationsId).css({
-		width: listWidth,
-		height: listWidth + listWidth*1/10,
+		width: setWidth,
+		height: setWidth + setWidth*1/10,
 		display: 'inline-block',
 		margin: '0px',
 		padding: '0px'
