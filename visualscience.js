@@ -703,6 +703,9 @@ var db;
 window.onload = function() {
 	db = new NDDB(optionsForNDDB);
 	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
+	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
 }
 
 //This is the array containing all the databases result from LivingScience
@@ -826,6 +829,7 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	if (selectedUsers != ''){
 		var thisTabId = tabId;
 		addTab('LivingScience: ' + selectedUsers, '#livingscience-tab-'+thisTabId);
+		jQuery('#livingscience-tab-'+thisTabId).css({'display':'inline-block', 'width':'95.4%'});
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
@@ -901,9 +905,9 @@ function getThWithContent(tableId, fieldContent) {
  */
 function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	jQuery('#'+idDivUnderTab).empty();
-	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+	/*lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
 	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
-	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
+	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();*/
 	db.importDB(lslist.getPubs(listOfPublications));
 	lsDB[thisTabId] = db;
 	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
@@ -926,7 +930,7 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 	numbersForPubsToShowList[5] = Math.floor(nbResults/1.5);
 	numbersForPubsToShowList[6] = Math.floor(nbResults/1.2);
 	jQuery('#'+location).html('<div><h3>Living Science</h3><div id="ls-result-options-'+thisTabId+'"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-'+thisTabId+'\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-'+thisTabId+'" style="display: none;"><table><tbody><tr><td><label for="sorting-ls-result-'+thisTabId+'">Sorting publications by</label></td><td><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onchange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-'+thisTabId+'">N° publications to display</label></td><td><select onchange="changeNumberOfDisplayedLSPublications('+thisTabId+');" name="nb-pubs-ls-result-'+thisTabId+'" id="nb-pubs-ls-result-'+thisTabId+'"><option value="25">25</option><option value="'+numbersForPubsToShowList[1]+'">'+numbersForPubsToShowList[1]+'</option><option value="'+numbersForPubsToShowList[2]+'">'+numbersForPubsToShowList[2]+'</option><option value="'+numbersForPubsToShowList[3]+'">'+numbersForPubsToShowList[3]+'</option><option value="'+numbersForPubsToShowList[4]+'">'+numbersForPubsToShowList[4]+'</option><option value="'+numbersForPubsToShowList[5]+'">'+numbersForPubsToShowList[5]+'</option><option value="'+numbersForPubsToShowList[6]+'">'+numbersForPubsToShowList[6]+'</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-'+thisTabId+'">Compare with</label></td><td><select onchange="compareLSTabsTogether('+thisTabId+')" onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></td></tr><tr><td><label for="search-ls-result-'+thisTabId+'">Search</label></td><td><input type="text" onchange="searchAndSortNDDB('+thisTabId+');" placeholder="Type your search" id="search-ls-result-'+thisTabId+'" name="search-ls-result-'+thisTabId+'" /> <strong><span id="search-ls-nb-result-'+thisTabId+'">'+nbResults+' Results</span></strong></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-'+thisTabId+'" style="display:inline-block;width:49%;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div><br><div id="ls-relations-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
-	setWithForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
+	setWidthForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	setParametersForLSDB(thisTabId);
 	actualizeLivingScienceDisplay(database, thisTabId);
 	
@@ -972,17 +976,29 @@ function searchAndSortNDDB (thisTabId) {
 	var optionsNDDB = {tags:{'start':start, 'howMany':howMany}};
 	var resultNDDB = new NDDB(optionsNDDB);
 	for (var i=0; i <= lsDB[thisTabId].length -1; i++) {
-		var authors = lsDB[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
-		var title = lsDB[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
-		var year = lsDB[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
-		var journal = false;//lsDB[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1; 
+		var authors = lsDB[thisTabId].db[i].author && lsDB[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
+		var title = lsDB[thisTabId].db[i].title && lsDB[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
+		var year = lsDB[thisTabId].db[i].year && lsDB[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
+		var journal = lsDB[thisTabId].db[i].journal && lsDB[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1; 
 		
 		if (authors || title || year || journal) {
 			resultNDDB.insert(lsDB[thisTabId].db[i]);
 		}
 	}
-	jQuery('#search-ls-nb-result-'+thisTabId).html(resultNDDB.length+' Results');
-	actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+	
+	var wordResult = 'Result';
+	if (resultNDDB.length == 0) {
+		actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+		jQuery('#ls-list-'+thisTabId).html('<p align="center"><strong>There is no result for your search.</strong></p>');
+	}
+	else if (resultNDDB.length == 1) {
+		actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+	}
+	else {
+		actualizeLivingScienceDisplay(resultNDDB, thisTabId);
+		wordResult = 'Results';
+	}
+	jQuery('#search-ls-nb-result-'+thisTabId).html(resultNDDB.length + ' ' + wordResult);
 }
 
 /*
@@ -1066,7 +1082,7 @@ function orderLSResultDatabase (thisTabId) {
 /*
  * This function sets the layout for the maps and relations div
  */
-function setWithForMapsAndRelations (listId, mapId, relationsId) {
+function setWidthForMapsAndRelations (listId, mapId, relationsId) {
 	var listWidth = jQuery('#'+listId).width();
 	jQuery('#'+mapId+', #'+relationsId).css({
 		width: listWidth,
