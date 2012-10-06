@@ -817,23 +817,22 @@ function createTabSendMessage () {
  * This function exports all the users to a CSV file. Currently using a jQuery plugin.(Table2CSV)
  */
 function exportUsersCSV (idOfThisTab) {
-	var finalTable = '<table>';
+	var finalTable = '';
+	
+	//Here we should go through the table header to get the name of the fields.
+	
 	var tableId = 'visualscience-user_list-result-'+idOfThisTab;
 	jQuery('#'+tableId+' > tbody > tr').each(function(index){
 		index++;
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
-			
-			finalTable += '<tr>';
-			
 			jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td').each(function(cell) {
-				if (cell != 0 && cell != 1) {
-					finalTable += '<td>' + jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+cell+')').html() + '</td>';
+				cell++;
+				if (cell != 1) {
+					finalTable += jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+cell+')').text() + ',';
 				}
 			});
-			finalTable +='</tr>';
 		}
 	});
-	finalTable += '</table>';
 	alert(finalTable);
 }
 
