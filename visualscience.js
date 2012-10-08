@@ -848,7 +848,7 @@ function createTabConference(idOfTheTab) {
  */
 function exportUsersCSV (idOfThisTab) {
 	//Some parameters for the communication with the PHP page:
-	var newLineCharacter = ' ';
+	var newLineCharacter = ';';
 	var url = 'sites/all/modules/visualscience/includes/stringToCSV.php?text=';
 	var finalTable = '';
 	var tableId = 'visualscience-user_list-result-'+idOfThisTab;
