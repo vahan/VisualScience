@@ -811,8 +811,10 @@ function makeActionBarMoveable (idOfThisTab) {
 function createTabSendMessage (idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers != '') {
+		var nbUsers = selectedUsers.match(/OR/g).length + 1;
+		title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers);
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ', selectedUsers, '#message-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-'+thisTabId);
 		
 		//Create the message tab
 		jQuery('#message-tab-'+thisTabId).html('<h3>Message Tab</h3>');
@@ -828,8 +830,10 @@ function createTabSendMessage (idOfTheTab) {
 function createTabConference(idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers != '') {
+		var nbUsers = selectedUsers.match(/OR/g).length + 1;
+		title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers);
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ', selectedUsers, '#conference-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-'+thisTabId);
 		
 		//Create the message tab
 		jQuery('#conference-tab-'+thisTabId).html('<h3>conference Tab</h3>');
