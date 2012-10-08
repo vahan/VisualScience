@@ -892,8 +892,10 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 		selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	}
 	if (selectedUsers != ''){
+		var nbUsers = selectedUsers.match(/OR/g).length + 1;
+		title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers);
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ', selectedUsers, '#livingscience-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
