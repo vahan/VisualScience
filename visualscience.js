@@ -729,7 +729,7 @@ function openUserListTab(dialogNumber_) {
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 		title = (title == '' ? 'All Users' : title);
 		var idOfThisTab = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/search.png" width="13px" alt="image for visualscience search" /> '+title, '#visualscience-search-tab-content-' + idOfThisTab);
+		addTab('<img src="sites/all/modules/visualscience/includes/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
 		//Insert the table result in a new div
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
@@ -812,7 +812,7 @@ function createTabSendMessage (idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers != '') {
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ' + selectedUsers, '#message-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ', selectedUsers, '#message-tab-'+thisTabId);
 		
 		//Create the message tab
 		jQuery('#message-tab-'+thisTabId).html('<h3>Message Tab</h3>');
@@ -829,7 +829,7 @@ function createTabConference(idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers != '') {
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ' + selectedUsers, '#conference-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ', selectedUsers, '#conference-tab-'+thisTabId);
 		
 		//Create the message tab
 		jQuery('#conference-tab-'+thisTabId).html('<h3>conference Tab</h3>');
@@ -893,7 +893,7 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	}
 	if (selectedUsers != ''){
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ' + selectedUsers, '#livingscience-tab-'+thisTabId);
+		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ', selectedUsers, '#livingscience-tab-'+thisTabId);
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
@@ -930,7 +930,7 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	var string = '';
 	for (var i=0; i < completeNamesArray.length; i++) {
 		if (i == completeNamesArray.length -1) {
-			string += completeNamesArray[i]
+			string += '"' + completeNamesArray[i] + '"';
 		}
 		else{
 			string += '"' + completeNamesArray[i]+'" OR ';
@@ -1309,10 +1309,14 @@ function getArrayFromTable(tableId) {
  * The url parameter should be a local url and it can contain a fragment identifier(#something)
  * The name parameter is the name you want the tab to have.
  */
-function addTab(name, url) {
+function addTab(icon, name, url) {
+	var nameMaxLength = 25;
+	if (name.length > nameMaxLength) {
+		name = name.substring(0, nameMaxLength) + '... ';
+	}
 	tabId++;
 	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-	jQuery('#' + tabbedInterface).tabs('add', url, name + '<span class="close-tab-cross" onClick="closeTab(\'' + url + '\')">X</span>');
+	jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="closeTab(\'' + url + '\')">X</span>');
 	jQuery('#' + tabbedInterface).tabs('select', nbTabs);
 	jQuery('#'+tabbedInterface+' > .ui-tabs-panel').css({
 		'display':'inline-block',
