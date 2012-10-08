@@ -1,7 +1,6 @@
 /**
  * Functions used in visualscience module
  */
-/*
 // TODO result insertion should be reconsidered. So it's possible to have full result insertions, insted of
 // just insterting the result before the string. So something like inserting between two " || ", " && "-s, or
 // between a " || ", " && " and one of "[" or "]"
@@ -934,7 +933,7 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 			string += completeNamesArray[i]
 		}
 		else{
-			string += completeNamesArray[i]+' OR ';
+			string += '"' + completeNamesArray[i]+'" OR ';
 		}
 	}
 	
@@ -962,9 +961,7 @@ function getThWithContent(tableId, fieldContent) {
  */
 function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	jQuery('#'+idDivUnderTab).empty();
-	/*lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
-	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
-	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();*/
+	db = new NDDB(optionsForNDDB);
 	db.importDB(lslist.getPubs(listOfPublications));
 	lsDB[thisTabId] = db;
 	lsDBOriginal[thisTabId] = db;
