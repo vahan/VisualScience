@@ -1100,7 +1100,7 @@ function getLSTabs (tabNotWanted) {
  */
 function getLSTabName (idOfTheTab) {
 	var tabName = jQuery('a[href|="#livingscience-tab-'+idOfTheTab+'"]').text();
-	tabName = tabName.substring(15, tabName.length-1);
+	tabName = tabName.substring(0, tabName.length-1);
 	return tabName;
 }
 /*
