@@ -848,19 +848,20 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input type="button" value="Add Attachment" />';
-	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;">'+content+'</div>';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input type="button" style="margin-left:10px;" value="Add Attachment" />';
+	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:50px;">'+content+'</div>';
 }
 
 /*
  * The recipients div for messages and conferences
  */
 function createRecipientsDiv (thisTabId, selectedUsers, selectedUsersEmail) {
-	var content = '';
+	var content = '<div id="visualscience-recipient-div-content-'+thisTabId+'" style="width:100%;overflow-y:scroll;height:200px;">';
 	for (var i=0; i < selectedUsers.length; i++) {
 		content += '<p id="visualscience-recipients-entry-'+thisTabId+'-'+i+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+selectedUsersEmail[i]+'">'+selectedUsers[i]+'</a></p>';
 	}
-	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;overflow-y:scroll;height:200px;">'+content+'</div>';
+	content += '</div>';
+	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;">'+content+'<input type="button" style="margin-left:10px;margin-right:10px;" value="Add Recipient" id="visualscience-message-add-recipient-button-'+thisTabId+'" nbRecipients="'+selectedUsers.length+'" onClick="addRecipientForMessage('+thisTabId+');" /><input type="email" name="visualscience-message-add-recipient-email-'+thisTabId+'" id="visualscience-message-add-recipient-email-'+thisTabId+'" placeholder="Type an email" /></div>';
 }
 
 /*
@@ -916,6 +917,26 @@ function sendVisualscienceMessage (thisTabId) {
 	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
 		'value': 'Message Sent !'
 	});
+}
+
+/*
+ * Gets the value of the email to add and insert it into the div
+ */
+function addRecipientForMessage (thisTabId) {
+	var email = jQuery('#visualscience-message-add-recipient-email-'+thisTabId).val();
+	if (email.indexOf('@') != -1) {
+		var nbRecipients = parseInt(jQuery('#visualscience-message-add-recipient-button-'+thisTabId).attr('nbRecipients'));
+		insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients);
+		jQuery('#visualscience-message-add-recipient-button-'+thisTabId).attr('nbRecipients', nbRecipients+1);
+	}
+	else{
+		alert('Please enter a valid email');
+	}
+}
+
+function insertEmailIntoRecipientsDiv (thisTabId, email, nbRecipients) {
+	var entryToAppend = '<p id="visualscience-recipients-entry-'+thisTabId+'-'+nbRecipients+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+nbRecipients+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+email+'">'+email+'</a></p>';
+	jQuery('#visualscience-recipient-div-content-'+thisTabId).append(entryToAppend);
 }
 
 /*
