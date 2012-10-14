@@ -815,12 +815,57 @@ function createTabSendMessage (idOfTheTab) {
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-'+thisTabId);
 		
-		//Create the message tab
-		jQuery('#message-tab-'+thisTabId).html('<h3>Message Tab</h3>');
+		//Create the message tab's HTML
+		var subjectDiv = createSubjectDiv(thisTabId);
+		var messageDiv = createMessageDiv(thisTabId);
+		var attachmentDiv = createAttachmentsDiv(thisTabId);
+		var recipientsDiv = createRecipientsDiv(thisTabId, selectedUsers);
+		var sendButton = createSendMessageButton(thisTabId);
+		var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">'+subjectDiv+messageDiv+sendButton+'</div><div style="float:right;width:45%;display:inline-block;">'+recipientsDiv+attachmentDiv+'</div></div>';
+		jQuery('#message-tab-'+thisTabId).html(messageTab);
 	}
 	else {
 		alert('Please select at least one user.');
 	}
+}
+
+/*
+ * The subject input for messages and conferences
+ */
+function createSubjectDiv (thisTabId) {
+	return '<input type="text" name="visualscience-subject-input-'+thisTabId+'" id="visualscience-subject-input-'+thisTabId+'" style="width:98%;" placeholder="Subject" />';
+}
+
+/*
+ * The div for the message
+ */
+function createMessageDiv (thisTabId) {
+	return '<textarea name="visualscience-message-input-'+thisTabId+'" id="visualscience-message-input-'+thisTabId+'" style="width:100%;" rows="10" placeholder="Your message"></textarea>';
+}
+
+/*
+ * The attachment div for messages and conferences
+ */
+function createAttachmentsDiv (thisTabId) {
+	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;">My attachments are here</div>';
+}
+
+/*
+ * The recipients div for messages and conferences
+ */
+function createRecipientsDiv (thisTabId, selectedUsers) {
+	var content = '';
+	for (var i=0; i < selectedUsers.length; i++) {
+		content += '<p style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a>'+selectedUsers[i]+'</p>';
+	}
+	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;overflow-y:scroll;height:250px;">'+content+'</div>';
+}
+
+/*
+ * The send button, only for messages
+ */
+function createSendMessageButton (thisTabId) {
+	return '<div style="text-align:right;"><input type="button" value="SEND" id="visualscience-send-message-button-'+thisTabId+'" style="padding-right:15px;padding-left:15px;" /></div>';
 }
 
 /*
@@ -906,6 +951,9 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	}
 }
 
+/*
+ * This functions sets the title for tabs, depending on the selected users.
+ */
 function getTitleFromUsers (selectedUsers) {
 	var nbUsers = selectedUsers.length;
 	title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers[0]);
