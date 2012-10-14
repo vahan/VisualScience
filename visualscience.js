@@ -810,9 +810,8 @@ function makeActionBarMoveable (idOfThisTab) {
  */
 function createTabSendMessage (idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
-	if (selectedUsers != '') {
-		var nbUsers = selectedUsers.match(/OR/g).length + 1;
-		title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers);
+	if (selectedUsers.length > 0) {
+		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-'+thisTabId);
 		
@@ -829,9 +828,8 @@ function createTabSendMessage (idOfTheTab) {
  */
 function createTabConference(idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
-	if (selectedUsers != '') {
-		var nbUsers = selectedUsers.match(/OR/g).length + 1;
-		title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers);
+	if (selectedUsers.length > 0) {
+		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-'+thisTabId);
 		
@@ -895,9 +893,8 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	if (selectedUsers == undefined) {
 		selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	}
-	if (selectedUsers != ''){
-		var nbUsers = selectedUsers.match(/OR/g).length + 1;
-		title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers);
+	if (selectedUsers.length > 0){
+		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
 		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
@@ -907,6 +904,12 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	else {
 		alert('Please select at least one user');
 	}
+}
+
+function getTitleFromUsers (selectedUsers) {
+	var nbUsers = selectedUsers.length;
+	title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers[0]);
+	return title;
 }
 
 /*
@@ -932,8 +935,10 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text());
 		}
 	});
+	return completeNamesArray;
 	//From now, we will generate a string out of the array, with the names separated with an OR.
-	var string = '';
+	//Optional, depending on what Christian wants.
+	/*var string = '';
 	for (var i=0; i < completeNamesArray.length; i++) {
 		if (i == completeNamesArray.length -1) {
 			string += '"' + completeNamesArray[i] + '"';
@@ -944,6 +949,7 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	}
 	
 	return string;//completeNamesArray;
+	*/
 }
 
 /*
