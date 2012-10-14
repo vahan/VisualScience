@@ -858,7 +858,7 @@ function createAttachmentsDiv (thisTabId) {
 function createRecipientsDiv (thisTabId, selectedUsers, selectedUsersEmail) {
 	var content = '<div id="visualscience-recipient-div-content-'+thisTabId+'" style="width:100%;overflow-y:scroll;height:200px;">';
 	for (var i=0; i < selectedUsers.length; i++) {
-		content += '<p id="visualscience-recipients-entry-'+thisTabId+'-'+i+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+selectedUsersEmail[i]+'">'+selectedUsers[i]+'</a></p>';
+		content += '<p id="visualscience-recipients-entry-'+thisTabId+'-'+i+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="deleteRecipientToMessage('+thisTabId+', '+i+');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+selectedUsersEmail[i]+'">'+selectedUsers[i]+'</a></p>';
 	}
 	content += '</div>';
 	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;">'+content+'<input type="button" style="margin-left:10px;margin-right:10px;" value="Add Recipient" id="visualscience-message-add-recipient-button-'+thisTabId+'" nbRecipients="'+selectedUsers.length+'" onClick="addRecipientForMessage('+thisTabId+');" /><input type="email" name="visualscience-message-add-recipient-email-'+thisTabId+'" id="visualscience-message-add-recipient-email-'+thisTabId+'" placeholder="Type an email" /></div>';
@@ -935,8 +935,15 @@ function addRecipientForMessage (thisTabId) {
 }
 
 function insertEmailIntoRecipientsDiv (thisTabId, email, nbRecipients) {
-	var entryToAppend = '<p id="visualscience-recipients-entry-'+thisTabId+'-'+nbRecipients+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+nbRecipients+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+email+'">'+email+'</a></p>';
+	nbRecipients += 1;
+	var entryToAppend = '<p id="visualscience-recipients-entry-'+thisTabId+'-'+nbRecipients+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="deleteRecipientToMessage('+thisTabId+', '+nbRecipients+');" id="visualscience-message-close-cross-'+thisTabId+'-'+nbRecipients+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+email+'">'+email+'</a></p>';
 	jQuery('#visualscience-recipient-div-content-'+thisTabId).append(entryToAppend);
+}
+
+function deleteRecipientToMessage (thisTabId, entryNb) {
+	jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+entryNb).hide('slow', function() {
+		jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+entryNb).remove();
+	});
 }
 
 /*
