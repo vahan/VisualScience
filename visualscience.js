@@ -811,6 +811,7 @@ function makeActionBarMoveable (idOfThisTab) {
 function createTabSendMessage (idOfTheTab) {
 	selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 	if (selectedUsers.length > 0) {
+		var selectedUsersEmail = getSelectedUsersEmailFromSearchTable(idOfTheTab);
 		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-'+thisTabId);
@@ -819,7 +820,7 @@ function createTabSendMessage (idOfTheTab) {
 		var subjectDiv = createSubjectDiv(thisTabId);
 		var messageDiv = createMessageDiv(thisTabId);
 		var attachmentDiv = createAttachmentsDiv(thisTabId);
-		var recipientsDiv = createRecipientsDiv(thisTabId, selectedUsers);
+		var recipientsDiv = createRecipientsDiv(thisTabId, selectedUsers, selectedUsersEmail);
 		var sendButton = createSendMessageButton(thisTabId);
 		var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">'+subjectDiv+messageDiv+sendButton+'</div><div style="float:right;width:45%;display:inline-block;">'+recipientsDiv+attachmentDiv+'</div></div>';
 		jQuery('#message-tab-'+thisTabId).html(messageTab);
@@ -854,10 +855,10 @@ function createAttachmentsDiv (thisTabId) {
 /*
  * The recipients div for messages and conferences
  */
-function createRecipientsDiv (thisTabId, selectedUsers) {
+function createRecipientsDiv (thisTabId, selectedUsers, selectedUsersEmail) {
 	var content = '';
 	for (var i=0; i < selectedUsers.length; i++) {
-		content += '<p style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a>'+selectedUsers[i]+'</p>';
+		content += '<p id="visualscience-recipients-entry-'+thisTabId+'-'+i+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:'+selectedUsersEmail[i]+'">'+selectedUsers[i]+'</a></p>';
 	}
 	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;overflow-y:scroll;height:200px;">'+content+'</div>';
 }
@@ -866,7 +867,69 @@ function createRecipientsDiv (thisTabId, selectedUsers) {
  * The send button, only for messages
  */
 function createSendMessageButton (thisTabId) {
-	return '<div style="text-align:right;"><input type="button" value="SEND" id="visualscience-send-message-button-'+thisTabId+'" style="padding-right:15px;padding-left:15px;" /></div>';
+	return '<div style="text-align:right;"><input type="button" onClick="sendVisualscienceMessage('+thisTabId+');" value="Send Message" id="visualscience-send-message-button-'+thisTabId+'" style="padding-right:15px;padding-left:15px;" /></div>';
+}
+
+/*
+ * Get informations and send them to the server through ajax
+ * TODO: Change the mailURL var with the one of the server !
+ */
+function sendVisualscienceMessage (thisTabId) {
+	var mailURL = 'http://www.tosski.ch';
+	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
+		'value': 'Sending Message... Please wait',
+		'disabled': 'disabled'
+	});
+	var subjectVal = jQuery('#visualscience-subject-input-'+thisTabId).val();
+	var messageVal = jQuery('#visualscience-message-input-'+thisTabId).val();
+	var attachmentJson = '';//getJsonOfAttachments(thisTabId);
+	var recipientsArray = getRecipientsOfMessage(thisTabId);
+	var flagAllDone = false;
+	for (var i=0; i < recipientsArray.length; i++) {
+		var recipientsVal = {name: recipientsArray[i][0], email: recipientsArray[i][1]};
+		var jsonObject = {message:
+			{
+				subject: subjectVal,
+				message: messageVal,
+				recipients: recipientsVal,
+				attachments: attachmentJson
+			}
+		};
+		jQuery.ajax({
+			url: mailURL,
+			type:'POST',
+			contentType: 'application/json; charset=utf-8',
+			data: jsonObject,
+			datatype: 'json',
+			error: function(req, msg, obj) {
+				alert('An error occured while sending the message.');
+				console.log(req);
+				console.log(msg);
+				console.log(obj);
+			}
+		});		
+		if (i == recipientsArray.length -1) {
+			flagAllDone = true;
+		}
+	}
+	while (!flagAllDone); //Barrier to wait until all the requests has been made
+	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
+		'value': 'Message Sent !'
+	});
+}
+
+/*
+ * Gets the name and email of every recipients of a message.
+ */
+function getRecipientsOfMessage (thisTabId) {
+	var recipientsEmailAndName = new Array();
+	jQuery('p[id*="visualscience-recipients-entry-'+thisTabId+'"]').each(function(i) {
+		recipientsEmailAndName[i] = new Array(2);
+		recipientsEmailAndName[i][0] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').text();
+		recipientsEmailAndName[i][1] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').attr('href').substring(7);
+		i++;
+	});
+	return recipientsEmailAndName;
 }
 
 /*
@@ -963,8 +1026,7 @@ function getTitleFromUsers (selectedUsers) {
 
 /*
  * This function gets every selected user from the user-list of results. 
- * It returns a string of full names separated with OR. It is of the form:
- *  Firstname Lastname OR Firstname Lastname OR Firstname Lastname
+ * It returns an array with the full name of each users.
  */
 function getSelectedUsersFromSearchTable (idOfTheTab) {
 	var tableId = 'visualscience-user_list-result-'+idOfTheTab;
@@ -985,20 +1047,23 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 		}
 	});
 	return completeNamesArray;
-	//From now, we will generate a string out of the array, with the names separated with an OR.
-	//Optional, depending on what Christian wants.
-	/*var string = '';
-	for (var i=0; i < completeNamesArray.length; i++) {
-		if (i == completeNamesArray.length -1) {
-			string += '"' + completeNamesArray[i] + '"';
+}
+
+/*
+ * This function gets every selected user's email from the user-list of results. 
+ * It returns an array with the full name of each users.
+ */
+function getSelectedUsersEmailFromSearchTable (idOfTheTab) {
+	var tableId = 'visualscience-user_list-result-'+idOfTheTab;
+	var firstFieldNumber = getThWithContent(tableId, 'mail');
+	var emailArray = new Array();
+	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
+		index++; //That's because index will go from 0(no nth-child) to n-1, missing n (interesting)
+		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
+			emailArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());
 		}
-		else{
-			string += '"' + completeNamesArray[i]+'" OR ';
-		}
-	}
-	
-	return string;//completeNamesArray;
-	*/
+	});
+	return emailArray;
 }
 
 /*
