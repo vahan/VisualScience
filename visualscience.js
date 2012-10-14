@@ -847,7 +847,8 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;">My attachments are here</div>';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input type="button" value="Add Attachment" />';
+	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;">'+content+'</div>';
 }
 
 /*
@@ -858,7 +859,7 @@ function createRecipientsDiv (thisTabId, selectedUsers) {
 	for (var i=0; i < selectedUsers.length; i++) {
 		content += '<p style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onClick="alert(\'Not implemented yet...\');" id="visualscience-message-close-cross-'+thisTabId+'-'+i+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a>'+selectedUsers[i]+'</p>';
 	}
-	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;overflow-y:scroll;height:250px;">'+content+'</div>';
+	return '<div id="visualscience-recipients-div-'+thisTabId+'" style="border:solid black 1px;display:inline-block;width:100%;overflow-y:scroll;height:200px;">'+content+'</div>';
 }
 
 /*
