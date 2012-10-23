@@ -1033,14 +1033,25 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	if (selectedUsers.length > 0){
 		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
+		//TODO: Change this once Christian will allow multiple users with array
+		stringWithOrs = changeArrayToOrString(selectedUsers);
 		addTab('<img src="sites/all/modules/visualscience/includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
-		livingscience.searchAuthor(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
+		livingscience.searchAuthor(selectedUsers[0], function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/visualscience/includes/loading.gif" width="100px" alt="loading" /></center>');
 	}
 	else {
 		alert('Please select at least one user');
 	}
+}
+
+function changeArrayToOrString (selectedUsers) {
+	var string = '';
+	for (var i=0; i < selectedUsers.length-1; i++) {
+		string += selectedUsers[i] + ' OR ';
+	}
+	string += selectedUsers[selectedUsers.length-1];
+	return string;
 }
 
 /*
