@@ -824,6 +824,18 @@ function createTabSendMessage (idOfTheTab) {
 		var sendButton = createSendMessageButton(thisTabId);
 		var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">'+subjectDiv+messageDiv+sendButton+'</div><div style="float:right;width:45%;display:inline-block;">'+recipientsDiv+attachmentDiv+'</div></div>';
 		jQuery('#message-tab-'+thisTabId).html(messageTab);
+		if (document.createStyleSheet){
+                document.createStyleSheet('style.css');
+            }
+            else {
+                jQuery("head").append(jQuery("<link rel='stylesheet' href='sites/all/modules/visualscience/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+            }
+		jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.cleditor.min.js', function(){
+			jQuery('#visualscience-message-input-'+thisTabId).cleditor({
+				width:'100%',
+				height:'400px'
+			});
+		});
 	}
 	else {
 		alert('Please select at least one user.');
@@ -1001,7 +1013,7 @@ function createTabConference(idOfTheTab) {
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-'+thisTabId);
 		
-		//Create the message tab
+		//Create the conference tab
 		jQuery('#conference-tab-'+thisTabId).html('<h3>conference Tab</h3>');
 	}
 	else {
