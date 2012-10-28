@@ -928,6 +928,21 @@ function addRecipientForMessage (thisTabId) {
 		var nbRecipients = parseInt(jQuery('#visualscience-message-add-recipient-button-'+thisTabId).attr('nbRecipients'));
 		insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients);
 		jQuery('#visualscience-message-add-recipient-button-'+thisTabId).attr('nbRecipients', nbRecipients+1);
+		var oldTitle = parseInt(jQuery('a[href="#message-tab-'+thisTabId+'"]').text());
+		if (isNaN(oldTitle)) {
+			var newTitle = ' 2 Users ';
+			oldTitle = jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(1, jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(2).indexOf('X')+2);
+		}
+		else if (oldTitle == 0) {
+			var newTitle = ' '+jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(1)+' ';
+			oldTitle = ' 0 User ';
+		}
+		else {
+			var newTitle =' '+(oldTitle + 1)+' ';
+			oldTitle = ' '+oldTitle+' ';
+		}
+		newTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').html().replace(oldTitle, newTitle);
+		jQuery('a[href="#message-tab-'+thisTabId+'"]').html(newTitle);
 	}
 	else{
 		alert('Please enter a valid email');
@@ -943,6 +958,21 @@ function insertEmailIntoRecipientsDiv (thisTabId, email, nbRecipients) {
 function deleteRecipientToMessage (thisTabId, entryNb) {
 	jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+entryNb).hide(350, function() {
 		jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+entryNb).remove();
+	var oldTitle = parseInt(jQuery('a[href="#message-tab-'+thisTabId+'"]').text());
+	if (oldTitle == 2) {
+		var newTitle = ' '+jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(1)+' ';
+		oldTitle = '2 Users';
+	}
+	else if (isNaN(oldTitle)) {
+		var newTitle = ' 0 User ';
+		oldTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').text().substring(0, jQuery('a[href="#message-tab-'+thisTabId+'"]').text().indexOf('X'));
+	}
+	else {
+		var newTitle = ' '+(oldTitle - 1)+' ';
+		oldTitle = ' '+oldTitle+' ';
+	}
+	newTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').html().replace(oldTitle, newTitle);
+	jQuery('a[href="#message-tab-'+thisTabId+'"]').html(newTitle);
 	});
 }
 
