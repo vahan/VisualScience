@@ -824,22 +824,52 @@ function createTabSendMessage (idOfTheTab) {
 		var sendButton = createSendMessageButton(thisTabId);
 		var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">'+subjectDiv+messageDiv+sendButton+'</div><div style="float:right;width:45%;display:inline-block;">'+recipientsDiv+attachmentDiv+'</div></div>';
 		jQuery('#message-tab-'+thisTabId).html(messageTab);
-		if (document.createStyleSheet){
-                document.createStyleSheet('style.css');
-            }
-            else {
-                jQuery("head").append(jQuery("<link rel='stylesheet' href='sites/all/modules/visualscience/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
-            }
-		jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.cleditor.min.js', function(){
-			jQuery('#visualscience-message-input-'+thisTabId).cleditor({
-				width:'100%',
-				height:'400px'
-			});
+		loadCLEditor('visualscience-message-input-'+thisTabId);
+		loadUploadScripts('upload-button-'+thisTabId, function(){
+			//addAttachments();
 		});
 	}
 	else {
 		alert('Please select at least one user.');
 	}
+}
+
+function loadUploadScripts (areaId, callback) {
+	jQuery.getScript('http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js',function(){
+		jQuery.getScript('sites/all/modules/visualscience/jquery.ui.widget.1.9.js', function() {
+			
+			
+			
+			
+	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.fileupload.js', function(){
+			/*jQuery('#'+areaId).fileupload({
+			dataType: 'json',
+			//url: 'sites/all/modules/visualscience/uploads/index.php',
+			done: function (e, data) {
+				jQuery.each(data.result, function (index, file) {
+					jQuery('<p/>').text("http://www.tooski.ch/assets/uploads/files/"+file.name).appendTo('#uploadDiv');
+					alert('Ok');
+				});
+			}
+			});*/
+		});
+		});
+			});	
+}
+
+function loadCLEditor (areaId) {
+	if (document.createStyleSheet){
+               document.createStyleSheet('style.css');
+           }
+           else {
+               jQuery("head").append(jQuery("<link rel='stylesheet' href='sites/all/modules/visualscience/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+           }
+	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.cleditor.min.js', function(){
+		jQuery('#'+areaId).cleditor({
+			width:'100%',
+			height:'400px'
+		});
+	});
 }
 
 /*
@@ -860,7 +890,7 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input type="button" style="margin-left:10px;" value="Add Attachment" />';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input id="upload-button-'+thisTabId+'" style="margin-left:10px;" type="file" name="files[]" data-url="sites/all/modules/visualscience/uploads/index.php" multiple />';
 	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:50px;">'+content+'</div>';
 }
 
