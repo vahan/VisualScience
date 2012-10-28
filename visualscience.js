@@ -943,6 +943,7 @@ function addRecipientForMessage (thisTabId) {
 		}
 		newTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').html().replace(oldTitle, newTitle);
 		jQuery('a[href="#message-tab-'+thisTabId+'"]').html(newTitle);
+		jQuery('#visualscience-recipient-div-content-'+thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
 	}
 	else{
 		alert('Please enter a valid email');
