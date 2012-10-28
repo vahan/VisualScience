@@ -724,7 +724,7 @@ var dialogNumber;
  */
 function openUserListTab(dialogNumber_) {
 	dialogNumber = dialogNumber_;
-	setTimeout(function() {//(Bad style) The tab creation should be deleted, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
+	setTimeout(function() {//(Bad style) The tab creation should be delayed, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
 		createTabbedInterface(dialogNumber);
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 		title = (title == '' ? 'All Users' : title);
@@ -1370,9 +1370,9 @@ function createTableUserList(dialogNumber, idOfThisTab) {
 		divFinalContent += '<td>' + arrayOfUserResults[i - 1] + '</td>';
 		if (i % nbColsInTable == 0 && i != arrayOfUserResults.length) {
 			if ((i/nbColsInTable)%2 == 0) {
-				divFinalContent += '</tr><tr class="odd">';
+				divFinalContent += '</tr><tr class="odd clickable" onClick="jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\', !jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\'));">';
 			} else {
-				divFinalContent += '</tr><tr class="even">';
+				divFinalContent += '</tr><tr class="even" onClick="jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\', !jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\'));">';
 			}
 		}
 	}
@@ -1412,7 +1412,7 @@ function createTableUserListHead (idOfThisTab, dialogNumber) {
 			header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 		}
 	});
-	header += '</tr></thead><tbody><tr class="odd">';
+	header += '</tr></thead><tbody><tr class="odd" onClick="jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\'0\\\']\').attr(\'checked\', !jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\'0\\\']\').attr(\'checked\'));">';
 	return header;
 }
 
