@@ -836,8 +836,26 @@ function createTabSendMessage (idOfTheTab) {
 
 function loadUploadScripts (areaId, callback) {
 	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js', function(){
-		
+		jQuery('#'+areaId).ajaxForm(function(){
+			console.log('alright !');
+		})
 	});
+}
+
+function uploadSubmittedFiles (tabId) {
+	var nbFilesEntered = parseInt(jQuery('#button-upload-'+tabId).attr('nbFiles'));
+	var fileList = document.getElementById('upload-button-'+tabId);
+	var content='';
+	for (var i=0; i < fileList.files.length; i++) {
+		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
+	}
+	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
+	jQuery('#button-upload-'+tabId).attr('nbFiles', nbFilesEntered + fileList.files.length)
+	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
+}
+
+function deleteFileToUpload (tabId, entryNb) {
+	
 }
 
 function loadCLEditor (areaId) {
@@ -850,7 +868,7 @@ function loadCLEditor (areaId) {
 	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.cleditor.min.js', function(){
 		jQuery('#'+areaId).cleditor({
 			width:'100%',
-			height:'400px'
+			height:'440px'
 		});
 	});
 }
@@ -873,8 +891,8 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input id="upload-button-'+thisTabId+'" style="margin-left:10px;" type="file" name="files[]" data-url="sites/all/modules/visualscience/uploads/index.php" multiple />';
-	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:50px;">'+content+'</div>';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'" style="height:150px;overflow-y:scroll;"></div><form action="sites/all/modules/visualscience/uploads/index.php" method="POST" id="upload-form-'+thisTabId+'"><input id="upload-button-'+thisTabId+'" style="margin-left:10px;width:100%;" type="file" name="files[]" data-url="sites/all/modules/visualscience/uploads/index.php" onChange="uploadSubmittedFiles(\''+thisTabId+'\');" nbFiles="0" multiple /><br /> <div id="progress-upload-'+thisTabId+'" style="margin:5px;padding:5px;background-color:red;font-size:10px;" >Progress</div></form>';
+	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">'+content+'</div>';
 }
 
 /*
