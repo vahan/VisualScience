@@ -835,26 +835,9 @@ function createTabSendMessage (idOfTheTab) {
 }
 
 function loadUploadScripts (areaId, callback) {
-	jQuery.getScript('http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js',function(){
-		jQuery.getScript('sites/all/modules/visualscience/jquery.ui.widget.1.9.js', function() {
-			
-			
-			
-			
-	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.fileupload.js', function(){
-			/*jQuery('#'+areaId).fileupload({
-			dataType: 'json',
-			//url: 'sites/all/modules/visualscience/uploads/index.php',
-			done: function (e, data) {
-				jQuery.each(data.result, function (index, file) {
-					jQuery('<p/>').text("http://www.tooski.ch/assets/uploads/files/"+file.name).appendTo('#uploadDiv');
-					alert('Ok');
-				});
-			}
-			});*/
-		});
-		});
-			});	
+	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js', function(){
+		
+	});
 }
 
 function loadCLEditor (areaId) {
