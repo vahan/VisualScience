@@ -709,9 +709,11 @@ window.onload = function() {
 
 //This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
 var lsDB = new Array();
-
 //The array containing the original result from LS. (as above, but won't be modified)
 var lsDBOriginal = new Array();
+
+//This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
+var uploadDB = new Array();
 
 //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 var dialogNumber;
@@ -837,25 +839,29 @@ function createTabSendMessage (idOfTheTab) {
 function loadUploadScripts (areaId, callback) {
 	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js', function(){
 		jQuery('#'+areaId).ajaxForm(function(){
-			console.log('alright !');
+			console.log('Form sent ?');
 		})
 	});
 }
 
 function uploadSubmittedFiles (tabId) {
-	var nbFilesEntered = parseInt(jQuery('#button-upload-'+tabId).attr('nbFiles'));
+	var nbFilesEntered = parseInt(jQuery('#upload-button-'+tabId).attr('nbFiles'));
 	var fileList = document.getElementById('upload-button-'+tabId);
 	var content='';
 	for (var i=0; i < fileList.files.length; i++) {
 		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
+		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);
 	}
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
-	jQuery('#button-upload-'+tabId).attr('nbFiles', nbFilesEntered + fileList.files.length)
+	jQuery('#upload-button-'+tabId).attr('nbFiles', nbFilesEntered + fileList.files.length)
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
+	//TODO:Here we will have to implement the ajax to php request.
 }
 
 function deleteFileToUpload (tabId, entryNb) {
-	
+	jQuery('#visualscience-upload-file-entry-'+tabId+'-'+entryNb).hide(350, function() {
+		jQuery('#visualscience-upload-file-entry-'+tabId+'-'+entryNb).remove();
+	});
 }
 
 function loadCLEditor (areaId) {
