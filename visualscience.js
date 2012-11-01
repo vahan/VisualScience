@@ -850,7 +850,7 @@ function uploadSubmittedFiles (tabId) {
 	var content='';
 	for (var i=0; i < fileList.files.length; i++) {
 		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
-		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);
+		//TODO: Change to add this line: uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i).name;
 	}
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
 	jQuery('#upload-button-'+tabId).attr('nbFiles', nbFilesEntered + fileList.files.length)
