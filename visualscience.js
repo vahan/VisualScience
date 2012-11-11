@@ -672,7 +672,7 @@ function setAutocompletes() {
  */
 
 //This is the URL to the php upload module
-var UploadModuleURL = 'http://localhost/QScience/upload_seb';
+var UploadModuleURL = '/QScience/upload_seb';
 
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
@@ -843,9 +843,9 @@ function createTabSendMessage (idOfTheTab) {
 
 function loadUploadScripts (areaId, callback) {
 	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js', function(){
-		jQuery('#'+areaId).ajaxForm(function(){
-			console.log('Form sent ?');
-		})
+		/*jQuery('#'+areaId).ajaxForm(function(){
+			console.log('Form sent ?');          Not useful, because already in funciton below...
+		})*/
 	});
 }
 
@@ -853,14 +853,31 @@ function uploadSubmittedFiles (tabId) {
 	var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles'));
 	var fileList = jQuery('#upload-form-'+tabId+' #edit-upload-seb-file')[0];
 	var content='';
+	if (!uploadDB[tabId]) {
+		uploadDB[tabId] = new Array();
+		jQuery('#upload-form-'+tabId+' #upload-seb-form').ajaxForm({
+			beforeSend: function() {
+				alert('file almost sent');
+			},
+			uploadProgress: function() {
+				
+			},
+			complete: function() {
+				alert('File uploaded.');
+			}
+		});
+	}
 	for (var i=0; i < fileList.files.length; i++) {
 		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
-		//TODO: Change to add this line: uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i).name;
+		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);//May be to change to store the file name and path instead of whole file
+		
+		//Here we send the file through AJAx to the php script
+		jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').val(fileList.files.item(i));
+		jQuery('#upload-form-'+tabId+' #upload-seb-form').submit();
 	}
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
 	jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles', nbFilesEntered + fileList.files.length)
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
-	//TODO:Here we will have to implement the ajax to php request.
 }
 
 function deleteFileToUpload (tabId, entryNb) {
