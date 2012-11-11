@@ -851,7 +851,7 @@ function loadUploadScripts (areaId, callback) {
 
 function uploadSubmittedFiles (tabId) {
 	var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles'));
-	var fileList = jQuery('#upload-form-'+tabId+' #edit-upload-seb-file');
+	var fileList = jQuery('#upload-form-'+tabId+' #edit-upload-seb-file')[0];
 	var content='';
 	for (var i=0; i < fileList.files.length; i++) {
 		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
@@ -920,8 +920,9 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
 					'nbFiles':'0',
-					'size':' ',
-					'multiple' : 'true'
+					'size':'18',
+					'multiple' : 'true',
+					'files[]':''
 				})
 				.css({
 					'width':'350px',
