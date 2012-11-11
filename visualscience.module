@@ -131,7 +131,7 @@ function visualscience_menu() {
     'page callback' => 'visualscience_page',
     'page arguments' => array("<div>TEST</div>", "test"),
     'access callback' => TRUE,
-    'weight' => 10,
+    'weight' => 10,adfsdf
   );*/
 
   return $items;

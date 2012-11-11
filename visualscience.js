@@ -670,6 +670,10 @@ function setAutocompletes() {
 /**
  * Code for new Design (Sebastien)
  */
+
+//This is the URL to the php upload module
+var UploadModuleURL = 'http://localhost/QScience/upload_seb';
+
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
 
@@ -827,6 +831,7 @@ function createTabSendMessage (idOfTheTab) {
 		var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">'+subjectDiv+messageDiv+sendButton+'</div><div style="float:right;width:45%;display:inline-block;">'+recipientsDiv+attachmentDiv+'</div></div>';
 		jQuery('#message-tab-'+thisTabId).html(messageTab);
 		loadCLEditor('visualscience-message-input-'+thisTabId);
+		loadDrupalHTMLUploadForm('no', 'upload-form-'+thisTabId, thisTabId);
 		loadUploadScripts('upload-button-'+thisTabId, function(){
 			//addAttachments();
 		});
@@ -845,15 +850,15 @@ function loadUploadScripts (areaId, callback) {
 }
 
 function uploadSubmittedFiles (tabId) {
-	var nbFilesEntered = parseInt(jQuery('#upload-button-'+tabId).attr('nbFiles'));
-	var fileList = document.getElementById('upload-button-'+tabId);
+	var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles'));
+	var fileList = jQuery('#upload-form-'+tabId+' #edit-upload-seb-file');
 	var content='';
 	for (var i=0; i < fileList.files.length; i++) {
 		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
 		//TODO: Change to add this line: uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i).name;
 	}
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
-	jQuery('#upload-button-'+tabId).attr('nbFiles', nbFilesEntered + fileList.files.length)
+	jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles', nbFilesEntered + fileList.files.length)
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
 	//TODO:Here we will have to implement the ajax to php request.
 }
@@ -897,8 +902,34 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'" style="height:150px;overflow-y:scroll;"></div><form action="sites/all/modules/visualscience/uploads/index.php" method="POST" id="upload-form-'+thisTabId+'"><input id="upload-button-'+thisTabId+'" style="margin-left:10px;width:100%;" type="file" name="files[]" data-url="sites/all/modules/visualscience/uploads/index.php" onChange="uploadSubmittedFiles(\''+thisTabId+'\');" nbFiles="0" multiple /><br /> <div id="progress-upload-'+thisTabId+'" style="margin:5px;padding:5px;background-color:red;font-size:10px;" >Progress</div></form>';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-'+thisTabId+'"></div> <div id="progress-upload-'+thisTabId+'" style="margin:5px;padding:5px;background-color:red;font-size:10px;" >Progress</div>';
 	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">'+content+'</div>';
+}
+
+/*
+ * Modifies a Drupal-generated form into a visually more estheatical form.
+ */
+function loadDrupalHTMLUploadForm (html, location, thisTabId) {
+	jQuery('#'+location).load(UploadModuleURL+' .content', function(response, status, xhr) {
+			if (status == "error") {
+				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
+			}
+			else {
+				jQuery('#edit-upload-seb-submit, #'+location+' label, #'+location+' .description').hide();
+				jQuery('#'+location+' #edit-upload-seb-file')
+				.attr({
+					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
+					'nbFiles':'0',
+					'size':' ',
+					'multiple' : 'true'
+				})
+				.css({
+					'width':'350px',
+					'margin-left':'10px',
+					
+				});
+			}			
+		});
 }
 
 /*
