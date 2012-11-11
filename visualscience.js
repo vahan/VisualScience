@@ -671,7 +671,7 @@ function setAutocompletes() {
  * Code for new Design (Sebastien)
  */
 
-//This is the URL to the php upload module
+//This is the URL to the php upload module(Always use https !)
 var UploadModuleURL = '/QScience/upload_seb';
 
 //This variable checks if the whole tabbed interface has been created yet.
@@ -842,11 +842,7 @@ function createTabSendMessage (idOfTheTab) {
 }
 
 function loadUploadScripts (areaId, callback) {
-	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js', function(){
-		/*jQuery('#'+areaId).ajaxForm(function(){
-			console.log('Form sent ?');          Not useful, because already in funciton below...
-		})*/
-	});
+	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js');
 }
 
 function uploadSubmittedFiles (tabId) {
