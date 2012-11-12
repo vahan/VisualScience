@@ -133,9 +133,48 @@ function visualscience_menu() {
     'access callback' => TRUE,
     'weight' => 10,adfsdf
   );*/
-
+  
+  //Seb
+  $items['visualscience/upload'] = array(
+    'title' => 'VisualScience Upload',
+    'description' => 'Upload a file in VisualScience',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('visualscience_upload_form'),
+    'access arguments' => array('visualscience'),
+    'type' => MENU_CALLBACK,
+  );
+  
   return $items;
 }
+
+/**
+ * Page callback: Current posts settings
+ *
+ * @see current_posts_menu()
+ */
+function visualscience_upload_form($form, &$form_state) {
+  $form['visualscience_upload_file'] = array(
+    '#type' => 'file',
+    '#title' => t('A file in your computer'),
+    '#size' => 20,
+    '#description' => t('The file you want to upload from your pc.'),
+    '#required' => FALSE,
+  );
+  
+  $form['visualscience_upload_submit'] = array(
+  	'#type' => 'submit',
+  	'#value' => t('Upload'),
+  );
+  
+  $form['#submit'][] = 'visualscience_upload_submit'; 
+
+  return system_settings_form($form);
+}
+
+function visualscience_upload_submit($form, &$form_state) {
+	drupal_set_message(t('Alright !'));
+}
+
 /**
  * 
  * Function to take care of having multiple instances of the same form on the page

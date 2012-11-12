@@ -672,7 +672,7 @@ function setAutocompletes() {
  */
 
 //This is the URL to the php upload module(Always use https !)
-var UploadModuleURL = '/QScience/upload_seb';
+var UploadModuleURL = './visualscience/upload';
 
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
@@ -846,12 +846,12 @@ function loadUploadScripts (areaId, callback) {
 }
 
 function uploadSubmittedFiles (tabId) {
-	var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles'));
-	var fileList = jQuery('#upload-form-'+tabId+' #edit-upload-seb-file')[0];
+	var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles'));
+	var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
 	var content='';
 	if (!uploadDB[tabId]) {
 		uploadDB[tabId] = new Array();
-		jQuery('#upload-form-'+tabId+' #upload-seb-form').ajaxForm({
+		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').ajaxForm({
 			beforeSend: function() {
 				alert('file almost sent');
 			},
@@ -868,11 +868,11 @@ function uploadSubmittedFiles (tabId) {
 		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);//May be to change to store the file name and path instead of whole file
 		
 		//Here we send the file through AJAx to the php script
-		jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').val(fileList.files.item(i));
-		jQuery('#upload-form-'+tabId+' #upload-seb-form').submit();
+		jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val(fileList.files.item(i));
+		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').submit();
 	}
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
-	jQuery('#upload-form-'+tabId+' #edit-upload-seb-file').attr('nbFiles', nbFilesEntered + fileList.files.length)
+	jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + fileList.files.length)
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
 }
 
@@ -928,8 +928,8 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
 			}
 			else {
-				jQuery('#edit-upload-seb-submit, #'+location+' label, #'+location+' .description').hide();
-				jQuery('#'+location+' #edit-upload-seb-file')
+				jQuery('#edit-visualscience-upload-submit, #'+location+' label, #'+location+' .description, #'+location+' #edit-actions').hide();
+				jQuery('#'+location+' #edit-visualscience-upload-file')
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
 					'nbFiles':'0',
