@@ -672,7 +672,7 @@ function setAutocompletes() {
  */
 
 //This is the URL to the php upload module(Always use https !)
-var UploadModuleURL = './visualscience/upload';
+var UploadModuleURL = './visualscience/upload/';
 
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
@@ -939,7 +939,7 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				})
 				.css({
 					'width':'350px',
-					'margin-left':'10px',
+					'margin-left':'15px'
 					
 				});
 			}			
