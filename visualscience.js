@@ -931,7 +931,7 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
 			}
 			else {
-				jQuery('#edit-visualscience-upload-submit, #'+location+' label, #'+location+' .description, #'+location+' #edit-actions').hide();
+				jQuery('#'+location+':first-child :not(form), #edit-visualscience-upload-submit, #'+location+' label, #'+location+' .description, #'+location+' #edit-actions').hide();
 				jQuery('#'+location+' #edit-visualscience-upload-file')
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
@@ -942,8 +942,8 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				})
 				.css({
 					'width':'350px',
-					'margin-left':'15px'
-					
+					'margin-left':'15px',
+					'display':'block'
 				});
 			}			
 		});
