@@ -140,7 +140,7 @@ function visualscience_menu() {
     'description' => 'Upload a file in VisualScience',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('visualscience_upload_form'),
-    'access arguments' => array(true),
+    'access arguments' => array('access visualscience'),
     'type' => MENU_CALLBACK,
   );
   
