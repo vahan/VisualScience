@@ -670,6 +670,10 @@ function setAutocompletes() {
 /**
  * Code for new Design (Sebastien)
  */
+
+//This is the URL to the php upload module(Always use https !)
+var UploadModuleURL = './visualscience/upload/';
+
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
 
@@ -709,9 +713,11 @@ window.onload = function() {
 
 //This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
 var lsDB = new Array();
-
 //The array containing the original result from LS. (as above, but won't be modified)
 var lsDBOriginal = new Array();
+
+//This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
+var uploadDB = new Array();
 
 //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 var dialogNumber;
@@ -724,7 +730,7 @@ var dialogNumber;
  */
 function openUserListTab(dialogNumber_) {
 	dialogNumber = dialogNumber_;
-	setTimeout(function() {//(Bad style) The tab creation should be deleted, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
+	setTimeout(function() {//(Bad style) The tab creation should be delayed, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
 		createTabbedInterface(dialogNumber);
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 		title = (title == '' ? 'All Users' : title);
@@ -824,10 +830,71 @@ function createTabSendMessage (idOfTheTab) {
 		var sendButton = createSendMessageButton(thisTabId);
 		var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">'+subjectDiv+messageDiv+sendButton+'</div><div style="float:right;width:45%;display:inline-block;">'+recipientsDiv+attachmentDiv+'</div></div>';
 		jQuery('#message-tab-'+thisTabId).html(messageTab);
+		loadCLEditor('visualscience-message-input-'+thisTabId);
+		loadDrupalHTMLUploadForm('no', 'upload-form-'+thisTabId, thisTabId);
+		loadUploadScripts('upload-button-'+thisTabId, function(){
+			//addAttachments();
+		});
 	}
 	else {
 		alert('Please select at least one user.');
 	}
+}
+
+function loadUploadScripts (areaId, callback) {
+	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.form.js');
+}
+
+function uploadSubmittedFiles (tabId) {
+	var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles'));
+	var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
+	var content='';
+	if (!uploadDB[tabId]) {
+		uploadDB[tabId] = new Array();
+		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').ajaxForm({
+			beforeSend: function() {
+				alert('file almost sent');
+			},
+			uploadProgress: function() {
+				
+			},
+			complete: function() {
+				alert('File uploaded.');
+			}
+		});
+	}
+	for (var i=0; i < fileList.files.length; i++) {
+		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
+		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);//May be to change to store the file name and path instead of whole file
+		
+		//Here we send the file through AJAx to the php script
+		jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val(fileList.files.item(i));
+		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').submit();
+	}
+	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
+	jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + fileList.files.length)
+	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
+}
+
+function deleteFileToUpload (tabId, entryNb) {
+	jQuery('#visualscience-upload-file-entry-'+tabId+'-'+entryNb).hide(350, function() {
+		jQuery('#visualscience-upload-file-entry-'+tabId+'-'+entryNb).remove();
+	});
+}
+
+function loadCLEditor (areaId) {
+	if (document.createStyleSheet){
+               document.createStyleSheet('style.css');
+           }
+           else {
+               jQuery("head").append(jQuery("<link rel='stylesheet' href='sites/all/modules/visualscience/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+           }
+	jQuery.getScript('sites/all/modules/visualscience/visualscience.jquery.cleditor.min.js', function(){
+		jQuery('#'+areaId).cleditor({
+			width:'100%',
+			height:'440px'
+		});
+	});
 }
 
 /*
@@ -848,8 +915,35 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'"></div><input type="button" style="margin-left:10px;" value="Add Attachment" />';
-	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:50px;">'+content+'</div>';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-'+thisTabId+'"></div> <div id="progress-upload-'+thisTabId+'" style="margin:5px;padding:5px;background-color:red;font-size:10px;" >Progress</div>';
+	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">'+content+'</div>';
+}
+
+/*
+ * Modifies a Drupal-generated form into a visually more estheatical form.
+ */
+function loadDrupalHTMLUploadForm (html, location, thisTabId) {
+	jQuery('#'+location).load(UploadModuleURL+' .content', function(response, status, xhr) {
+			if (status == "error") {
+				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
+			}
+			else {
+				jQuery('#edit-visualscience-upload-submit, #'+location+' label, #'+location+' .description, #'+location+' #edit-actions').hide();
+				jQuery('#'+location+' #edit-visualscience-upload-file')
+				.attr({
+					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
+					'nbFiles':'0',
+					'size':'18',
+					'multiple' : 'true',
+					'files[]':''
+				})
+				.css({
+					'width':'350px',
+					'margin-left':'15px'
+					
+				});
+			}			
+		});
 }
 
 /*
@@ -928,6 +1022,22 @@ function addRecipientForMessage (thisTabId) {
 		var nbRecipients = parseInt(jQuery('#visualscience-message-add-recipient-button-'+thisTabId).attr('nbRecipients'));
 		insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients);
 		jQuery('#visualscience-message-add-recipient-button-'+thisTabId).attr('nbRecipients', nbRecipients+1);
+		var oldTitle = parseInt(jQuery('a[href="#message-tab-'+thisTabId+'"]').text());
+		if (isNaN(oldTitle)) {
+			var newTitle = ' 2 Users ';
+			oldTitle = jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(1, jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(2).indexOf('X')+2);
+		}
+		else if (oldTitle == 0) {
+			var newTitle = ' '+jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(1)+' ';
+			oldTitle = ' 0 User ';
+		}
+		else {
+			var newTitle =' '+(oldTitle + 1)+' ';
+			oldTitle = ' '+oldTitle+' ';
+		}
+		newTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').html().replace(oldTitle, newTitle);
+		jQuery('a[href="#message-tab-'+thisTabId+'"]').html(newTitle);
+		jQuery('#visualscience-recipient-div-content-'+thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
 	}
 	else{
 		alert('Please enter a valid email');
@@ -943,6 +1053,21 @@ function insertEmailIntoRecipientsDiv (thisTabId, email, nbRecipients) {
 function deleteRecipientToMessage (thisTabId, entryNb) {
 	jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+entryNb).hide(350, function() {
 		jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+entryNb).remove();
+	var oldTitle = parseInt(jQuery('a[href="#message-tab-'+thisTabId+'"]').text());
+	if (oldTitle == 2) {
+		var newTitle = ' '+jQuery('#visualscience-recipients-div-'+thisTabId+':first-child').text().substring(1)+' ';
+		oldTitle = '2 Users';
+	}
+	else if (isNaN(oldTitle)) {
+		var newTitle = ' 0 User ';
+		oldTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').text().substring(0, jQuery('a[href="#message-tab-'+thisTabId+'"]').text().indexOf('X'));
+	}
+	else {
+		var newTitle = ' '+(oldTitle - 1)+' ';
+		oldTitle = ' '+oldTitle+' ';
+	}
+	newTitle = jQuery('a[href="#message-tab-'+thisTabId+'"]').html().replace(oldTitle, newTitle);
+	jQuery('a[href="#message-tab-'+thisTabId+'"]').html(newTitle);
 	});
 }
 
@@ -970,7 +1095,7 @@ function createTabConference(idOfTheTab) {
 		var thisTabId = tabId;
 		addTab('<img src="sites/all/modules/visualscience/includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-'+thisTabId);
 		
-		//Create the message tab
+		//Create the conference tab
 		jQuery('#conference-tab-'+thisTabId).html('<h3>conference Tab</h3>');
 	}
 	else {
@@ -1370,9 +1495,9 @@ function createTableUserList(dialogNumber, idOfThisTab) {
 		divFinalContent += '<td>' + arrayOfUserResults[i - 1] + '</td>';
 		if (i % nbColsInTable == 0 && i != arrayOfUserResults.length) {
 			if ((i/nbColsInTable)%2 == 0) {
-				divFinalContent += '</tr><tr class="odd">';
+				divFinalContent += '</tr><tr class="odd clickable" onClick="jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\', !jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\'));">';
 			} else {
-				divFinalContent += '</tr><tr class="even">';
+				divFinalContent += '</tr><tr class="even" onClick="jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\', !jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\''+((i/nbColsInTable)+2)+'\\\']\').attr(\'checked\'));">';
 			}
 		}
 	}
@@ -1412,7 +1537,7 @@ function createTableUserListHead (idOfThisTab, dialogNumber) {
 			header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 		}
 	});
-	header += '</tr></thead><tbody><tr class="odd">';
+	header += '</tr></thead><tbody><tr class="odd" onClick="jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\'0\\\']\').attr(\'checked\', !jQuery(\'#visualscience-user_list-result-'+idOfThisTab+' input[value=\\\'0\\\']\').attr(\'checked\'));">';
 	return header;
 }
 

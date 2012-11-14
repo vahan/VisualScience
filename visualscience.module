@@ -131,11 +131,71 @@ function visualscience_menu() {
     'page callback' => 'visualscience_page',
     'page arguments' => array("<div>TEST</div>", "test"),
     'access callback' => TRUE,
-    'weight' => 10,
+    'weight' => 10,adfsdf
   );*/
-
+  
+  //Seb
+  $items['visualscience/upload'] = array(
+    'title' => 'VisualScience Upload',
+    'description' => 'Upload a file in VisualScience',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('visualscience_upload_form'),
+    'access arguments' => array('visualscience'),
+    'type' => MENU_CALLBACK,
+  );
+  
   return $items;
 }
+
+/**
+ * Page callback: Current posts settings
+ *
+ * @see current_posts_menu()
+ */
+function visualscience_upload_form($form, &$form_state) {
+  $form['visualscience_upload_file'] = array(
+    '#type' => 'file',
+    '#title' => t('A file in your computer'),
+    '#size' => 20,
+    '#description' => t('The file you want to upload from your pc.'),
+    '#required' => FALSE,
+  );
+  
+  $form['visualscience_upload_submit'] = array(
+  	'#type' => 'submit',
+  	'#value' => t('Upload'),
+  );
+  
+  $form['#submit'][] = 'visualscience_upload_submit'; 
+
+  return system_settings_form($form);
+}
+
+function visualscience_upload_submit($form, &$form_state) {
+	$dir = 'public://';
+	$validators = array();
+	$file = 'visualscience_upload_file';
+	if (!empty($file)) {
+		$file = file_save_upload($file, $validators, $dir, FILE_EXISTS_RENAME);
+		if (!empty($file)) {
+			$finalDestination = $dir.'visualscience/';
+			$file = file_copy($file, $finalDestination.$file->filename, FILE_EXISTS_RENAME);
+			if (!empty($file)) {
+				drupal_set_message(t('The file has been uploaded to:').drupal_realpath($file->uri));
+			}
+			else {
+				form_set_error(t('An error occured when copying the file.'));
+			}
+		}
+		else {
+			form_set_error(t('An error occured when uploading the file.'));
+		}
+	}
+	else {
+		form_set_error(t('You did not chose a file.'));
+	}
+}
+
 /**
  * 
  * Function to take care of having multiple instances of the same form on the page
