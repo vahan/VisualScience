@@ -1530,7 +1530,7 @@ function getTableUserListOptions (tableId, idOfThisTab, nbColsInTable) {
  * It takes every thead from the hidden table and generates the thead witht that.
  */
 function createTableUserListHead (idOfThisTab, dialogNumber) {
-	var header = '<div style="display:inline-block;max-width:80%;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
+	var header = '<div style="display:inline-block;max-width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
 		//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 		if (jQuery(this).html().indexOf('form-checkbox') != -1) {
