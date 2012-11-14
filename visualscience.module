@@ -155,22 +155,18 @@ function visualscience_menu() {
 function visualscience_upload_form($form, &$form_state) {
   $form['visualscience_upload_file'] = array(
     '#type' => 'file',
-    '#title' => t('A file in your computer'),
     '#size' => 20,
-    '#description' => t('The file you want to upload from your pc.'),
     '#required' => FALSE,
-  );
-  
-  $form['visualscience_upload_submit'] = array(
-  	'#type' => 'submit',
-  	'#value' => t('Upload'),
+    '#attributes' => array(
+		'multiple' => 'true',
+	),
   );
   
   $form['#submit'][] = 'visualscience_upload_submit'; 
 
-  return system_settings_form($form);
+  return $form;
 }
-
+//TODO: Change so taht it can handle multiple uploads
 function visualscience_upload_submit($form, &$form_state) {
 	$dir = 'public://';
 	$validators = array();
