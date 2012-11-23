@@ -868,21 +868,29 @@ function uploadSubmittedFiles (tabId) {
 	if (!uploadDB[tabId]) {
 		uploadDB[tabId] = new Array();
 		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').ajaxForm({
+			clearForm: true,
+			
 			beforeSend: function() {
 				jQuery('#progress-upload-'+tabId).text('Progress: Preparing File...').css({
 					'background-color': 'yellow',
-					'display':'block'
+					'display':'block',
+					'color':'white'
 					});
 			},
 			uploadProgress: function() {
 				jQuery('#progress-upload-'+tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
 			},
-			complete: function() {
+			success: function() {
 				jQuery('#progress-upload-'+tabId).text('Progress: File Successfully Uploaded ! You may select another one.').css({
-					'background-color': 'green',
-					'color':'white'
+					'background-color': 'green'
 					});
-			}
+			}, 
+			error: function(jqXHR, textStatus, errorThrown) {
+				jQuery('#progress-upload-'+tabId).text('Progress: Error '+textStatus+': '+errorThrown).css({
+					'background-color': 'red'
+					});
+			} 
+			
 		});
 	}
 	var fileName = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val().replace('c:\\fakepath\\', '').replace('C:\\fakepath\\', '');
@@ -901,6 +909,7 @@ function uploadSubmittedFiles (tabId) {
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(newLine);
 	jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + 1)
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
+	return false;//Avoid standard browser to navigate to the page.
 }
 
 function deleteFileToUpload (tabId, entryNb) {
@@ -956,6 +965,7 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 			}
 			else {
 				jQuery('#'+location).children().children(':not(#visualscience-upload-form)').hide();
+				jQuery('#'+location+' #edit-submit').hide();
 				jQuery('#'+location+' #edit-visualscience-upload-file')
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',

@@ -161,10 +161,10 @@ function visualscience_upload_form($form, &$form_state) {
 	),
   );
   
-  /*$form['submit'] = array(
+  $form['submit'] = array(
   '#type' => 'submit',
   '#value' => t('Save'),
-);*/
+);
   
   $form['#submit'][] = 'visualscience_upload_submit'; 
 
