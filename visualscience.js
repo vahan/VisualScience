@@ -880,10 +880,29 @@ function uploadSubmittedFiles (tabId) {
 			uploadProgress: function() {
 				jQuery('#progress-upload-'+tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
 			},
-			success: function() {
-				jQuery('#progress-upload-'+tabId).text('Progress: File Successfully Uploaded ! You may select another one.').css({
-					'background-color': 'green'
-					});
+			success: function(data, textStatus, jqXHR) {
+				//Don't forget to delete the #invisible. (End of function !)
+					jQuery('html').append('<div id="invisible" style="display:none;">'+data.substring(data.indexOf('<div id="messages"'))+'</div>');
+					jQuery('#invisible').html(jQuery('#invisible .messages').html());
+					var messages = jQuery('#invisible').text();
+					if (messages.indexOf('Error') != -1) {//Check for errors
+						//Get error text
+						//Print error text
+					}
+					else if (messages.indexOf('Status') != -1) {//check for success and path
+						jQuery('#progress-upload-'+tabId).text('Progress: File Successfully Uploaded ! You may select another one.').css({
+							'background-color': 'green'
+						});
+						
+					//Get url of file
+					}
+					else {//Improbable, there was an error.		
+						jQuery('#progress-upload-'+tabId).text('Progress: Upload Unsuccessful. Please Try Again.').css({
+							'background-color': 'red'
+						});			
+					}
+					
+					//Don't forget !: jQuery('#invisible').remove();
 			}, 
 			error: function(jqXHR, textStatus, errorThrown) {
 				jQuery('#progress-upload-'+tabId).text('Progress: Error '+textStatus+': '+errorThrown).css({
