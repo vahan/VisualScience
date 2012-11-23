@@ -671,12 +671,11 @@ function setAutocompletes() {
  * Code for new Design (Sebastien)
  */
 
-//This is the URL to the php upload module(Always use https !)
+//This is the URL to the php upload module
 var UploadModuleURL = './visualscience/upload/';
 
-//This is the folder in which visualscience is installed
-//TODO: Change the attribution with a JS function.(So that it is automatic)
-var installFolder = 'visualscience/';
+//This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
+//var installFolder = 'sites/all/modules/visualscience/';
 
 //This variable checks if the whole tabbed interface has been created yet.
 var tabbedInterfaceExists = false;
@@ -738,7 +737,7 @@ function openUserListTab(dialogNumber_) {
 		var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 		title = (title == '' ? 'All Users' : title);
 		var idOfThisTab = tabId;
-		addTab('<img src="sites/all/modules/'+installFolder+'includes/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
+		addTab('<img src="'+installFolder+'includes/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
 		//Insert the table result in a new div
 		var content = createUserSearchResult(dialogNumber, idOfThisTab);
 		jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
@@ -823,7 +822,7 @@ function createTabSendMessage (idOfTheTab) {
 		var selectedUsersEmail = getSelectedUsersEmailFromSearchTable(idOfTheTab);
 		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/'+installFolder+'includes/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-'+thisTabId);
+		addTab('<img src="'+installFolder+'includes/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-'+thisTabId);
 		
 		//Create the message tab's HTML
 		var subjectDiv = createSubjectDiv(thisTabId);
@@ -845,7 +844,7 @@ function createTabSendMessage (idOfTheTab) {
 }
 
 function loadUploadScripts (areaId, callback) {
-	jQuery.getScript('sites/all/modules/'+installFolder+'visualscience.jquery.form.js');
+	jQuery.getScript(installFolder+'visualscience.jquery.form.js');
 }
 
 function uploadSubmittedFiles (tabId) {
@@ -890,9 +889,9 @@ function loadCLEditor (areaId) {
                document.createStyleSheet('style.css');
            }
            else {
-               jQuery("head").append(jQuery("<link rel='stylesheet' href='sites/all/modules/"+installFolder+"visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+               jQuery("head").append(jQuery("<link rel='stylesheet' href='"+installFolder+"visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
            }
-	jQuery.getScript('sites/all/modules/'+installFolder+'visualscience.jquery.cleditor.min.js', function(){
+	jQuery.getScript(installFolder+'visualscience.jquery.cleditor.min.js', function(){
 		jQuery('#'+areaId).cleditor({
 			width:'100%',
 			height:'440px'
@@ -931,7 +930,7 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
 			}
 			else {
-				jQuery('#edit-visualscience-upload-submit, #'+location+' label, #'+location+' .description, #'+location+' #edit-actions').hide();
+				jQuery('#'+location).children().children(':not(#visualscience-upload-form)').hide();
 				jQuery('#'+location+' #edit-visualscience-upload-file')
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
@@ -942,8 +941,8 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				})
 				.css({
 					'width':'350px',
-					'margin-left':'15px'
-					
+					'margin-left':'15px',
+					'display':'block'
 				});
 			}			
 		});
@@ -1096,7 +1095,7 @@ function createTabConference(idOfTheTab) {
 	if (selectedUsers.length > 0) {
 		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
-		addTab('<img src="sites/all/modules/'+installFolder+'includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-'+thisTabId);
+		addTab('<img src="'+installFolder+'includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-'+thisTabId);
 		
 		//Create the conference tab
 		jQuery('#conference-tab-'+thisTabId).html('<h3>conference Tab</h3>');
@@ -1112,7 +1111,7 @@ function createTabConference(idOfTheTab) {
 function exportUsersCSV (idOfThisTab) {
 	//Some parameters for the communication with the PHP page:
 	var newLineCharacter = ';';
-	var url = 'sites/all/modules/'+installFolder+'includes/stringToCSV.php?text=';
+	var url = installFolder+'includes/stringToCSV.php?text=';
 	var finalTable = '';
 	var tableId = 'visualscience-user_list-result-'+idOfThisTab;
 	//Through the head of the table
@@ -1163,10 +1162,10 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 		var thisTabId = tabId;
 		//TODO: Change this once Christian will allow multiple users with array
 		stringWithOrs = changeArrayToOrString(selectedUsers);
-		addTab('<img src="sites/all/modules/'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
+		addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
 		livingscience.searchAuthor(selectedUsers[0], function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
-		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="sites/all/modules/'+installFolder+'includes/loading.gif" width="100px" alt="loading" /></center>');
+		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="'+installFolder+'includes/loading.gif" width="100px" alt="loading" /></center>');
 	}
 	else {
 		alert('Please select at least one user');
