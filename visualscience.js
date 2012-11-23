@@ -671,7 +671,7 @@ function setAutocompletes() {
  * Code for new Design (Sebastien)
  */
 
-//This is the URL to the php upload module(Always use https !)
+//This is the URL to the php upload module
 var UploadModuleURL = './visualscience/upload/';
 
 //This is the folder in which visualscience is installed
@@ -931,7 +931,7 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
 			}
 			else {
-				jQuery('#'+location+':first-child :not(form), #edit-visualscience-upload-submit, #'+location+' label, #'+location+' .description, #'+location+' #edit-actions').hide();
+				jQuery('#'+location).children().children(':not(#visualscience-upload-form)').hide();
 				jQuery('#'+location+' #edit-visualscience-upload-file')
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
