@@ -148,9 +148,8 @@ function visualscience_menu() {
 }
 
 /**
- * Page callback: Current posts settings
+ * Page callback: Upload form
  *
- * @see current_posts_menu()
  */
 function visualscience_upload_form($form, &$form_state) {
   $form['visualscience_upload_file'] = array(
@@ -158,15 +157,20 @@ function visualscience_upload_form($form, &$form_state) {
     '#size' => 20,
     '#required' => FALSE,
     '#attributes' => array(
-		'multiple' => 'true',
+		'multiple' => 'false',
 	),
   );
+  
+  /*$form['submit'] = array(
+  '#type' => 'submit',
+  '#value' => t('Save'),
+);*/
   
   $form['#submit'][] = 'visualscience_upload_submit'; 
 
   return $form;
 }
-//TODO: Change so taht it can handle multiple uploads
+//TODO: Change so taht it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
 function visualscience_upload_submit($form, &$form_state) {
 	$dir = 'public://';
 	$validators = array();
@@ -189,7 +193,7 @@ function visualscience_upload_submit($form, &$form_state) {
 	}
 	else {
 		form_set_error(t('You did not chose a file.'));
-	}
+	}	
 }
 
 /**

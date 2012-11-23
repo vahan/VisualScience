@@ -790,7 +790,7 @@ function createUserSearchResult(dialogNumber, idOfThisTab) {
  * This creates the action bar, with the different buttons.
  */
 function createActionBar(idOfThisTab) {
-	var finalDiv = '<div align="center" style="max-width:20%;" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
+	var finalDiv = '<div align="center" style="max-width:25%;" class="action-bar-container" id="action-bar-container'+idOfThisTab+'"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
 	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage('+idOfThisTab+');"  /><br />';
 	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV('+idOfThisTab+');"  /><br />';
 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience('+idOfThisTab+');"  /><br />';
@@ -869,26 +869,37 @@ function uploadSubmittedFiles (tabId) {
 		uploadDB[tabId] = new Array();
 		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').ajaxForm({
 			beforeSend: function() {
-				alert('file almost sent');
+				jQuery('#progress-upload-'+tabId).text('Progress: Preparing File...').css({
+					'background-color': 'yellow',
+					'display':'block'
+					});
 			},
 			uploadProgress: function() {
-				
+				jQuery('#progress-upload-'+tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
 			},
 			complete: function() {
-				alert('File uploaded.');
+				jQuery('#progress-upload-'+tabId).text('Progress: File Successfully Uploaded ! You may select another one.').css({
+					'background-color': 'green',
+					'color':'white'
+					});
 			}
 		});
 	}
-	for (var i=0; i < fileList.files.length; i++) {
+	var fileName = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val().replace('c:\\fakepath\\', '').replace('C:\\fakepath\\', '');
+	var newLine = '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+1)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileName+'</a></p>';
+	jQuery('#upload-form-'+tabId+' #visualscience-upload-form').submit();
+	/* Old Code(Multiple files)
+	 * New one is the line above.
+	 for (var i=0; i < fileList.files.length; i++) {
 		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
 		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);//May be to change to store the file name and path instead of whole file
 		
 		//Here we send the file through AJAx to the php script
 		jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val(fileList.files.item(i));
 		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').submit();
-	}
-	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(content);
-	jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + fileList.files.length)
+	}*/
+	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(newLine);
+	jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + 1)
 	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
 }
 
@@ -931,7 +942,7 @@ function createMessageDiv (thisTabId) {
  * The attachment div for messages and conferences
  */
 function createAttachmentsDiv (thisTabId) {
-	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-'+thisTabId+'"></div> <div id="progress-upload-'+thisTabId+'" style="margin:5px;padding:5px;background-color:red;font-size:10px;" >Progress</div>';
+	var content = '<div id="visualscience-message-attachments-div-show-'+thisTabId+'" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-'+thisTabId+'"></div> <div id="progress-upload-'+thisTabId+'" style="margin:5px;padding:5px;background-color:red;font-size:12px;display:none;" >Progress</div>';
 	return '<div id="visualscience-attachments-div-'+thisTabId+'" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">'+content+'</div>';
 }
 
@@ -1541,7 +1552,7 @@ function getTableUserListOptions (tableId, idOfThisTab, nbColsInTable) {
  * It takes every thead from the hidden table and generates the thead witht that.
  */
 function createTableUserListHead (idOfThisTab, dialogNumber) {
-	var header = '<div style="display:inline-block;max-width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
+	var header = '<div style="display:inline-block;max-width:90%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
 	jQuery('#user_list-list-'+dialogNumber+' > thead > tr > th').each(function() {
 		//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 		if (jQuery(this).html().indexOf('form-checkbox') != -1) {
@@ -1551,7 +1562,7 @@ function createTableUserListHead (idOfThisTab, dialogNumber) {
 			header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 		}
 	});
-	header += '</tr></thead><tbody><tr class="odd" >';
+	header += '</tr></thead><tbody><tr class="odd clickable clickToSelect" >';
 	return header;
 }
 
