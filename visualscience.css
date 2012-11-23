@@ -189,3 +189,7 @@ a:hover{
 	font-size:72%;
 	font-weight:normal;
 }
+
+.clickable:hover {
+	cursor: pointer;
+}
