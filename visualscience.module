@@ -245,6 +245,7 @@ function visualscience_page($clear = true) {
     //variable_del('visualscience_search_table');
   }
   //To set the js variable 'installFolder' (May not be in the right place)
+  //TODO: Change the place to the right one.
   $output .= "<script type='text/javascript'>var installFolder = '".drupal_get_path('module', 'visualscience')."/';</script>";
   return $output;
 }
