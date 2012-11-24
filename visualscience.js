@@ -881,20 +881,27 @@ function uploadSubmittedFiles (tabId) {
 				jQuery('#progress-upload-'+tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
 			},
 			success: function(data, textStatus, jqXHR) {
-				//Don't forget to delete the #invisible. (End of function !)
-					jQuery('html').append('<div id="invisible" style="display:none;">'+data.substring(data.indexOf('<div id="messages"'))+'</div>');
+					jQuery('html').append('<div id="invisible" style="display:none;">'+data.substring(data.indexOf('<div id="page"'))+'</div>');
 					jQuery('#invisible').html(jQuery('#invisible .messages').html());
 					var messages = jQuery('#invisible').text();
 					if (messages.indexOf('Error') != -1) {//Check for errors
-						//Get error text
-						//Print error text
+						inst = messages;
+						jQuery('#progress-upload-'+tabId).text('Upload Failed: '+messages).css({
+							'background-color': 'red'
+						});
 					}
 					else if (messages.indexOf('Status') != -1) {//check for success and path
-						jQuery('#progress-upload-'+tabId).text('Progress: File Successfully Uploaded ! You may select another one.').css({
+						
+						var link = messages.substring(messages.indexOf('The file has been uploaded to:')+30);
+						var fileName = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val().replace('c:\\fakepath\\', '').replace('C:\\fakepath\\', '');
+						var newLine = '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+1)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="'+link+'" target="_blank">'+fileName+'</a></p>';
+						jQuery('#visualscience-message-attachments-div-show-'+tabId).append(newLine);
+						jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + 1)
+						jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
+						
+						jQuery('#progress-upload-'+tabId).text('File Successfully Uploaded ! You may select another one.').css({
 							'background-color': 'green'
 						});
-						
-					//Get url of file
 					}
 					else {//Improbable, there was an error.		
 						jQuery('#progress-upload-'+tabId).text('Progress: Upload Unsuccessful. Please Try Again.').css({
@@ -902,7 +909,7 @@ function uploadSubmittedFiles (tabId) {
 						});			
 					}
 					
-					//Don't forget !: jQuery('#invisible').remove();
+					jQuery('#invisible').remove();
 			}, 
 			error: function(jqXHR, textStatus, errorThrown) {
 				jQuery('#progress-upload-'+tabId).text('Progress: Error '+textStatus+': '+errorThrown).css({
@@ -912,22 +919,7 @@ function uploadSubmittedFiles (tabId) {
 			
 		});
 	}
-	var fileName = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val().replace('c:\\fakepath\\', '').replace('C:\\fakepath\\', '');
-	var newLine = '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+1)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileName+'</a></p>';
 	jQuery('#upload-form-'+tabId+' #visualscience-upload-form').submit();
-	/* Old Code(Multiple files)
-	 * New one is the line above.
-	 for (var i=0; i < fileList.files.length; i++) {
-		content += '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+i)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+i)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="#">'+fileList.files.item(i).name+'</a></p>';
-		uploadDB[tabId][nbFilesEntered + i] = fileList.files.item(i);//May be to change to store the file name and path instead of whole file
-		
-		//Here we send the file through AJAx to the php script
-		jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val(fileList.files.item(i));
-		jQuery('#upload-form-'+tabId+' #visualscience-upload-form').submit();
-	}*/
-	jQuery('#visualscience-message-attachments-div-show-'+tabId).append(newLine);
-	jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + 1)
-	jQuery('#visualscience-message-attachments-div-show-'+tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
 	return false;//Avoid standard browser to navigate to the page.
 }
 
@@ -989,9 +981,7 @@ function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 				.attr({
 					'onChange':'uploadSubmittedFiles(\''+thisTabId+'\');',
 					'nbFiles':'0',
-					'size':'18',
-					'multiple' : 'true',
-					'files[]':''
+					'size':'18'
 				})
 				.css({
 					'width':'350px',

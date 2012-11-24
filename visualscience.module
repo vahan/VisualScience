@@ -156,9 +156,6 @@ function visualscience_upload_form($form, &$form_state) {
     '#type' => 'file',
     '#size' => 20,
     '#required' => FALSE,
-    '#attributes' => array(
-		'multiple' => 'false',
-	),
   );
   
   $form['submit'] = array(
@@ -181,7 +178,7 @@ function visualscience_upload_submit($form, &$form_state) {
 			$finalDestination = $dir.'visualscience/';
 			$file = file_copy($file, $finalDestination.$file->filename, FILE_EXISTS_RENAME);
 			if (!empty($file)) {
-				drupal_set_message(t('The file has been uploaded to:').drupal_realpath($file->uri));
+				drupal_set_message(t('The file has been uploaded to:').file_create_url($file->uri));
 			}
 			else {
 				form_set_error(t('An error occured when copying the file.'));
