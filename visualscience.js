@@ -893,7 +893,7 @@ function uploadSubmittedFiles (tabId) {
 						});
 					}
 					else if (messages.indexOf('Status') != -1) {//check for success and path
-						
+						var nbFilesEntered = parseInt(jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').attr('nbFiles'));
 						var link = messages.substring(messages.indexOf('The file has been uploaded to:')+30);
 						var fileName = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file').val().replace('c:\\fakepath\\', '').replace('C:\\fakepath\\', '');
 						var newLine = '<p id="visualscience-upload-file-entry-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteFileToUpload('+tabId+', '+(nbFilesEntered+1)+');" id="visualscience-message-close-cross-'+tabId+'-'+(nbFilesEntered+1)+'" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="'+link+'" target="_blank">'+fileName+'</a></p>';
@@ -905,7 +905,7 @@ function uploadSubmittedFiles (tabId) {
 							'background-color': 'green'
 						});
 					}
-					else {//Improbable, there was an error.		
+					else {//Improbable, there was an error.	
 						jQuery('#progress-upload-'+tabId).text('Progress: Upload Unsuccessful. Please Try Again.').css({
 							'background-color': 'red'
 						});			
@@ -1015,7 +1015,6 @@ function createSendMessageButton (thisTabId) {
 
 /*
  * Get informations and send them to the server through ajax
- * TODO: Change the mailURL var with the one of the server !
  */
 function sendVisualscienceMessage (thisTabId) {
 	var mailURL = SendMailURL;
@@ -1025,33 +1024,24 @@ function sendVisualscienceMessage (thisTabId) {
 	});
 	var subjectVal = jQuery('#visualscience-subject-input-'+thisTabId).val();
 	var messageVal = jQuery('#visualscience-message-input-'+thisTabId).val();
-	var attachmentJson = '';//getJsonOfAttachments(thisTabId);
+	var attachmentJson = getJsonOfAttachments(thisTabId);
 	var recipientsArray = getRecipientsOfMessage(thisTabId);
 	var flagAllDone = false;
 	for (var i=0; i < recipientsArray.length; i++) {
 		var recipientsVal = {name: recipientsArray[i][0], email: recipientsArray[i][1]};
-		var jsonObject = {message:
-			{
-				subject: subjectVal,
-				message: messageVal,
-				recipients: recipientsVal,
-				attachments: attachmentJson
-			}
-		};
+		var jsonObject = {subject: subjectVal, message: messageVal, recipients: recipientsVal, attachments: attachmentJson };
 		jQuery.ajax({
 			url: mailURL,
 			type:'POST',
-			contentType: 'application/json; charset=utf-8',
 			data: jsonObject,
-			datatype: 'json',
 			error: function(req, msg, obj) {
 				alert('An error occured while sending the message.');
 				console.log(req);
 				console.log(msg);
 				console.log(obj);
 			},
-			success: function() {
-				alert('Alright !');
+			success: function(data) {
+				alert(data);
 			}
 		});		
 		if (i == recipientsArray.length -1) {
@@ -1060,8 +1050,23 @@ function sendVisualscienceMessage (thisTabId) {
 	}
 	while (!flagAllDone); //Barrier to wait until all the requests has been made
 	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
-		'value': 'Message Sent !'
+		'value': 'Message Sent !',
+		//For testing purposes:
+		'disabled':false
 	});
+}
+
+function getJsonOfAttachments (thisTabId) {
+	var attachments = new Array();
+	jQuery('p[id*="visualscience-upload-file-entry-'+thisTabId+'"]').each(function(i) {
+		attachments[i] = new Array(2);
+		//Name of File:
+		attachments[i][0] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').text();
+		//URL of File:
+		attachments[i][1] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').attr('href');
+		i++;
+	});
+	return recipientsEmailAndName;
 }
 
 /*
