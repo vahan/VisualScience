@@ -1057,16 +1057,16 @@ function sendVisualscienceMessage (thisTabId) {
 }
 
 function getJsonOfAttachments (thisTabId) {
+	var thisTabId = 1;
 	var attachments = new Array();
 	jQuery('p[id*="visualscience-upload-file-entry-'+thisTabId+'"]').each(function(i) {
 		attachments[i] = new Array(2);
 		//Name of File:
-		attachments[i][0] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').text();
+		attachments[i][0] = jQuery(this).children(':nth-child(2)').text();
 		//URL of File:
-		attachments[i][1] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').attr('href');
-		i++;
+		attachments[i][1] = jQuery(this).children(':nth-child(2)').attr('href');
 	});
-	return recipientsEmailAndName;
+	return attachments;
 }
 
 /*
@@ -1134,9 +1134,8 @@ function getRecipientsOfMessage (thisTabId) {
 	var recipientsEmailAndName = new Array();
 	jQuery('p[id*="visualscience-recipients-entry-'+thisTabId+'"]').each(function(i) {
 		recipientsEmailAndName[i] = new Array(2);
-		recipientsEmailAndName[i][0] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').text();
-		recipientsEmailAndName[i][1] = jQuery('#visualscience-recipients-entry-'+thisTabId+'-'+i+' > .visualscience-message-recipients-infos').attr('href').substring(7);
-		i++;
+		recipientsEmailAndName[i][0] = jQuery(this).children(':nth-child(2)').text();
+		recipientsEmailAndName[i][1] = jQuery(this).children(':nth-child(2)').attr('href').substring(7);
 	});
 	return recipientsEmailAndName;
 }
