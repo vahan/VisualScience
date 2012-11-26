@@ -181,12 +181,42 @@ function visualscience_upload_form($form, &$form_state) {
  */
 function visualscience_send_mail() {
 	$subject =  $_POST['subject'];
-$email = $_POST['recipients']['email'];
-$name =  $_POST['recipients']['name'];
-$message =  $_POST['message'];
-
-echo $subject.'|'.$email.'|'.$name.'|'.$message;
+	$email = $_POST['recipients']['email'];
+	$name =  $_POST['recipients']['name'];
+	$message =  $_POST['message'];
+	$attachments=  $_POST['attachments'];//[0][0] will give the name of object n°0, while [0][1] will give its URL
 	
+	$attachmentsText = t('<br /><h3>Attached Files</h3>');
+	foreach ($attachments as $entry) {
+		$attachmentsText .= t('- <a href="'.$entry[1].'" _target="blank">'.$entry[0].'</a><br />');
+	}
+	$final_text = $message.$attachmentsText;
+	$mail = drupal_mail('VisualScience', 'notice', $to, $language, $params, FALSE);
+	
+	
+	
+	$module = 'VisualScience';
+    $key = 'test'.rand(1, 1000000);
+    $language = language_default();
+    $params = array();
+    $from = $user->mail;
+    $send = TRUE;
+    $message = drupal_mail($module, $key, $email, $language, $params, $from, $send);
+
+    $message['subject'] = $subject;
+    $message['body'] = array();
+    $message['body'][] = $message;
+    $message['body'][] = $attachmentsText;
+
+    // Retrieve the responsible implementation for this message.
+    $system = drupal_mail_system($module, $key);
+
+    // Format the message body.
+    $message = $system->format($message);
+
+    // Send e-mail.
+    $message['result'] = $system->mail($message);
+	print_r($message);
 }
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)

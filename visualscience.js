@@ -1057,7 +1057,7 @@ function sendVisualscienceMessage (thisTabId) {
 }
 
 function getJsonOfAttachments (thisTabId) {
-	var thisTabId = 1;
+	//{name: recipientsArray[i][0], email: recipientsArray[i][1]}
 	var attachments = new Array();
 	jQuery('p[id*="visualscience-upload-file-entry-'+thisTabId+'"]').each(function(i) {
 		attachments[i] = new Array(2);
@@ -1066,7 +1066,7 @@ function getJsonOfAttachments (thisTabId) {
 		//URL of File:
 		attachments[i][1] = jQuery(this).children(':nth-child(2)').attr('href');
 	});
-	return attachments;
+	return attachments;//window.JSON.stringify(attachments);
 }
 
 /*
