@@ -674,6 +674,9 @@ function setAutocompletes() {
 //This is the URL to the php upload module
 var UploadModuleURL = './visualscience/upload/';
 
+//This is the URL to the php that handles the mail
+var SendMailURL = './visualscience/mail/';
+
 //This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
 //var installFolder = 'sites/all/modules/visualscience/';
 
@@ -885,7 +888,6 @@ function uploadSubmittedFiles (tabId) {
 					jQuery('#invisible').html(jQuery('#invisible .messages').html());
 					var messages = jQuery('#invisible').text();
 					if (messages.indexOf('Error') != -1) {//Check for errors
-						inst = messages;
 						jQuery('#progress-upload-'+tabId).text('Upload Failed: '+messages).css({
 							'background-color': 'red'
 						});
@@ -1016,7 +1018,7 @@ function createSendMessageButton (thisTabId) {
  * TODO: Change the mailURL var with the one of the server !
  */
 function sendVisualscienceMessage (thisTabId) {
-	var mailURL = 'localhost';
+	var mailURL = SendMailURL;
 	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
 		'value': 'Sending Message... Please wait',
 		'disabled': 'disabled'
@@ -1047,6 +1049,9 @@ function sendVisualscienceMessage (thisTabId) {
 				console.log(req);
 				console.log(msg);
 				console.log(obj);
+			},
+			success: function() {
+				alert('Alright !');
 			}
 		});		
 		if (i == recipientsArray.length -1) {

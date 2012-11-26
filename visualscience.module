@@ -144,6 +144,14 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
   );
   
+  $items['visualscience/mail'] = array(
+    'title' => 'VisualScience Mail Send',
+    'description' => 'Send Mail from VisualScience',
+    'page callback' => 'visualscience_send_mail',
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_CALLBACK,
+  );
+  
   return $items;
 }
 
@@ -167,7 +175,17 @@ function visualscience_upload_form($form, &$form_state) {
 
   return $form;
 }
-//TODO: Change so taht it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
+
+/**
+ * 
+ */
+function visualscience_send_mail() {
+	
+	$message = drupal_json_decode($_POST['message']);
+	echo $message->subject;
+}
+
+//TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
 function visualscience_upload_submit($form, &$form_state) {
 	$dir = 'public://';
 	$validators = array();
