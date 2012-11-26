@@ -144,6 +144,14 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
   );
   
+  $items['visualscience/mail'] = array(
+    'title' => 'VisualScience Mail Send',
+    'description' => 'Send Mail from VisualScience',
+    'page callback' => 'visualscience_send_mail',
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_CALLBACK,
+  );
+  
   return $items;
 }
 
@@ -156,9 +164,6 @@ function visualscience_upload_form($form, &$form_state) {
     '#type' => 'file',
     '#size' => 20,
     '#required' => FALSE,
-    '#attributes' => array(
-		'multiple' => 'false',
-	),
   );
   
   $form['submit'] = array(
@@ -170,7 +175,17 @@ function visualscience_upload_form($form, &$form_state) {
 
   return $form;
 }
-//TODO: Change so taht it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
+
+/**
+ * 
+ */
+function visualscience_send_mail() {
+	
+	$message = drupal_json_decode($_POST['message']);
+	echo $message->subject;
+}
+
+//TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
 function visualscience_upload_submit($form, &$form_state) {
 	$dir = 'public://';
 	$validators = array();
@@ -181,7 +196,7 @@ function visualscience_upload_submit($form, &$form_state) {
 			$finalDestination = $dir.'visualscience/';
 			$file = file_copy($file, $finalDestination.$file->filename, FILE_EXISTS_RENAME);
 			if (!empty($file)) {
-				drupal_set_message(t('The file has been uploaded to:').drupal_realpath($file->uri));
+				drupal_set_message(t('The file has been uploaded to:').file_create_url($file->uri));
 			}
 			else {
 				form_set_error(t('An error occured when copying the file.'));
