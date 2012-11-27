@@ -1029,6 +1029,10 @@ function sendVisualscienceMessage (thisTabId) {
 	var flagAllDone = false;
 	if (recipientsArray.length < 1) {
 		alert('Please insert at least one recipient.');
+		jQuery('#visualscience-send-message-button-'+thisTabId).attr({
+		'value': 'Send Message',
+		'disabled': false
+		});
 		return false;
 	}
 	for (var i=0; i < recipientsArray.length; i++) {
@@ -1043,10 +1047,18 @@ function sendVisualscienceMessage (thisTabId) {
 				console.log(req);
 				console.log(msg);
 				console.log(obj);
+				jQuery('#visualscience-send-message-button-'+thisTabId).attr({
+					'value': 'Re-try Sending',
+					'disabled': false
+				});
 			},
 			success: function(data) {
 				if (parseInt(data) != 1) {
 					alert('There was a problem while sending the email. Please try again later.');
+					jQuery('#visualscience-send-message-button-'+thisTabId).attr({
+						'value': 'Re-try now',
+						'disabled': false
+					});
 				}
 			}
 		});		
