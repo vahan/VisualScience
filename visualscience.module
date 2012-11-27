@@ -186,17 +186,16 @@ function visualscience_send_mail() {
 	$message =  $_POST['message'];
 	$attachments=  $_POST['attachments'];//[0][0] will give the name of object n°0, while [0][1] will give its URL
 	if ($attachments.length >= 1) {
-		
 		$attachmentsText = t('<br /><h3>Attached Files</h3>');
 		foreach ($attachments as $entry) {
 			$attachmentsText .= t('- <a href="'.$entry[1].'" _target="blank">'.$entry[0].'</a><br />');
 		}
-		$final_text = $message.$attachmentsText;
-		$mail = drupal_mail('VisualScience', 'notice', $to, $language, $params, FALSE);
 	}
 	else {
 		$attachmentsText = '';
 	}
+	$final_text = $message.$attachmentsText;
+	
 	
 	global $user;
 	$module = 'VisualScience';
