@@ -194,7 +194,7 @@ function visualscience_send_mail() {
 	$mail = drupal_mail('VisualScience', 'notice', $to, $language, $params, FALSE);
 	
 	
-	
+	global $user;
 	$module = 'VisualScience';
     $key = 'test'.rand(1, 1000000);
     $language = language_default();
@@ -212,7 +212,7 @@ function visualscience_send_mail() {
 
     // Send e-mail.
     $message['result'] = $system->mail($message);
-	echo $message['body'];
+	echo $from.'/'.$user->name;
 }
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
