@@ -149,7 +149,7 @@ function visualscience_menu() {
     'description' => 'Send Mail from VisualScience',
     'page callback' => 'visualscience_send_mail',
     'access arguments' => array('access visualscience'),
-    'type' => CALLBACK,
+    'type' => MENU_CALLBACK,
   );
   
   return $items;
@@ -185,7 +185,7 @@ function visualscience_send_mail() {
 	$name =  $_POST['recipients']['name'];
 	$message =  $_POST['message'];
 	$attachments=  $_POST['attachments'];//[0][0] will give the name of object n°0, while [0][1] will give its URL
-	if ($attachments.length >= 1) {
+	if ($attachments[0]) {
 		$attachmentsText = t('<br /><h3>Attached Files</h3>');
 		foreach ($attachments as $entry) {
 			$attachmentsText .= t('- <a href="'.$entry[1].'" _target="blank">'.$entry[0].'</a><br />');
@@ -203,10 +203,11 @@ function visualscience_send_mail() {
     $language = language_default();
     $params = array();
     $from = $user->mail;
-    $send = TRUE;
+    $send = FALSE;
     $message = drupal_mail($module, $key, $email, $language, $params, $from, $send);
 
 	$message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+	$message['headers']['From'] = $message['headers']['Sender'] = $message['headers']['Return-Path'] = $from;
     $message['subject'] = $subject;
     $message['body'] = $final_text;
 
