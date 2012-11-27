@@ -203,10 +203,11 @@ function visualscience_send_mail() {
     $send = TRUE;
     $message = drupal_mail($module, $key, $email, $language, $params, $from, $send);
 
+	$message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
     $message['subject'] = $subject;
     $message['body'] = array();
-    $message['body'][] = $message;
-    $message['body'][] = $attachmentsText;
+    $message['body'][] = '';
+    $message['body'][] = $final_text;
 
     // Retrieve the responsible implementation for this message.
     $system = drupal_mail_system($module, $key);
