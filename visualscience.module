@@ -205,19 +205,14 @@ function visualscience_send_mail() {
 
 	$message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
     $message['subject'] = $subject;
-    $message['body'] = array();
-    $message['body'][] = '';
-    $message['body'][] = $final_text;
+    $message['body'] = $final_text;
 
     // Retrieve the responsible implementation for this message.
     $system = drupal_mail_system($module, $key);
 
-    // Format the message body.
-    $message = $system->format($message);
-
     // Send e-mail.
     $message['result'] = $system->mail($message);
-	print_r($message);
+	echo $message['body'];
 }
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
@@ -366,5 +361,4 @@ function _visualscience_insert_after_first_element(&$a, $element) {
     array_unshift($a, $first_element, $element);
   }
 }
-
 ?>
