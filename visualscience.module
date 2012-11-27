@@ -212,7 +212,7 @@ function visualscience_send_mail() {
 
     // Send e-mail.
     $message['result'] = $system->mail($message);
-	echo $from.'/'.$user->name;
+    echo $message['result'];
 }
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)

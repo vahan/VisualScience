@@ -1027,6 +1027,10 @@ function sendVisualscienceMessage (thisTabId) {
 	var attachmentJson = getJsonOfAttachments(thisTabId);
 	var recipientsArray = getRecipientsOfMessage(thisTabId);
 	var flagAllDone = false;
+	if (recipientsArray.length < 1) {
+		alert('Please insert at least one recipient.');
+		return false;
+	}
 	for (var i=0; i < recipientsArray.length; i++) {
 		var recipientsVal = {name: recipientsArray[i][0], email: recipientsArray[i][1]};
 		var jsonObject = {subject: subjectVal, message: messageVal, recipients: recipientsVal, attachments: attachmentJson };
@@ -1035,13 +1039,15 @@ function sendVisualscienceMessage (thisTabId) {
 			type:'POST',
 			data: jsonObject,
 			error: function(req, msg, obj) {
-				alert('An error occured while sending the message.');
+				alert('An error occured on the server side while sending the message. Please contact the administrator if this happens again.');
 				console.log(req);
 				console.log(msg);
 				console.log(obj);
 			},
 			success: function(data) {
-				alert(data);
+				if (parseInt(data) != 1) {
+					alert('There was a problem while sending the email. Please try again later.');
+				}
 			}
 		});		
 		if (i == recipientsArray.length -1) {
@@ -1050,14 +1056,11 @@ function sendVisualscienceMessage (thisTabId) {
 	}
 	while (!flagAllDone); //Barrier to wait until all the requests has been made
 	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
-		'value': 'Message Sent !',
-		//For testing purposes:
-		'disabled':false
+		'value': 'Message Sent !'
 	});
 }
 
 function getJsonOfAttachments (thisTabId) {
-	//{name: recipientsArray[i][0], email: recipientsArray[i][1]}
 	var attachments = new Array();
 	jQuery('p[id*="visualscience-upload-file-entry-'+thisTabId+'"]').each(function(i) {
 		attachments[i] = new Array(2);
