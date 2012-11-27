@@ -1048,7 +1048,7 @@ function sendVisualscienceMessage (thisTabId) {
 				console.log(msg);
 				console.log(obj);
 				jQuery('#visualscience-send-message-button-'+thisTabId).attr({
-					'value': 'Re-try Sending',
+					'value': 'Re-try now',
 					'disabled': false
 				});
 			},
