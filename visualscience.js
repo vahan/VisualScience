@@ -1068,7 +1068,7 @@ function sendVisualscienceMessage (thisTabId) {
 	}
 	while (!flagAllDone); //Barrier to wait until all the requests has been made
 	jQuery('#visualscience-send-message-button-'+thisTabId).attr({
-		'value': 'Message Sent !',
+		'value': 'Message Sent. Send again ?',
 		'disabled': false
 	});
 }
