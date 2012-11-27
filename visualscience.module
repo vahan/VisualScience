@@ -149,7 +149,7 @@ function visualscience_menu() {
     'description' => 'Send Mail from VisualScience',
     'page callback' => 'visualscience_send_mail',
     'access arguments' => array('access visualscience'),
-    'type' => MENU_CALLBACK,
+    'type' => CALLBACK,
   );
   
   return $items;
@@ -196,7 +196,7 @@ function visualscience_send_mail() {
 	
 	global $user;
 	$module = 'VisualScience';
-    $key = 'test'.rand(1, 1000000);
+    $key = 'mail'.rand(1, 1000000);
     $language = language_default();
     $params = array();
     $from = $user->mail;
