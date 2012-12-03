@@ -1214,7 +1214,7 @@ function exportUsersCSV (idOfThisTab) {
 			finalTable += newLineCharacter;
 		}
 	});
-	finalTable += '&char='+newLineCharacter;
+	finalTable = encodeURIComponent(finalTable)+'&char='+encodeURIComponent(newLineCharacter);
 	window.open(url + finalTable);
 }
 
