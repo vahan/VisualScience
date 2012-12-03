@@ -671,11 +671,14 @@ function setAutocompletes() {
  * Code for new Design (Sébastien)
  */
 
+//This is the root folder, where the installation has been done. 
+var rootFolder = document.location.href.substring(0, document.location.href.indexOf('/visualscience/'));
+
 //This is the URL to the php upload module
-var UploadModuleURL = './visualscience/upload/';
+var UploadModuleURL = rootFolder + '/visualscience/upload/';
 
 //This is the URL to the php that handles the mail
-var SendMailURL = './visualscience/mail/';
+var SendMailURL = rootFolder + '/visualscience/mail/';
 
 //This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
 //var installFolder = 'sites/all/modules/visualscience/';
