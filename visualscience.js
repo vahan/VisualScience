@@ -1179,7 +1179,7 @@ function createTabConference(idOfTheTab) {
  */
 function exportUsersCSV (idOfThisTab) {
 	//Some parameters for the communication with the PHP page:
-	var newLineCharacter = ';';
+	var newLineCharacter = '[^-|-¼]'+Math.floor(Math.random()*12);
 	var url = installFolder+'includes/stringToCSV.php?text=';
 	var finalTable = '';
 	var tableId = 'visualscience-user_list-result-'+idOfThisTab;
@@ -1196,7 +1196,7 @@ function exportUsersCSV (idOfThisTab) {
 		}
 	});
 	finalTable += newLineCharacter;
-	//Throught the body of table
+	//Through the body of table
 	jQuery('#'+tableId+' > tbody > tr').each(function(index){
 		index++;
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
@@ -1214,6 +1214,7 @@ function exportUsersCSV (idOfThisTab) {
 			finalTable += newLineCharacter;
 		}
 	});
+	finalTable += '&char='+newLineCharacter;
 	window.open(url + finalTable);
 }
 
