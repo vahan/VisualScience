@@ -672,7 +672,7 @@ function setAutocompletes() {
  */
 
 //This is the root folder, where the installation has been done. 
-var rootFolder = document.location.href.substring(0, document.location.href.indexOf('/visualscience/'));
+var rootFolder = document.location.href.substring(0, document.location.href.indexOf('/visualscience'));
 
 //This is the URL to the php upload module
 var UploadModuleURL = rootFolder + '/visualscience/upload/';
