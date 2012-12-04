@@ -221,24 +221,17 @@ function visualscience_send_message() {
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
 function visualscience_upload_submit($form, &$form_state) {
-	$dir = 'public://';
+	$dir = 'public://visualscience/';
 	$validators = array();
 	$file = 'visualscience_upload_file';
 	if (!empty($file)) {
 		$file = file_save_upload($file, $validators, $dir, FILE_EXISTS_RENAME);
-		if (!empty($file)) {
-			$finalDestination = $dir.'visualscience/';
-			$file = file_copy($file, $finalDestination.$file->filename, FILE_EXISTS_RENAME);
 			if (!empty($file)) {
 				drupal_set_message(t('The file has been uploaded to:').file_create_url($file->uri));
 			}
 			else {
-				form_set_error(t('An error occured when copying the file.'));
+				form_set_error(t('An error occured when uploading the file.'));
 			}
-		}
-		else {
-			form_set_error(t('An error occured when uploading the file.'));
-		}
 	}
 	else {
 		form_set_error(t('You did not chose a file.'));
