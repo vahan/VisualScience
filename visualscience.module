@@ -216,7 +216,14 @@ function visualscience_send_message() {
 
     // Send e-mail.
     $message['result'] = $system->mail($message);
-    echo $message['result'];
+	//If no errors, let's add file access to the user.
+	if ($message['result']) {
+		//
+   		echo $message['result'];
+	}
+	else {
+		echo '0';
+	}
 }
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)

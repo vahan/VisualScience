@@ -52,11 +52,11 @@ function visualscience_schema() {
         'not null' => TRUE,
         'description' => 'Primary Key: Unique file ID.',
       ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Secondary Key: User ID who has permission to access the file.',
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 1024,
+        'default' => '',
+        'description' => 'The email of the user who can acces the file.',
       ),
       'name' => array(
         'type' => 'varchar',
