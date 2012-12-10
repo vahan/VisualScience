@@ -217,15 +217,23 @@ function visualscience_send_message() {
     // Send e-mail.
     $message['result'] = $system->mail($message);
 	//If no errors, let's add file access to the user.
-	if ($message['result']) {
+	if ($message['result'] == 1) {
 		//getting user id from email.
-		$users = db_query('SELECT uid FROM {users} WHERE mail = :mail', array(':mail' => $email));
-		$uid = $users[0];
-		//actually adding
-		foreach ($attachments as $entry) {
-			
+		$users = db_query('SELECT uid FROM {users} WHERE mail = :mail', array(':mail' => $email,));
+		foreach ($users as $u) { //In the "impossible" case where two emails are the same
+			$uid = $u->uid;
 		}
-   		echo $uid;
+		//actually adding the access to the user.
+		foreach ($attachments as $file) {
+			$query = db_insert('visualscience_uploaded_files')->fields(array(
+				'uid' => $uid,
+				'email' => $from,
+				'name' => $file[0],
+				'url' => $file[1],
+			));
+			$query->execute();
+		}
+		echo '1';
 	}
 	else {
 		echo '0';

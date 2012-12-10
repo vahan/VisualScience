@@ -70,7 +70,7 @@ function visualscience_schema() {
         'default' => '',
         'description' => 'Name of the file, common to each recipient of a message',
       ),
-      'search' => array(
+      'url' => array(
         'type' => 'varchar',
         'length' => 4096,
         'default' => '',
