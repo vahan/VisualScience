@@ -266,7 +266,7 @@ function visualscience_send_message() {
     // Send e-mail.
     $message['result'] = $system->mail($message);
 	//If no errors, let's add file access to the user.
-	//if ($message['result'] == 1) {
+	if ($message['result'] == 1) {
 		//getting user id from email.
 		$users = db_query('SELECT uid FROM {users} WHERE mail = :mail LIMIT 1', array(':mail' => $email,));
 		//In the "impossible" case where two emails are the same in the db
@@ -287,10 +287,10 @@ function visualscience_send_message() {
 			}
 		}
 		echo '1';
-	/*}
+	}
 	else {
 		echo '0';
-	}*/
+	}
 }
 
 //TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
