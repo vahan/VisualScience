@@ -224,6 +224,7 @@ function visualscience_send_message() {
 		foreach ($users as $u) {
 			$uid = $u->uid;
 		}
+		echo $user->mail;
 		//actually adding the access to the user.
 		if (!is_null($uid) && isset($uid)) {	
 			foreach ($attachments as $file) {
@@ -251,7 +252,16 @@ function visualscience_upload_submit($form, &$form_state) {
 	if (!empty($file)) {
 		$file = file_save_upload($file, $validators, $dir, FILE_EXISTS_RENAME);
 			if (!empty($file)) {
-				
+				global $user;
+				$uid = $user->uid;
+				$email = $user->mail;
+				$query = db_insert('visualscience_uploaded_files')->fields(array(
+					'uid' => $uid,
+					'email' => $email,
+					'name' => $file->filename,
+					'url' => file_create_url($file->uri),
+				));
+				$query->execute();
 				drupal_set_message(t('The file has been uploaded to:').file_create_url($file->uri));
 			}
 			else {
