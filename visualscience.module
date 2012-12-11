@@ -144,6 +144,14 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
   );
   
+  $items['visualscience/file'] = array(
+    'title' => 'VisualScience Attachment Access',
+    'description' => 'Access a file uploaded from VisualScience',
+    'page callback' => 'visualscience_get_file',
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_CALLBACK,
+  );
+  
   $items['visualscience/mail'] = array(
     'title' => 'VisualScience Mail Send',
     'description' => 'Send Mail from VisualScience',
@@ -174,6 +182,35 @@ function visualscience_upload_form($form, &$form_state) {
   $form['#submit'][] = 'visualscience_upload_submit'; 
 
   return $form;
+}
+
+/**
+ * 
+ */
+function visualscience_get_file () {
+	$fileId = doubleval($_GET['id']);
+	global $user;
+	$uid = $user->uid;
+	$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND fid = :fid', array(':uid'=>$uid, ':fid'=>$fileId));
+	$result = $result->fetchObject();
+	if (!is_null($result)) {
+		$url = $result->url;
+		$name = $result->name;
+		$mimetype = file_get_mimetype($name);
+    	$headers = array(
+			'Content-Type' => $mimetype,
+			'Content-Disposition' => ' attachment; filename='.$name,
+			'Content-Transfer-Encoding' => 'binary',
+			'Expires' => '0',
+			'Cache-Control' => 'must-revalidate',
+			'Pragma' => 'public',
+			'Content-Length' => filesize($url),
+		);
+		file_transfer($url, $headers);
+	}
+	else{
+		echo 'You don\'t have the permission to access the file. May be log in ?';
+	}
 }
 
 /**
@@ -259,7 +296,7 @@ function visualscience_upload_submit($form, &$form_state) {
 					'uid' => $uid,
 					'email' => $email,
 					'name' => $file->filename,
-					'url' => file_create_url($file->uri),
+					'url' => $file->uri,
 				));
 				$query->execute();
 				drupal_set_message(t('The file has been uploaded to:').file_create_url($file->uri));
