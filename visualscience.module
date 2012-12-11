@@ -207,8 +207,8 @@ function visualscience_get_file () {
 			'Content-Length' => filesize($url),
 		);
 		if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
-    		$http_headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
-    		$http_headers['Pragma'] = 'public';
+    		$headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
+    		$headers['Pragma'] = 'public';
   		}
 		file_transfer($url, $headers);
 	}
@@ -303,7 +303,10 @@ function visualscience_upload_submit($form, &$form_state) {
 					'url' => $file->uri,
 				));
 				$query->execute();
-				drupal_set_message(t('The file has been uploaded to:').file_create_url($file->uri));
+				$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND url = :url', array(':uid'=>$uid, ':url'=>$file->uri))->fetchObject();
+				$id = $result->fid;
+				global $base_url;
+				drupal_set_message(t('The file has been uploaded to:').$base_url.'/visualscience/file?id='.$id);
 			}
 			else {
 				form_set_error(t('An error occured when uploading the file.'));
