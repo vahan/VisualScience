@@ -68,13 +68,13 @@ function visualscience_schema() {
         'type' => 'varchar',
         'length' => 1024,
         'default' => '',
-        'description' => 'Name of the file, common to each recipient of a message',
+        'description' => 'Name of the file, as uploaded by user',
       ),
       'url' => array(
         'type' => 'varchar',
         'length' => 4096,
         'default' => '',
-        'description' => 'The url of the file in the private directory.',
+        'description' => 'The url of the file in the private directory.(Common to each message)',
       ),
     ),
     'primary key' => array('fid')
