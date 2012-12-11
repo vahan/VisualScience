@@ -203,9 +203,13 @@ function visualscience_get_file () {
 			'Content-Transfer-Encoding' => 'binary',
 			'Expires' => '0',
 			'Cache-Control' => 'must-revalidate',
-			'Pragma' => 'public',
+			'Pragma' => 'no-cache',
 			'Content-Length' => filesize($url),
 		);
+		if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+    		$http_headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
+    		$http_headers['Pragma'] = 'public';
+  		}
 		file_transfer($url, $headers);
 	}
 	else{
