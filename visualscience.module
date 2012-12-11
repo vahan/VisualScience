@@ -147,8 +147,8 @@ function visualscience_menu() {
   $items['visualscience/file'] = array(
     'title' => 'VisualScience Attachment Access',
     'description' => 'Access a file uploaded from VisualScience',
-    'page callback' => 'visualscience_get_file',
-    'access arguments' => array('access visualscience'),
+    'page callback' => 'visualscience_get_file_with_id',
+    'access arguments' => TRUE,
     'type' => MENU_CALLBACK,
   );
   
@@ -186,34 +186,42 @@ function visualscience_upload_form($form, &$form_state) {
 
 /**
  * 
- */
-function visualscience_get_file () {
+ */	
+function visualscience_get_file_with_id () {
 	$fileId = doubleval($_GET['id']);
 	global $user;
+	global $base_url;
 	$uid = $user->uid;
-	$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND fid = :fid', array(':uid'=>$uid, ':fid'=>$fileId));
-	$result = $result->fetchObject();
-	if (!is_null($result)) {
-		$url = $result->url;
-		$name = $result->name;
-		$mimetype = file_get_mimetype($name);
-    	$headers = array(
-			'Content-Type' => $mimetype,
-			'Content-Disposition' => ' attachment; filename='.$name,
-			'Content-Transfer-Encoding' => 'binary',
-			'Expires' => '0',
-			'Cache-Control' => 'must-revalidate',
-			'Pragma' => 'no-cache',
-			'Content-Length' => filesize($url),
-		);
-		if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
-    		$headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
-    		$headers['Pragma'] = 'public';
-  		}
-		file_transfer($url, $headers);
+	if ($uid) {
+		$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND fid = :fid', array(':uid'=>$uid, ':fid'=>$fileId));
+		$result = $result->fetchObject();
+		if(!is_null($result->url) && !empty($result->url)){
+			$url = $result->url;
+			$name = $result->name;
+			$mimetype = file_get_mimetype($name);
+    		$headers = array(
+				'Content-Type' => $mimetype,
+				'Content-Disposition' => ' attachment; filename='.$name,
+				'Content-Transfer-Encoding' => 'binary',
+				'Expires' => '0',
+				'Cache-Control' => 'must-revalidate',
+				'Pragma' => 'no-cache',
+				'Content-Length' => filesize($url),
+			);
+			if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+    			$headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
+    			$headers['Pragma'] = 'public';
+  			}
+			file_transfer($url, $headers);
+		}
+		else{
+			drupal_set_message(t('You don\'t have the permission to access the file.'), 'error');
+			header( 'Location: '.$base_url.'/visualscience/' );
+		}
 	}
-	else{
-		echo 'You don\'t have the permission to access the file. May be log in ?';
+	else {
+		drupal_set_message(t('Please log in to access uploaded files.'), 'warning');
+		header( 'Location: '.$base_url.'/user?destination=' . substr ($_SERVER['REQUEST_URI'],1 ) );
 	}
 }
 
