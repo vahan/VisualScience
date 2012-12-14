@@ -148,7 +148,7 @@ function visualscience_menu() {
     'title' => 'VisualScience Attachment Access',
     'description' => 'Access a file uploaded from VisualScience',
     'page callback' => 'visualscience_get_file_with_id',
-    'access arguments' => TRUE,
+    'access arguments' => array('access visualscience'),
     'type' => MENU_CALLBACK,
   );
   
