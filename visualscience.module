@@ -220,8 +220,8 @@ function visualscience_get_file_with_id () {
 		}
 	}
 	else {
-		drupal_set_message(t('Please log in to access uploaded files.'), 'warning');
-		header( 'Location: '.$base_url.'/user?destination=' . substr ($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/visualscience/file')+1) );
+		drupal_set_message(t('Please log in to access uploaded files.'.substr ($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/visualscience/file')+1)), 'warning');
+		header( 'Location: '.$base_url.'/user?destination=' . substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/visualscience/file')+1) );
 	}
 }
 
