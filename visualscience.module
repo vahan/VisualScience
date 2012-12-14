@@ -270,9 +270,8 @@ function visualscience_send_message() {
 		//getting user id from email.
 		$users = db_query('SELECT uid FROM {users} WHERE mail = :mail LIMIT 1', array(':mail' => $email,));
 		//In the "impossible" case where two emails are the same in the db
-		foreach ($users as $u) {
-			$uid = $u->uid;
-		}
+		$users = $users->fetchObject();
+		$uid = $users->uid;
 		//actually adding the access to the user.
 		if (!is_null($uid) && isset($uid)) {	
 			foreach ($attachments as $file) {
