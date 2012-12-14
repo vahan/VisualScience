@@ -148,7 +148,7 @@ function visualscience_menu() {
     'title' => 'VisualScience Attachment Access',
     'description' => 'Access a file uploaded from VisualScience',
     'page callback' => 'visualscience_get_file_with_id',
-    'access arguments' => array('access visualscience'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   
@@ -221,7 +221,7 @@ function visualscience_get_file_with_id () {
 	}
 	else {
 		drupal_set_message(t('Please log in to access uploaded files.'), 'warning');
-		header( 'Location: '.$base_url.'/user?destination=' . substr ($_SERVER['REQUEST_URI'],1 ) );
+		header( 'Location: '.$base_url.'/user?destination=' . substr ($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/visualscience/file')+1) );
 	}
 }
 
