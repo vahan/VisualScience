@@ -273,7 +273,6 @@ function visualscience_send_message() {
 		foreach ($users as $u) {
 			$uid = $u->uid;
 		}
-		echo $user->mail;
 		//actually adding the access to the user.
 		if (!is_null($uid) && isset($uid)) {	
 			foreach ($attachments as $file) {
