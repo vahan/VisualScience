@@ -1431,7 +1431,7 @@ function compareLSTabsTogether (thisTabId) {
 	var idOfThisTab = tabId;
 	addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+idOfThisTab);
 	createComparisonInterface(idOfThisTab);
-	createComparisonStatisticTable(idOfThisTab);
+	createComparisonStatisticTable(idOfThisTab, thisTabId, selectedTabId);
 	createComparisonSpriki(idOfThisTab);
 	createComparisonPublication(idOfThisTab, thisTabId, selectedTabId);
 }
@@ -1440,16 +1440,72 @@ function createComparisonInterface (idOfThisTab) {
 	jQuery('#livingscience-tab-'+idOfThisTab).html('<div id="ls-compare-statistics-'+idOfThisTab+'"></div><div id="ls-compare-spriki-'+idOfThisTab+'"></div><div id="ls-compare-pubs-'+idOfThisTab+'"></div>');
 }
 
-function createComparisonStatisticTable (idOfThisTab) {
-	jQuery('#ls-compare-statistics-'+idOfThisTab).html('<img src="http://blog.l4m.fr/wp-content/uploads/2010/10/banniere-et-theme...ign-copie-10ddce.png" />');
+function createComparisonStatisticTable (idOfThisTab, idFirstDB, idSecondDB) {
+	var objectOfStatistics = {
+		//Databases to work out
+		db : [idFirstDB, idSecondDB],
+		//Fields of the table. 0:fieldname, 1:function to fill field.
+		fields: [
+			['N° Publications', getNbPublicationsOfLSDB],
+			['Journals', getListJournalsFromLSDB],
+			['Co-Authors', getListCoauthorsFromLSDB],
+			['Period of activity', getPeriodActivityFromLSDB],
+			['Most Famous Publication', getFamousPublicationFromLSDB]
+		]
+	}
+	
+	var finalTable = getComparisonTableStatistics(idOfThisTab, objectOfStatistics);
+	jQuery('#ls-compare-statistics-'+idOfThisTab).html('<h3>Statistics</h3>'+finalTable);
+	makeTableSortable('ls-compare-statistics-table-'+idOfThisTab);
+}
+
+function getNbPublicationsOfLSDB (idOfDB) {
+	return idOfDB;
+}
+
+function getListJournalsFromLSDB (idOfDB) {
+	return idOfDB;
+}
+
+function getListCoauthorsFromLSDB (idOfDB) {
+	return idOfDB;
+}
+
+function getPeriodActivityFromLSDB (idOfDB) {
+	return idOfDB;
+}
+
+function getFamousPublicationFromLSDB (idOfDB) {
+	return idOfDB;
+}
+
+function getComparisonTableStatistics (idOfTab, object) {
+	var table = '<table id="ls-compare-statistics-table-'+idOfTab+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th></th>';
+	
+	jQuery.each(object.fields, function(i) {
+		table += '<th>'+object.fields[i][0]+'</th>';
+	});
+	
+	table += '</tr></thead><tbody>';
+	
+	jQuery.each(object.db, function(i) {
+		table += '<tr><td>'+object.db[i]+'</td>';
+		jQuery.each(object.fields, function(j) {
+			table += '<td>'+object.fields[j][1](object.db[i])+'</td>';
+		});
+		table += '</tr>'
+	});
+	
+	table += '</tbody></table>';
+	return table;
 }
 
 function createComparisonSpriki (idOfThisTab) {
-	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<img src="http://blog.l4m.fr/wp-content/uploads/2010/10/banniere-et-theme...ign-copie-10ddce.png" />');
+	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<h3>Relations</h3><div id="ls-compare-spriki-'+idOfThisTab+'" style="display:block;text-align:center;"><img src="http://blog.l4m.fr/wp-content/uploads/2010/10/banniere-et-theme...ign-copie-10ddce.png" /></div>');
 }
 
 function createComparisonPublication (idOfThisTab, idFirstDB, idSecondDB) {
-	jQuery('#ls-compare-pubs-'+idOfThisTab).html('<div id="ls-compare-left-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;"></div><div id="ls-compare-right-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;"></div>');
+	jQuery('#ls-compare-pubs-'+idOfThisTab).html('<h3>Publications</h3><div id="ls-compare-left-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;"></div><div id="ls-compare-right-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;float:right;"></div>');
 	generatePublicationsDiv(lsDB[idFirstDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-left-pubs-'+idOfThisTab);
 	generatePublicationsDiv(lsDB[idSecondDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-right-pubs-'+idOfThisTab);
 }
