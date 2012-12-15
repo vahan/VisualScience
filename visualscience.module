@@ -195,7 +195,7 @@ function visualscience_get_file_with_id () {
 	if ($uid) {
 		$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND fid = :fid', array(':uid'=>$uid, ':fid'=>$fileId));
 		$result = $result->fetchObject();
-		if(!is_null($result->url) && !empty($result->url)){
+		if(!is_null($result) && !empty($result)){
 			$url = $result->url;
 			$name = $result->name;
 			$mimetype = file_get_mimetype($name);

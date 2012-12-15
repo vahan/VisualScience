@@ -1236,7 +1236,7 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 		//TODO: Change this once Christian will allow multiple users with array
 		stringWithOrs = changeArrayToOrString(selectedUsers);
 		addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
-		livingscience.searchAuthor(selectedUsers[0], function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
+		livingscience.searchAuthor(stringWithOrs, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="'+installFolder+'includes/loading.gif" width="100px" alt="loading" /></center>');
 	}
@@ -1246,11 +1246,11 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 }
 
 function changeArrayToOrString (selectedUsers) {
-	var string = '';
+	var string = '"';
 	for (var i=0; i < selectedUsers.length-1; i++) {
-		string += selectedUsers[i] + ' OR ';
+		string += selectedUsers[i] + '" OR "';
 	}
-	string += selectedUsers[selectedUsers.length-1];
+	string += selectedUsers[selectedUsers.length-1] + '"';
 	return string;
 }
 
@@ -1352,7 +1352,7 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 	jQuery('#'+location).html('<div><h3>Living Science</h3><div id="ls-result-options-'+thisTabId+'"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-'+thisTabId+'\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-'+thisTabId+'" style="display: none;"><table><tbody><tr><td><label for="sorting-ls-result-'+thisTabId+'">Sorting publications by</label></td><td><select name="sorting-ls-result-'+thisTabId+'" id="sorting-ls-result-'+thisTabId+'" onchange="orderLSResultDatabase('+thisTabId+');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-'+thisTabId+'">N° publications to display</label></td><td><select onchange="changeNumberOfDisplayedLSPublications('+thisTabId+');" name="nb-pubs-ls-result-'+thisTabId+'" id="nb-pubs-ls-result-'+thisTabId+'"><option value="25">25</option><option value="'+numbersForPubsToShowList[1]+'">'+numbersForPubsToShowList[1]+'</option><option value="'+numbersForPubsToShowList[2]+'">'+numbersForPubsToShowList[2]+'</option><option value="'+numbersForPubsToShowList[3]+'">'+numbersForPubsToShowList[3]+'</option><option value="'+numbersForPubsToShowList[4]+'">'+numbersForPubsToShowList[4]+'</option><option value="'+numbersForPubsToShowList[5]+'">'+numbersForPubsToShowList[5]+'</option><option value="'+numbersForPubsToShowList[6]+'">'+numbersForPubsToShowList[6]+'</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-'+thisTabId+'">Compare with</label></td><td><select onchange="compareLSTabsTogether('+thisTabId+')" onclick="getListOfTabsForLSComparison('+thisTabId+')" id="comparison-ls-result-'+thisTabId+'" name="comparison-ls-result-'+thisTabId+'"><option value="nothing">Select a tab...</option></select></td></tr><tr><td><label for="search-ls-result-'+thisTabId+'">Search</label></td><td><input type="text" onchange="searchAndSortNDDB('+thisTabId+');" placeholder="Type your search" id="search-ls-result-'+thisTabId+'" name="search-ls-result-'+thisTabId+'" /> <strong><span id="search-ls-nb-result-'+thisTabId+'">'+nbResults+' Results</span></strong></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-'+thisTabId+'" style="display:inline-block;width:49%;background-color:white;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div><br><div id="ls-relations-'+thisTabId+'" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
 	setWidthForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	setParametersForLSDB(thisTabId);
-	actualizeLivingScienceDisplay(database, thisTabId);
+	//actualizeLivingScienceDisplay(database, thisTabId);
 	
 }
 
@@ -1425,9 +1425,40 @@ function searchAndSortNDDB (thisTabId) {
  * This function creates a new tab, where two LS search tabs are compared.
  */
 function compareLSTabsTogether (thisTabId) {
-	var selectedTab = jQuery('#comparison-ls-result-'+thisTabId).val();
-	var nameOfThisTab = getLSTabName(thisTabId);
-	createTabLivingScience('', nameOfThisTab +' OR '+ selectedTab);
+	var selectedTabId = parseInt(jQuery('#comparison-ls-result-'+thisTabId).val());
+	var mergedNDDB = mergeTabsLSDB(thisTabId, selectedTabId);
+	var title = 'Comparison Interface';
+	var idOfThisTab = tabId;
+	addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+idOfThisTab);
+	createComparisonInterface(idOfThisTab);
+	createComparisonStatisticTable(idOfThisTab);
+	createComparisonSpriki(idOfThisTab);
+	createComparisonPublication(idOfThisTab, thisTabId, selectedTabId);
+}
+
+function createComparisonInterface (idOfThisTab) {
+	jQuery('#livingscience-tab-'+idOfThisTab).html('<div id="ls-compare-statistics-'+idOfThisTab+'"></div><div id="ls-compare-spriki-'+idOfThisTab+'"></div><div id="ls-compare-pubs-'+idOfThisTab+'"></div>');
+}
+
+function createComparisonStatisticTable (idOfThisTab) {
+	jQuery('#ls-compare-statistics-'+idOfThisTab).html('<img src="http://blog.l4m.fr/wp-content/uploads/2010/10/banniere-et-theme...ign-copie-10ddce.png" />');
+}
+
+function createComparisonSpriki (idOfThisTab) {
+	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<img src="http://blog.l4m.fr/wp-content/uploads/2010/10/banniere-et-theme...ign-copie-10ddce.png" />');
+}
+
+function createComparisonPublication (idOfThisTab, idFirstDB, idSecondDB) {
+	jQuery('#ls-compare-pubs-'+idOfThisTab).html('<div id="ls-compare-left-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;"></div><div id="ls-compare-right-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;"></div>');
+	generatePublicationsDiv(lsDB[idFirstDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-left-pubs-'+idOfThisTab);
+	generatePublicationsDiv(lsDB[idSecondDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-right-pubs-'+idOfThisTab);
+}
+
+function mergeTabsLSDB (firstTabId, secondTabId) {
+	var db = lsDB[firstTabId];
+	jQuery.each(lsDB[secondTabId].db, function(i) {
+		db.insert(lsDB[secondTabId].db[i]);
+	});
 }
 
 /*
@@ -1439,7 +1470,7 @@ function getListOfTabsForLSComparison (thisTabId) {
 	var currentTabs = getLSTabs(thisTabId);
 	var newSelectList = '<option value="nothing">Select a tab...</option>';
 	jQuery(currentTabs).each(function(i) {
-		newSelectList += '<option value="'+currentTabs[i]+'">'+currentTabs[i]+'</option>';
+		newSelectList += '<option value="'+currentTabs[i][1]+'">'+currentTabs[i][0]+'</option>';
 	});
 	jQuery('#comparison-ls-result-'+thisTabId).html(newSelectList);
 }
@@ -1451,10 +1482,14 @@ function getListOfTabsForLSComparison (thisTabId) {
  */
 function getLSTabs (tabNotWanted) {
 	var tabs = new Array();
+	var oldI = 0;
 	for (var i=0; i <= lsDB.length; i++) {
 		if (lsDB[i] != undefined && i != tabNotWanted) {
+			tabs[oldI] = new Array();
 			var tabName = getLSTabName(i);
-			tabs.push(tabName);
+			tabs[oldI][0] = tabName;
+			tabs[oldI][1] = i;
+			oldI++;
 		}
 	}
 	return tabs;
