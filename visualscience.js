@@ -1426,7 +1426,6 @@ function searchAndSortNDDB (thisTabId) {
  */
 function compareLSTabsTogether (thisTabId) {
 	var selectedTabId = parseInt(jQuery('#comparison-ls-result-'+thisTabId).val());
-	var mergedNDDB = mergeTabsLSDB(thisTabId, selectedTabId);
 	var title = 'Comparison Interface';
 	var idOfThisTab = tabId;
 	addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+idOfThisTab);
@@ -1460,11 +1459,21 @@ function createComparisonStatisticTable (idOfThisTab, idFirstDB, idSecondDB) {
 }
 
 function getNbPublicationsOfLSDB (idOfDB) {
-	return idOfDB;
+	return lsDBOriginal[idOfDB].count();
 }
 
 function getListJournalsFromLSDB (idOfDB) {
-	return idOfDB;
+	var journalsAll = lsDBOriginal[idOfDB].fetchArray('journal');
+	var journals = new Array();
+	var list = '<ul>';
+	jQuery.each(journalsAll, function(i, el) {
+		if(jQuery.inArray(el[0], journals) == -1) {
+			journals.push(el[0]);
+			list += '<li>'+journalsAll[i][0]+'</li>';
+		}
+	});
+	list += '</ul>';
+	return list;
 }
 
 function getListCoauthorsFromLSDB (idOfDB) {
@@ -1472,11 +1481,13 @@ function getListCoauthorsFromLSDB (idOfDB) {
 }
 
 function getPeriodActivityFromLSDB (idOfDB) {
-	return idOfDB;
+	var min = lsDBOriginal[idOfDB].min('year');
+	var max = lsDBOriginal[idOfDB].max('year');
+	return min+' - '+max;
 }
 
 function getFamousPublicationFromLSDB (idOfDB) {
-	return idOfDB;
+	return lsDBOriginal[idOfDB].db[0].title;
 }
 
 function getComparisonTableStatistics (idOfTab, object) {
@@ -1506,15 +1517,8 @@ function createComparisonSpriki (idOfThisTab) {
 
 function createComparisonPublication (idOfThisTab, idFirstDB, idSecondDB) {
 	jQuery('#ls-compare-pubs-'+idOfThisTab).html('<h3>Publications</h3><div id="ls-compare-left-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;"></div><div id="ls-compare-right-pubs-'+idOfThisTab+'" style="display:inline-block;width:48%;float:right;"></div>');
-	generatePublicationsDiv(lsDB[idFirstDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-left-pubs-'+idOfThisTab);
-	generatePublicationsDiv(lsDB[idSecondDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-right-pubs-'+idOfThisTab);
-}
-
-function mergeTabsLSDB (firstTabId, secondTabId) {
-	var db = lsDB[firstTabId];
-	jQuery.each(lsDB[secondTabId].db, function(i) {
-		db.insert(lsDB[secondTabId].db[i]);
-	});
+	generatePublicationsDiv(lsDBOriginal[idFirstDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-left-pubs-'+idOfThisTab);
+	generatePublicationsDiv(lsDBOriginal[idSecondDB], firstPublicationForLivingScience, numberOfPublicationsForLivingScience, 'ls-compare-right-pubs-'+idOfThisTab);
 }
 
 /*
