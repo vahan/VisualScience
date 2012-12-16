@@ -1272,25 +1272,26 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	/*
 	 * Enable the comments to have a working version, for the other computers and the general version of VisualScience
 	 */
-	var firstFieldNumber = getThWithContent(tableId, 'name');//To delete when comments enabled
-	//var firstFieldToTake = getThWithContent(tableId, 'First Name');
-	//var secondFieldToTake = getThWithContent(tableId, 'Last Name');
-	
 	var completeNamesArray = new Array();
-	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
+	if (!isNaN(parseInt(getThWithContent(tableId, 'First Name')))) {
+		var firstFieldNumber = getThWithContent(tableId, 'First Name');
+		var secondFieldNumber = getThWithContent(tableId, 'Last Name');jQuery('#'+tableId+' > tbody > tr').each(function(index) {
 		index++; //That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
-			//for username field:
-			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
-			
-			//For first and last name fields:
-			/*
 			var first = jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text();
 			var last = jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text();
 			completeNamesArray.push(first + ' ' + last);
-			*/
+		}
+		});
+	}
+	else {
+		var firstFieldNumber = getThWithContent(tableId, 'name');jQuery('#'+tableId+' > tbody > tr').each(function(index) {
+		index++; //That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
+		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
+			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
 		}
 	});
+	}
 	return completeNamesArray;
 }
 
@@ -1442,7 +1443,7 @@ function compareLSTabsTogether (thisTabId) {
 }
 
 function createComparisonInterface (idOfThisTab) {
-	jQuery('#livingscience-tab-'+idOfThisTab).html('<div id="ls-compare-statistics-'+idOfThisTab+'" style="width:100%;overflow-x:scroll;"></div><div id="ls-compare-spriki-'+idOfThisTab+'"></div><div id="ls-compare-pubs-'+idOfThisTab+'"></div>');
+	jQuery('#livingscience-tab-'+idOfThisTab).html('<div id="ls-compare-statistics-'+idOfThisTab+'" style="width:100%;"></div><div id="ls-compare-spriki-'+idOfThisTab+'"></div><div id="ls-compare-pubs-'+idOfThisTab+'"></div>');
 }
 
 function createComparisonStatisticTable (idOfThisTab, idFirstDB, idSecondDB) {
@@ -1528,7 +1529,7 @@ function getFamousPublicationFromLSDB (idOfDB) {
 }
 
 function getComparisonTableStatistics (idOfTab, object) {
-	var table = '<table id="ls-compare-statistics-table-'+idOfTab+'" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th></th>';
+	var table = '<table id="ls-compare-statistics-table-'+idOfTab+'" style="display:inline-block;max-width:100%;overflow-x:scroll;" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th></th>';
 	
 	jQuery.each(object.fields, function(i) {
 		table += '<th>'+object.fields[i][0]+'</th>';
