@@ -1280,9 +1280,15 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
 		index++; //That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
 		if (jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') input').is(':checked')) {
+			//for username field:
 			completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text());//To delete when comments enabled
 			
-			//completeNamesArray.push(jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text()+\' \'+jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text());
+			//For first and last name fields:
+			/*
+			var first = jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+firstFieldNumber+')').text();
+			var last = jQuery('#'+tableId+' > tbody > tr:nth-child('+index+') > td:nth-child('+secondFieldNumber+')').text();
+			completeNamesArray.push(first + ' ' + last);
+			*/
 		}
 	});
 	return completeNamesArray;
@@ -1478,13 +1484,33 @@ function getListJournalsFromLSDB (idOfDB) {
 			}
 		}
 	});
+	var nbJournals = journals.length;
 	list += '</ul>';
 	rest += '</ul>';
-	return list+'<a onClick="jQuery(\'#ls-comparison-statistics-rest-'+idOfDB+'\').slideToggle();if(jQuery(this).text() == \'Read More\'){jQuery(this).text(\'Read Less\')}else{jQuery(this).text(\'Read More\')}">Read More</a>'+rest;
+	return '<p>'+nbJournals+' Journals</p>'+list+'<a onClick="jQuery(\'#ls-comparison-statistics-rest-'+idOfDB+'\').slideToggle();if(jQuery(this).text() == \'Read More\'){jQuery(this).text(\'Read Less\')}else{jQuery(this).text(\'Read More\')}">Read More</a>'+rest;
 }
 
 function getListCoauthorsFromLSDB (idOfDB) {
-	return idOfDB;
+	var allAuthors = new Array();
+	var shortList = '<ul>';
+	var longList = '<ul id="ls-compare-statistics-authors-rest-'+idOfDB+'" style="display:none;">';
+	jQuery.each(lsDBOriginal[idOfDB].db, function(i, el) {
+		jQuery.each(el.authors, function(j, element) {
+			if (jQuery.inArray(element.name, allAuthors) == -1) {
+				allAuthors.push(element.name);
+				if (allAuthors.length <= 5) {
+					shortList += '<li>'+element.name+'</li>';
+				}
+				else {
+					longList += '<li>'+element.name+'</li>';
+				}
+			}
+		});
+	});
+	var nbOfCoauthors = allAuthors.length;
+	shortList += '</ul>';
+	longList += '</ul>';
+	return '<p>'+nbOfCoauthors+' Co-authors</p>'+shortList+'<a onClick="jQuery(\'#ls-compare-statistics-authors-rest-'+idOfDB+'\').slideToggle();if(jQuery(this).text() == \'Read More\'){jQuery(this).text(\'Read Less\')}else{jQuery(this).text(\'Read More\')}">Read More</a>'+longList;
 }
 
 function getPeriodActivityFromLSDB (idOfDB) {
