@@ -1466,14 +1466,21 @@ function getListJournalsFromLSDB (idOfDB) {
 	var journalsAll = lsDBOriginal[idOfDB].fetchArray('journal');
 	var journals = new Array();
 	var list = '<ul>';
+	var rest = '<ul id="ls-comparison-statistics-rest-'+idOfDB+'" style="display:none;">';
 	jQuery.each(journalsAll, function(i, el) {
-		if(jQuery.inArray(el[0], journals) == -1) {
+		if(jQuery.inArray(el[0], journals) == -1 && el[0] != 'undefined' && el[0] && el[0] != 'NULL') {
 			journals.push(el[0]);
-			list += '<li>'+journalsAll[i][0]+'</li>';
+			if (i <= 5) { //We don't want to show too much journals at the same time...
+				list += '<li>'+journalsAll[i][0]+'</li>';
+			}
+			else {
+				rest += '<li>'+journalsAll[i][0]+'</li>';				
+			}
 		}
 	});
 	list += '</ul>';
-	return list;
+	rest += '</ul>';
+	return list+'<a onClick="jQuery(\'#ls-comparison-statistics-rest-'+idOfDB+'\').slideToggle();if(jQuery(this).text() == \'Read More\'){jQuery(this).text(\'Read Less\')}else{jQuery(this).text(\'Read More\')}">Read More</a>'+rest;
 }
 
 function getListCoauthorsFromLSDB (idOfDB) {
