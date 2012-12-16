@@ -1442,7 +1442,7 @@ function compareLSTabsTogether (thisTabId) {
 }
 
 function createComparisonInterface (idOfThisTab) {
-	jQuery('#livingscience-tab-'+idOfThisTab).html('<div id="ls-compare-statistics-'+idOfThisTab+'"></div><div id="ls-compare-spriki-'+idOfThisTab+'"></div><div id="ls-compare-pubs-'+idOfThisTab+'"></div>');
+	jQuery('#livingscience-tab-'+idOfThisTab).html('<div id="ls-compare-statistics-'+idOfThisTab+'" style="width:100%;overflow-x:scroll;"></div><div id="ls-compare-spriki-'+idOfThisTab+'"></div><div id="ls-compare-pubs-'+idOfThisTab+'"></div>');
 }
 
 function createComparisonStatisticTable (idOfThisTab, idFirstDB, idSecondDB) {
@@ -1455,7 +1455,7 @@ function createComparisonStatisticTable (idOfThisTab, idFirstDB, idSecondDB) {
 			['Journals', getListJournalsFromLSDB],
 			['Co-Authors', getListCoauthorsFromLSDB],
 			['Period of activity', getPeriodActivityFromLSDB],
-			['Most Famous Publication', getFamousPublicationFromLSDB]
+			['Top 3 Publications', getFamousPublicationFromLSDB]
 		]
 	}
 	
@@ -1520,7 +1520,11 @@ function getPeriodActivityFromLSDB (idOfDB) {
 }
 
 function getFamousPublicationFromLSDB (idOfDB) {
-	return lsDBOriginal[idOfDB].db[0].title;
+	var html = '';
+	for (i=0; i<3; i++) {
+		html += '<p><a href="'+lsDBOriginal[idOfDB].db[i].url+'" target="_blank">'+lsDBOriginal[idOfDB].db[i].title+'</a></p>';
+	}
+	return html;
 }
 
 function getComparisonTableStatistics (idOfTab, object) {
@@ -1533,7 +1537,7 @@ function getComparisonTableStatistics (idOfTab, object) {
 	table += '</tr></thead><tbody>';
 	
 	jQuery.each(object.db, function(i) {
-		table += '<tr><td>'+object.db[i]+'</td>';
+		table += '<tr><td>'+getLSTabName(i+1)+'</td>';
 		jQuery.each(object.fields, function(j) {
 			table += '<td>'+object.fields[j][1](object.db[i])+'</td>';
 		});
