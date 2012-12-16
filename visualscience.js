@@ -1233,10 +1233,8 @@ function createTabLivingScience(idOfTheTab, selectedUsers) {
 	if (selectedUsers.length > 0){
 		var title = getTitleFromUsers(selectedUsers);
 		var thisTabId = tabId;
-		//TODO: Change this once Christian will allow multiple users with array
-		stringWithOrs = changeArrayToOrString(selectedUsers);
 		addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+thisTabId);
-		livingscience.searchAuthor(stringWithOrs, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
+		livingscience.searchMultipleAuthors(selectedUsers, function(results) {onLivingScienceResults(results, 'livingscience-tab-'+thisTabId, thisTabId); });
 		//TODO: Replace with a Drupal loading picture
 		jQuery('#livingscience-tab-'+thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="'+installFolder+'includes/loading.gif" width="100px" alt="loading" /></center>');
 	}
@@ -1365,7 +1363,12 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 
 function setParametersForLSDB (thisTabId) {
 	jQuery(lsDB[thisTabId].db).each(function(i) {
-		lsDB[thisTabId].db[i].author = lsDB[thisTabId].db[i].authors[0].name;
+		if (lsDB[thisTabId].db[i].authors && lsDB[thisTabId].db[i].authors[0] && lsDB[thisTabId].db[i].authors[0].name) {
+			lsDB[thisTabId].db[i].author = lsDB[thisTabId].db[i].authors[0].name;
+		}
+		else{
+			lsDB[thisTabId].db[i].author = 'Unknown';
+		}
 	});
 }
 
@@ -1376,7 +1379,7 @@ function actualizeLivingScienceDisplay (database, thisTabId) {
 	var start = database.resolveTag('start');
 	var howMany = database.resolveTag('howMany');
 	generatePublicationsDiv(database, start, howMany, 'ls-list-'+thisTabId);
-	generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);
+	//generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);
 	generateRelationsDiv(database, start, howMany, 'ls-relations-'+thisTabId);
 }
 
@@ -1438,7 +1441,7 @@ function compareLSTabsTogether (thisTabId) {
 	addTab('<img src="'+installFolder+'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-'+idOfThisTab);
 	createComparisonInterface(idOfThisTab);
 	createComparisonStatisticTable(idOfThisTab, thisTabId, selectedTabId);
-	createComparisonSpriki(idOfThisTab);
+	createComparisonSpriki(idOfThisTab, thisTabId, selectedTabId);
 	createComparisonPublication(idOfThisTab, thisTabId, selectedTabId);
 }
 
@@ -1549,8 +1552,21 @@ function getComparisonTableStatistics (idOfTab, object) {
 	return table;
 }
 
-function createComparisonSpriki (idOfThisTab) {
-	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<h3>Relations</h3><div id="ls-compare-spriki-'+idOfThisTab+'" style="display:block;text-align:center;"><p>The spriki thing.</p></div>');
+function createComparisonSpriki (idOfThisTab, firstDbId, secondDbId) {
+	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<h3>Relations</h3><div id="ls-compare-spriki-'+idOfThisTab+'" style="display:block;text-align:center;"></div>');
+	var mergedDB = mergeLSDB(firstDbId, secondDbId);
+	generateRelationsDiv(mergedDB, 0, mergedDB.count(), 'ls-compare-spriki-'+idOfThisTab);
+}
+
+function mergeLSDB (idFirstDB, idSecondDB) {
+	var newDB = new NDDB(optionsForNDDB);
+	jQuery.each(lsDBOriginal[idFirstDB], function(i) {
+		newDB.insert(lsDBOriginal[idFirstDB].db[i]);
+	});
+	jQuery.each(lsDBOriginal[idSecondDB], function(i) {
+		newDB.insert(lsDBOriginal[idSecondDB].db[i]);
+	});
+	return newDB;
 }
 
 function createComparisonPublication (idOfThisTab, idFirstDB, idSecondDB) {
