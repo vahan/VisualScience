@@ -717,7 +717,7 @@ window.onload = function() {
 	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
 	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
 	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
-	lsmaps = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
+	lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
 }
 
 //This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
@@ -1681,12 +1681,11 @@ function generateRelationsDiv (database, start, howMany, location) {
  * location is the id without # of where to insert it
  */
 function generateMapDiv (database,start, howMany, location) {
-	/*var publicationsToShow = new Array();
-	for (var i=start; i <= start+howMany; i++) {                   Uncomment when Maps API updated
+	var publicationsToShow = new Array();
+	for (var i=start; (i <= start+howMany) && (i <= database.length -1); i++) {             
 		publicationsToShow.push(database.db[i].livingscienceID);
 	}
-	lsmap.set(publicationsToShow, location);*/
-	jQuery('#'+location).html('<img src="http://travelguide.all-about-switzerland.info/railroads/map_switzerland_cities.gif" width="100%" height="auto" alt="just a map image for test" />');
+	lsmap.set(publicationsToShow, location);
 }
 
 /*
