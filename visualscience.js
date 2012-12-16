@@ -1273,8 +1273,8 @@ function getSelectedUsersFromSearchTable (idOfTheTab) {
 	 * Enable the comments to have a working version, for the other computers and the general version of VisualScience
 	 */
 	var firstFieldNumber = getThWithContent(tableId, 'name');//To delete when comments enabled
-	//var firstFieldToTake = getThWithContent('#'+tableId, 'First Name');
-	//var secondFieldToTake = getThWithContent('#'+tableId, 'Last Name');
+	//var firstFieldToTake = getThWithContent(tableId, 'First Name');
+	//var secondFieldToTake = getThWithContent(tableId, 'Last Name');
 	
 	var completeNamesArray = new Array();
 	jQuery('#'+tableId+' > tbody > tr').each(function(index) {
