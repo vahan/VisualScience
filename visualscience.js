@@ -1500,6 +1500,7 @@ function getListJournalsFromLSDB (idOfDB) {
 
 function getListCoauthorsFromLSDB (idOfDB) {
 	var allAuthors = new Array();
+	allAuthors.push(getLSTabName(idOfDB));
 	var shortList = '<ul>';
 	var longList = '<ul id="ls-compare-statistics-authors-rest-'+idOfDB+'" style="display:none;">';
 	jQuery.each(lsDBOriginal[idOfDB].db, function(i, el) {
