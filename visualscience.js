@@ -1368,6 +1368,10 @@ function setParametersForLSDB (thisTabId) {
 		}
 		else{
 			lsDB[thisTabId].db[i].author = 'Unknown';
+			lsDB[thisTabId].db[i].authors = new Array();
+			lsDB[thisTabId].db[i].authors[0] = {
+				name : 'Unknown'
+			}
 		}
 	});
 }
@@ -1541,7 +1545,7 @@ function getComparisonTableStatistics (idOfTab, object) {
 	table += '</tr></thead><tbody>';
 	
 	jQuery.each(object.db, function(i) {
-		table += '<tr><td>'+getLSTabName(i+1)+'</td>';
+		table += '<tr><td>'+getLSTabName(object.db[i])+'</td>';
 		jQuery.each(object.fields, function(j) {
 			table += '<td>'+object.fields[j][1](object.db[i])+'</td>';
 		});
@@ -1553,9 +1557,9 @@ function getComparisonTableStatistics (idOfTab, object) {
 }
 
 function createComparisonSpriki (idOfThisTab, firstDbId, secondDbId) {
-	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<h3>Relations</h3><div id="ls-compare-spriki-'+idOfThisTab+'" style="display:block;text-align:center;"></div>');
+	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<h3>Relations</h3><center><div id="ls-compare-spriki-relations-'+idOfThisTab+'" style="display:inline-block;text-align:center;width:100%;height:500px;"></div></center>');
 	var mergedDB = mergeLSDB(firstDbId, secondDbId);
-	generateRelationsDiv(mergedDB, 0, mergedDB.count(), 'ls-compare-spriki-'+idOfThisTab);
+	generateRelationsDiv(mergedDB, 0, mergedDB.count(), 'ls-compare-spriki-relations-'+idOfThisTab);
 }
 
 function mergeLSDB (idFirstDB, idSecondDB) {
