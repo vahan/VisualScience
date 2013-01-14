@@ -1563,16 +1563,20 @@ function createComparisonSpriki (idOfThisTab, firstDbId, secondDbId) {
 	jQuery('#ls-compare-spriki-'+idOfThisTab).html('<h3>Relations</h3><center><div id="ls-compare-spriki-relations-'+idOfThisTab+'" style="display:inline-block;text-align:center;width:100%;height:500px;"></div></center>');
 	var mergedDB = mergeLSDB(firstDbId, secondDbId);
 	generateRelationsDiv(mergedDB, 0, mergedDB.count(), 'ls-compare-spriki-relations-'+idOfThisTab);
+	lsDBOriginal[idOfThisTab] = mergedDB;
 }
 
 function mergeLSDB (idFirstDB, idSecondDB) {
 	var newDB = new NDDB(optionsForNDDB);
-	jQuery.each(lsDBOriginal[idFirstDB], function(i) {
+	var length = lsDBOriginal[idFirstDB].length > lsDBOriginal[idSecondDB].length ? lsDBOriginal[idFirstDB].length : lsDBOriginal[idSecondDB].length;
+	var biggerDB = lsDBOriginal[idFirstDB].length > lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
+	for (var i=0; i < length; i++) {
 		newDB.insert(lsDBOriginal[idFirstDB].db[i]);
-	});
-	jQuery.each(lsDBOriginal[idSecondDB], function(i) {
 		newDB.insert(lsDBOriginal[idSecondDB].db[i]);
-	});
+	}
+	for (var i=length; i < lsDBOriginal[biggerDB].length; i++) {
+		newDB.insert(lsDBOriginal[biggerDB].db[i]);
+	}
 	return newDB;
 }
 
