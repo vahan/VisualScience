@@ -977,7 +977,16 @@ function createAttachmentsDiv (thisTabId) {
 function loadDrupalHTMLUploadForm (html, location, thisTabId) {
 	jQuery('#'+location).load(UploadModuleURL+' .content', function(response, status, xhr) {
 			if (status == "error") {
-				alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
+				if (xhr.status == 403) {
+					alert('Please login to be able to send messages.(403)');
+					jQuery('#'+location).html('<p align="center" font-color="red">Please login to be able to send messages.</p>');
+				}
+				else if (xhr.status == 404) {
+					alert('Please come back later, there is a problem with the server.(404)');
+				}
+				else {
+					alert('An error occured:\n' + 'Status:'+xhr.status + ':\n' + xhr.statusText);
+				}
 			}
 			else {
 				jQuery('#'+location).children().children(':not(#visualscience-upload-form)').hide();
@@ -1334,7 +1343,7 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	lsDBOriginal[thisTabId] = db;
 	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
 	jQuery('a[href="#livingscience-tab-'+thisTabId+'"]').bind('click', function() {
-		generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
+		actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 	});
 }
 
