@@ -1336,6 +1336,9 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	lsDB[thisTabId] = db;
 	lsDBOriginal[thisTabId] = db;
 	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
+	jQuery('a[href="#livingscience-tab-'+thisTabId+'"]').bind('click', function() {
+		generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
+	});
 }
 
 /*
@@ -1358,7 +1361,6 @@ function generateLivingScienceFromDB (database, location, thisTabId) {
 	setWidthForMapsAndRelations('ls-list-'+thisTabId, 'ls-map-'+thisTabId, 'ls-relations-'+thisTabId);
 	setParametersForLSDB(thisTabId);
 	actualizeLivingScienceDisplay(database, thisTabId);
-	
 }
 
 function setParametersForLSDB (thisTabId) {
@@ -1383,7 +1385,7 @@ function actualizeLivingScienceDisplay (database, thisTabId) {
 	var start = database.resolveTag('start');
 	var howMany = database.resolveTag('howMany');
 	generatePublicationsDiv(database, start, howMany, 'ls-list-'+thisTabId);
-	//generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);
+	generateMapDiv(database, start, howMany, 'ls-map-'+thisTabId);
 	generateRelationsDiv(database, start, howMany, 'ls-relations-'+thisTabId);
 }
 
