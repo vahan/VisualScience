@@ -1267,9 +1267,6 @@ function getTitleFromUsers (selectedUsers) {
  */
 function getSelectedUsersFromSearchTable (idOfTheTab) {
 	var tableId = 'visualscience-user_list-result-'+idOfTheTab;
-	/*
-	 * Enable the comments to have a working version, for the other computers and the general version of VisualScience
-	 */
 	var completeNamesArray = new Array();
 	if (!isNaN(parseInt(getThWithContent(tableId, 'First Name')))) {
 		var firstFieldNumber = getThWithContent(tableId, 'First Name');
@@ -1539,7 +1536,7 @@ function getListCoauthorsFromLSDB (idOfDB) {
 	});
 	authors.sort();
 	jQuery.each(authors, function(i, el) {
-		html += '<li>'+el+'</li>';
+		html += '<li><a href="#" onclick="createTabLivingScience(undefined, [\''+el+'\'])">'+el+'</a></li>';
 	});
 	html += '</ul></div>';
 	var nbOfCoauthors = authors.length;
