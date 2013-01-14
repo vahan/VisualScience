@@ -1480,48 +1480,71 @@ function getNbPublicationsOfLSDB (idOfDB) {
 
 function getListJournalsFromLSDB (idOfDB) {
 	var journalsAll = lsDBOriginal[idOfDB].fetchArray('journal');
+	journalsAll.sort();
 	var journals = new Array();
-	var list = '<ul>';
-	var rest = '<ul id="ls-comparison-statistics-rest-'+idOfDB+'" style="display:none;">';
+	var html = '<div style="overflow-y:scroll;max-width:250px;max-height:250px;"><ul>';
 	jQuery.each(journalsAll, function(i, el) {
 		if(jQuery.inArray(el[0], journals) == -1 && el[0] != 'undefined' && el[0] && el[0] != 'NULL') {
 			journals.push(el[0]);
-			if (i <= 5) { //We don't want to show too much journals at the same time...
-				list += '<li>'+journalsAll[i][0]+'</li>';
-			}
-			else {
-				rest += '<li>'+journalsAll[i][0]+'</li>';				
-			}
+			html += '<li>'+journalsAll[i][0]+'</li>';
 		}
 	});
+	html += '</ul></div>';
 	var nbJournals = journals.length;
-	list += '</ul>';
-	rest += '</ul>';
-	return '<p>'+nbJournals+' Journals</p>'+list+'<a onClick="jQuery(\'#ls-comparison-statistics-rest-'+idOfDB+'\').slideToggle();if(jQuery(this).text() == \'Read More\'){jQuery(this).text(\'Read Less\')}else{jQuery(this).text(\'Read More\')}">Read More</a>'+rest;
+	return '<p><strong>'+nbJournals+' Journals</strong></p>'+html;
+}
+
+function getLastNameCommaFirstName (name) {
+	var first = name.substring(0, name.lastIndexOf(' '));
+	var last = name.substring(name.lastIndexOf(' ')+1);
+	return last+', '+first;
+}
+
+function getInitialLastname (name) {
+	var initial = name.substring(0, 1);
+	var last = name.substring(name.lastIndexOf(' ')+1);
+	return initial+' '+last;
+}
+
+function sortHTMLList (idOfList) {
+	var mylist = jQuery('#'+idOfList);
+	var listitems = mylist.children('li').get();
+	listitems.sort(function(a, b) {
+	   return jQuery(a).text().toUpperCase().localeCompare(jQuery(b).text().toUpperCase());
+	})
+	jQuery.each(listitems, function(idx, itm) { mylist.append(itm); });
 }
 
 function getListCoauthorsFromLSDB (idOfDB) {
 	var allAuthors = new Array();
-	allAuthors.push(getLSTabName(idOfDB));
-	var shortList = '<ul>';
-	var longList = '<ul id="ls-compare-statistics-authors-rest-'+idOfDB+'" style="display:none;">';
+	var authors = new Array();
+	authorName = getLSTabName(idOfDB);
+	allAuthors.push(authorName);
+	allAuthors.push(getInitialLastname(authorName));
+	allAuthors.push(getLastNameCommaFirstName(authorName));
+	allAuthors.push(authorName+'...');
+	allAuthors.push(authorName.substring(0, authorName.length-3));
+	var html = '<div style="overflow-y:scroll;max-width:250px;max-height:250px;"><ul>';
 	jQuery.each(lsDBOriginal[idOfDB].db, function(i, el) {
 		jQuery.each(el.authors, function(j, element) {
 			if (jQuery.inArray(element.name, allAuthors) == -1) {
 				allAuthors.push(element.name);
-				if (allAuthors.length <= 5) {
-					shortList += '<li>'+element.name+'</li>';
-				}
-				else {
-					longList += '<li>'+element.name+'</li>';
-				}
+				allAuthors.push(element.name.substring(0, element.name.length-3));
+				allAuthors.push(element.name+'...');
+				allAuthors.push(getInitialLastname(element.name));
+				allAuthors.push(getLastNameCommaFirstName(element.name));
+				authors.push(element.name);
 			}
 		});
 	});
-	var nbOfCoauthors = allAuthors.length;
-	shortList += '</ul>';
-	longList += '</ul>';
-	return '<p>'+nbOfCoauthors+' Co-authors</p>'+shortList+'<a onClick="jQuery(\'#ls-compare-statistics-authors-rest-'+idOfDB+'\').slideToggle();if(jQuery(this).text() == \'Read More\'){jQuery(this).text(\'Read Less\')}else{jQuery(this).text(\'Read More\')}">Read More</a>'+longList;
+	authors.sort();
+	jQuery.each(authors, function(i, el) {
+		html += '<li>'+el+'</li>';
+	});
+	html += '</ul></div>';
+	var nbOfCoauthors = authors.length;
+	
+	return '<p><strong>'+nbOfCoauthors+' Co-authors</strong></p>'+html;
 }
 
 function getPeriodActivityFromLSDB (idOfDB) {
@@ -1548,7 +1571,7 @@ function getComparisonTableStatistics (idOfTab, object) {
 	table += '</tr></thead><tbody>';
 	
 	jQuery.each(object.db, function(i) {
-		table += '<tr><td>'+getLSTabName(object.db[i])+'</td>';
+		table += '<tr><td style="color:'+getSprikiColor(i)+';"><strong>'+getLSTabName(object.db[i])+'</strong></td>';
 		jQuery.each(object.fields, function(j) {
 			table += '<td>'+object.fields[j][1](object.db[i])+'</td>';
 		});
@@ -1557,6 +1580,28 @@ function getComparisonTableStatistics (idOfTab, object) {
 	
 	table += '</tbody></table>';
 	return table;
+}
+
+function getSprikiColor (idColor) {
+	switch (idColor){
+		case 0:
+		return '#0000C8';
+		
+		case 1:
+		return '#FF9600';
+		
+		case 2:
+		return '#1C9500';
+		
+		case 3:
+		return '#F7FA00';
+		
+		case 4:
+		return '#A30086';
+		
+		default:
+		return '';
+	}
 }
 
 function createComparisonSpriki (idOfThisTab, firstDbId, secondDbId) {
@@ -1625,7 +1670,7 @@ function getLSTabs (tabNotWanted) {
  */
 function getLSTabName (idOfTheTab) {
 	var tabName = jQuery('a[href|="#livingscience-tab-'+idOfTheTab+'"]').text();
-	tabName = tabName.substring(0, tabName.length-1);
+	tabName = tabName.substring(1, tabName.length-1);
 	return tabName;
 }
 /*
