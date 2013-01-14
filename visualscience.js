@@ -1562,7 +1562,7 @@ function getPeriodActivityFromLSDB (idOfDB) {
 function getFamousPublicationFromLSDB (idOfDB) {
 	var html = '';
 	for (i=0; i<3; i++) {
-		html += '<p><a href="'+lsDBOriginal[idOfDB].db[i].url+'" target="_blank">'+lsDBOriginal[idOfDB].db[i].title+'</a></p>';
+		html += '<p style="min-width:250px;"><a href="'+lsDBOriginal[idOfDB].db[i].url+'" target="_blank">'+lsDBOriginal[idOfDB].db[i].title+'</a></p>';
 	}
 	return html;
 }
