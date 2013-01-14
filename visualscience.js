@@ -1343,7 +1343,9 @@ function onLivingScienceResults (listOfPublications, idDivUnderTab, thisTabId) {
 	lsDBOriginal[thisTabId] = db;
 	generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
 	jQuery('a[href="#livingscience-tab-'+thisTabId+'"]').bind('click', function() {
-		actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+		setTimeout(function() {
+			actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+		}, 1000);
 	});
 }
 
