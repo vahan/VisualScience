@@ -57,7 +57,7 @@ var vsLivingscience = (function() {
 			if (selectedUsers.length > 0) {
 				var title = vsUtils.getTitleFromUsers(selectedUsers);
 				var thisTabId = vsInterface.getTabId();
-				addTab('<img src="' + installFolder + '../images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + thisTabId);
+				vsInterface.addTab('<img src="' + installFolder + '../images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + thisTabId);
 				livingscience.searchMultipleAuthors(selectedUsers, function(results) {
 					onLivingScienceResults(results, 'livingscience-tab-' + thisTabId, thisTabId);
 				});

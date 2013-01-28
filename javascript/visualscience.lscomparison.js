@@ -1,5 +1,9 @@
 var vsLscomparison = (function() {
 
+	function createComparisonInterface(idOfThisTab) {
+		jQuery('#livingscience-tab-' + idOfThisTab).html('<div id="ls-compare-statistics-' + idOfThisTab + '" style="width:100%;"></div><div id="ls-compare-spriki-' + idOfThisTab + '"></div><div id="ls-compare-pubs-' + idOfThisTab + '"></div>');
+	}
+
 	return {
 		/*
 		 * This function creates a new tab, where two LS search tabs are compared.
@@ -7,15 +11,12 @@ var vsLscomparison = (function() {
 		compareLSTabsTogether : function(thisTabId) {
 			var selectedTabId = parseInt(jQuery('#comparison-ls-result-' + thisTabId).val());
 			var title = 'Comparison Interface';
-			var idOfThisTab = tabId;
-			addTab('<img src="' + installFolder + '../images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
+			var idOfThisTab = vsInterface.getTabId();
+			vsInterface.addTab('<img src="' + installFolder + '../images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
 			createComparisonInterface(idOfThisTab);
 			createComparisonStatisticTable(idOfThisTab, thisTabId, selectedTabId);
 			createComparisonSpriki(idOfThisTab, thisTabId, selectedTabId);
 			createComparisonPublication(idOfThisTab, thisTabId, selectedTabId);
-		},
-		createComparisonInterface : function(idOfThisTab) {
-			jQuery('#livingscience-tab-' + idOfThisTab).html('<div id="ls-compare-statistics-' + idOfThisTab + '" style="width:100%;"></div><div id="ls-compare-spriki-' + idOfThisTab + '"></div><div id="ls-compare-pubs-' + idOfThisTab + '"></div>');
 		},
 		createComparisonStatisticTable : function(idOfThisTab, idFirstDB, idSecondDB) {
 			var objectOfStatistics = {
