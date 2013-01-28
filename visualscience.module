@@ -14,7 +14,6 @@ require_once 'includes/visualscience.search.inc';
 require_once 'includes/visualscience.settings.inc';
 require_once 'includes/visualscience.utils.inc';
 
-
 /**
  * TODO: feature: change the current search, get the results directly from the DB(in process, Vahan)
  * TODO: bug: inner not does not work!
@@ -349,13 +348,24 @@ function visualscience_page($clear = true) {
   drupal_add_library('system', 'ui.dialog');
   drupal_add_library('system', 'ui.tabs');
   
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.js');
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.layout.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.tablesorter.js');
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/visualscience.jquery.tablesorter.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/visualscience.nddb.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.jquery.layout.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.layout.css');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.jquery.tablesorter.js');
+  drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.tablesorter.css');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.handlebars.js');
+  
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.livingscience.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.message.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.csv.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.userlist.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.lscomparison.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
 
   if (!isset($_SESSION["searchNumber"])) {
   	$_SESSION["searchNumber"] = 0;
