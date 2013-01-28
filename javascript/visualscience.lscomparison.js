@@ -8,7 +8,7 @@ var vsLscomparison = (function() {
 			var selectedTabId = parseInt(jQuery('#comparison-ls-result-' + thisTabId).val());
 			var title = 'Comparison Interface';
 			var idOfThisTab = tabId;
-			addTab('<img src="' + installFolder + 'includes/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
+			addTab('<img src="' + installFolder + '../images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
 			createComparisonInterface(idOfThisTab);
 			createComparisonStatisticTable(idOfThisTab, thisTabId, selectedTabId);
 			createComparisonSpriki(idOfThisTab, thisTabId, selectedTabId);
