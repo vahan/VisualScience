@@ -20,8 +20,8 @@ var vsSearch = (function() {
 		 * -The table with the result and its options.(Sort table, hide fields, etc...)
 		 */
 		createUserSearchResult : function(dialogNumber, idOfThisTab) {
-			var actionBar = createActionBar(idOfThisTab);
-			var tableUserList = createTableUserList(dialogNumber, idOfThisTab);
+			var actionBar = vsSearch.createActionBar(idOfThisTab);
+			var tableUserList = vsSearch.createTableUserList(dialogNumber, idOfThisTab);
 			return '<h3>User List</h3>' + actionBar + tableUserList;
 		},
 
@@ -70,9 +70,9 @@ var vsSearch = (function() {
 		getSelectedUsersFromSearchTable : function(idOfTheTab) {
 			var tableId = 'visualscience-user_list-result-' + idOfTheTab;
 			var completeNamesArray = new Array();
-			if (!isNaN(parseInt(getThWithContent(tableId, 'First Name')))) {
-				var firstFieldNumber = getThWithContent(tableId, 'First Name');
-				var secondFieldNumber = getThWithContent(tableId, 'Last Name');
+			if (!isNaN(parseInt(vsUtils.getThWithContent(tableId, 'First Name')))) {
+				var firstFieldNumber = vsUtils.getThWithContent(tableId, 'First Name');
+				var secondFieldNumber = vsUtils.getThWithContent(tableId, 'Last Name');
 				jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 					index++;
 					//That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
@@ -101,7 +101,7 @@ var vsSearch = (function() {
 		 */
 		getSelectedUsersEmailFromSearchTable : function(idOfTheTab) {
 			var tableId = 'visualscience-user_list-result-' + idOfTheTab;
-			var firstFieldNumber = getThWithContent(tableId, 'mail');
+			var firstFieldNumber = vsUtils.getThWithContent(tableId, 'mail');
 			var emailArray = new Array();
 			jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 				index++;
@@ -117,9 +117,9 @@ var vsSearch = (function() {
 		 */
 
 		createTableUserList : function(dialogNumber, idOfThisTab) {
-			var divFinalContent = createTableUserListHead(idOfThisTab, dialogNumber);
-			var arrayOfUserResults = getArrayFromTable('user_list-list-' + dialogNumber);
-			var nbColsInTable = countColumnsInTable('user_list-list-' + dialogNumber);
+			var divFinalContent = vsSearch.createTableUserListHead(idOfThisTab, dialogNumber);
+			var arrayOfUserResults = vsUtils.getArrayFromTable('user_list-list-' + dialogNumber);
+			var nbColsInTable = vsUtils.countColumnsInTable('user_list-list-' + dialogNumber);
 			for (var i = 1; i < arrayOfUserResults.length + 1; i++) {
 				divFinalContent += '<td>' + arrayOfUserResults[i - 1] + '</td>';
 				if (i % nbColsInTable == 0 && i != arrayOfUserResults.length) {
@@ -131,7 +131,7 @@ var vsSearch = (function() {
 				}
 			}
 			divFinalContent += '</tr></tbody></table></div>';
-			divFinalContent += getTableUserListOptions('user_list-list-' + dialogNumber, idOfThisTab, nbColsInTable);
+			divFinalContent += vsSearch.getTableUserListOptions('user_list-list-' + dialogNumber, idOfThisTab, nbColsInTable);
 			return divFinalContent;
 		},
 		/*
