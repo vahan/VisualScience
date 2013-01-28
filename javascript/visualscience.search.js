@@ -1,30 +1,196 @@
-var vsSearch = (function () {
+var vsSearch = (function() {
 
-  var myPrivateVar, myPrivateMethod;
+	return {
+		makeRowsSelectable : function() {
+			jQuery('.clickToSelect').click(function() {
+				var cur = jQuery(this).children().children().children();
+				var newState = !(cur.attr('checked'));
+				cur.attr('checked', newState);
+			});
+			jQuery('.clickToSelect').children().children().children().click(function() {
+				var newState = !(jQuery(this).attr('checked'));
+				jQuery(this).attr('checked', newState);
+			});
+		},
 
-  // A private counter variable
-  myPrivateVar = 0;
+		/*
+		 * This function creates the whole tab, which will be displayed to the user.
+		 * It contains :
+		 * -the action bar, which is the bar with every buttons(Message, CSV, LS and Conference)
+		 * -The table with the result and its options.(Sort table, hide fields, etc...)
+		 */
+		createUserSearchResult : function(dialogNumber, idOfThisTab) {
+			var actionBar = createActionBar(idOfThisTab);
+			var tableUserList = createTableUserList(dialogNumber, idOfThisTab);
+			return '<h3>User List</h3>' + actionBar + tableUserList;
+		},
 
-  // A private function which logs any arguments
-  myPrivateMethod = function( foo ) {
-      console.log( foo );
-  };
+		/*
+		 * This creates the action bar, with the different buttons.
+		 */
+		createActionBar : function(idOfThisTab) {
+			var finalDiv = '<div align="center" style="max-width:25%;" class="action-bar-container" id="action-bar-container' + idOfThisTab + '"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
+			var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage(' + idOfThisTab + ');"  /><br />';
+			var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV(' + idOfThisTab + ');"  /><br />';
+			var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience(' + idOfThisTab + ');"  /><br />';
+			var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference(' + idOfThisTab + ');" /><br />';
+			finalDiv += sendMessage + csvExport + livingscience + conference + '</div></div>';
+			return finalDiv;
+		},
+		/*
+		 * Depending on what the user sees, the action bar will be static at the top of the page,
+		 * or fixed on the left, when he scrolls down.
+		 */
+		makeActionBarMoveable : function(idOfThisTab) {
+			var top_offset = jQuery('#action-bar-container' + idOfThisTab).offset().top;
+			var tableHeight = jQuery('#visualscience-user_list-result-' + idOfThisTab).height();
+			var actionBarHeight = jQuery('#actionBar' + idOfThisTab).height();
+			if (tableHeight > actionBarHeight) {
+				jQuery('#action-bar-container' + idOfThisTab).height(tableHeight);
+			}
+			var el = jQuery('#actionBar' + idOfThisTab);
+			jQuery(window).bind('scroll', function() {
+				var scroll_top = jQuery(window).scrollTop();
+				var threshold = 100;
+				//a threshold so the bar does not stick to the top
+				var tabHeight = jQuery('#visualscience-search-tab-content-' + idOfThisTab).height();
+				if (scroll_top + threshold + actionBarHeight > top_offset + tableHeight && tabHeight > 350) {
+					el.css('top', tableHeight - actionBarHeight);
+				} else if (scroll_top > top_offset - threshold) {
+					el.css('top', scroll_top - top_offset + threshold);
+				} else {
+					el.css('top', '');
+				}
+			});
+		},
+		/*
+		 * This function gets every selected user from the user-list of results.
+		 * It returns an array with the full name of each users.
+		 */
+		getSelectedUsersFromSearchTable : function(idOfTheTab) {
+			var tableId = 'visualscience-user_list-result-' + idOfTheTab;
+			var completeNamesArray = new Array();
+			if (!isNaN(parseInt(getThWithContent(tableId, 'First Name')))) {
+				var firstFieldNumber = getThWithContent(tableId, 'First Name');
+				var secondFieldNumber = getThWithContent(tableId, 'Last Name');
+				jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
+					index++;
+					//That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
+					if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
+						var first = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + firstFieldNumber + ')').text();
+						var last = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + secondFieldNumber + ')').text();
+						completeNamesArray.push(first + ' ' + last);
+					}
+				});
+			} else {
+				var firstFieldNumber = getThWithContent(tableId, 'name');
+				jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
+					index++;
+					//That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
+					if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
+						completeNamesArray.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + firstFieldNumber + ')').text());
+						//To delete when comments enabled
+					}
+				});
+			}
+			return completeNamesArray;
+		},
+		/*
+		 * This function gets every selected user's email from the user-list of results.
+		 * It returns an array with the full name of each users.
+		 */
+		getSelectedUsersEmailFromSearchTable : function(idOfTheTab) {
+			var tableId = 'visualscience-user_list-result-' + idOfTheTab;
+			var firstFieldNumber = getThWithContent(tableId, 'mail');
+			var emailArray = new Array();
+			jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
+				index++;
+				//That's because index will go from 0(no nth-child) to n-1, missing n (interesting)
+				if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
+					emailArray.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + firstFieldNumber + ')').text());
+				}
+			});
+			return emailArray;
+		},
+		/*
+		 * Creates the table of users, which can be sorted.
+		 */
 
-  return {
-
-    // A public variable
-    myPublicVar: "foo",
-
-    // A public function utilizing privates
-    myPublicFunction: function( bar ) {
-
-      // Increment our private counter
-      myPrivateVar++;
-
-      // Call our private method using bar
-      myPrivateMethod( bar );
-
-    }
-  };
+		createTableUserList : function(dialogNumber, idOfThisTab) {
+			var divFinalContent = createTableUserListHead(idOfThisTab, dialogNumber);
+			var arrayOfUserResults = getArrayFromTable('user_list-list-' + dialogNumber);
+			var nbColsInTable = countColumnsInTable('user_list-list-' + dialogNumber);
+			for (var i = 1; i < arrayOfUserResults.length + 1; i++) {
+				divFinalContent += '<td>' + arrayOfUserResults[i - 1] + '</td>';
+				if (i % nbColsInTable == 0 && i != arrayOfUserResults.length) {
+					if ((i / nbColsInTable) % 2 == 0) {
+						divFinalContent += '</tr><tr class="odd clickable clickToSelect" >';
+					} else {
+						divFinalContent += '</tr><tr class="even clickable clickToSelect" >';
+					}
+				}
+			}
+			divFinalContent += '</tr></tbody></table></div>';
+			divFinalContent += getTableUserListOptions('user_list-list-' + dialogNumber, idOfThisTab, nbColsInTable);
+			return divFinalContent;
+		},
+		/*
+		 * This function creates the visibility options for the user list search.
+		 * firstly it takes every th field from the header table, and generates the checkbox witht these labels.
+		 * On the checkbox there is a function that toggles the visibility of the wanted element.
+		 */
+		getTableUserListOptions : function(tableId, idOfThisTab, nbColsInTable) {
+			var divOptions = '<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">';
+			jQuery('#' + tableId + ' > thead > tr > th').each(function(i) {
+				if (jQuery(this).text() != '') {
+					divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" class="option"><input type="checkbox" onClick="toggleColNbFromTable(\'visualscience-user_list-result-' + idOfThisTab + '\',' + i + ');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" id="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" /> ' + jQuery(this).text() + ' </label></div>';
+				}
+			});
+			divOptions += '</div></div></fieldset>';
+			return divOptions;
+		},
+		/*
+		 * This creates the thead of the user list search table.
+		 * It takes every thead from the hidden table and generates the thead witht that.
+		 */
+		createTableUserListHead : function(idOfThisTab, dialogNumber) {
+			var header = '<div style="display:inline-block;max-width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
+			jQuery('#user_list-list-' + dialogNumber + ' > thead > tr > th').each(function() {
+				//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
+				if (jQuery(this).html().indexOf('form-checkbox') != -1) {
+					header += '<th style="min-width:35px;" onClick="selectAllBoxes(' + idOfThisTab + ')"><input type="checkbox" id="user-list_master_checkbox-' + idOfThisTab + '" class="form-checkbox" title="Select all rows in this table" onClick="selectAllBoxes(' + idOfThisTab + ')" /></th>';
+				} else {
+					header += '<th style="min-width:35px;">' + jQuery(this).html() + '</th>';
+				}
+			});
+			header += '</tr></thead><tbody><tr class="odd clickable clickToSelect" >';
+			return header;
+		},
+		/*
+		 * This function selects all checkboxes once you click on the top
+		 * checkbox of a user-list search table. It firstly checks if the
+		 * top box is checked or not, and then apply the state to all the boxes.
+		 */
+		selectAllBoxes : function(idOfThisTab) {
+			var newState;
+			if (jQuery('#user-list_master_checkbox-' + idOfThisTab).attr('checked') == true) {
+				newState = false;
+			} else {
+				newState = true;
+			}
+			jQuery('#user-list_master_checkbox-' + idOfThisTab).attr('checked', newState);
+			jQuery('#visualscience-user_list-result-' + idOfThisTab + ' input[id|="user_list-list"]').each(function() {
+				jQuery(this).attr('checked', newState);
+			});
+		},
+		/*
+		 * toggles the visibility of a column in a table.
+		 * tableId is the id of the table and colNb the number (from 0)  of the col to toggle.
+		 */
+		toggleColNbFromTable : function(tableId, colNb) {
+			jQuery('#' + tableId + ' td:nth-child(' + (colNb + 1) + ')').toggle();
+			jQuery('#' + tableId + ' th:nth-child(' + (colNb + 1) + ')').toggle();
+		},
+	};
 
 })();

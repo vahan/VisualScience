@@ -1,30 +1,22 @@
-var vsConference = (function () {
+var vsConference = (function() {
 
-  var myPrivateVar, myPrivateMethod;
+	return {
+		/*
+		 * Creates a tab for a conference.
+		 */
+		createTabConference : function(idOfTheTab) {
+			selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
+			if (selectedUsers.length > 0) {
+				var title = getTitleFromUsers(selectedUsers);
+				var thisTabId = tabId;
+				addTab('<img src="' + installFolder + 'includes/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-' + thisTabId);
 
-  // A private counter variable
-  myPrivateVar = 0;
-
-  // A private function which logs any arguments
-  myPrivateMethod = function( foo ) {
-      console.log( foo );
-  };
-
-  return {
-
-    // A public variable
-    myPublicVar: "foo",
-
-    // A public function utilizing privates
-    myPublicFunction: function( bar ) {
-
-      // Increment our private counter
-      myPrivateVar++;
-
-      // Call our private method using bar
-      myPrivateMethod( bar );
-
-    }
-  };
+				//Create the conference tab
+				jQuery('#conference-tab-' + thisTabId).html('<h3>conference Tab</h3>');
+			} else {
+				alert('Please select at least one user.');
+			}
+		}
+	};
 
 })();

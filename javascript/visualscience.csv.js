@@ -1,30 +1,47 @@
-var vsCSV = (function () {
+var vsCSV = (function() {
 
-  var myPrivateVar, myPrivateMethod;
-
-  // A private counter variable
-  myPrivateVar = 0;
-
-  // A private function which logs any arguments
-  myPrivateMethod = function( foo ) {
-      console.log( foo );
-  };
-
-  return {
-
-    // A public variable
-    myPublicVar: "foo",
-
-    // A public function utilizing privates
-    myPublicFunction: function( bar ) {
-
-      // Increment our private counter
-      myPrivateVar++;
-
-      // Call our private method using bar
-      myPrivateMethod( bar );
-
-    }
-  };
+	return {
+		/*
+		 * This function exports all the users to a CSV file. Currently using a jQuery plugin.(Table2CSV)
+		 */
+		exportUsersCSV : function(idOfThisTab) {
+			//Some parameters for the communication with the PHP page:
+			var newLineCharacter = '[^-|-¼]' + Math.floor(Math.random() * 12);
+			var url = installFolder + 'includes/stringToCSV.php?text=';
+			var finalTable = '';
+			var tableId = 'visualscience-user_list-result-' + idOfThisTab;
+			//Through the head of the table
+			jQuery('#' + tableId + ' > thead > tr > th').each(function(i) {
+				i++;
+				if (i != 1) {
+					if (i == 2) {
+						finalTable += jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text().replace(' ', '-');
+					} else {
+						finalTable += ',' + jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text().replace(' ', '-');
+					}
+				}
+			});
+			finalTable += newLineCharacter;
+			//Through the body of table
+			jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
+				index++;
+				if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
+					jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td').each(function(cell) {
+						cell++;
+						if (cell != 1) {
+							if (cell == 2) {
+								finalTable += jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + cell + ')').text().replace(' ', '-');
+							} else {
+								finalTable += ',' + jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + cell + ')').text().replace(' ', '-');
+							}
+						}
+					});
+					finalTable += newLineCharacter;
+				}
+			});
+			finalTable = encodeURIComponent(finalTable) + '&char=' + encodeURIComponent(newLineCharacter);
+			window.open(url + finalTable);
+		}
+	};
 
 })();
