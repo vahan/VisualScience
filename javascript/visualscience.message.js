@@ -1,8 +1,67 @@
 var vsMessage = (function() {
-	var uploadDB;
-
+	var uploadDB, createSubjectDiv, createMessageDiv, createAttachmentsDiv, createRecipientsDiv, createSendMessageButton;
 	//This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
 	uploadDB = new Array();
+
+	/*
+	 * The subject input for messages and conferences
+	 */
+	function createSubjectDiv(thisTabId) {
+		return '<input type="text" name="visualscience-subject-input-' + thisTabId + '" id="visualscience-subject-input-' + thisTabId + '" style="width:98%;" placeholder="Subject" />';
+	}
+
+	/*
+	 * The div for the message
+	 */
+	function createMessageDiv(thisTabId) {
+		return '<textarea name="visualscience-message-input-' + thisTabId + '" id="visualscience-message-input-' + thisTabId + '" style="width:100%;" rows="10" placeholder="Your message"></textarea>';
+	}
+
+	/*
+	 * The attachment div for messages and conferences
+	 */
+	function createAttachmentsDiv(thisTabId) {
+		var content = '<div id="visualscience-message-attachments-div-show-' + thisTabId + '" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-' + thisTabId + '"></div> <div id="progress-upload-' + thisTabId + '" style="margin:5px;padding:5px;background-color:red;font-size:12px;display:none;" >Progress</div>';
+		return '<div id="visualscience-attachments-div-' + thisTabId + '" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">' + content + '</div>';
+	}
+
+	/*
+	 * The recipients div for messages and conferences
+	 */
+	function createRecipientsDiv(thisTabId, selectedUsers, selectedUsersEmail) {
+		var content = '<div id="visualscience-recipient-div-content-' + thisTabId + '" style="width:100%;overflow-y:scroll;height:200px;">';
+		for (var i = 0; i < selectedUsers.length; i++) {
+			content += '<p id="visualscience-recipients-entry-' + thisTabId + '-' + i + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="vsMessage.deleteRecipientToMessage(' + thisTabId + ', ' + i + ');" id="visualscience-message-close-cross-' + thisTabId + '-' + i + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:' + selectedUsersEmail[i] + '">' + selectedUsers[i] + '</a></p>';
+		}
+		content += '</div>';
+		return '<div id="visualscience-recipients-div-' + thisTabId + '" style="border:solid black 1px;display:inline-block;width:100%;">' + content + '<input type="button" style="margin-left:10px;margin-right:10px;" value="Add Recipient" id="visualscience-message-add-recipient-button-' + thisTabId + '" nbRecipients="' + selectedUsers.length + '" onClick="vsMessage.addRecipientForMessage(' + thisTabId + ');" /><input type="email" name="visualscience-message-add-recipient-email-' + thisTabId + '" id="visualscience-message-add-recipient-email-' + thisTabId + '" placeholder="Type an email" onKeyPress="if (event.keyCode == 13) vsMessage.addRecipientForMessage(' + thisTabId + ');" /></div>';
+	}
+
+	/*
+	 * The send button, only for messages
+	 */
+	function createSendMessageButton(thisTabId) {
+		return '<div style="text-align:right;"><input type="button" onClick="vsMessage.sendVisualscienceMessage(' + thisTabId + ');" value="Send Message" id="visualscience-send-message-button-' + thisTabId + '" style="padding-right:15px;padding-left:15px;" /></div>';
+	}
+
+	function insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients) {
+		nbRecipients += 1;
+		var entryToAppend = '<p id="visualscience-recipients-entry-' + thisTabId + '-' + nbRecipients + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="vsMessage.deleteRecipientToMessage(' + thisTabId + ', ' + nbRecipients + ');" id="visualscience-message-close-cross-' + thisTabId + '-' + nbRecipients + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:' + email + '">' + email + '</a></p>';
+		jQuery('#visualscience-recipient-div-content-' + thisTabId).append(entryToAppend);
+	}
+
+	/*
+	 * Gets the name and email of every recipients of a message.
+	 */
+	function getRecipientsOfMessage(thisTabId) {
+		var recipientsEmailAndName = new Array();
+		jQuery('p[id*="visualscience-recipients-entry-' + thisTabId + '"]').each(function(i) {
+			recipientsEmailAndName[i] = new Array(2);
+			recipientsEmailAndName[i][0] = jQuery(this).children(':nth-child(2)').text();
+			recipientsEmailAndName[i][1] = jQuery(this).children(':nth-child(2)').attr('href').substring(7);
+		});
+		return recipientsEmailAndName;
+	}
 
 	return {
 		/*
@@ -11,10 +70,10 @@ var vsMessage = (function() {
 		createTabSendMessage : function(idOfTheTab) {
 			selectedUsers = getSelectedUsersFromSearchTable(idOfTheTab);
 			if (selectedUsers.length > 0) {
-				var selectedUsersEmail = getSelectedUsersEmailFromSearchTable(idOfTheTab);
-				var title = getTitleFromUsers(selectedUsers);
-				var thisTabId = tabId;
-				addTab('<img src="' + installFolder + '../images/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-' + thisTabId);
+				var selectedUsersEmail = vsSearch.getSelectedUsersEmailFromSearchTable(idOfTheTab);
+				var title = vsUtils.getTitleFromUsers(selectedUsers);
+				var thisTabId = vsInterface.getTabId();
+				addTab('<img src="' + installFolder() + '/images/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-' + thisTabId);
 
 				//Create the message tab's HTML
 				var subjectDiv = createSubjectDiv(thisTabId);
@@ -24,9 +83,9 @@ var vsMessage = (function() {
 				var sendButton = createSendMessageButton(thisTabId);
 				var messageTab = '<h3>Message</h3><div width="100%"><div style="width:45%;display:inline-block;">' + subjectDiv + messageDiv + sendButton + '</div><div style="float:right;width:45%;display:inline-block;">' + recipientsDiv + attachmentDiv + '</div></div>';
 				jQuery('#message-tab-' + thisTabId).html(messageTab);
-				loadCLEditor('visualscience-message-input-' + thisTabId);
-				loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
-				loadUploadScripts('upload-button-' + thisTabId, function() {
+				vsUtils.loadCLEditor('visualscience-message-input-' + thisTabId);
+				vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
+				vsUtils.loadUploadScripts('upload-button-' + thisTabId, function() {
 					//addAttachments();
 				});
 			} else {
@@ -34,54 +93,17 @@ var vsMessage = (function() {
 			}
 		},
 		/*
-		 * The subject input for messages and conferences
-		 */
-		createSubjectDiv : function(thisTabId) {
-			return '<input type="text" name="visualscience-subject-input-' + thisTabId + '" id="visualscience-subject-input-' + thisTabId + '" style="width:98%;" placeholder="Subject" />';
-		},
-
-		/*
-		 * The div for the message
-		 */
-		createMessageDiv : function(thisTabId) {
-			return '<textarea name="visualscience-message-input-' + thisTabId + '" id="visualscience-message-input-' + thisTabId + '" style="width:100%;" rows="10" placeholder="Your message"></textarea>';
-		},
-		/*
-		 * The attachment div for messages and conferences
-		 */
-		createAttachmentsDiv : function(thisTabId) {
-			var content = '<div id="visualscience-message-attachments-div-show-' + thisTabId + '" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-' + thisTabId + '"></div> <div id="progress-upload-' + thisTabId + '" style="margin:5px;padding:5px;background-color:red;font-size:12px;display:none;" >Progress</div>';
-			return '<div id="visualscience-attachments-div-' + thisTabId + '" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">' + content + '</div>';
-		},
-		/*
-		 * The recipients div for messages and conferences
-		 */
-		createRecipientsDiv : function(thisTabId, selectedUsers, selectedUsersEmail) {
-			var content = '<div id="visualscience-recipient-div-content-' + thisTabId + '" style="width:100%;overflow-y:scroll;height:200px;">';
-			for (var i = 0; i < selectedUsers.length; i++) {
-				content += '<p id="visualscience-recipients-entry-' + thisTabId + '-' + i + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteRecipientToMessage(' + thisTabId + ', ' + i + ');" id="visualscience-message-close-cross-' + thisTabId + '-' + i + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:' + selectedUsersEmail[i] + '">' + selectedUsers[i] + '</a></p>';
-			}
-			content += '</div>';
-			return '<div id="visualscience-recipients-div-' + thisTabId + '" style="border:solid black 1px;display:inline-block;width:100%;">' + content + '<input type="button" style="margin-left:10px;margin-right:10px;" value="Add Recipient" id="visualscience-message-add-recipient-button-' + thisTabId + '" nbRecipients="' + selectedUsers.length + '" onClick="addRecipientForMessage(' + thisTabId + ');" /><input type="email" name="visualscience-message-add-recipient-email-' + thisTabId + '" id="visualscience-message-add-recipient-email-' + thisTabId + '" placeholder="Type an email" onKeyPress="if (event.keyCode == 13) addRecipientForMessage(' + thisTabId + ');" /></div>';
-		},
-		/*
-		 * The send button, only for messages
-		 */
-		createSendMessageButton : function(thisTabId) {
-			return '<div style="text-align:right;"><input type="button" onClick="sendVisualscienceMessage(' + thisTabId + ');" value="Send Message" id="visualscience-send-message-button-' + thisTabId + '" style="padding-right:15px;padding-left:15px;" /></div>';
-		},
-		/*
 		 * Get informations and send them to the server through ajax
 		 */
 		sendVisualscienceMessage : function(thisTabId) {
-			var mailURL = SendMailURL;
+			var mailURL = vsUtils.getSendMailURL();
 			jQuery('#visualscience-send-message-button-' + thisTabId).attr({
 				'value' : 'Sending Message... Please wait',
 				'disabled' : 'disabled'
 			});
 			var subjectVal = jQuery('#visualscience-subject-input-' + thisTabId).val();
 			var messageVal = jQuery('#visualscience-message-input-' + thisTabId).val();
-			var attachmentJson = getJsonOfAttachments(thisTabId);
+			var attachmentJson = vsUtils.getJsonOfAttachments(thisTabId);
 			var recipientsArray = getRecipientsOfMessage(thisTabId);
 			var flagAllDone = false;
 			if (recipientsArray.length < 1) {
@@ -164,11 +186,6 @@ var vsMessage = (function() {
 				alert('Please enter a valid email');
 			}
 		},
-		insertEmailIntoRecipientsDiv : function(thisTabId, email, nbRecipients) {
-			nbRecipients += 1;
-			var entryToAppend = '<p id="visualscience-recipients-entry-' + thisTabId + '-' + nbRecipients + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="deleteRecipientToMessage(' + thisTabId + ', ' + nbRecipients + ');" id="visualscience-message-close-cross-' + thisTabId + '-' + nbRecipients + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:' + email + '">' + email + '</a></p>';
-			jQuery('#visualscience-recipient-div-content-' + thisTabId).append(entryToAppend);
-		},
 		deleteRecipientToMessage : function(thisTabId, entryNb) {
 			jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).hide(350, function() {
 				jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).remove();
@@ -186,18 +203,6 @@ var vsMessage = (function() {
 				newTitle = jQuery('a[href="#message-tab-' + thisTabId + '"]').html().replace(oldTitle, newTitle);
 				jQuery('a[href="#message-tab-' + thisTabId + '"]').html(newTitle);
 			});
-		},
-		/*
-		 * Gets the name and email of every recipients of a message.
-		 */
-		getRecipientsOfMessage : function(thisTabId) {
-			var recipientsEmailAndName = new Array();
-			jQuery('p[id*="visualscience-recipients-entry-' + thisTabId + '"]').each(function(i) {
-				recipientsEmailAndName[i] = new Array(2);
-				recipientsEmailAndName[i][0] = jQuery(this).children(':nth-child(2)').text();
-				recipientsEmailAndName[i][1] = jQuery(this).children(':nth-child(2)').attr('href').substring(7);
-			});
-			return recipientsEmailAndName;
 		}
 	};
 

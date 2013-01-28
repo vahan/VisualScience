@@ -13,6 +13,14 @@ var vsInterface = (function() {
 
 	return {
 
+		getTabId : function() {
+			return tabId;
+		},
+
+		setTabId : function(newTabId) {
+			tabId = newTabId;
+		},
+
 		/*
 		 * This function is called when the user launches the search from the bar.
 		 * It will first check if the tabbed interface is loaded and load it if not.
