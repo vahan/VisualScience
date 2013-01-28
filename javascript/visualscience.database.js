@@ -8,11 +8,6 @@ var vsDatabase = (function() {
 	//Constant: Where to start the display of the LivingScience publications
 	firstPublicationForLivingScience = 0;
 
-	//This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
-	lsDB = new Array();
-	//The array containing the original result from LS. (as above, but won't be modified)
-	lsDBOriginal = new Array();
-
 	//Options for the NDDB database
 	optionsForNDDB = {
 		tags : {
@@ -20,10 +15,18 @@ var vsDatabase = (function() {
 			'start' : firstPublicationForLivingScience
 		}
 	};
-	//variable that contain every new NDDB.(the latest created)
-	db = new NDDB(optionsForNDDB);
 
 	return {
+		//This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
+		lsDB : new Array(),
+		//The array containing the original result from LS. (as above, but won't be modified)
+		lsDBOriginal : new Array(),
+		//variable that contain every new NDDB.(the latest created)
+		db : new NDDB(optionsForNDDB),
+
+		getOptionsForNDDB : function() {
+			return optionsForNDDB;
+		},
 		setParametersForLSDB : function(thisTabId) {
 			jQuery(lsDB[thisTabId].db).each(function(i) {
 				if (lsDB[thisTabId].db[i].authors && lsDB[thisTabId].db[i].authors[0] && lsDB[thisTabId].db[i].authors[0].name) {
