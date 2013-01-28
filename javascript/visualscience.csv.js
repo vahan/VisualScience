@@ -7,7 +7,7 @@ var vsCSV = (function() {
 		exportUsersCSV : function(idOfThisTab) {
 			//Some parameters for the communication with the PHP page:
 			var newLineCharacter = '[^-|-¼]' + Math.floor(Math.random() * 12);
-			var url = installFolder + 'includes/stringToCSV.php?text=';
+			var url = vsUtils.getCSVURL();
 			var finalTable = '';
 			var tableId = 'visualscience-user_list-result-' + idOfThisTab;
 			//Through the head of the table

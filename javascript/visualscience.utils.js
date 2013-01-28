@@ -1,5 +1,5 @@
 var vsUtils = (function() {
-	var rootFolder, UploadModuleURL, SendMailURL;
+	var rootFolder, UploadModuleURL, SendMailURL, csvURL;
 	//This is the root folder, where the installation has been done.
 	rootFolder = document.location.href.substring(0, document.location.href.substring(document.location.href.indexOf('http://') + 10).indexOf('/visualscience') + 10);
 	//This is the URL to the php upload module
@@ -8,11 +8,14 @@ var vsUtils = (function() {
 	SendMailURL = rootFolder + '/visualscience/mail/';
 	//This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
 	//var installFolder = 'sites/all/modules/visualscience/';
-
+	csvURL = installFolder + 'includes/stringToCSV.php?text=';
 	//This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 	var dialogNumber;
 
 	return {
+		getCSVURL: function() {
+			return csvURL;
+		},
 		getSendMailURL: function () {
 			return SendMailURL;
 		},
