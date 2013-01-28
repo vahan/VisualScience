@@ -363,7 +363,9 @@ function visualscience_page($clear = true) {
   
   variable_set('visualscience_current_tab', 'user_list');
   $output = "<div class='visualscience-container' id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
-  $output .= drupal_render(drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]));
+  // must declare a variable: otherwise get error "Strict warning: Only variables should be passed by reference"
+  $form = drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]);
+  $output .= drupal_render($form);
   $list = variable_get('visualscience_list');
 //  if (isset($_GET['search'])) {
 //  	$output .= "<script type='text/javascript' class='.remove_after_loaded'>openDialog(".$_SESSION["searchNumber"].")</script>";

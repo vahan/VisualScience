@@ -48,10 +48,7 @@ var vsLivingscience = (function() {
 			lsDBOriginal[thisTabId] = db;
 			generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
 			jQuery('a[href="#livingscience-tab-' + thisTabId + '"]').bind('click', function() {
-				setTimeout(function() {
-					generateLivingScienceFromDB(lsDB[thisTabId], idDivUnderTab, thisTabId);
-					//actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
-				}, 1000);
+				actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
 			});
 		},
 		/*
@@ -79,6 +76,10 @@ var vsLivingscience = (function() {
 		 * Actualizes the display of a LivingScience result.
 		 */
 		actualizeLivingScienceDisplay : function(database, thisTabId) {
+			livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+ 	 		lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+ 			lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
+			lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
 			var start = database.resolveTag('start');
 			var howMany = database.resolveTag('howMany');
 			generatePublicationsDiv(database, start, howMany, 'ls-list-' + thisTabId);
