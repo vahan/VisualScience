@@ -8,6 +8,7 @@ var vsLscomparison = (function() {
 		/*
 		 * This function creates a new tab, where two LS search tabs are compared.
 		 */
+		//TODO: Restart from here the refactorisation:
 		compareLSTabsTogether : function(thisTabId) {
 			var selectedTabId = parseInt(jQuery('#comparison-ls-result-' + thisTabId).val());
 			var title = 'Comparison Interface';
