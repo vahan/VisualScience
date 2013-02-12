@@ -1,7 +1,5 @@
 var vsMessage = (function() {
-	var uploadDB, createSubjectDiv, createMessageDiv, createAttachmentsDiv, createRecipientsDiv, createSendMessageButton;
-	//This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
-	uploadDB = new Array();
+	var createSubjectDiv, createMessageDiv, createAttachmentsDiv, createRecipientsDiv, createSendMessageButton;
 
 	/*
 	 * The subject input for messages and conferences

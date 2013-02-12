@@ -1,7 +1,9 @@
 var vsDatabase = (function() {
 
-	var numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
+	var uploadDB, numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
 
+	//This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
+	uploadDB = new Array();
 	//Constant: The number of publications displayed by default in LS tab
 	numberOfPublicationsForLivingScience = 10;
 
@@ -17,6 +19,12 @@ var vsDatabase = (function() {
 	};
 
 	return {
+		getUploadDB : function() {
+			return uploadDB;
+		},
+		setUploadDB: function (index, value) {
+			uploadDB[index] = value;
+		},
 		getFirstPublicationForLivingScience : function() {
 			return firstPublicationForLivingScience;
 		},

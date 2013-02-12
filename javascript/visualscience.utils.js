@@ -13,13 +13,13 @@ var vsUtils = (function() {
 	var dialogNumber;
 
 	return {
-		getCSVURL: function() {
+		getCSVURL : function() {
 			return csvURL;
 		},
-		getSendMailURL: function () {
+		getSendMailURL : function() {
 			return SendMailURL;
 		},
-		
+
 		/*
 		 * Automatically turns a table into a sortable table.(jQuery Plugin: Tablesorter 2.0)
 		 * the parameter idOfTable is the actual id of the table to be sorted.
@@ -43,8 +43,8 @@ var vsUtils = (function() {
 			var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
 			var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
 			var content = '';
-			if (!uploadDB[tabId]) {
-				uploadDB[tabId] = new Array();
+			if (!vsDatabase.getUploadDB()[tabId]) {
+				vsDatabase.setUploadDB(tabId, new Array());
 				jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
 					clearForm : true,
 					beforeSend : function() {
@@ -102,9 +102,9 @@ var vsUtils = (function() {
 
 		loadCLEditor : function(areaId) {
 			if (document.createStyleSheet) {
-				document.createStyleSheet('style.css');
+				document.createStyleSheet(installFolder + 'css/visualscience.jquery.cleditor.css');
 			} else {
-				jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+				jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "css/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
 			}
 			jQuery.getScript(installFolder + 'visualscience.jquery.cleditor.min.js', function() {
 				jQuery('#' + areaId).cleditor({
@@ -177,7 +177,7 @@ var vsUtils = (function() {
 		 * fieldContent is the content of the th the column should have.
 		 */
 		getThWithContent : function(tableId, fieldContent) {
-			for (var i = 0; i <= countColumnsInTable(tableId); i++) {
+			for (var i = 0; i <= vsUtils.countColumnsInTable(tableId); i++) {
 				if (jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text() == fieldContent) {
 					return i;
 				}
