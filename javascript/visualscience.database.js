@@ -17,6 +17,12 @@ var vsDatabase = (function() {
 	};
 
 	return {
+		getFirstPublicationForLivingScience : function() {
+			return firstPublicationForLivingScience;
+		},
+		getNumberOfPublicationsForLivingScience : function() {
+			return numberOfPublicationsForLivingScience;
+		},
 		//This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
 		lsDB : new Array(),
 		//The array containing the original result from LS. (as above, but won't be modified)
