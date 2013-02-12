@@ -1,15 +1,14 @@
 var vsLivingscience = (function() {
+	var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
 	//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
 	//API instance to make search
-	var livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
 	//API instance to generate list
-	var lslist
-	new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
 	//API instance to generate map
-	var lsmap
-	new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
+	lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
 	//API instance to generate relations
-	var lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
+	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
 
 	/*
 	 * This function is the callback when a livingscience search is done.
@@ -17,7 +16,7 @@ var vsLivingscience = (function() {
 	 * (More infos: https://github.com/nodeGame/NDDB)
 	 * Then, thanks to this database, we generate the nice table in the div under the tab.
 	 */
-	function onLivingScienceResults(listOfPublications, idDivUnderTab, thisTabId) {
+	onLivingScienceResults = function (listOfPublications, idDivUnderTab, thisTabId) {
 		jQuery('#' + idDivUnderTab).empty();
 		vsDatabase.db = new NDDB(vsDatabase.getOptionsForNDDB());
 		vsDatabase.db.importDB(lslist.getPubs(listOfPublications));
@@ -32,7 +31,7 @@ var vsLivingscience = (function() {
 	/*
 	 * This function sets the layout for the maps and relations div
 	 */
-	function setWidthForMapsAndRelations(listId, mapId, relationsId) {
+	setWidthForMapsAndRelations = function (listId, mapId, relationsId) {
 		var setWidth = jQuery('#' + tabbedInterface).width() / 2;
 		setWidth -= setWidth * 1 / 10;
 		jQuery('#' + mapId + ', #' + relationsId).css({
