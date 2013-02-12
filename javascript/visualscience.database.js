@@ -123,7 +123,7 @@ var vsDatabase = (function() {
 			});
 			authors.sort();
 			jQuery.each(authors, function(i, el) {
-				html += '<li><a href="#" onclick="createTabLivingScience(undefined, [\'' + el + '\'])">' + el + '</a></li>';
+				html += '<li><a href="#" onclick="vsLivingScience.createTabLivingScience(undefined, [\'' + el + '\'])">' + el + '</a></li>';
 			});
 			html += '</ul></div>';
 			var nbOfCoauthors = authors.length;

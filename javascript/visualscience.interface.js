@@ -1,6 +1,6 @@
 var vsInterface = (function() {
 
-	var tabbedInterfaceExists, tabbedInterface, tabId;
+	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface;
 
 	//This variable checks if the whole tabbed interface has been created yet.
 	tabbedInterfaceExists = false;
@@ -10,6 +10,20 @@ var vsInterface = (function() {
 
 	//Variable to differentiate each tab from each other
 	tabId = 0;
+
+	/*
+	 * This function creates a tabbed-interface, out of the variable tabbedInterface.
+	 * Firstly, it however checks if the interface does not already exists, because otherwise this could create bugs.
+	 */
+	createTabbedInterface = function(dialogNumber) {
+		if (!tabbedInterfaceExists) {
+			tabbedInterfaceExists = true;
+			jQuery('#container-' + dialogNumber + '-0').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
+			jQuery('#' + tabbedInterface).tabs({
+				cache : true
+			});
+		}
+	};
 
 	return {
 
@@ -32,14 +46,14 @@ var vsInterface = (function() {
 				createTabbedInterface(dialogNumber);
 				var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 				title = (title == '' ? 'All Users' : title);
-				var idOfThisTab = tabId;
-				addTab('<img src="' + installFolder + '../images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
+				var idOfThisTab = vsInterface.getTabId();
+				vsInterface.addTab('<img src="' + installFolder + '../images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
 				//Insert the table result in a new div
-				var content = createUserSearchResult(dialogNumber, idOfThisTab);
+				var content = vsSearch.createUserSearchResult(dialogNumber, idOfThisTab);
 				jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-				makeActionBarMoveable(idOfThisTab);
-				makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-				makeRowsSelectable();
+				vsSearch.makeActionBarMoveable(idOfThisTab);
+				vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+				vsSearch.makeRowsSelectable();
 			}, 1);
 		},
 		/*
@@ -52,9 +66,9 @@ var vsInterface = (function() {
 			if (name.length > nameMaxLength) {
 				name = name.substring(0, nameMaxLength) + '... ';
 			}
-			tabId++;
+			vsInterface.setTabId(vsInterface.getTabId()++);
 			var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-			jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="closeTab(\'' + url + '\')">X</span>');
+			jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="vsInterface.closeTab(\'' + url + '\')">X</span>');
 			jQuery('#' + tabbedInterface).tabs('select', nbTabs);
 			jQuery('#' + tabbedInterface + ' > .ui-tabs-panel').css({
 				'display' : 'inline-block',
@@ -70,21 +84,7 @@ var vsInterface = (function() {
 			jQuery('#' + tabbedInterface).tabs('remove', tabIndex);
 			//Now we want to delete the database in the array of NDDB
 			var tabNb = parseInt(tabIndex.charAt(tabIndex.length - 1));
-			lsDB[tabNb] = undefined;
-		},
-
-		/*
-		 * This function creates a tabbed-interface, out of the variable tabbedInterface.
-		 * Firstly, it however checks if the interface does not already exists, because otherwise this could create bugs.
-		 */
-		createTabbedInterface : function(dialogNumber) {
-			if (!tabbedInterfaceExists) {
-				tabbedInterfaceExists = true;
-				jQuery('#container-' + dialogNumber + '-0').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
-				jQuery('#' + tabbedInterface).tabs({
-					cache : true
-				});
-			}
+			vsDatabase.lsDB[tabNb] = undefined;
 		}
 	};
 
