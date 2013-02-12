@@ -9,8 +9,8 @@ var vsLscomparison = (function() {
 			//Databases to work out
 			db : [idFirstDB, idSecondDB],
 			//Fields of the table. 0:fieldname, 1:function to fill field.
-			fields : [['N° Publications', getNbPublicationsOfLSDB], ['Journals', getListJournalsFromLSDB], ['Co-Authors', getListCoauthorsFromLSDB], ['Period of activity', getPeriodActivityFromLSDB], ['Top 3 Publications', getFamousPublicationFromLSDB]]
-		}
+			fields : [['N° Publications', vsDatabase.getNbPublicationsOfLSDB], ['Journals', vsDatabase.getListJournalsFromLSDB], ['Co-Authors', vsDatabase.getListCoauthorsFromLSDB], ['Period of activity', vsDatabase.getPeriodActivityFromLSDB], ['Top 3 Publications', vsDatabase.getFamousPublicationFromLSDB]]
+		};
 
 		var finalTable = getComparisonTableStatistics(idOfThisTab, objectOfStatistics);
 		jQuery('#ls-compare-statistics-' + idOfThisTab).html('<h3>Statistics</h3>' + finalTable);
