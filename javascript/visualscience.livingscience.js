@@ -16,7 +16,7 @@ var vsLivingscience = (function() {
 	 * (More infos: https://github.com/nodeGame/NDDB)
 	 * Then, thanks to this database, we generate the nice table in the div under the tab.
 	 */
-	onLivingScienceResults = function (listOfPublications, idDivUnderTab, thisTabId) {
+	onLivingScienceResults = function(listOfPublications, idDivUnderTab, thisTabId) {
 		jQuery('#' + idDivUnderTab).empty();
 		vsDatabase.db = new NDDB(vsDatabase.getOptionsForNDDB());
 		vsDatabase.db.importDB(lslist.getPubs(listOfPublications));
@@ -27,11 +27,10 @@ var vsLivingscience = (function() {
 			vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 		});
 	}
-
 	/*
 	 * This function sets the layout for the maps and relations div
 	 */
-	setWidthForMapsAndRelations = function (listId, mapId, relationsId) {
+	setWidthForMapsAndRelations = function(listId, mapId, relationsId) {
 		var setWidth = jQuery('#' + tabbedInterface).width() / 2;
 		setWidth -= setWidth * 1 / 10;
 		jQuery('#' + mapId + ', #' + relationsId).css({
