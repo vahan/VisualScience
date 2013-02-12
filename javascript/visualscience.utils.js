@@ -131,7 +131,7 @@ var vsUtils = (function() {
 					jQuery('#' + location).children().children(':not(#visualscience-upload-form)').hide();
 					jQuery('#' + location + ' #edit-submit').hide();
 					jQuery('#' + location + ' #edit-visualscience-upload-file').attr({
-						'onChange' : 'uploadSubmittedFiles(\'' + thisTabId + '\');',
+						'onChange' : 'vsUtils.uploadSubmittedFiles(\'' + thisTabId + '\');',
 						'nbFiles' : '0',
 						'size' : '18'
 					}).css({
