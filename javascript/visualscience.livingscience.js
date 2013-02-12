@@ -26,7 +26,7 @@ var vsLivingscience = (function() {
 		jQuery('a[href="#livingscience-tab-' + thisTabId + '"]').bind('click', function() {
 			vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 		});
-	}
+	};
 	/*
 	 * This function sets the layout for the maps and relations div
 	 */
@@ -40,7 +40,7 @@ var vsLivingscience = (function() {
 			margin : '0px',
 			padding : '0px'
 		});
-	}
+	};
 
 	return {
 		/*
