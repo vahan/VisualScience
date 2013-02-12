@@ -30,10 +30,10 @@ var vsSearch = (function() {
 		 */
 		createActionBar : function(idOfThisTab) {
 			var finalDiv = '<div align="center" style="max-width:25%;" class="action-bar-container" id="action-bar-container' + idOfThisTab + '"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
-			var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="createTabSendMessage(' + idOfThisTab + ');"  /><br />';
-			var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="exportUsersCSV(' + idOfThisTab + ');"  /><br />';
-			var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="createTabLivingScience(' + idOfThisTab + ');"  /><br />';
-			var conference = '<input class="form-submit" value="Conference" type="button" onClick="createTabConference(' + idOfThisTab + ');" /><br />';
+			var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="vsMessage.createTabSendMessage(' + idOfThisTab + ');"  /><br />';
+			var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="vsCSV.exportUsersCSV(' + idOfThisTab + ');"  /><br />';
+			var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="vsLivingscience.createTabLivingScience(' + idOfThisTab + ');"  /><br />';
+			var conference = '<input class="form-submit" value="Conference" type="button" onClick="vsConference.createTabConference(' + idOfThisTab + ');" /><br />';
 			finalDiv += sendMessage + csvExport + livingscience + conference + '</div></div>';
 			return finalDiv;
 		},
@@ -143,7 +143,7 @@ var vsSearch = (function() {
 			var divOptions = '<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">';
 			jQuery('#' + tableId + ' > thead > tr > th').each(function(i) {
 				if (jQuery(this).text() != '') {
-					divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" class="option"><input type="checkbox" onClick="toggleColNbFromTable(\'visualscience-user_list-result-' + idOfThisTab + '\',' + i + ');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" id="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" /> ' + jQuery(this).text() + ' </label></div>';
+					divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + idOfThisTab + '\',' + i + ');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" id="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" /> ' + jQuery(this).text() + ' </label></div>';
 				}
 			});
 			divOptions += '</div></div></fieldset>';
@@ -158,7 +158,7 @@ var vsSearch = (function() {
 			jQuery('#user_list-list-' + dialogNumber + ' > thead > tr > th').each(function() {
 				//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
 				if (jQuery(this).html().indexOf('form-checkbox') != -1) {
-					header += '<th style="min-width:35px;" onClick="selectAllBoxes(' + idOfThisTab + ')"><input type="checkbox" id="user-list_master_checkbox-' + idOfThisTab + '" class="form-checkbox" title="Select all rows in this table" onClick="selectAllBoxes(' + idOfThisTab + ')" /></th>';
+					header += '<th style="min-width:35px;" onClick="vsSearch.selectAllBoxes(' + idOfThisTab + ')"><input type="checkbox" id="user-list_master_checkbox-' + idOfThisTab + '" class="form-checkbox" title="Select all rows in this table" onClick="vsSearch.selectAllBoxes(' + idOfThisTab + ')" /></th>';
 				} else {
 					header += '<th style="min-width:35px;">' + jQuery(this).html() + '</th>';
 				}
