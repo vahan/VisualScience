@@ -23,7 +23,7 @@ var vsDatabase = (function() {
 		getNumberOfPublicationsForLivingScience : function() {
 			return numberOfPublicationsForLivingScience;
 		},
-		//This is the array containing all the databases result from LivingScience (modified throught time by search, display, etc...)
+		//This is the array containing all the databases result from LivingScience (modified through time by search, display, etc...)
 		lsDB : new Array(),
 		//The array containing the original result from LS. (as above, but won't be modified)
 		lsDBOriginal : new Array(),
@@ -34,13 +34,13 @@ var vsDatabase = (function() {
 			return optionsForNDDB;
 		},
 		setParametersForLSDB : function(thisTabId) {
-			jQuery(lsDB[thisTabId].db).each(function(i) {
-				if (lsDB[thisTabId].db[i].authors && lsDB[thisTabId].db[i].authors[0] && lsDB[thisTabId].db[i].authors[0].name) {
-					lsDB[thisTabId].db[i].author = lsDB[thisTabId].db[i].authors[0].name;
+			jQuery(vsDatabase.lsDB[thisTabId].db).each(function(i) {
+				if (vsDatabase.lsDB[thisTabId].db[i].authors && vsDatabase.lsDB[thisTabId].db[i].authors[0] && vsDatabase.lsDB[thisTabId].db[i].authors[0].name) {
+					vsDatabase.lsDB[thisTabId].db[i].author = vsDatabase.lsDB[thisTabId].db[i].authors[0].name;
 				} else {
-					lsDB[thisTabId].db[i].author = 'Unknown';
-					lsDB[thisTabId].db[i].authors = new Array();
-					lsDB[thisTabId].db[i].authors[0] = {
+					vsDatabase.lsDB[thisTabId].db[i].author = 'Unknown';
+					vsDatabase.lsDB[thisTabId].db[i].authors = new Array();
+					vsDatabase.lsDB[thisTabId].db[i].authors[0] = {
 						name : 'Unknown'
 					}
 				}
@@ -48,44 +48,44 @@ var vsDatabase = (function() {
 		},
 		searchAndSortNDDB : function(thisTabId) {
 			var wordToSearch = jQuery('#search-ls-result-' + thisTabId).val().toLowerCase();
-			var howMany = lsDB[thisTabId].resolveTag('howMany');
-			var start = lsDB[thisTabId].resolveTag('start')
+			var howMany = vsDatabase.lsDB[thisTabId].resolveTag('howMany');
+			var start = vsDatabase.lsDB[thisTabId].resolveTag('start')
 			var optionsNDDB = {
 				tags : {
 					'start' : start,
 					'howMany' : howMany
 				}
 			};
-			lsDB[thisTabId] = new NDDB(optionsNDDB);
-			for (var i = 0; i <= lsDBOriginal[thisTabId].length - 1; i++) {
-				var authors = lsDBOriginal[thisTabId].db[i].author && lsDBOriginal[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
-				var title = lsDBOriginal[thisTabId].db[i].title && lsDBOriginal[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
-				var year = lsDBOriginal[thisTabId].db[i].year && lsDBOriginal[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
-				var journal = lsDBOriginal[thisTabId].db[i].journal && lsDBOriginal[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1;
+			vsDatabase.lsDB[thisTabId] = new NDDB(optionsNDDB);
+			for (var i = 0; i <= vsDatabase.lsDBOriginal[thisTabId].length - 1; i++) {
+				var authors = vsDatabase.lsDBOriginal[thisTabId].db[i].author && vsDatabase.lsDBOriginal[thisTabId].db[i].author.toLowerCase().indexOf(wordToSearch) != -1;
+				var title = vsDatabase.lsDBOriginal[thisTabId].db[i].title && vsDatabase.lsDBOriginal[thisTabId].db[i].title.toLowerCase().indexOf(wordToSearch) != -1;
+				var year = vsDatabase.lsDBOriginal[thisTabId].db[i].year && vsDatabase.lsDBOriginal[thisTabId].db[i].year.toString().toLowerCase().indexOf(wordToSearch) != -1;
+				var journal = vsDatabase.lsDBOriginal[thisTabId].db[i].journal && vsDatabase.lsDBOriginal[thisTabId].db[i].journal.toLowerCase().indexOf(wordToSearch) != -1;
 
 				if (authors || title || year || journal) {
-					lsDB[thisTabId].insert(lsDBOriginal[thisTabId].db[i]);
+					vsDatabase.lsDB[thisTabId].insert(vsDatabase.lsDBOriginal[thisTabId].db[i]);
 				}
 			}
 
 			var wordResult = 'Result';
-			if (lsDB[thisTabId].length == 0) {
-				actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+			if (vsDatabase.lsDB[thisTabId].length == 0) {
+				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 				jQuery('#ls-list-' + thisTabId).html('<p align="center"><strong>There is no result for your search.</strong></p>');
-			} else if (lsDB[thisTabId].length == 1) {
-				actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+			} else if (vsDatabase.lsDB[thisTabId].length == 1) {
+				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 			} else {
-				actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 				wordResult = 'Results';
 			}
-			jQuery('#search-ls-nb-result-' + thisTabId).html(lsDB[thisTabId].length + ' ' + wordResult);
+			jQuery('#search-ls-nb-result-' + thisTabId).html(vsDatabase.lsDB[thisTabId].length + ' ' + wordResult);
 		},
 		getNbPublicationsOfLSDB : function(idOfDB) {
-			return lsDBOriginal[idOfDB].count();
+			return vsDatabase.lsDBOriginal[idOfDB].count();
 		},
 
 		getListJournalsFromLSDB : function(idOfDB) {
-			var journalsAll = lsDBOriginal[idOfDB].fetchArray('journal');
+			var journalsAll = vsDatabase.lsDBOriginal[idOfDB].fetchArray('journal');
 			journalsAll.sort();
 			var journals = new Array();
 			var html = '<div style="overflow-y:scroll;max-width:250px;max-height:250px;"><ul>';
@@ -102,21 +102,21 @@ var vsDatabase = (function() {
 		getListCoauthorsFromLSDB : function(idOfDB) {
 			var allAuthors = new Array();
 			var authors = new Array();
-			authorName = getLSTabName(idOfDB);
+			authorName = vsDatabase.getLSTabName(idOfDB);
 			allAuthors.push(authorName);
-			allAuthors.push(getInitialLastname(authorName));
-			allAuthors.push(getLastNameCommaFirstName(authorName));
+			allAuthors.push(vsUtils.getInitialLastname(authorName));
+			allAuthors.push(vsUtils.getLastNameCommaFirstName(authorName));
 			allAuthors.push(authorName + '...');
 			allAuthors.push(authorName.substring(0, authorName.length - 3));
 			var html = '<div style="overflow-y:scroll;max-width:250px;max-height:250px;"><ul>';
-			jQuery.each(lsDBOriginal[idOfDB].db, function(i, el) {
+			jQuery.each(vsDatabase.lsDBOriginal[idOfDB].db, function(i, el) {
 				jQuery.each(el.authors, function(j, element) {
 					if (jQuery.inArray(element.name, allAuthors) == -1) {
 						allAuthors.push(element.name);
 						allAuthors.push(element.name.substring(0, element.name.length - 3));
 						allAuthors.push(element.name + '...');
-						allAuthors.push(getInitialLastname(element.name));
-						allAuthors.push(getLastNameCommaFirstName(element.name));
+						allAuthors.push(vsUtils.getInitialLastname(element.name));
+						allAuthors.push(vsUtils.getLastNameCommaFirstName(element.name));
 						authors.push(element.name);
 					}
 				});
@@ -131,14 +131,14 @@ var vsDatabase = (function() {
 			return '<p><strong>' + nbOfCoauthors + ' Co-authors</strong></p>' + html;
 		},
 		getPeriodActivityFromLSDB : function(idOfDB) {
-			var min = lsDBOriginal[idOfDB].min('year');
-			var max = lsDBOriginal[idOfDB].max('year');
+			var min = vsDatabase.lsDBOriginal[idOfDB].min('year');
+			var max = vsDatabase.lsDBOriginal[idOfDB].max('year');
 			return min + ' - ' + max;
 		},
 		getFamousPublicationFromLSDB : function(idOfDB) {
 			var html = '';
 			for ( i = 0; i < 3; i++) {
-				html += '<p style="min-width:250px;"><a href="' + lsDBOriginal[idOfDB].db[i].url + '" target="_blank">' + lsDBOriginal[idOfDB].db[i].title + '</a></p>';
+				html += '<p style="min-width:250px;"><a href="' + vsDatabase.lsDBOriginal[idOfDB].db[i].url + '" target="_blank">' + vsDatabase.lsDBOriginal[idOfDB].db[i].title + '</a></p>';
 			}
 			return html;
 		},
@@ -151,37 +151,37 @@ var vsDatabase = (function() {
 			var orderSetting = jQuery('#sorting-ls-result-' + thisTabId).val();
 			switch (orderSetting) {
 				case 'increasing':
-					lsDB[thisTabId].sort('year');
+					vsDatabase.lsDB[thisTabId].sort('year');
 					break;
 				case 'decreasing':
-					lsDB[thisTabId].sort('year');
-					lsDB[thisTabId].reverse();
+					vsDatabase.lsDB[thisTabId].sort('year');
+					vsDatabase.lsDB[thisTabId].reverse();
 					break;
 				case 'authors':
-					lsDB[thisTabId].sort('author');
+					vsDatabase.lsDB[thisTabId].sort('author');
 					break;
 				case 'random':
-					lsDB[thisTabId].shuffle();
+					vsDatabase.lsDB[thisTabId].shuffle();
 					break;
 				case 'own':
-					lsDB[thisTabId].sort('livingscienceID');
+					vsDatabase.lsDB[thisTabId].sort('livingscienceID');
 					break;
 				default:
-					lsDB[thisTabId].sort(orderSetting);
+					vsDatabase.lsDB[thisTabId].sort(orderSetting);
 					break;
 			}
-			actualizeLivingScienceDisplay(lsDB[thisTabId], thisTabId);
+			vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 		},
 		mergeLSDB : function(idFirstDB, idSecondDB) {
 			var newDB = new NDDB(optionsForNDDB);
-			var length = lsDBOriginal[idFirstDB].length > lsDBOriginal[idSecondDB].length ? lsDBOriginal[idFirstDB].length : lsDBOriginal[idSecondDB].length;
-			var biggerDB = lsDBOriginal[idFirstDB].length > lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
+			var length = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? vsDatabase.lsDBOriginal[idFirstDB].length : vsDatabase.lsDBOriginal[idSecondDB].length;
+			var biggerDB = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
 			for (var i = 0; i < length; i++) {
 				newDB.insert(lsDBOriginal[idFirstDB].db[i]);
 				newDB.insert(lsDBOriginal[idSecondDB].db[i]);
 			}
-			for (var i = length; i < lsDBOriginal[biggerDB].length; i++) {
-				newDB.insert(lsDBOriginal[biggerDB].db[i]);
+			for (var i = length; i < vsDatabase.lsDBOriginal[biggerDB].length; i++) {
+				newDB.insert(vsDatabase.lsDBOriginal[biggerDB].db[i]);
 			}
 			return newDB;
 		}
