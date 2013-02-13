@@ -186,8 +186,8 @@ var vsDatabase = (function() {
 			var length = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? vsDatabase.lsDBOriginal[idFirstDB].length : vsDatabase.lsDBOriginal[idSecondDB].length;
 			var biggerDB = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
 			for (var i = 0; i < length; i++) {
-				newDB.insert(lsDBOriginal[idFirstDB].db[i]);
-				newDB.insert(lsDBOriginal[idSecondDB].db[i]);
+				newDB.insert(vsDatabase.lsDBOriginal[idFirstDB].db[i]);
+				newDB.insert(vsDatabase.lsDBOriginal[idSecondDB].db[i]);
 			}
 			for (var i = length; i < vsDatabase.lsDBOriginal[biggerDB].length; i++) {
 				newDB.insert(vsDatabase.lsDBOriginal[biggerDB].db[i]);
