@@ -15,33 +15,37 @@ var vsInterface = (function() {
 	 * This function creates a tabbed-interface, out of the variable tabbedInterface.
 	 * Firstly, it however checks if the interface does not already exists, because otherwise this could create bugs.
 	 */
-	createTabbedInterface = function(dialogNumber) {
-		if (!tabbedInterfaceExists) {
-			tabbedInterfaceExists = true;
-			jQuery('#container-' + dialogNumber + '-0').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
-			jQuery('#' + tabbedInterface).tabs({
-				cache : true
-			});
-		}
-	};
+	 createTabbedInterface = function(dialogNumber) {
+	 	if (!tabbedInterfaceExists) {
+	 		tabbedInterfaceExists = true;
+	 		jQuery('#container-' + dialogNumber + '-0').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
+	 		jQuery('#' + tabbedInterface).tabs({
+	 			cache : true
+	 		});
+	 	}
+	 };
 
-	return {
+	 return {
 
-		getTabId : function() {
-			return tabId;
-		},
+	 	getTabbedInterface: function (){
+	 		return tabbedInterface;
+	 	},
 
-		setTabId : function(newTabId) {
-			tabId = newTabId;
-		},
+	 	getTabId : function() {
+	 		return tabId;
+	 	},
+
+	 	setTabId : function(newTabId) {
+	 		tabId = newTabId;
+	 	},
 
 		/*
 		 * This function is called when the user launches the search from the bar.
 		 * It will first check if the tabbed interface is loaded and load it if not.
 		 * Then it adds a new tab to the interface, with the result of the search.
 		 */
-		openUserListTab : function(dialogNumber_) {
-			dialogNumber = dialogNumber_;
+		 openUserListTab : function(dialogNumber_) {
+		 	dialogNumber = dialogNumber_;
 			setTimeout(function() {//(Bad style) The tab creation should be delayed, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
 				createTabbedInterface(dialogNumber);
 				var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
@@ -61,27 +65,27 @@ var vsInterface = (function() {
 		 * The url parameter should be a local url and it can contain a fragment identifier(#something)
 		 * The name parameter is the name you want the tab to have.
 		 */
-		addTab : function(icon, name, url) {
-			var nameMaxLength = 25;
-			if (name.length > nameMaxLength) {
-				name = name.substring(0, nameMaxLength) + '... ';
-			}
-			vsInterface.setTabId(vsInterface.getTabId()+1);
-			var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-			jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="vsInterface.closeTab(\'' + url + '\')">X</span>');
-			jQuery('#' + tabbedInterface).tabs('select', nbTabs);
-			jQuery('#' + tabbedInterface + ' > .ui-tabs-panel').css({
-				'display' : 'inline-block',
-				'width' : '95.4%',
-				'min-height' : '300px'
-			});
-		},
+		 addTab : function(icon, name, url) {
+		 	var nameMaxLength = 25;
+		 	if (name.length > nameMaxLength) {
+		 		name = name.substring(0, nameMaxLength) + '... ';
+		 	}
+		 	vsInterface.setTabId(vsInterface.getTabId()+1);
+		 	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
+		 	jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="vsInterface.closeTab(\'' + url + '\')">X</span>');
+		 	jQuery('#' + tabbedInterface).tabs('select', nbTabs);
+		 	jQuery('#' + tabbedInterface + ' > .ui-tabs-panel').css({
+		 		'display' : 'inline-block',
+		 		'width' : '95.4%',
+		 		'min-height' : '300px'
+		 	});
+		 },
 		/*
 		 * This function closes the tab indicated by tabIndex.
 		 * TabIndex can either be the zero-position of the tab, or the href parameter.
 		 */
-		closeTab : function(tabIndex) {
-			jQuery('#' + tabbedInterface).tabs('remove', tabIndex);
+		 closeTab : function(tabIndex) {
+		 	jQuery('#' + tabbedInterface).tabs('remove', tabIndex);
 			//Now we want to delete the database in the array of NDDB
 			var tabNb = parseInt(tabIndex.charAt(tabIndex.length - 1));
 			vsDatabase.lsDB[tabNb] = undefined;

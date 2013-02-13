@@ -1,5 +1,8 @@
-var vsLivingscience = (function() {
-	var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
+var vsLivingscience;
+// We have to wait until the livingscience.nocache.js file is loaded.
+jQuery(window).load(function() {
+	vsLivingscience = (function() {
+		var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
 	//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
 	//API instance to make search
 	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
@@ -22,7 +25,7 @@ var vsLivingscience = (function() {
 	 	vsDatabase.db.importDB(lslist.getPubs(listOfPublications));
 	 	vsDatabase.lsDB[thisTabId] = vsDatabase.db;
 	 	vsDatabase.lsDBOriginal[thisTabId] = vsDatabase.db;
-	 	generateLivingScienceFromDB(vsDatabase.lsDB[thisTabId], idDivUnderTab, thisTabId);
+	 	vsLivingscience.generateLivingScienceFromDB(vsDatabase.lsDB[thisTabId], idDivUnderTab, thisTabId);
 	 	jQuery('a[href="#livingscience-tab-' + thisTabId + '"]').bind('click', function() {
 	 		vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 	 	});
@@ -31,7 +34,7 @@ var vsLivingscience = (function() {
 	 * This function sets the layout for the maps and relations div
 	 */
 	 setWidthForMapsAndRelations = function(listId, mapId, relationsId) {
-	 	var setWidth = jQuery('#' + tabbedInterface).width() / 2;
+	 	var setWidth = jQuery('#' + vsInterface.getTabbedInterface()).width() / 2;
 	 	setWidth -= setWidth * 1 / 10;
 	 	jQuery('#' + mapId + ', #' + relationsId).css({
 	 		width : setWidth,
@@ -112,8 +115,8 @@ var vsLivingscience = (function() {
 		 	}
 		 	var options = {
 		 		tags : {
-		 			'howMany' : numberOfPublications,
-		 			'start' : firstPublicationForLivingScience
+		 			'howMany' : numberOfPublications-1,
+		 			'start' : vsDatabase.getFirstPublicationForLivingScience()
 		 		}
 		 	};
 		 	vsDatabase.lsDB[thisTabId].init(options, vsDatabase.lsDB[thisTabId]);
@@ -171,3 +174,4 @@ var vsLivingscience = (function() {
 		};
 
 	})();
+});

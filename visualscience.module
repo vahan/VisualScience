@@ -354,19 +354,19 @@ function visualscience_page($clear = true) {
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.jquery.tablesorter.js');
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.tablesorter.css');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.handlebars.js');
-  
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
+  
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.livingscience.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.message.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.csv.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.userlist.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.lscomparison.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.conference.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.livingscience.js');
 
   if (!isset($_SESSION["searchNumber"])) {
   	$_SESSION["searchNumber"] = 0;

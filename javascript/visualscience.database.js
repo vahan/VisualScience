@@ -19,6 +19,7 @@ var vsDatabase = (function() {
 	};
 
 	return {
+
 		getUploadDB : function() {
 			return uploadDB;
 		},
@@ -110,7 +111,7 @@ var vsDatabase = (function() {
 		getListCoauthorsFromLSDB : function(idOfDB) {
 			var allAuthors = new Array();
 			var authors = new Array();
-			authorName = vsDatabase.getLSTabName(idOfDB);
+			authorName = vsLivingscience.getLSTabName(idOfDB);
 			allAuthors.push(authorName);
 			allAuthors.push(vsUtils.getInitialLastname(authorName));
 			allAuthors.push(vsUtils.getLastNameCommaFirstName(authorName));

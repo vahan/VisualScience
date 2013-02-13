@@ -14,7 +14,7 @@ var vsLscomparison = (function() {
 
 		var finalTable = getComparisonTableStatistics(idOfThisTab, objectOfStatistics);
 		jQuery('#ls-compare-statistics-' + idOfThisTab).html('<h3>Statistics</h3>' + finalTable);
-		vsInterface.makeTableSortable('ls-compare-statistics-table-' + idOfThisTab);
+		vsUtils.makeTableSortable('ls-compare-statistics-table-' + idOfThisTab);
 	};
 	getComparisonTableStatistics = function(idOfTab, object) {
 		var table = '<table id="ls-compare-statistics-table-' + idOfTab + '" style="display:inline-block;max-width:100%;overflow-x:scroll;" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th></th>';
@@ -109,7 +109,7 @@ var vsLscomparison = (function() {
 			for (var i = 0; i <= vsDatabase.lsDB.length; i++) {
 				if (vsDatabase.lsDB[i] != undefined && i != tabNotWanted) {
 					tabs[oldI] = new Array();
-					var tabName = getLSTabName(i);
+					var tabName = vsLivingscience.getLSTabName(i);
 					tabs[oldI][0] = tabName;
 					tabs[oldI][1] = i;
 					oldI++;
