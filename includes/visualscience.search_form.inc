@@ -174,7 +174,7 @@ function visualscience_search_callback($form, $form_state) {
   $current_tab = variable_get("visualscience_current_tab");
   variable_set('visualscience_list', $list);
   
-  return "<script type='text/javascript' class='.remove_after_loaded'>openUserListTab(".$idSuffix.");</script>".module_invoke($current_tab, 'science_tab', $list, $idSuffix);
+  return "<script type='text/javascript' class='.remove_after_loaded'>vsInterface.openUserListTab(".$idSuffix.");</script>".module_invoke($current_tab, 'science_tab', $list, $idSuffix);
 }
 
 /**

@@ -66,7 +66,7 @@ var vsInterface = (function() {
 			if (name.length > nameMaxLength) {
 				name = name.substring(0, nameMaxLength) + '... ';
 			}
-			vsInterface.setTabId(vsInterface.getTabId()++);
+			vsInterface.setTabId(vsInterface.getTabId()+1);
 			var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
 			jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="vsInterface.closeTab(\'' + url + '\')">X</span>');
 			jQuery('#' + tabbedInterface).tabs('select', nbTabs);
