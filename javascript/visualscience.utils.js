@@ -37,7 +37,7 @@ var vsUtils = (function() {
 		},
 
 		loadUploadScripts : function(areaId, callback) {
-			jQuery.getScript(installFolder + 'visualscience.jquery.form.js');
+			jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
 		},
 
 		uploadSubmittedFiles : function(tabId) {
@@ -103,11 +103,11 @@ var vsUtils = (function() {
 
 		loadCLEditor : function(areaId) {
 			if (document.createStyleSheet) {
-				document.createStyleSheet(installFolder + 'css/visualscience.jquery.cleditor.css');
+				document.createStyleSheet(installFolder + '/css/visualscience.jquery.cleditor.css');
 			} else {
-				jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "css/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+				jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "/css/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
 			}
-			jQuery.getScript(installFolder + 'visualscience.jquery.cleditor.min.js', function() {
+			jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.cleditor.min.js', function() {
 				jQuery('#' + areaId).cleditor({
 					width : '100%',
 					height : '440px'

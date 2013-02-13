@@ -83,7 +83,7 @@ var vsSearch = (function() {
 					}
 				});
 			} else {
-				var firstFieldNumber = getThWithContent(tableId, 'name');
+				var firstFieldNumber = vsUtils.getThWithContent(tableId, 'name');
 				jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 					index++;
 					//That's because index will go from 0(no nth-child) to n-1, missing n(interesting)

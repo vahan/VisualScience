@@ -37,7 +37,7 @@ var vsLivingscience = (function() {
 	 		width : setWidth,
 	 		height : setWidth + setWidth * 1 / 10,
 	 		display : 'inline-block',
-		 	margin : '0px',
+	 		margin : '0px',
 	 		padding : '0px'
 	 	});
 	 };
