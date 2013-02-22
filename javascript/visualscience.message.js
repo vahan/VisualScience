@@ -65,7 +65,7 @@ var vsMessage = (function() {
 		 		var selectedUsersEmail = vsSearch.getSelectedUsersEmailFromSearchTable(idOfTheTab);
 		 		var title = vsUtils.getTitleFromUsers(selectedUsers);
 		 		var thisTabId = vsInterface.getTabId();
-		 		vsInterface.addTab('<img src="' + installFolder + '/images/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-' + thisTabId);
+		 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + '/images/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-' + thisTabId);
 
 				//Create the message tab's HTML
 				var subjectDiv = createSubjectDiv(thisTabId);

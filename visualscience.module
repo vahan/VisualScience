@@ -355,7 +355,8 @@ function visualscience_page($clear = true) {
   drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.tablesorter.css');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.handlebars.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
-  
+  //Settings necessary to VisualScience:
+  drupal_add_js(array('installFolder' => url(drupal_get_path('module', 'visualscience')).'/'), 'setting');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
@@ -388,9 +389,6 @@ function visualscience_page($clear = true) {
     //variable_del('visualscience_list');
     //variable_del('visualscience_search_table');
   }
-  //To set the js variable 'installFolder' (May not be in the right place)
-  //TODO: Change the place to the right one.
-  $output .= "<script type='text/javascript'>var installFolder = '".url(drupal_get_path('module', 'visualscience'))."/';var visualscienceCurrentFolder = '".drupal_get_path('module', 'visualscience')."/';</script>";
   return $output;
 }
 

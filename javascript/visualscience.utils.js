@@ -1,19 +1,23 @@
 var vsUtils = (function() {
 	var rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL;
-	//This is the root folder, where the installation has been done.
-	rootFolder = document.location.href.substring(0, document.location.href.substring(document.location.href.indexOf('http://') + 10).indexOf('/visualscience') + 10);
-	//TODO: Change this global variable with a DrupalJS function
-	//This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
-	installFolder = 'sites/all/modules/visualscience/';
-	//This is the URL to the php upload module
-	UploadModuleURL = rootFolder + '/visualscience/upload/';
-	//This is the URL to the php that handles the mail
-	SendMailURL = rootFolder + '/visualscience/mail/';
-	csvURL = installFolder + 'includes/stringToCSV.php?text=';
+	jQuery(document).ready(function() {
+		//This is the root folder, where the installation has been done.
+		rootFolder = Drupal.settings.basePath; //document.location.href.substring(0, document.location.href.substring(document.location.href.indexOf('http://') + 10).indexOf('/visualscience') + 10);
+		//This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
+		installFolder = Drupal.settings.installFolder;//'sites/all/modules/visualscience/';
+		//This is the URL to the php upload module
+		UploadModuleURL = rootFolder + '/visualscience/upload/';
+		//This is the URL to the php that handles the mail
+		SendMailURL = rootFolder + '/visualscience/mail/';
+		csvURL = installFolder + 'includes/stringToCSV.php?text=';
+	});
 	//This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 	var dialogNumber;
 
 	return {
+		getInstallFolder: function() {
+			return installFolder;
+		},
 		getCSVURL : function() {
 			return csvURL;
 		},
@@ -26,42 +30,42 @@ var vsUtils = (function() {
 		 * the parameter idOfTable is the actual id of the table to be sorted.
 		 * Attention: The first column won't be sortable.(That's the reason for parameter headers:{0...})
 		 */
-		makeTableSortable : function(idOfTable) {
-			jQuery('#' + idOfTable).tablesorter({
-				headers : {
-					0 : {
-						sorter : false
-					}
-				}
-			});
-		},
+		 makeTableSortable : function(idOfTable) {
+		 	jQuery('#' + idOfTable).tablesorter({
+		 		headers : {
+		 			0 : {
+		 				sorter : false
+		 			}
+		 		}
+		 	});
+		 },
 
-		loadUploadScripts : function(areaId, callback) {
-			jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
-		},
+		 loadUploadScripts : function(areaId, callback) {
+		 	jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
+		 },
 
-		uploadSubmittedFiles : function(tabId) {
-			var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
-			var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
-			var content = '';
-			if (!vsDatabase.getUploadDB()[tabId]) {
-				vsDatabase.setUploadDB(tabId, new Array());
-				jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
-					clearForm : true,
-					beforeSend : function() {
-						jQuery('#progress-upload-' + tabId).text('Progress: Preparing File...').css({
-							'background-color' : 'yellow',
-							'display' : 'block',
-							'color' : 'white'
-						});
-					},
-					uploadProgress : function() {
-						jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
-					},
-					success : function(data, textStatus, jqXHR) {
-						jQuery('html').append('<div id="invisible" style="display:none;">' + data.substring(data.indexOf('<div id="page"')) + '</div>');
-						jQuery('#invisible').html(jQuery('#invisible .messages').html());
-						var messages = jQuery('#invisible').text();
+		 uploadSubmittedFiles : function(tabId) {
+		 	var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
+		 	var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
+		 	var content = '';
+		 	if (!vsDatabase.getUploadDB()[tabId]) {
+		 		vsDatabase.setUploadDB(tabId, new Array());
+		 		jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
+		 			clearForm : true,
+		 			beforeSend : function() {
+		 				jQuery('#progress-upload-' + tabId).text('Progress: Preparing File...').css({
+		 					'background-color' : 'yellow',
+		 					'display' : 'block',
+		 					'color' : 'white'
+		 				});
+		 			},
+		 			uploadProgress : function() {
+		 				jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
+		 			},
+		 			success : function(data, textStatus, jqXHR) {
+		 				jQuery('html').append('<div id="invisible" style="display:none;">' + data.substring(data.indexOf('<div id="page"')) + '</div>');
+		 				jQuery('#invisible').html(jQuery('#invisible .messages').html());
+		 				var messages = jQuery('#invisible').text();
 						if (messages.indexOf('Error') != -1) {//Check for errors
 							jQuery('#progress-upload-' + tabId).text('Upload Failed: ' + messages).css({
 								'background-color' : 'red'
@@ -90,9 +94,9 @@ var vsUtils = (function() {
 						});
 					}
 				});
-			}
-			jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').submit();
-			return false;
+}
+jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').submit();
+return false;
 			//Avoid standard browser to navigate to the page.
 		},
 		deleteFileToUpload : function(tabId, entryNb) {
@@ -117,43 +121,43 @@ var vsUtils = (function() {
 		/*
 		 * Modifies a Drupal-generated form into a visually more estheatical form.
 		 */
-		loadDrupalHTMLUploadForm : function(html, location, thisTabId) {
-			jQuery('#' + location).load(UploadModuleURL + ' .content', function(response, status, xhr) {
-				if (status == "error") {
-					if (xhr.status == 403) {
-						alert('Please login to be able to send messages.(403)');
-						jQuery('#' + location).html('<p align="center" font-color="red">Please login to be able to send messages.</p>');
-					} else if (xhr.status == 404) {
-						alert('Please come back later, there is a problem with the server.(404)');
-					} else {
-						alert('An error occured:\n' + 'Status:' + xhr.status + ':\n' + xhr.statusText);
-					}
-				} else {
-					jQuery('#' + location).children().children(':not(#visualscience-upload-form)').hide();
-					jQuery('#' + location + ' #edit-submit').hide();
-					jQuery('#' + location + ' #edit-visualscience-upload-file').attr({
-						'onChange' : 'vsUtils.uploadSubmittedFiles(\'' + thisTabId + '\');',
-						'nbFiles' : '0',
-						'size' : '18'
-					}).css({
-						'width' : '350px',
-						'margin-left' : '15px',
-						'display' : 'block'
-					});
-				}
-			});
-		},
+		 loadDrupalHTMLUploadForm : function(html, location, thisTabId) {
+		 	jQuery('#' + location).load(UploadModuleURL + ' .content', function(response, status, xhr) {
+		 		if (status == "error") {
+		 			if (xhr.status == 403) {
+		 				alert('Please login to be able to send messages.(403)');
+		 				jQuery('#' + location).html('<p align="center" font-color="red">Please login to be able to send messages.</p>');
+		 			} else if (xhr.status == 404) {
+		 				alert('Please come back later, there is a problem with the server.(404)');
+		 			} else {
+		 				alert('An error occured:\n' + 'Status:' + xhr.status + ':\n' + xhr.statusText);
+		 			}
+		 		} else {
+		 			jQuery('#' + location).children().children(':not(#visualscience-upload-form)').hide();
+		 			jQuery('#' + location + ' #edit-submit').hide();
+		 			jQuery('#' + location + ' #edit-visualscience-upload-file').attr({
+		 				'onChange' : 'vsUtils.uploadSubmittedFiles(\'' + thisTabId + '\');',
+		 				'nbFiles' : '0',
+		 				'size' : '18'
+		 			}).css({
+		 				'width' : '350px',
+		 				'margin-left' : '15px',
+		 				'display' : 'block'
+		 			});
+		 		}
+		 	});
+},
 
-		getJsonOfAttachments : function(thisTabId) {
-			var attachments = new Array();
-			jQuery('p[id*="visualscience-upload-file-entry-' + thisTabId + '"]').each(function(i) {
-				attachments[i] = new Array(2);
+getJsonOfAttachments : function(thisTabId) {
+	var attachments = new Array();
+	jQuery('p[id*="visualscience-upload-file-entry-' + thisTabId + '"]').each(function(i) {
+		attachments[i] = new Array(2);
 				//Name of File:
 				attachments[i][0] = jQuery(this).children(':nth-child(2)').text();
 				//URL of File:
 				attachments[i][1] = jQuery(this).children(':nth-child(2)').attr('href');
 			});
-			return attachments;
+	return attachments;
 			//window.JSON.stringify(attachments);
 		},
 		changeArrayToOrString : function(selectedUsers) {
@@ -167,67 +171,67 @@ var vsUtils = (function() {
 		/*
 		 * This functions sets the title for tabs, depending on the selected users.
 		 */
-		getTitleFromUsers : function(selectedUsers) {
-			var nbUsers = selectedUsers.length;
-			title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers[0]);
-			return title;
-		},
+		 getTitleFromUsers : function(selectedUsers) {
+		 	var nbUsers = selectedUsers.length;
+		 	title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers[0]);
+		 	return title;
+		 },
 		/*
 		 * With this function, you get the column number from a table, whose column's th contains fieldContent.
 		 * tableId is the id of the table you want to check for the column number.
 		 * fieldContent is the content of the th the column should have.
 		 */
-		getThWithContent : function(tableId, fieldContent) {
-			for (var i = 0; i <= vsUtils.countColumnsInTable(tableId); i++) {
-				if (jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text() == fieldContent) {
-					return i;
-				}
-			}
-		},
-		getLastNameCommaFirstName : function(name) {
-			var first = name.substring(0, name.lastIndexOf(' '));
-			var last = name.substring(name.lastIndexOf(' ') + 1);
-			return last + ', ' + first;
-		},
-		getInitialLastname : function(name) {
-			var initial = name.substring(0, 1);
-			var last = name.substring(name.lastIndexOf(' ') + 1);
-			return initial + ' ' + last;
-		},
-		sortHTMLList : function(idOfList) {
-			var mylist = jQuery('#' + idOfList);
-			var listitems = mylist.children('li').get();
-			listitems.sort(function(a, b) {
-				return jQuery(a).text().toUpperCase().localeCompare(jQuery(b).text().toUpperCase());
-			})
-			jQuery.each(listitems, function(idx, itm) {
-				mylist.append(itm);
-			});
-		},
+		 getThWithContent : function(tableId, fieldContent) {
+		 	for (var i = 0; i <= vsUtils.countColumnsInTable(tableId); i++) {
+		 		if (jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text() == fieldContent) {
+		 			return i;
+		 		}
+		 	}
+		 },
+		 getLastNameCommaFirstName : function(name) {
+		 	var first = name.substring(0, name.lastIndexOf(' '));
+		 	var last = name.substring(name.lastIndexOf(' ') + 1);
+		 	return last + ', ' + first;
+		 },
+		 getInitialLastname : function(name) {
+		 	var initial = name.substring(0, 1);
+		 	var last = name.substring(name.lastIndexOf(' ') + 1);
+		 	return initial + ' ' + last;
+		 },
+		 sortHTMLList : function(idOfList) {
+		 	var mylist = jQuery('#' + idOfList);
+		 	var listitems = mylist.children('li').get();
+		 	listitems.sort(function(a, b) {
+		 		return jQuery(a).text().toUpperCase().localeCompare(jQuery(b).text().toUpperCase());
+		 	})
+		 	jQuery.each(listitems, function(idx, itm) {
+		 		mylist.append(itm);
+		 	});
+		 },
 
 		/*
 		 * Count and returns the number of columns in a table.
 		 * tableId is the id of the table.
 		 */
-		countColumnsInTable : function(tableId) {
-			var colCount = 0;
-			jQuery('#' + tableId + ' > thead > tr > th').each(function() {
-				colCount++;
-			});
-			return colCount;
-		},
+		 countColumnsInTable : function(tableId) {
+		 	var colCount = 0;
+		 	jQuery('#' + tableId + ' > thead > tr > th').each(function() {
+		 		colCount++;
+		 	});
+		 	return colCount;
+		 },
 		/*
 		 * Transform the content of a table into an array. It doesn't take in account the tr,
 		 * so it only returns the value of the table, without any hierarchic order.(NO array in array)
 		 */
-		getArrayFromTable : function(tableId) {
-			var values = new Array();
-			var td = jQuery('#' + tableId + ' > tbody > tr > td');
-			td.each(function(i) {
-				values[i] = jQuery(this).html();
-			})
-			return values;
-		}
-	};
+		 getArrayFromTable : function(tableId) {
+		 	var values = new Array();
+		 	var td = jQuery('#' + tableId + ' > tbody > tr > td');
+		 	td.each(function(i) {
+		 		values[i] = jQuery(this).html();
+		 	})
+		 	return values;
+		 }
+		};
 
-})();
+	})();

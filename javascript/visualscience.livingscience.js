@@ -58,12 +58,12 @@ jQuery(window).load(function() {
 		 	if (selectedUsers.length > 0) {
 		 		var title = vsUtils.getTitleFromUsers(selectedUsers);
 		 		var thisTabId = vsInterface.getTabId();
-		 		vsInterface.addTab('<img src="' + installFolder + 'images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + thisTabId);
+		 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + thisTabId);
 		 		livingscience.searchMultipleAuthors(selectedUsers, function(results) {
 		 			onLivingScienceResults(results, 'livingscience-tab-' + thisTabId, thisTabId);
 		 		});
 				//TODO: Replace with a Drupal loading picture
-				jQuery('#livingscience-tab-' + thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="' + installFolder + 'images/loading.gif" width="100px" alt="loading" /></center>');
+				jQuery('#livingscience-tab-' + thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="' + vsUtils.getInstallFolder() + 'images/loading.gif" width="100px" alt="loading" /></center>');
 			} else {
 				alert('Please select at least one user');
 			}
