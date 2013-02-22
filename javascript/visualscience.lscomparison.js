@@ -39,22 +39,22 @@ var vsLscomparison = (function() {
 	getSprikiColor = function(idColor) {
 		switch (idColor) {
 			case 0:
-				return '#0000C8';
+			return '#0000C8';
 
 			case 1:
-				return '#FF9600';
+			return '#FF9600';
 
 			case 2:
-				return '#1C9500';
+			return '#1C9500';
 
 			case 3:
-				return '#F7FA00';
+			return '#F7FA00';
 
 			case 4:
-				return '#A30086';
+			return '#A30086';
 
 			default:
-				return '';
+			return '';
 		}
 	};
 
@@ -67,56 +67,56 @@ var vsLscomparison = (function() {
 
 	createComparisonPublication = function(idOfThisTab, idFirstDB, idSecondDB) {
 		jQuery('#ls-compare-pubs-' + idOfThisTab).html('<h3>Publications</h3><div id="ls-compare-left-pubs-' + idOfThisTab + '" style="display:inline-block;width:48%;"></div><div id="ls-compare-right-pubs-' + idOfThisTab + '" style="display:inline-block;width:48%;float:right;"></div>');
-		vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idFirstDB], vsDatabase.getFirstPublicationForLivingScience, vsDatabase.getNumberOfPublicationsForLivingScience, 'ls-compare-left-pubs-' + idOfThisTab);
-		vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idSecondDB], vsDatabase.getFirstPublicationForLivingScience, vsDatabase.getNumberOfPublicationsForLivingScience, 'ls-compare-right-pubs-' + idOfThisTab);
+		vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idFirstDB], vsDatabase.getFirstPublicationForLivingScience(), vsDatabase.getNumberOfPublicationsForLivingScience(), 'ls-compare-left-pubs-' + idOfThisTab);
+		vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idSecondDB], vsDatabase.getFirstPublicationForLivingScience(), vsDatabase.getNumberOfPublicationsForLivingScience(), 'ls-compare-right-pubs-' + idOfThisTab);
 	};
 
 	return {
 		/*
 		 * This function creates a new tab, where two LS search tabs are compared.
 		 */
-		compareLSTabsTogether : function(thisTabId) {
-			var selectedTabId = parseInt(jQuery('#comparison-ls-result-' + thisTabId).val());
-			var title = 'Comparison Interface';
-			var idOfThisTab = vsInterface.getTabId();
-			vsInterface.addTab('<img src="' + installFolder + 'images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
-			createComparisonInterface(idOfThisTab);
-			createComparisonStatisticTable(idOfThisTab, thisTabId, selectedTabId);
-			createComparisonSpriki(idOfThisTab, thisTabId, selectedTabId);
-			createComparisonPublication(idOfThisTab, thisTabId, selectedTabId);
-		},
+		 compareLSTabsTogether : function(thisTabId) {
+		 	var selectedTabId = parseInt(jQuery('#comparison-ls-result-' + thisTabId).val());
+		 	var title = 'Comparison Interface';
+		 	var idOfThisTab = vsInterface.getTabId();
+		 	vsInterface.addTab('<img src="' + installFolder + 'images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
+		 	createComparisonInterface(idOfThisTab);
+		 	createComparisonStatisticTable(idOfThisTab, thisTabId, selectedTabId);
+		 	createComparisonSpriki(idOfThisTab, thisTabId, selectedTabId);
+		 	createComparisonPublication(idOfThisTab, thisTabId, selectedTabId);
+		 },
 		/*
 		 * This function lists the others tabs as an option to compare with. It is called
 		 * when the user clicks on the scrollable select. It creates the <option> tags in the select
 		 * tags.
 		 */
-		getListOfTabsForLSComparison : function(thisTabId) {
-			var currentTabs = vsLscomparison.getLSTabs(thisTabId);
-			var newSelectList = '<option value="nothing">Select a tab...</option>';
-			jQuery(currentTabs).each(function(i) {
-				newSelectList += '<option value="' + currentTabs[i][1] + '">' + currentTabs[i][0] + '</option>';
-			});
-			jQuery('#comparison-ls-result-' + thisTabId).html(newSelectList);
-		},
+		 getListOfTabsForLSComparison : function(thisTabId) {
+		 	var currentTabs = vsLscomparison.getLSTabs(thisTabId);
+		 	var newSelectList = '<option value="nothing">Select a tab...</option>';
+		 	jQuery(currentTabs).each(function(i) {
+		 		newSelectList += '<option value="' + currentTabs[i][1] + '">' + currentTabs[i][0] + '</option>';
+		 	});
+		 	jQuery('#comparison-ls-result-' + thisTabId).html(newSelectList);
+		 },
 		/*
 		 * This function returns all the LS that are actually opened.
 		 * If we want not to have a tab in it, the optional parameter
 		 * tabNotWanted is the number of the tab we don't want in the final array.
 		 */
-		getLSTabs : function(tabNotWanted) {
-			var tabs = new Array();
-			var oldI = 0;
-			for (var i = 0; i <= vsDatabase.lsDB.length; i++) {
-				if (vsDatabase.lsDB[i] != undefined && i != tabNotWanted) {
-					tabs[oldI] = new Array();
-					var tabName = vsLivingscience.getLSTabName(i);
-					tabs[oldI][0] = tabName;
-					tabs[oldI][1] = i;
-					oldI++;
-				}
-			}
-			return tabs;
-		}
-	};
+		 getLSTabs : function(tabNotWanted) {
+		 	var tabs = new Array();
+		 	var oldI = 0;
+		 	for (var i = 0; i <= vsDatabase.lsDB.length; i++) {
+		 		if (vsDatabase.lsDB[i] != undefined && i != tabNotWanted) {
+		 			tabs[oldI] = new Array();
+		 			var tabName = vsLivingscience.getLSTabName(i);
+		 			tabs[oldI][0] = tabName;
+		 			tabs[oldI][1] = i;
+		 			oldI++;
+		 		}
+		 	}
+		 	return tabs;
+		 }
+		};
 
-})();
+	})();

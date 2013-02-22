@@ -51,7 +51,7 @@ var vsInterface = (function() {
 				var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
 				title = (title == '' ? 'All Users' : title);
 				var idOfThisTab = vsInterface.getTabId();
-				vsInterface.addTab('<img src="' + installFolder + '../images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
+				vsInterface.addTab('<img src="' + installFolder + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
 				//Insert the table result in a new div
 				var content = vsSearch.createUserSearchResult(dialogNumber, idOfThisTab);
 				jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
