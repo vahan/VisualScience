@@ -29,13 +29,11 @@ var vsSearch = (function() {
 		 * This creates the action bar, with the different buttons.
 		 */
 		 createActionBar : function(idOfThisTab) {
-		 	var finalDiv = '<div align="center" style="max-width:25%;" class="action-bar-container" id="action-bar-container' + idOfThisTab + '"><div id="actionBar' + idOfThisTab + '" class="action-bar"><h4>Actions<span class="small-addition-in-title">to selected users</span></h4>';
-		 	var sendMessage = '<input class="form-submit" value="Message" type="button" onClick="vsMessage.createTabSendMessage(' + idOfThisTab + ');"  /><br />';
-		 	var csvExport = '<input class="form-submit" value="To CSV" type="button" onClick="vsCSV.exportUsersCSV(' + idOfThisTab + ');"  /><br />';
-		 	var livingscience = '<input class="form-submit" value="LivingScience" type="button" onClick="vsLivingscience.createTabLivingScience(' + idOfThisTab + ');"  /><br />';
-		 	var conference = '<input class="form-submit" value="Conference" type="button" onClick="vsConference.createTabConference(' + idOfThisTab + ');" /><br />';
-		 	finalDiv += sendMessage + csvExport + livingscience + conference + '</div></div>';
-		 	return finalDiv;
+		 	var actionBar = vsInterface.getView('actionBar.html');
+		 	var parameters = {
+		 		idOfThisTab: idOfThisTab
+		 	};
+		 	return actionBar(parameters);
 		 },
 		/*
 		 * Depending on what the user sees, the action bar will be static at the top of the page,
