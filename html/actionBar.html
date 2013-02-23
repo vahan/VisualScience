@@ -1,0 +1,13 @@
+<div align="center" style="max-width:25%;" class="action-bar-container" id="action-bar-container{{idOfThisTab}}">
+	<div id="actionBar{{idOfThisTab}}" class="action-bar">
+		<h4>Actions<span class="small-addition-in-title">to selected users</span></h4>
+		<input class="form-submit" value="Message" type="button" onClick="vsMessage.createTabSendMessage({{idOfThisTab}});"  />
+		<br />
+		<input class="form-submit" value="To CSV" type="button" onClick="vsCSV.exportUsersCSV({{idOfThisTab}});"  />
+		<br />
+		<input class="form-submit" value="LivingScience" type="button" onClick="vsLivingscience.createTabLivingScience({{idOfThisTab}});"  />
+		<br />
+		<input class="form-submit" value="Conference" type="button" onClick="vsConference.createTabConference({{idOfThisTab}});" />
+		<br />
+	</div>
+</div>
