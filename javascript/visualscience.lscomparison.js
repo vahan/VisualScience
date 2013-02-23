@@ -2,7 +2,11 @@ var vsLscomparison = (function() {
 	var createComparisonInterface, createComparisonStatisticTable, getComparisonTableStatistics, getSprikiColor, createComparisonSpriki, createComparisonPublication;
 
 	createComparisonInterface = function(idOfThisTab) {
-		jQuery('#livingscience-tab-' + idOfThisTab).html('<div id="ls-compare-statistics-' + idOfThisTab + '" style="width:100%;"></div><div id="ls-compare-spriki-' + idOfThisTab + '"></div><div id="ls-compare-pubs-' + idOfThisTab + '"></div>');
+		var comparisonInterface = vsInterface.getView('lsComparisonLayout.html');
+		var parameters = {
+			idOfThisTab: idOfThisTab
+		};
+		jQuery('#livingscience-tab-' + idOfThisTab).html(comparisonInterface(parameters));
 	};
 	createComparisonStatisticTable = function(idOfThisTab, idFirstDB, idSecondDB) {
 		var objectOfStatistics = {

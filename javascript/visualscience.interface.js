@@ -15,7 +15,8 @@ var vsInterface = (function() {
 	listOfViews = new Array(
 		'livingscienceLoading.html',
 		'livingsciencePageLayout.html',
-		'actionBar.html'
+		'actionBar.html',
+		'lsComparisonLayout.html'
 		);
 	//Pre-loading the views when the html is loaded
 	jQuery(document).ready(function() {
