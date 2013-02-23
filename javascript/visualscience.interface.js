@@ -13,7 +13,8 @@ var vsInterface = (function() {
 
 	//List of all the views that have to be pre-loaded
 	listOfViews = new Array(
-		'livingscienceLoading.html'
+		'livingscienceLoading.html',
+		'livingsciencePageLayout.html'
 		);
 	//Pre-loading the views when the html is loaded
 	jQuery(document).ready(function() {

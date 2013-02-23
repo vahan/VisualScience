@@ -78,14 +78,18 @@ jQuery(window).load(function() {
 		 */
 		 generateLivingScienceFromDB : function(database, location, thisTabId) {
 		 	var nbResults = database.length;
-		 	var numbersForPubsToShowList = new Array();
-		 	numbersForPubsToShowList[1] = Math.floor(nbResults / 12);
-		 	numbersForPubsToShowList[2] = Math.floor(nbResults / 6);
-		 	numbersForPubsToShowList[3] = Math.floor(nbResults / 3);
-		 	numbersForPubsToShowList[4] = Math.floor(nbResults / 2);
-		 	numbersForPubsToShowList[5] = Math.floor(nbResults / 1.5);
-		 	numbersForPubsToShowList[6] = Math.floor(nbResults / 1.2);
-		 	jQuery('#' + location).html('<div><div id="ls-result-options-' + thisTabId + '"><fieldset class="collapsible form-wrapper"><legend><a onclick="jQuery(\'#ls-result-option-table-' + thisTabId + '\').slideToggle();">Options</a></legend><div class="fieldset-wrapper" id="ls-result-option-table-' + thisTabId + '" style="display: none;"><table><tbody><tr><td><label for="sorting-ls-result-' + thisTabId + '">Sorting publications by</label></td><td><select name="sorting-ls-result-' + thisTabId + '" id="sorting-ls-result-' + thisTabId + '" onchange="vsDatabase.orderLSResultDatabase(' + thisTabId + ');"><option value="own">Default</option><option value="title">Title</option><option value="decreasing">Date decreasing</option><option value="increasing">Date increasing</option><option value="authors">Author</option><option value="random">Random</option></select></td></tr><tr><td><label for="nb-pubs-ls-result-' + thisTabId + '">N° publications to display</label></td><td><select onchange="vsLivingscience.changeNumberOfDisplayedLSPublications(' + thisTabId + ');" name="nb-pubs-ls-result-' + thisTabId + '" id="nb-pubs-ls-result-' + thisTabId + '"><option value="25">25</option><option value="' + numbersForPubsToShowList[1] + '">' + numbersForPubsToShowList[1] + '</option><option value="' + numbersForPubsToShowList[2] + '">' + numbersForPubsToShowList[2] + '</option><option value="' + numbersForPubsToShowList[3] + '">' + numbersForPubsToShowList[3] + '</option><option value="' + numbersForPubsToShowList[4] + '">' + numbersForPubsToShowList[4] + '</option><option value="' + numbersForPubsToShowList[5] + '">' + numbersForPubsToShowList[5] + '</option><option value="' + numbersForPubsToShowList[6] + '">' + numbersForPubsToShowList[6] + '</option><option value="all">all</option></select></td></tr><tr><td><label for="comparison-ls-result-' + thisTabId + '">Compare with</label></td><td><select onchange="vsLscomparison.compareLSTabsTogether(' + thisTabId + ')" onclick="vsLscomparison.getListOfTabsForLSComparison(' + thisTabId + ')" id="comparison-ls-result-' + thisTabId + '" name="comparison-ls-result-' + thisTabId + '"><option value="nothing">Select a tab...</option></select></td></tr><tr><td><label for="search-ls-result-' + thisTabId + '">Search</label></td><td><input type="text" onchange="vsDatabase.searchAndSortNDDB(' + thisTabId + ');" placeholder="Type your search" id="search-ls-result-' + thisTabId + '" name="search-ls-result-' + thisTabId + '" /> <strong><span id="search-ls-nb-result-' + thisTabId + '">' + nbResults + ' Results</span></strong></td></tr></tbody></table></div></fieldset></div><div><div id="ls-list-' + thisTabId + '" style="display:inline-block;width:49%;background-color:white;"></div><div align="center" style="display:inline-block;width:50%;float:right;"><div id="ls-map-' + thisTabId + '" style="display: inline-block; margin: 0px; padding: 0px;"></div><br /><div id="ls-relations-' + thisTabId + '" style="display: inline-block; margin: 0px; padding: 0px;"></div></div></div>');
+		 	var livingsciencePageContent = vsInterface.getView('livingsciencePageLayout.html');
+		 	var parameters = {
+		 		totalResults: nbResults,
+		 		thisTabId: thisTabId,
+		 		firstOrder: Math.floor(nbResults / 12),
+		 		secondOrder: Math.floor(nbResults / 6),
+		 		thirdOrder: Math.floor(nbResults / 3),
+		 		fourthOrder: Math.floor(nbResults / 2),
+		 		fifthOrder: Math.floor(nbResults / 1.5),
+		 		sixthOrder: Math.floor(nbResults / 1.2),
+		 	};
+		 	jQuery('#' + location).html(livingsciencePageContent(parameters));
 		 	setWidthForMapsAndRelations('ls-list-' + thisTabId, 'ls-map-' + thisTabId, 'ls-relations-' + thisTabId);
 		 	vsDatabase.setParametersForLSDB(thisTabId);
 		 	vsLivingscience.actualizeLivingScienceDisplay(database, thisTabId);
