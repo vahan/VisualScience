@@ -1,6 +1,6 @@
 var vsInterface = (function() {
 
-	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface;
+	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews;
 
 	//This variable checks if the whole tabbed interface has been created yet.
 	tabbedInterfaceExists = false;
@@ -10,6 +10,17 @@ var vsInterface = (function() {
 
 	//Variable to differentiate each tab from each other
 	tabId = 0;
+
+	//List of all the views that have to be pre-loaded
+	listOfViews = new Array(
+		'livingscienceLoading.html'
+		);
+	//Pre-loading the views when the html is loaded
+	jQuery(document).ready(function() {
+		jQuery.each(listOfViews, function(index, element){
+			vsInterface.storeViewInDB(element);
+		});
+	});
 
 	/*
 	 * This function creates a tabbed-interface, out of the variable tabbedInterface.
@@ -37,6 +48,27 @@ var vsInterface = (function() {
 
 	 	setTabId : function(newTabId) {
 	 		tabId = newTabId;
+	 	},
+
+	 	storeViewInDB: function (viewPathSource) {
+	 		jQuery.get(vsUtils.getInstallFolder() + 'html/' + viewPathSource, function(data) {
+	 			vsDatabase.htmlViewsDB[viewPathSource] = data;
+	 		});
+	 	},
+
+	 	getView: function (viewPathSource) {
+	 		if (!vsDatabase.htmlViewsDB[viewPathSource]) {
+	 			alert('Don\'t forget to add your view into vsInterface. (listOfViews)');
+	 			vsInterface.storeViewInDB(viewPathSource);
+	 			/**
+	 			* TODO: Here you should find a way to delay the process and then call (because the view is not yet loaded into the db)
+	 			* return vsInterface.getView(viewPathSource);
+	 			*/
+	 		}
+	 		else {
+	 			var source = vsDatabase.htmlViewsDB[viewPathSource];
+	 			return Handlebars.compile(source);
+	 		}
 	 	},
 
 		/*

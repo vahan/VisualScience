@@ -19,6 +19,7 @@ var vsDatabase = (function() {
 	};
 
 	return {
+		htmlViewsDB : new Array(),
 
 		getUploadDB : function() {
 			return uploadDB;
@@ -156,44 +157,44 @@ var vsDatabase = (function() {
 		 * thisTabId is the id of the tab where the database should be sorted, which is also the
 		 * index of the database in lsDB.
 		 */
-		orderLSResultDatabase : function(thisTabId) {
-			var orderSetting = jQuery('#sorting-ls-result-' + thisTabId).val();
-			switch (orderSetting) {
-				case 'increasing':
-					vsDatabase.lsDB[thisTabId].sort('year');
-					break;
-				case 'decreasing':
-					vsDatabase.lsDB[thisTabId].sort('year');
-					vsDatabase.lsDB[thisTabId].reverse();
-					break;
-				case 'authors':
-					vsDatabase.lsDB[thisTabId].sort('author');
-					break;
-				case 'random':
-					vsDatabase.lsDB[thisTabId].shuffle();
-					break;
-				case 'own':
-					vsDatabase.lsDB[thisTabId].sort('livingscienceID');
-					break;
-				default:
-					vsDatabase.lsDB[thisTabId].sort(orderSetting);
-					break;
-			}
-			vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
-		},
-		mergeLSDB : function(idFirstDB, idSecondDB) {
-			var newDB = new NDDB(optionsForNDDB);
-			var length = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? vsDatabase.lsDBOriginal[idFirstDB].length : vsDatabase.lsDBOriginal[idSecondDB].length;
-			var biggerDB = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
-			for (var i = 0; i < length; i++) {
-				newDB.insert(vsDatabase.lsDBOriginal[idFirstDB].db[i]);
-				newDB.insert(vsDatabase.lsDBOriginal[idSecondDB].db[i]);
-			}
-			for (var i = length; i < vsDatabase.lsDBOriginal[biggerDB].length; i++) {
-				newDB.insert(vsDatabase.lsDBOriginal[biggerDB].db[i]);
-			}
-			return newDB;
-		}
-	};
+		 orderLSResultDatabase : function(thisTabId) {
+		 	var orderSetting = jQuery('#sorting-ls-result-' + thisTabId).val();
+		 	switch (orderSetting) {
+		 		case 'increasing':
+		 		vsDatabase.lsDB[thisTabId].sort('year');
+		 		break;
+		 		case 'decreasing':
+		 		vsDatabase.lsDB[thisTabId].sort('year');
+		 		vsDatabase.lsDB[thisTabId].reverse();
+		 		break;
+		 		case 'authors':
+		 		vsDatabase.lsDB[thisTabId].sort('author');
+		 		break;
+		 		case 'random':
+		 		vsDatabase.lsDB[thisTabId].shuffle();
+		 		break;
+		 		case 'own':
+		 		vsDatabase.lsDB[thisTabId].sort('livingscienceID');
+		 		break;
+		 		default:
+		 		vsDatabase.lsDB[thisTabId].sort(orderSetting);
+		 		break;
+		 	}
+		 	vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
+		 },
+		 mergeLSDB : function(idFirstDB, idSecondDB) {
+		 	var newDB = new NDDB(optionsForNDDB);
+		 	var length = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? vsDatabase.lsDBOriginal[idFirstDB].length : vsDatabase.lsDBOriginal[idSecondDB].length;
+		 	var biggerDB = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
+		 	for (var i = 0; i < length; i++) {
+		 		newDB.insert(vsDatabase.lsDBOriginal[idFirstDB].db[i]);
+		 		newDB.insert(vsDatabase.lsDBOriginal[idSecondDB].db[i]);
+		 	}
+		 	for (var i = length; i < vsDatabase.lsDBOriginal[biggerDB].length; i++) {
+		 		newDB.insert(vsDatabase.lsDBOriginal[biggerDB].db[i]);
+		 	}
+		 	return newDB;
+		 }
+		};
 
-})();
+	})();

@@ -358,8 +358,8 @@ function visualscience_page($clear = true) {
   //Settings necessary to VisualScience:
   drupal_add_js(array('installFolder' => url(drupal_get_path('module', 'visualscience')).'/'), 'setting');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
+  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.message.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.csv.js');

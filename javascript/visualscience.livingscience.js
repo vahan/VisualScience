@@ -62,8 +62,9 @@ jQuery(window).load(function() {
 		 		livingscience.searchMultipleAuthors(selectedUsers, function(results) {
 		 			onLivingScienceResults(results, 'livingscience-tab-' + thisTabId, thisTabId);
 		 		});
-				//TODO: Replace with a Drupal loading picture
-				jQuery('#livingscience-tab-' + thisTabId).html('<center><h4>Search launched, please be patient...</h4><img src="' + vsUtils.getInstallFolder() + 'images/loading.gif" width="100px" alt="loading" /></center>');
+				var loadingPage = vsInterface.getView('livingscienceLoading.html');
+				var inputs = {installFolder: vsUtils.getInstallFolder()};
+				jQuery('#livingscience-tab-' + thisTabId).html(loadingPage(inputs));
 			} else {
 				alert('Please select at least one user');
 			}
