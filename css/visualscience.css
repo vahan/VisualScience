@@ -210,6 +210,7 @@ span.preselected {
  	padding:2px;
  	width:75%;
  	border:solid black 1px;
+ 	behavior: url(./PIE.htc);
  }
  .vs-button img {
  	vertical-align:middle;
@@ -221,4 +222,5 @@ span.preselected {
  	background-image:    -moz-linear-gradient(top, #999999, #ffffff); /* Firefox 3.6-15 */
  	background-image:      -o-linear-gradient(top, #999999, #ffffff); /* Opera 11.10-12.00 */
  	background-image:         linear-gradient(to bottom, #999999, #ffffff); /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+ 	behavior: url(./PIE.htc);
  }
