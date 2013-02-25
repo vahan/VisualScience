@@ -147,3 +147,49 @@ span.preselected {
 * html .visualscience_menu ul {height: 1%;}
 .visualscience_menu ul {display: block;}
 /* End hide from IE-mac */
+
+/*
+ * Added code for tab-design
+ */
+a:hover{
+	cursor:pointer;
+}
+
+.close-tab-cross {
+	cursor:pointer;
+	font-weight:bolder;
+	margin-left:10px;
+}
+.close-tab-cross:hover {
+	color:#FF0000;
+}
+
+.action-bar {
+	width:100%;
+	display:inline-block;
+    position:relative;	
+    border:solid black 1px; 
+}
+
+.action-bar-container {
+	top:0px;
+	width:15%;
+	overflow:hidden;
+	padding-right:2px;
+	padding-bottom:2px;
+	margin-right:8px;
+	margin-top:10px;
+	margin-bottom:8px;
+	display:inline-block;
+	float:left;
+}
+
+.small-addition-in-title {
+	padding-left:3px;
+	font-size:72%;
+	font-weight:normal;
+}
+
+.clickable:hover {
+	cursor: pointer;
+}

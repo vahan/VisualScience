@@ -42,6 +42,44 @@ function visualscience_schema() {
     'unique keys' => array('name' => array('name'))
   );
   
+  //table for uploaded files and their permissions
+  $schema['visualscience_uploaded_files'] = array(
+  	'description' => 'Uploaded Files and Permissions',
+    'fields' => array(
+      'fid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique file ID.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'User Id of the user who can access the file.',
+      ),
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 1024,
+        'default' => '',
+        'description' => 'The email of the user who can acces the file.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 1024,
+        'default' => '',
+        'description' => 'Name of the file, as uploaded by user',
+      ),
+      'url' => array(
+        'type' => 'varchar',
+        'length' => 4096,
+        'default' => '',
+        'description' => 'The url of the file in the private directory.(Common to each message)',
+      ),
+    ),
+    'primary key' => array('fid')
+  );
+  
   //table for tabs
   /*$schema[visualscience_get_tabs_table_name()] = array(
     'description' => 'Stores data of the tabs.',
@@ -80,8 +118,6 @@ function visualscience_schema() {
 function visualscience_uninstall() {
   drupal_uninstall_schema('visualscience');
 }
-
-
 
 
 

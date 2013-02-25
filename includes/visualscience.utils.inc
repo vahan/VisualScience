@@ -79,7 +79,7 @@ function visualscience_autocomplete($term = '', $search_type = 'generic') {
         break;
       default:
         // $search_type should match with the name of the field
-        $result = get_field_autocomplete("field_".$search_type, $term);
+        $result = visualscience_get_field_autocomplete("field_".$search_type, $term);
         $resultReady = TRUE;
         break;
     }
@@ -117,13 +117,13 @@ function visualscience_get_autocomplete_data($table, $column, $term) {
 }
 
 /**
- * get_field_autocomplete
+ * visualscience_get_field_autocomplete
  * Function to get the taxonomy field names as an array, given the field name
  * @param string $field_name
  * @param string $tag
  * @return
  */
-function get_field_autocomplete($field_name, $tag = '') {
+function visualscience_get_field_autocomplete($field_name, $tag = '') {
 	try {
 		$field = field_info_field($field_name);
 		if ($field['type'] != "taxonomy_term_reference") {
