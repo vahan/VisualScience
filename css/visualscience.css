@@ -1,65 +1,65 @@
 .visualscience_menu ul {
-  padding: 0; margin: 0;
-    border-bottom: 1px solid #CCC;
+	padding: 0; margin: 0;
+	border-bottom: 1px solid #CCC;
 }
 
 .visualscience_menu ul li {
-  list-style-type: none;
-  list-style-image: none;
-  float: left;
+	list-style-type: none;
+	list-style-image: none;
+	float: left;
 }
 
 .visualscience_menu ul:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 #search-more-options {
-    clear: both;
-    visibility: hidden;
-    overflow: hidden;
-    height: 0px;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
+	height: 0px;
 }
 
 #more-options-link {
-    clear: both;
-    display: block;
-    cursor: pointer;
+	clear: both;
+	display: block;
+	cursor: pointer;
 }
 
 span.highlight {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 span.autocomplete_row_0 {
-    background: #eee;
-    display: block;
+	background: #eee;
+	display: block;
 }
 
 span.autocomplete_row_1 {
-    background: #fff;
-    display: block;
+	background: #fff;
+	display: block;
 }
 
 span.preselected {
-    background: #ddd;
+	background: #ddd;
 }
 
 
 .ui-menu .ui-menu-item a {
-    padding: 1px;
-    margin: 0;	
+	padding: 1px;
+	margin: 0;	
 }
 
 .ui-menu .ui-menu-item a span {
-    vertical-align: center;	
+	vertical-align: center;	
 }
 
 .ui-menu .ui-menu-item input {
-    vertical-align: center; 
+	vertical-align: center; 
 }
 
 .vs-datepicker {
@@ -151,45 +151,74 @@ span.preselected {
 /*
  * Added code for tab-design
  */
-a:hover{
-	cursor:pointer;
-}
+ a:hover{
+ 	cursor:pointer;
+ }
 
-.close-tab-cross {
-	cursor:pointer;
-	font-weight:bolder;
-	margin-left:10px;
-}
-.close-tab-cross:hover {
-	color:#FF0000;
-}
+ .close-tab-cross {
+ 	cursor:pointer;
+ 	font-weight:bolder;
+ 	margin-left:10px;
+ }
+ .close-tab-cross:hover {
+ 	color:#FF0000;
+ }
 
-.action-bar {
-	width:100%;
-	display:inline-block;
-    position:relative;	
-    border:solid black 1px; 
-}
+ .action-bar {
+ 	width:100%;
+ 	display:inline-block;
+ 	position:relative;	
+ 	border:solid black 1px; 
+ }
 
-.action-bar-container {
-	top:0px;
-	width:15%;
-	overflow:hidden;
-	padding-right:2px;
-	padding-bottom:2px;
-	margin-right:8px;
-	margin-top:10px;
-	margin-bottom:8px;
-	display:inline-block;
-	float:left;
-}
+ .action-bar-container {
+ 	top:0px;
+ 	width:15%;
+ 	overflow:hidden;
+ 	padding-right:2px;
+ 	padding-bottom:2px;
+ 	margin-right:8px;
+ 	margin-top:10px;
+ 	margin-bottom:8px;
+ 	display:inline-block;
+ 	float:left;
+ }
 
-.small-addition-in-title {
-	padding-left:3px;
-	font-size:72%;
-	font-weight:normal;
-}
+ .small-addition-in-title {
+ 	padding-left:3px;
+ 	font-size:72%;
+ 	font-weight:normal;
+ }
 
-.clickable:hover {
-	cursor: pointer;
-}
+ .clickable:hover {
+ 	cursor: pointer;
+ }
+ .vs-button {
+ 	background-color: #ffffff;
+ 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#999999)); /* Chrome, Safari 4+ */
+ 	background-image: -webkit-linear-gradient(top, #ffffff, #999999); /* Chrome 10-25, iOS 5+, Safari 5.1+ */
+ 	background-image:    -moz-linear-gradient(top, #ffffff, #999999); /* Firefox 3.6-15 */
+ 	background-image:      -o-linear-gradient(top, #ffffff, #999999); /* Opera 11.10-12.00 */
+ 	background-image:         linear-gradient(to bottom, #ffffff, #999999); /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+
+ 	-webkit-box-shadow: 0px 0px 4px 0px #ffffff; /* Android 2.3+, iOS 4.0.2-4.2, Safari 3-4 */
+ 	box-shadow: 0px 0px 4px 0px #ffffff; /* Chrome 6+, Firefox 4+, IE 9+, iOS 5+, Opera 10.50+ */
+
+ 	-webkit-border-radius: 4px; /* Android ≤ 1.6, iOS 1-3.2, Safari 3-4 */
+ 	border-radius: 4px; /* Android 2.1+, Chrome, Firefox 4+, IE 9+, iOS 4+, Opera 10.50+, Safari 5+ */
+
+ 	padding:2px;
+ 	width:75%;
+ 	border:solid black 1px;
+ }
+ .vs-button img {
+ 	vertical-align:middle;
+ }
+ .vs-button:hover {
+ 	background-color: #999999;
+ 	background-image: -webkit-gradient(linear, left top, left bottom, from(#999999), to(#ffffff)); /* Chrome, Safari 4+ */
+ 	background-image: -webkit-linear-gradient(top, #999999, #ffffff); /* Chrome 10-25, iOS 5+, Safari 5.1+ */
+ 	background-image:    -moz-linear-gradient(top, #999999, #ffffff); /* Firefox 3.6-15 */
+ 	background-image:      -o-linear-gradient(top, #999999, #ffffff); /* Opera 11.10-12.00 */
+ 	background-image:         linear-gradient(to bottom, #999999, #ffffff); /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+ }
