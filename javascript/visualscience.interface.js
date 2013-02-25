@@ -18,7 +18,8 @@ var vsInterface = (function() {
 		'actionBar.html',
 		'lsComparisonLayout.html',
 		'sprikiComparisonLayout.html',
-		'lsComparisonPubsLayout.html'
+		'lsComparisonPubsLayout.html',
+		'msgRecipientsLayout.html'
 		);
 	//Pre-loading the views when the html is loaded
 	jQuery(document).ready(function() {

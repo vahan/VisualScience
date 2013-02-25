@@ -24,12 +24,17 @@ var vsMessage = (function() {
 	 * The recipients div for messages and conferences
 	 */
 	 createRecipientsDiv = function(thisTabId, selectedUsers, selectedUsersEmail) {
-	 	var content = '<div id="visualscience-recipient-div-content-' + thisTabId + '" style="width:100%;overflow-y:scroll;height:200px;">';
+	 	var recipientsLayout = vsInterface.getView('msgRecipientsLayout.html');
+	 	var users = new Array();
 	 	for (var i = 0; i < selectedUsers.length; i++) {
-	 		content += '<p id="visualscience-recipients-entry-' + thisTabId + '-' + i + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="vsMessage.deleteRecipientToMessage(' + thisTabId + ', ' + i + ');" id="visualscience-message-close-cross-' + thisTabId + '-' + i + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:' + selectedUsersEmail[i] + '">' + selectedUsers[i] + '</a></p>';
+	 		users.push({id: i, email: selectedUsersEmail[i], name: selectedUsers[i], tab:thisTabId});//Have to put tab, otherwise not well interpreted into handlebars' view
 	 	}
-	 	content += '</div>';
-	 	return '<div id="visualscience-recipients-div-' + thisTabId + '" style="border:solid black 1px;display:inline-block;width:100%;">' + content + '<input type="button" style="margin-left:10px;margin-right:10px;" value="Add Recipient" id="visualscience-message-add-recipient-button-' + thisTabId + '" nbRecipients="' + selectedUsers.length + '" onClick="vsMessage.addRecipientForMessage(' + thisTabId + ');" /><input type="email" name="visualscience-message-add-recipient-email-' + thisTabId + '" id="visualscience-message-add-recipient-email-' + thisTabId + '" placeholder="Type an email" onKeyPress="if (event.keyCode == 13) vsMessage.addRecipientForMessage(' + thisTabId + ');" /></div>';
+	 	var parameters = {
+	 		thisTabId: thisTabId,
+	 		nbUsers: selectedUsers.length,
+	 		user: users
+	 	};
+	 	return recipientsLayout(parameters);
 	 };
 	/*
 	 * The send button, only for messages
