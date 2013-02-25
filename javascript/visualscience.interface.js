@@ -16,7 +16,9 @@ var vsInterface = (function() {
 		'livingscienceLoading.html',
 		'livingsciencePageLayout.html',
 		'actionBar.html',
-		'lsComparisonLayout.html'
+		'lsComparisonLayout.html',
+		'sprikiComparisonLayout.html',
+		'lsComparisonPubsLayout.html'
 		);
 	//Pre-loading the views when the html is loaded
 	jQuery(document).ready(function() {

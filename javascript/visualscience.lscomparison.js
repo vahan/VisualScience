@@ -63,14 +63,22 @@ var vsLscomparison = (function() {
 	};
 
 	createComparisonSpriki = function(idOfThisTab, firstDbId, secondDbId) {
-		jQuery('#ls-compare-spriki-' + idOfThisTab).html('<h3>Relations</h3><center><div id="ls-compare-spriki-relations-' + idOfThisTab + '" style="display:inline-block;text-align:center;width:100%;height:500px;"></div></center>');
+		var sprikiComparisonLayout = vsInterface.getView('sprikiComparisonLayout.html');
+		var parameters = {
+			idOfThisTab: idOfThisTab
+		};
+		jQuery('#ls-compare-spriki-' + idOfThisTab).html(sprikiComparisonLayout(parameters));
 		var mergedDB = vsDatabase.mergeLSDB(firstDbId, secondDbId);
 		vsLivingscience.generateRelationsDiv(mergedDB, 0, mergedDB.count(), 'ls-compare-spriki-relations-' + idOfThisTab);
 		vsDatabase.lsDBOriginal[idOfThisTab] = mergedDB;
 	};
 
 	createComparisonPublication = function(idOfThisTab, idFirstDB, idSecondDB) {
-		jQuery('#ls-compare-pubs-' + idOfThisTab).html('<h3>Publications</h3><div id="ls-compare-left-pubs-' + idOfThisTab + '" style="display:inline-block;width:48%;"></div><div id="ls-compare-right-pubs-' + idOfThisTab + '" style="display:inline-block;width:48%;float:right;"></div>');
+		var lsComparisonPubsLayout = vsInterface.getView('lsComparisonPubsLayout.html');
+		var parameters = {
+			idOfThisTab: idOfThisTab
+		};
+		jQuery('#ls-compare-pubs-' + idOfThisTab).html(lsComparisonPubsLayout(parameters));
 		vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idFirstDB], vsDatabase.getFirstPublicationForLivingScience(), vsDatabase.getNumberOfPublicationsForLivingScience(), 'ls-compare-left-pubs-' + idOfThisTab);
 		vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idSecondDB], vsDatabase.getFirstPublicationForLivingScience(), vsDatabase.getNumberOfPublicationsForLivingScience(), 'ls-compare-right-pubs-' + idOfThisTab);
 	};
