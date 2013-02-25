@@ -1,5 +1,5 @@
 var vsMessage = (function() {
-	var createSubjectDiv, createMessageDiv, createAttachmentsDiv, createRecipientsDiv, createSendMessageButton, insertEmailIntoRecipientsDiv, getRecipientsOfMessage;
+	var createSubjectDiv, createMessageDiv, createAttachmentsDiv, createRecipientsDiv, createSendMessageButton, insertEmailIntoRecipientsDiv, getRecipientsOfMessage, renameMessageTab;
 
 	/*
 	 * The subject input for messages and conferences
@@ -60,6 +60,23 @@ var vsMessage = (function() {
 	 	return recipientsEmailAndName;
 	 };
 
+	 renameMessageTab =  function (thisTabId) {
+	 	var nbRecipients = jQuery('#visualscience-recipient-div-content-'+thisTabId+' p').size();
+	 	var title = '';
+	 	if (nbRecipients == 1) {
+	 		title = ' ' + jQuery('#visualscience-recipient-div-content-'+thisTabId+' p a:nth-child(2)').text();
+	 	}
+	 	else if (nbRecipients == 0) {
+	 		title = ' No User';
+	 	}
+	 	else {
+	 		title = ' ' + nbRecipients + ' Users';
+	 	}
+	 	var oldTitle = jQuery('a[href="#message-tab-' + thisTabId + '"]').text();
+	 	oldTitle = oldTitle.substring(0, oldTitle.length -1);
+	 	var tabTitleContent = jQuery('a[href="#message-tab-' + thisTabId + '"]').html().replace(oldTitle, title);
+	 	jQuery('a[href="#message-tab-' + thisTabId + '"]').html(tabTitleContent);
+	 };
 	 return {
 		/*
 		 * This function creates a new Tab where it is possible to send a message to the selected user(s)
@@ -165,19 +182,7 @@ var vsMessage = (function() {
 		 		var nbRecipients = parseInt(jQuery('#visualscience-message-add-recipient-button-' + thisTabId).attr('nbRecipients'));
 		 		insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients);
 		 		jQuery('#visualscience-message-add-recipient-button-' + thisTabId).attr('nbRecipients', nbRecipients + 1);
-		 		var oldTitle = parseInt(jQuery('a[href="#message-tab-' + thisTabId + '"]').text());
-		 		if (isNaN(oldTitle)) {
-		 			var newTitle = ' 2 Users ';
-		 			oldTitle = jQuery('#visualscience-recipients-div-' + thisTabId + ':first-child').text().substring(1, jQuery('#visualscience-recipients-div-' + thisTabId + ':first-child').text().substring(2).indexOf('X') + 2);
-		 		} else if (oldTitle == 0) {
-		 			var newTitle = ' ' + jQuery('#visualscience-recipients-div-' + thisTabId + ':first-child').text().substring(1) + ' ';
-		 			oldTitle = ' 0 User ';
-		 		} else {
-		 			var newTitle = ' ' + (oldTitle + 1) + ' ';
-		 			oldTitle = ' ' + oldTitle + ' ';
-		 		}
-		 		newTitle = jQuery('a[href="#message-tab-' + thisTabId + '"]').html().replace(oldTitle, newTitle);
-		 		jQuery('a[href="#message-tab-' + thisTabId + '"]').html(newTitle);
+		 		renameMessageTab(thisTabId);
 		 		jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
 		 	} else {
 		 		alert('Please enter a valid email');
@@ -186,19 +191,7 @@ var vsMessage = (function() {
 		 deleteRecipientToMessage : function(thisTabId, entryNb) {
 		 	jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).hide(350, function() {
 		 		jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).remove();
-		 		var oldTitle = parseInt(jQuery('a[href="#message-tab-' + thisTabId + '"]').text());
-		 		if (oldTitle == 2) {
-		 			var newTitle = ' ' + jQuery('#visualscience-recipients-div-' + thisTabId + ':first-child').text().substring(1) + ' ';
-		 			oldTitle = '2 Users';
-		 		} else if (isNaN(oldTitle)) {
-		 			var newTitle = ' 0 User ';
-		 			oldTitle = jQuery('a[href="#message-tab-' + thisTabId + '"]').text().substring(0, jQuery('a[href="#message-tab-' + thisTabId + '"]').text().indexOf('X'));
-		 		} else {
-		 			var newTitle = ' ' + (oldTitle - 1) + ' ';
-		 			oldTitle = ' ' + oldTitle + ' ';
-		 		}
-		 		newTitle = jQuery('a[href="#message-tab-' + thisTabId + '"]').html().replace(oldTitle, newTitle);
-		 		jQuery('a[href="#message-tab-' + thisTabId + '"]').html(newTitle);
+		 		renameMessageTab(thisTabId);
 		 	});
 		 }
 		};
