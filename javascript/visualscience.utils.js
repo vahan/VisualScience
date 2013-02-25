@@ -10,7 +10,6 @@ var vsUtils = (function() {
 		//This is the URL to the php that handles the mail
 		SendMailURL = rootFolder + '/visualscience/mail/';
 		csvURL = installFolder + 'includes/stringToCSV.php?text=';
-		alert('ui-work')
 	});
 	//This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 	var dialogNumber;

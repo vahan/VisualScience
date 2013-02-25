@@ -43,6 +43,7 @@ jQuery(window).load(function() {
 	 		margin : '0px',
 	 		padding : '0px'
 	 	});
+	 	jQuery('#'+listId).css('height', 2 * (setWidth + setWidth * 1 / 10) + 10);
 	 };
 	 
 	 return {
