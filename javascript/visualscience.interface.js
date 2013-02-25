@@ -19,7 +19,8 @@ var vsInterface = (function() {
 		'lsComparisonLayout.html',
 		'sprikiComparisonLayout.html',
 		'lsComparisonPubsLayout.html',
-		'msgRecipientsLayout.html'
+		'msgRecipientsLayout.html',
+		'msgNewRecipientsEntry.html'
 		);
 	//Pre-loading the views when the html is loaded
 	jQuery(document).ready(function() {

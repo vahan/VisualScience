@@ -44,8 +44,13 @@ var vsMessage = (function() {
 	 };
 	 insertEmailIntoRecipientsDiv = function(thisTabId, email, nbRecipients) {
 	 	nbRecipients += 1;
-	 	var entryToAppend = '<p id="visualscience-recipients-entry-' + thisTabId + '-' + nbRecipients + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="vsMessage.deleteRecipientToMessage(' + thisTabId + ', ' + nbRecipients + ');" id="visualscience-message-close-cross-' + thisTabId + '-' + nbRecipients + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-message-recipients-infos" href="mailto:' + email + '">' + email + '</a></p>';
-	 	jQuery('#visualscience-recipient-div-content-' + thisTabId).append(entryToAppend);
+	 	var newEntry = vsInterface.getView('msgNewRecipientsEntry.html');
+	 	var parameters = {
+	 		thisTabId: thisTabId,
+	 		email: email,
+	 		nbRecipients: nbRecipients
+	 	};
+	 	jQuery('#visualscience-recipient-div-content-' + thisTabId).append(newEntry(parameters));
 	 };
 	/*
 	 * Gets the name and email of every recipients of a message.
