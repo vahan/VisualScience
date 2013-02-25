@@ -23,8 +23,9 @@ var vsInterface = (function() {
 		'msgNewRecipientsEntry.html',
 		'msgTabLayout.html'
 		);
-	//Pre-loading the views when the html is loaded
+	
 	jQuery(document).ready(function() {
+		//Pre-loading the views when the html is loaded
 		jQuery.each(listOfViews, function(index, element){
 			vsInterface.storeViewInDB(element);
 		});
