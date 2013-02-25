@@ -98,7 +98,7 @@ var vsDatabase = (function() {
 			var journalsAll = vsDatabase.lsDBOriginal[idOfDB].fetchArray('journal');
 			journalsAll.sort();
 			var journals = new Array();
-			var html = '<div style="overflow-y:scroll;max-width:250px;max-height:250px;"><ul>';
+			var html = '<div style="overflow-y:scroll;max-width:250px;max-height:200px;"><ul>';
 			jQuery.each(journalsAll, function(i, el) {
 				if (jQuery.inArray(el[0], journals) == -1 && el[0] != 'undefined' && el[0] && el[0] != 'NULL') {
 					journals.push(el[0]);
@@ -118,7 +118,7 @@ var vsDatabase = (function() {
 			allAuthors.push(vsUtils.getLastNameCommaFirstName(authorName));
 			allAuthors.push(authorName + '...');
 			allAuthors.push(authorName.substring(0, authorName.length - 3));
-			var html = '<div style="overflow-y:scroll;max-width:250px;max-height:250px;"><ul>';
+			var html = '<div style="overflow-y:scroll;max-width:250px;max-height:200px;"><ul>';
 			jQuery.each(vsDatabase.lsDBOriginal[idOfDB].db, function(i, el) {
 				jQuery.each(el.authors, function(j, element) {
 					if (jQuery.inArray(element.name, allAuthors) == -1) {

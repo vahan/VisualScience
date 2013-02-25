@@ -30,7 +30,7 @@ var vsLscomparison = (function() {
 		table += '</tr></thead><tbody>';
 
 		jQuery.each(object.db, function(i) {
-			table += '<tr><td style="color:' + getSprikiColor(i) + ';"><strong>' + vsLivingscience.getLSTabName(object.db[i]) + '</strong></td>';
+			table += '<tr style="height:250px;"><td style="color:' + getSprikiColor(i) + ';"><strong>' + vsLivingscience.getLSTabName(object.db[i]) + '</strong></td>';
 			jQuery.each(object.fields, function(j) {
 				table += '<td>' + object.fields[j][1](object.db[i]) + '</td>';
 			});
