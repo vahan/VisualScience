@@ -31,7 +31,8 @@ var vsSearch = (function() {
 		 createActionBar : function(idOfThisTab) {
 		 	var actionBar = vsInterface.getView('actionBar.html');
 		 	var parameters = {
-		 		idOfThisTab: idOfThisTab
+		 		idOfThisTab: idOfThisTab,
+		 		installFolder: vsUtils.getInstallFolder()
 		 	};
 		 	return actionBar(parameters);
 		 },
