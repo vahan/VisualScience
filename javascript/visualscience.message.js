@@ -1,12 +1,5 @@
 var vsMessage = (function() {
-	var createAttachmentsDiv, createRecipientsDiv, insertEmailIntoRecipientsDiv, getRecipientsOfMessage, renameMessageTab;
-	/*
-	 * The attachment div for messages and conferences
-	 */
-	 createAttachmentsDiv = function(thisTabId) {
-	 	var content = '<div id="visualscience-message-attachments-div-show-' + thisTabId + '" style="height:150px;overflow-y:scroll;"></div><div id="upload-form-' + thisTabId + '"></div> <div id="progress-upload-' + thisTabId + '" style="margin:5px;padding:5px;background-color:red;font-size:12px;display:none;" >Progress</div>';
-	 	return '<div id="visualscience-attachments-div-' + thisTabId + '" style="display:inline-block;width:100%;border:solid black 1px;margin-top:20px;">' + content + '</div>';
-	 };
+	var createRecipientsDiv, insertEmailIntoRecipientsDiv, getRecipientsOfMessage, renameMessageTab;
 	/*
 	 * The recipients div for messages and conferences
 	 */
@@ -22,14 +15,6 @@ var vsMessage = (function() {
 	 		user: users
 	 	};
 	 	return recipientsLayout(parameters);
-	 };
-
-	 createMessageEditor = function (thisTabId) {
-	 	var messageEditor = vsInterface.getView('msgTabLayout.html');
-	 	var parameters = {
-	 		thisTabId: thisTabId
-	 	};
-	 	return messageEditor(parameters);
 	 };
 
 	 insertEmailIntoRecipientsDiv = function(thisTabId, email, nbRecipients) {
@@ -85,19 +70,13 @@ var vsMessage = (function() {
 		 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + '/images/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-' + thisTabId);
 
 				//Create the message tab's HTML
-				//var attachmentDiv = createAttachmentsDiv(thisTabId);
 				var recipientsDiv = createRecipientsDiv(thisTabId, selectedUsers, selectedUsersEmail);
-
-
 				var msgTabLayout = vsInterface.getView('msgTabLayout.html');
 				var parameters = {
 					recipientsDiv: recipientsDiv,
 					thisTabId: thisTabId
 				};
 				var messageTab = msgTabLayout(parameters);
-
-				//var msgEditor = createMessageEditor(thisTabId);
-				//var messageTab = '<h3>Message</h3><div width="100%">'+msgEditor+'<div style="float:right;width:45%;display:inline-block;">' + recipientsDiv + attachmentDiv + '</div></div>';
 				jQuery('#message-tab-' + thisTabId).html(messageTab);
 				vsUtils.loadCLEditor('visualscience-message-input-' + thisTabId);
 				vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
