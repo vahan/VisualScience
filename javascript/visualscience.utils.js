@@ -10,6 +10,10 @@ var vsUtils = (function() {
 		//This is the URL to the php that handles the mail
 		SendMailURL = rootFolder + '/visualscience/mail/';
 		csvURL = installFolder + 'includes/stringToCSV.php?text=';
+		//Testing wether the browser is IE6-8:
+		if (jQuery.browser.mise && parseInt(jQuery.browser.version.slice(0,3)) < 9) {
+			jQuery.getScript(installFolder + '/javascript/lib/visualscience.shim.IE9.js');
+		}
 	});
 	//This is the DialogNumber variable. Setting it global makes everything much more easier to use.
 	var dialogNumber;
