@@ -226,3 +226,7 @@ span.preselected {
  	background-image:      -o-linear-gradient(top, #d1d1d1, #ffffff); /* Opera 11.10-12.00 */
  	background-image:         linear-gradient(to bottom, #d1d1d1, #ffffff); /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
  }
+ .ui-tooltip {
+ 	max-width: 150px;
+ 	padding:5px;
+ }

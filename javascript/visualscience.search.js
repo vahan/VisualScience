@@ -29,7 +29,9 @@ var vsSearch = (function() {
 		 * This creates the action bar, with the different buttons.
 		 */
 		 createActionBar : function(idOfThisTab) {
-		 	var actionBar = vsInterface.getView('actionBar.html');
+		 	var actionBar = vsInterface.getView('actionBar.html', function(data) {
+		 		return data;
+		 	});
 		 	var parameters = {
 		 		idOfThisTab: idOfThisTab,
 		 		installFolder: vsUtils.getInstallFolder()

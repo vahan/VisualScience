@@ -14,14 +14,8 @@ var vsInterface = (function() {
 	//List of all the views that have to be pre-loaded
 	listOfViews = new Array(
 		'livingscienceLoading.html',
-		'livingsciencePageLayout.html',
 		'actionBar.html',
-		'lsComparisonLayout.html',
-		'sprikiComparisonLayout.html',
-		'lsComparisonPubsLayout.html',
-		'msgRecipientsLayout.html',
-		'msgNewRecipientsEntry.html',
-		'msgTabLayout.html'
+		'msgRecipientsLayout.html'
 		);
 	
 	jQuery(document).ready(function() {
@@ -59,16 +53,18 @@ var vsInterface = (function() {
 	 		tabId = newTabId;
 	 	},
 
-	 	storeViewInDB: function (viewPathSource) {
+	 	storeViewInDB: function (viewPathSource, callback) {
 	 		jQuery.get(vsUtils.getInstallFolder() + 'html/' + viewPathSource, function(data) {
 	 			vsDatabase.htmlViewsDB[viewPathSource] = data;
+	 			if (callback) {
+	 				vsInterface.getView(viewPathSource, callback);
+	 			}
 	 		});
 	 	},
 
-	 	getView: function (viewPathSource) {
+	 	getView: function (viewPathSource, callback) {
 	 		if (!vsDatabase.htmlViewsDB[viewPathSource]) {
-	 			alert('Don\'t forget to add your view into vsInterface. (listOfViews)');
-	 			vsInterface.storeViewInDB(viewPathSource);
+	 			vsInterface.storeViewInDB(viewPathSource, callback);
 	 			/**
 	 			* TODO: Here you should find a way to delay the process and then call (because the view is not yet loaded into the db)
 	 			* return vsInterface.getView(viewPathSource);
@@ -76,7 +72,8 @@ var vsInterface = (function() {
 	 		}
 	 		else {
 	 			var source = vsDatabase.htmlViewsDB[viewPathSource];
-	 			return Handlebars.compile(source);
+	 			source =  Handlebars.compile(source);
+	 			return callback(source);
 	 		}
 	 	},
 

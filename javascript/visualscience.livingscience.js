@@ -63,13 +63,14 @@ jQuery(window).load(function() {
 		 		livingscience.searchMultipleAuthors(selectedUsers, function(results) {
 		 			onLivingScienceResults(results, 'livingscience-tab-' + thisTabId, thisTabId);
 		 		});
-				var loadingPage = vsInterface.getView('livingscienceLoading.html');
-				var inputs = {installFolder: vsUtils.getInstallFolder()};
-				jQuery('#livingscience-tab-' + thisTabId).html(loadingPage(inputs));
-			} else {
-				alert('Please select at least one user');
-			}
-		},
+		 		vsInterface.getView('livingscienceLoading.html', function(loadingPage) {
+		 			var inputs = {installFolder: vsUtils.getInstallFolder()};
+		 			jQuery('#livingscience-tab-' + thisTabId).html(loadingPage(inputs));
+		 		});
+		 	} else {
+		 		alert('Please select at least one user');
+		 	}
+		 },
 		/*
 		 * Generates the content of a LivingScience tab, with the layout and design.
 		 * It firstly creates the layout, and then inserts in it the content.
@@ -79,21 +80,22 @@ jQuery(window).load(function() {
 		 */
 		 generateLivingScienceFromDB : function(database, location, thisTabId) {
 		 	var nbResults = database.length;
-		 	var livingsciencePageContent = vsInterface.getView('livingsciencePageLayout.html');
-		 	var parameters = {
-		 		totalResults: nbResults,
-		 		thisTabId: thisTabId,
-		 		firstOrder: Math.floor(nbResults / 12),
-		 		secondOrder: Math.floor(nbResults / 6),
-		 		thirdOrder: Math.floor(nbResults / 3),
-		 		fourthOrder: Math.floor(nbResults / 2),
-		 		fifthOrder: Math.floor(nbResults / 1.5),
-		 		sixthOrder: Math.floor(nbResults / 1.2),
-		 	};
-		 	jQuery('#' + location).html(livingsciencePageContent(parameters));
-		 	setWidthForMapsAndRelations('ls-list-' + thisTabId, 'ls-map-' + thisTabId, 'ls-relations-' + thisTabId);
-		 	vsDatabase.setParametersForLSDB(thisTabId);
-		 	vsLivingscience.actualizeLivingScienceDisplay(database, thisTabId);
+		 	vsInterface.getView('livingsciencePageLayout.html', function(livingsciencePageContent) {
+		 		var parameters = {
+		 			totalResults: nbResults,
+		 			thisTabId: thisTabId,
+		 			firstOrder: Math.floor(nbResults / 12),
+		 			secondOrder: Math.floor(nbResults / 6),
+		 			thirdOrder: Math.floor(nbResults / 3),
+		 			fourthOrder: Math.floor(nbResults / 2),
+		 			fifthOrder: Math.floor(nbResults / 1.5),
+		 			sixthOrder: Math.floor(nbResults / 1.2),
+		 		};
+		 		jQuery('#' + location).html(livingsciencePageContent(parameters));
+		 		setWidthForMapsAndRelations('ls-list-' + thisTabId, 'ls-map-' + thisTabId, 'ls-relations-' + thisTabId);
+		 		vsDatabase.setParametersForLSDB(thisTabId);
+		 		vsLivingscience.actualizeLivingScienceDisplay(database, thisTabId);
+		 	});
 		 },
 		/*
 		 * Actualizes the display of a LivingScience result.

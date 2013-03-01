@@ -4,7 +4,7 @@
 			<legend>
 				<a onclick="jQuery('#ls-result-option-table-{{thisTabId}}').slideToggle();">Options</a>
 			</legend>
-			<div class="fieldset-wrapper" id="ls-result-option-table-{{thisTabId}}" style="display: none;">
+			<div class="fieldset-wrapper" id="ls-result-option-table-{{thisTabId}}">
 				<table>
 					<tbody>
 						<tr>
@@ -12,7 +12,7 @@
 								<label for="sorting-ls-result-{{thisTabId}}">Sorting publications by</label>
 							</td>
 							<td>
-								<select name="sorting-ls-result-{{thisTabId}}" id="sorting-ls-result-{{thisTabId}}" onchange="vsDatabase.orderLSResultDatabase({{thisTabId}});">
+								<select name="sorting-ls-result-{{thisTabId}}" id="sorting-ls-result-{{thisTabId}}" onchange="vsDatabase.orderLSResultDatabase({{thisTabId}});" title="Sort the publications, using one of our pre-defined orders.">
 									<option value="own">Default</option>
 									<option value="title">Title</option>
 									<option value="decreasing">Date decreasing</option>

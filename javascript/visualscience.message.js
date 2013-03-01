@@ -4,7 +4,9 @@ var vsMessage = (function() {
 	 * The recipients div for messages and conferences
 	 */
 	 createRecipientsDiv = function(thisTabId, selectedUsers, selectedUsersEmail) {
-	 	var recipientsLayout = vsInterface.getView('msgRecipientsLayout.html');
+	 	var recipientsLayout = vsInterface.getView('msgRecipientsLayout.html', function(data) {
+	 		return data;
+	 	});
 	 	var users = new Array();
 	 	for (var i = 0; i < selectedUsers.length; i++) {
 	 		users.push({id: i, email: selectedUsersEmail[i], name: selectedUsers[i], tab:thisTabId});//Have to put tab, otherwise not well interpreted into handlebars' view
@@ -19,13 +21,14 @@ var vsMessage = (function() {
 
 	 insertEmailIntoRecipientsDiv = function(thisTabId, email, nbRecipients) {
 	 	nbRecipients += 1;
-	 	var newEntry = vsInterface.getView('msgNewRecipientsEntry.html');
-	 	var parameters = {
-	 		thisTabId: thisTabId,
-	 		email: email,
-	 		nbRecipients: nbRecipients
-	 	};
-	 	jQuery('#visualscience-recipient-div-content-' + thisTabId).append(newEntry(parameters));
+	 	vsInterface.getView('msgNewRecipientsEntry.html', function(newEntry) {
+	 		var parameters = {
+	 			thisTabId: thisTabId,
+	 			email: email,
+	 			nbRecipients: nbRecipients
+	 		};
+	 		jQuery('#visualscience-recipient-div-content-' + thisTabId).append(newEntry(parameters));
+	 	});
 	 };
 	/*
 	 * Gets the name and email of every recipients of a message.
@@ -69,24 +72,23 @@ var vsMessage = (function() {
 		 		var thisTabId = vsInterface.getTabId();
 		 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + '/images/message.png" width="13px" alt="image for message tab" /> ', title, '#message-tab-' + thisTabId);
 
-				//Create the message tab's HTML
-				var recipientsDiv = createRecipientsDiv(thisTabId, selectedUsers, selectedUsersEmail);
-				var msgTabLayout = vsInterface.getView('msgTabLayout.html');
-				var parameters = {
-					recipientsDiv: recipientsDiv,
-					thisTabId: thisTabId
-				};
-				var messageTab = msgTabLayout(parameters);
-				jQuery('#message-tab-' + thisTabId).html(messageTab);
-				vsUtils.loadCLEditor('visualscience-message-input-' + thisTabId);
-				vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
-				vsUtils.loadUploadScripts('upload-button-' + thisTabId, function() {
-					//addAttachments();
-				});
-			} else {
-				alert('Please select at least one user.');
-			}
-		},
+		 		//Create the message tab's HTML
+		 		var recipientsDiv = createRecipientsDiv(thisTabId, selectedUsers, selectedUsersEmail);
+		 		vsInterface.getView('msgTabLayout.html', function(msgTabLayout) {
+		 			var parameters = {
+		 				recipientsDiv: recipientsDiv,
+		 				thisTabId: thisTabId
+		 			};
+		 			var messageTab = msgTabLayout(parameters);
+		 			jQuery('#message-tab-' + thisTabId).html(messageTab);
+		 			vsUtils.loadCLEditor('visualscience-message-input-' + thisTabId);
+		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
+		 			vsUtils.loadUploadScripts('upload-button-' + thisTabId);
+		 		});
+		 	} else {
+		 		alert('Please select at least one user.');
+		 	}
+		 },
 		/*
 		 * Get informations and send them to the server through ajax
 		 */
