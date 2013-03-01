@@ -59,7 +59,7 @@ var vsDatabase = (function() {
 		searchAndSortNDDB : function(thisTabId) {
 			var wordToSearch = jQuery('#search-ls-result-' + thisTabId).val().toLowerCase();
 			var howMany = vsDatabase.lsDB[thisTabId].resolveTag('howMany');
-			var start = vsDatabase.lsDB[thisTabId].resolveTag('start')
+			var start = vsDatabase.lsDB[thisTabId].resolveTag('start');
 			var optionsNDDB = {
 				tags : {
 					'start' : start,
@@ -89,6 +89,20 @@ var vsDatabase = (function() {
 				wordResult = 'Results';
 			}
 			jQuery('#search-ls-nb-result-' + thisTabId).html(vsDatabase.lsDB[thisTabId].length + ' ' + wordResult);
+		},
+		searchNDDB: function(keyword, database, dbOptions) {
+			var searchedDB = new NDDB(dbOptions);
+			for (var i = 0; i <= database.length - 1; i++) {
+				var authors = database.db[i].author && database.db[i].author.toLowerCase().indexOf(keyword) != -1;
+				var title = database.db[i].title && database.db[i].title.toLowerCase().indexOf(keyword) != -1;
+				var year = database.db[i].year && database.db[i].year.toString().toLowerCase().indexOf(keyword) != -1;
+				var journal = database.db[i].journal && database.db[i].journal.toLowerCase().indexOf(keyword) != -1;
+
+				if (authors || title || year || journal) {
+					searchedDB.insert(database.db[i]);
+				}
+			}
+			return searchedDB;
 		},
 		getNbPublicationsOfLSDB : function(idOfDB) {
 			return vsDatabase.lsDBOriginal[idOfDB].count();
@@ -182,16 +196,16 @@ var vsDatabase = (function() {
 		 	}
 		 	vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 		 },
-		 mergeLSDB : function(idFirstDB, idSecondDB) {
+		 mergeLSDB : function(firstDatabase, secondDatabase) {
 		 	var newDB = new NDDB(optionsForNDDB);
-		 	var length = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? vsDatabase.lsDBOriginal[idFirstDB].length : vsDatabase.lsDBOriginal[idSecondDB].length;
-		 	var biggerDB = vsDatabase.lsDBOriginal[idFirstDB].length > vsDatabase.lsDBOriginal[idSecondDB].length ? idFirstDB : idSecondDB;
+		 	var length = firstDatabase.length > secondDatabase.length ? firstDatabase.length : secondDatabase.length;
+		 	var biggerDB = firstDatabase.length > secondDatabase.length ? firstDatabase : secondDatabase;
 		 	for (var i = 0; i < length; i++) {
-		 		newDB.insert(vsDatabase.lsDBOriginal[idFirstDB].db[i]);
-		 		newDB.insert(vsDatabase.lsDBOriginal[idSecondDB].db[i]);
+		 		newDB.insert(firstDatabase.db[i]);
+		 		newDB.insert(secondDatabase.db[i]);
 		 	}
-		 	for (var i = length; i < vsDatabase.lsDBOriginal[biggerDB].length; i++) {
-		 		newDB.insert(vsDatabase.lsDBOriginal[biggerDB].db[i]);
+		 	for (var i = length; i < biggerDB.length; i++) {
+		 		newDB.insert(biggerDB.db[i]);
 		 	}
 		 	return newDB;
 		 }

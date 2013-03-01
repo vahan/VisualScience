@@ -69,16 +69,19 @@ var vsLscomparison = (function() {
 				idOfThisTab: idOfThisTab
 			};
 			jQuery('#ls-compare-spriki-' + idOfThisTab).html(sprikiComparisonLayout(parameters));
-			var mergedDB = vsDatabase.mergeLSDB(firstDbId, secondDbId);
+			var mergedDB = vsDatabase.mergeLSDB(vsDatabase.lsDBOriginal[firstDbId], vsDatabase.lsDBOriginal[secondDbId]);
 			vsLivingscience.generateRelationsDiv(mergedDB, 0, mergedDB.count(), 'ls-compare-spriki-relations-' + idOfThisTab);
 			vsDatabase.lsDBOriginal[idOfThisTab] = mergedDB;
+			vsDatabase.lsDB[idOfThisTab] = mergedDB;
 		});
 	};
 
 	createComparisonPublication = function(idOfThisTab, idFirstDB, idSecondDB) {
 		vsInterface.getView('lsComparisonPubsLayout.html', function(lsComparisonPubsLayout) {
 			var parameters = {
-				idOfThisTab: idOfThisTab
+				idOfThisTab: idOfThisTab,
+				idFirstDB: idFirstDB,
+				idSecondDB: idSecondDB
 			};
 			jQuery('#ls-compare-pubs-' + idOfThisTab).html(lsComparisonPubsLayout(parameters));
 			vsLivingscience.generatePublicationsDiv(vsDatabase.lsDBOriginal[idFirstDB], vsDatabase.getFirstPublicationForLivingScience(), vsDatabase.getNumberOfPublicationsForLivingScience(), 'ls-compare-left-pubs-' + idOfThisTab);
@@ -131,7 +134,24 @@ var vsLscomparison = (function() {
 		 		}
 		 	}
 		 	return tabs;
-		 }
-		};
+		 },
 
-	})();
+		 searchMergedDB: function (idMerged, idDBToSearch, idOtherDB, side) {
+		 	var searchKeyWord = jQuery('#ls-compare-search-pubs-'+idOfThisTab+'-'+idDBToSearch).val().toLowerCase();
+		 	var options = {
+		 		tags : {
+		 			'start' : vsDatabase.lsDB[thisTabId].resolveTag('start'),
+		 			'howMany' : vsDatabase.lsDB[thisTabId].resolveTag('howMany')
+		 		}
+		 	};
+		 	var searchedDB = vsDatabase.searchNDDB(searchKeyWord, vsDatabase.lsDBOriginal[idDBToSearch], options);
+		 	/**
+		 	*To finish, because you don't need to merge the dbs, 
+		 	* but just recreate the interface for the searched list of pubs.
+		 	* (See if may be it is easy to regenerate the relations/statistic table.)
+		 	*/
+		 }
+		}
+	};
+
+})();

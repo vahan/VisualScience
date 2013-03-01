@@ -15,7 +15,8 @@ var vsInterface = (function() {
 	listOfViews = new Array(
 		'livingscienceLoading.html',
 		'actionBar.html',
-		'msgRecipientsLayout.html'
+		'msgRecipientsLayout.html',
+		'lsComparisonLayout.html'
 		);
 	
 	jQuery(document).ready(function() {
