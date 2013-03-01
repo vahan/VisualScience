@@ -226,7 +226,11 @@ span.preselected {
  	background-image:      -o-linear-gradient(top, #d1d1d1, #ffffff); /* Opera 11.10-12.00 */
  	background-image:         linear-gradient(to bottom, #d1d1d1, #ffffff); /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
  }
- .ui-tooltip {
- 	max-width: 150px;
- 	padding:5px;
- }
+.visualscience-search {
+ 	-webkit-border-radius: 2px; /* Android ≤ 1.6, iOS 1-3.2, Safari 3-4 */
+ 	border-radius: 2px; /* Android 2.1+, Chrome, Firefox 4+, IE 9+, iOS 4+, Opera 10.50+, Safari 5+ */
+    padding: 6px;
+    -moz-box-shadow:inset 2px 2px 5px #ccc;
+    box-shadow:inset 2px 2px 5px #ccc;
+    border: 1px solid #b8b8b8;
+}

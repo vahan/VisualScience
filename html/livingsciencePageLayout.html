@@ -54,7 +54,7 @@
 								<label for="search-ls-result-{{thisTabId}}">Search</label>
 							</td>
 							<td>
-								<input type="text" onchange="vsDatabase.searchAndSortNDDB({{thisTabId}});" placeholder="Type your search" id="search-ls-result-{{thisTabId}}" name="search-ls-result-{{thisTabId}}" /> 
+								<input type="search" onkeyup="vsDatabase.searchAndSortNDDB({{thisTabId}});" placeholder="Type your search" id="search-ls-result-{{thisTabId}}" name="search-ls-result-{{thisTabId}}" class="visualscience-search" /> 
 								<strong>
 									<span id="search-ls-nb-result-{{thisTabId}}">{{totalResults}} Results</span>
 								</strong>

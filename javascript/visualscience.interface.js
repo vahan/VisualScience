@@ -73,7 +73,12 @@ var vsInterface = (function() {
 	 		else {
 	 			var source = vsDatabase.htmlViewsDB[viewPathSource];
 	 			source =  Handlebars.compile(source);
-	 			return callback(source);
+	 			if (callback) {
+	 				return callback(source);
+	 			}
+	 			else {
+	 				return source;
+	 			}
 	 		}
 	 	},
 
