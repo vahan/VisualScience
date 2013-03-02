@@ -1,12 +1,12 @@
 <h3>Publications</h3>
-<div style="display:inline-block;width:48%;height:500px;overflow-y:scroll;" align="center">
-	<input type="search" placeholder="Search" size="40%" id="ls-compare-search-pubs-{{idOfThisTab}}-{{idFirstDB}}" class="visualscience-search" onkeyup="vsLsComparison.searchDB({{idOfThisTab}}, {{idFirstDB}}, {{idSecondDB}}, 1);" />
+<div style="display:inline-block;width:48%;" align="center">
+	<input type="search" placeholder="Search" size="40%" id="ls-compare-search-pubs-{{idOfThisTab}}-{{idFirstDB}}" class="visualscience-search" onkeyup="vsLscomparison.searchMergedDB({{idOfThisTab}}, {{idFirstDB}}, {{idSecondDB}}, 1);" />
 	<br /><br />
-	<div id="ls-compare-left-pubs-{{idOfThisTab}}" >
+	<div id="ls-compare-left-pubs-{{idOfThisTab}}" style="height:500px;overflow-y:scroll;">
 	</div>
 </div>
-<div style="display:inline-block;width:48%;float:right;height:500px;overflow-y:scroll;" align="center">
-	<input type="search" placeholder="Search" size="40%" id="ls-compare-search-pubs-{{idOfThisTab}}-{{idSecondDB}}" class="visualscience-search" onkeyup="vsLsComparison.searchMergedDB({{idOfThisTab}}, {{idSecondDB}}, {{idFirstDB}}, 2);" />
+<div style="display:inline-block;width:48%;float:right;" align="center">
+	<input type="search" placeholder="Search" size="40%" id="ls-compare-search-pubs-{{idOfThisTab}}-{{idSecondDB}}" class="visualscience-search" onkeyup="vsLscomparison.searchMergedDB({{idOfThisTab}}, {{idSecondDB}}, {{idFirstDB}}, 2);" />
 	<br /><br />
-	<div id="ls-compare-right-pubs-{{idOfThisTab}}" ></div>
+	<div id="ls-compare-right-pubs-{{idOfThisTab}}" style="height:500px;overflow-y:scroll;"></div>
 </div>

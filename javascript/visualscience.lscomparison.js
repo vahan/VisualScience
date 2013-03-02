@@ -137,20 +137,19 @@ var vsLscomparison = (function() {
 		 },
 
 		 searchMergedDB: function (idMerged, idDBToSearch, idOtherDB, side) {
-		 	var searchKeyWord = jQuery('#ls-compare-search-pubs-'+idOfThisTab+'-'+idDBToSearch).val().toLowerCase();
+		 	var searchKeyWord = jQuery('#ls-compare-search-pubs-'+idMerged+'-'+idDBToSearch).val().toLowerCase();
 		 	var options = {
 		 		tags : {
-		 			'start' : vsDatabase.lsDB[thisTabId].resolveTag('start'),
-		 			'howMany' : vsDatabase.lsDB[thisTabId].resolveTag('howMany')
+		 			'start' : vsDatabase.lsDB[idDBToSearch].resolveTag('start'),
+		 			'howMany' : vsDatabase.lsDB[idDBToSearch].resolveTag('howMany')
 		 		}
 		 	};
 		 	var searchedDB = vsDatabase.searchNDDB(searchKeyWord, vsDatabase.lsDBOriginal[idDBToSearch], options);
-		 	/**
-		 	*To finish, because you don't need to merge the dbs, 
-		 	* but just recreate the interface for the searched list of pubs.
-		 	* (See if may be it is easy to regenerate the relations/statistic table.)
-		 	*/
-		 }
+		 	var location = side == 1 ? 'ls-compare-left-pubs-'+idMerged : 'ls-compare-right-pubs-'+idMerged;
+		 	var start = vsDatabase.lsDB[idDBToSearch].resolveTag('start');
+		 	var howMany = vsDatabase.lsDB[idDBToSearch].resolveTag('howMany');
+		 	vsLivingscience.generatePublicationsDiv(searchedDB, start, howMany, location);
+		 
 		}
 	};
 
