@@ -48,6 +48,15 @@ var vsUtils = (function() {
 		 	jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
 		 },
 
+		 loadTimepickr: function(callback) {
+		 	if (document.createStyleSheet) {
+		 		document.createStyleSheet(installFolder + '/css/visualscience.jquery.timepicker.css');
+		 	} else {
+		 		jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "/css/visualscience.jquery.timepicker.css' type='text/css' media='screen' />"));
+		 	}
+		 	jQuery.getScript(installFolder+'/javascript/lib/visualscience.jquery.timepicker.js', callback);
+		 },
+
 		 uploadSubmittedFiles : function(tabId) {
 		 	var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
 		 	var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
@@ -101,27 +110,27 @@ var vsUtils = (function() {
 }
 jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').submit();
 return false;
-			//Avoid standard browser to navigate to the page.
-		},
-		deleteFileToUpload : function(tabId, entryNb) {
-			jQuery('#visualscience-upload-file-entry-' + tabId + '-' + entryNb).hide(350, function() {
-				jQuery('#visualscience-upload-file-entry-' + tabId + '-' + entryNb).remove();
-			});
-		},
 
-		loadCLEditor : function(areaId) {
-			if (document.createStyleSheet) {
-				document.createStyleSheet(installFolder + '/css/visualscience.jquery.cleditor.css');
-			} else {
-				jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "/css/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
-			}
-			jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.cleditor.min.js', function() {
-				jQuery('#' + areaId).cleditor({
-					width : '100%',
-					height : '440px'
-				});
-			});
-		},
+},
+deleteFileToUpload : function(tabId, entryNb) {
+	jQuery('#visualscience-upload-file-entry-' + tabId + '-' + entryNb).hide(350, function() {
+		jQuery('#visualscience-upload-file-entry-' + tabId + '-' + entryNb).remove();
+	});
+},
+
+loadCLEditor : function(areaId) {
+	if (document.createStyleSheet) {
+		document.createStyleSheet(installFolder + '/css/visualscience.jquery.cleditor.css');
+	} else {
+		jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "/css/visualscience.jquery.cleditor.css' type='text/css' media='screen' />"));
+	}
+	jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.cleditor.min.js', function() {
+		jQuery('#' + areaId).cleditor({
+			width : '100%',
+			height : '440px'
+		});
+	});
+},
 		/*
 		 * Modifies a Drupal-generated form into a visually more estheatical form.
 		 */

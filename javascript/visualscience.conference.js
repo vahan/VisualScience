@@ -17,6 +17,12 @@ var vsConference = (function() {
 						idOfThisTab: thisTabId
 					};
 					jQuery('#conference-tab-'+thisTabId).html(confTabView(parameters));
+					jQuery('.datepicker').datepicker();
+					vsUtils.loadTimepickr(function(){
+						//TODO: Need jQuery 1.7+ to work...
+						jQuery('#timepicker').timepicker();
+					});
+					vsUtils.loadCLEditor('lceEditor'+thisTabId);
 				});
 			} else {
 				alert('Please select at least one user.');
