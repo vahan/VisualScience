@@ -12,7 +12,12 @@ var vsConference = (function() {
 		 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/conference.png" width="13px" alt="image for message tab" /> ', title, '#conference-tab-' + thisTabId);
 
 				//Create the conference tab
-				jQuery('#conference-tab-' + thisTabId).html('<h3>conference Tab</h3>');
+				vsInterface.getView('conferenceTabLayout.html', function(confTabView) {
+					var parameters = {
+						idOfThisTab: thisTabId
+					};
+					jQuery('#conference-tab-'+thisTabId).html(confTabView(parameters));
+				});
 			} else {
 				alert('Please select at least one user.');
 			}

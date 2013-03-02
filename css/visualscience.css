@@ -234,3 +234,14 @@ span.preselected {
     box-shadow:inset 2px 2px 5px #ccc;
     border: 1px solid #b8b8b8;
 }
+.visualscience-left {
+width:48%;
+}
+.visualscience-right {
+width:48%;
+float:right;
+}
+.visualscience-right, .visualscience-left {
+border: solid black 1px;
+height:500px;
+}
