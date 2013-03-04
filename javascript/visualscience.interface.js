@@ -16,7 +16,8 @@ var vsInterface = (function() {
 		'livingscienceLoading.html',
 		'actionBar.html',
 		'msgRecipientsLayout.html',
-		'lsComparisonLayout.html'
+		'lsComparisonLayout.html',
+		'confRecipientsLayout.html'
 		);
 	
 	jQuery(document).ready(function() {
