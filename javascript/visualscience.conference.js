@@ -70,6 +70,7 @@ var vsConference = (function() {
 						jQuery('#timepicker').timepicker();
 					});
 					vsUtils.loadCLEditor('lceEditor'+thisTabId);
+		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
 				});
 			} else {
 				alert('Please select at least one user.');

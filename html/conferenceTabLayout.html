@@ -1,9 +1,12 @@
-<div>
+<div style="margin-bottom:100px;">
 	<h3 align="left">Informations</h3>
+	<p>
+		Enter here the important informations about your conference. Set the date and time, and also who will participate.
+	</p>
 	<div class="visualscience-right">
 		{{{recipients}}}
 	</div>
-	<div class="visualscience-left" style="margin-top:150px;margin-bottom:150px;">
+	<div class="visualscience-left" style="margin-top:50px">
 		<p title="Title of the conference">
 			Title: &nbsp;&nbsp;&nbsp;&nbsp; 
 			<input type="text" placeholder="Title of the conference" /></p>
@@ -17,12 +20,17 @@
 			</p>
 		</div>
 	</div>
-	<br />
-	<hr width="80%" align="center" styel="margin:10px;" />
 	<div>
 		<h3 align="left">Message</h3>
+		<p>
+			Write here a small message that will be added to the email notifying the other participants of the conference. Note the you can also add a file to your message.
+		</p>
 		<div class="visualscience-right">
-			Here there will be the Attachments div.
+			<div id="visualscience-attachments-div-{{thisTabId}}" style="display:inline-block;width:100%;border:solid black 1px;margin-top:0px;">
+				<div id="visualscience-message-attachments-div-show-{{thisTabId}}" style="height:150px;overflow-y:scroll;"></div>
+				<div id="upload-form-{{thisTabId}}"></div> 
+				<div id="progress-upload-{{thisTabId}}" style="margin:5px;padding:5px;background-color:red;font-size:12px;display:none;" >Progress</div>
+			</div>
 		</div>
 		<div class="visualscience-left">
 			<textarea id="lceEditor{{thisTabId}}" rows="15" stle="width:90%;">
