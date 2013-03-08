@@ -66,16 +66,34 @@ var vsConference = (function() {
 					jQuery('#conference-tab-'+thisTabId).html(confTabView(parameters));
 					jQuery('.datepicker').datepicker();
 					vsUtils.loadTimepickr(function(){
-						//TODO: Need jQuery 1.7+ to work...
+						/*
+						TODO: Need jQuery 1.7+ to work...
+						*/
 						jQuery('#timepicker').timepicker();
 					});
 					vsUtils.loadCLEditor('lceEditor'+thisTabId);
-		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
+					vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
 				});
 			} else {
 				alert('Please select at least one user.');
 			}
 		},
+
+checkAndSendConference: function (thisTabId) {
+var errors = checkForFormErrors(thisTabId);
+/**
+* Here what we want to do is to have check error functions, that will return true and write error text 
+* if there are indeed errors, or delete(if needed) the error text and return false. Each method will be called onKeyUp 
+* in the view, and can also be used for the verification process.
+*/
+if (!errors) {
+//Proceed with sending
+}
+else {
+alert('Please double check the form as there seems to be some errors.');
+}
+},
+
 		addRecipientForConference : function(thisTabId) {
 			var email = jQuery('#visualscience-conference-add-recipient-email-' + thisTabId).val();
 			if (email.indexOf('@') != -1) {

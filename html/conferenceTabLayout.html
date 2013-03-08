@@ -42,7 +42,7 @@
 	<div align="center">
 		<h3 align="left">Submit</h3>
 		<p align="justify" width="75%">
-Before submitting the conference, you may want to double-check what you entered, as you will not be able to modify those informations later. Also, please take note of what will happend when you'll hit the <strong>Create my Conference !</strong> button.
+			Before submitting the conference, you may want to double-check what you entered, as you will not be able to modify those informations later. Also, please take note of what will happend when you'll hit the <strong>Create my Conference !</strong> button.
 		</p>
 		<div width="75%">
 			<ol width="50%" style="text-align:left;display:inline-block;">
@@ -53,5 +53,5 @@ Before submitting the conference, you may want to double-check what you entered,
 			</ol>
 		</div>
 		<br />
-		<input type="button" value="Create my Conference !" style="font-size:18px;" />
+		<input type="button" value="Create my Conference !" onclick="vsConference.checkAndSendConference({{thisTabId}});return false;" style="font-size:18px;" />
 	</div>
