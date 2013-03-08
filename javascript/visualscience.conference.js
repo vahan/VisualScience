@@ -42,42 +42,46 @@ var vsConference = (function() {
 		 		var thisTabId = vsInterface.getTabId();
 		 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/conference.png" width="13px" alt="image for conference tab" /> ', title, '#conference-tab-' + thisTabId);
 
-				//Create the conference tab
-				vsInterface.getView('conferenceTabLayout.html', function(confTabView) {
-					var usersEmail = vsSearch.getSelectedUsersEmailFromSearchTable(idOfTheTab);
-					var users = new Array();
-					for (var i=0; i < usersEmail.length; i++) {
-						users[i] = {
-							id: i,
-							name: selectedUsers[i],
-							email: usersEmail[i],
-							tab: thisTabId
-						};
-					}
-					var parameters = {
-						thisTabId: thisTabId,
-						user: users,
-						nbUsers: users.length
-					};
-					var recipients = vsInterface.getView('confRecipientsLayout.html', function(data) {
-						return data;
-					});
-					parameters.recipients = recipients(parameters);
-					jQuery('#conference-tab-'+thisTabId).html(confTabView(parameters));
-					jQuery('.datepicker').datepicker();
-					vsUtils.loadTimepicker(function(){
-						jQuery('.timepicker').timeEntry({show24Hours: true});
-					});
-					vsUtils.loadCLEditor('lceEditor'+thisTabId);
-					vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
-				});
-			} else {
-				alert('Please select at least one user.');
-			}
-		},
+		 		//Create the conference tab
+		 		vsInterface.getView('conferenceTabLayout.html', function(confTabView) {
+		 			var usersEmail = vsSearch.getSelectedUsersEmailFromSearchTable(idOfTheTab);
+		 			var users = new Array();
+		 			for (var i=0; i < usersEmail.length; i++) {
+		 				users[i] = {
+		 					id: i,
+		 					name: selectedUsers[i],
+		 					email: usersEmail[i],
+		 					tab: thisTabId
+		 				};
+		 			}
+		 			var parameters = {
+		 				thisTabId: thisTabId,
+		 				user: users,
+		 				nbUsers: users.length
+		 			};
+		 			var recipients = vsInterface.getView('confRecipientsLayout.html', function(data) {
+		 				return data;
+		 			});
+		 			parameters.recipients = recipients(parameters);
+		 			jQuery('#conference-tab-'+thisTabId).html(confTabView(parameters));
+		 			jQuery('.datepicker').datepicker();
+		 			vsUtils.loadTimepicker(function(){
+		 				jQuery('.timepicker').timeEntry({
+		 					show24Hours: true,
+		 					spinnerImage: ''
+
+		 				});
+		 			});
+		 			vsUtils.loadCLEditor('lceEditor'+thisTabId);
+		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
+		 		});
+} else {
+	alert('Please select at least one user.');
+}
+},
 
 checkAndSendConference: function (thisTabId) {
-var errors = checkForFormErrors(thisTabId);
+	var errors = checkForFormErrors(thisTabId);
 /**
 * Here what we want to do is to have check error functions, that will return true and write error text 
 * if there are indeed errors, or delete(if needed) the error text and return false. Each method will be called onKeyUp 
@@ -87,27 +91,52 @@ if (!errors) {
 //Proceed with sending
 }
 else {
-alert('Please double check the form as there seems to be some errors.');
+	alert('Please double check the form as there seems to be some errors.');
 }
 },
 
-		addRecipientForConference : function(thisTabId) {
-			var email = jQuery('#visualscience-conference-add-recipient-email-' + thisTabId).val();
-			if (email.indexOf('@') != -1) {
-				var nbRecipients = parseInt(jQuery('#visualscience-conference-add-recipient-button-' + thisTabId).attr('nbRecipients'));
-				insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients);
-				jQuery('#visualscience-conference-add-recipient-button-' + thisTabId).attr('nbRecipients', nbRecipients + 1);
-				renameConferenceTab(thisTabId);
-				jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
-			} else {
-				alert('Please enter a valid email');
-			}
-		},
-		deleteRecipientToConference : function(thisTabId, entryNb) {
-			jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).hide(350, function() {
-				jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).remove();
-				renameConferenceTab(thisTabId);
-			});
-		}
-	};
+checkConfTitle: function (thisTabId) {
+	if (jQuery('#vs-conf-title-'+thisTabId).val() != '') {
+		jQuery('#vs-conf-title-error-'+thisTabId).text('');
+		return false;
+	}
+	else {
+		jQuery('#vs-conf-title-error-'+thisTabId).text('You have to set a title.');
+		return true;
+	}
+},
+
+checkConfDate: function (thisTabId) {
+	var now = new Date();
+	now = Math.floor((now.getTime() - (now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds()))/1000);
+	var date = jQuery('#vs-conf-date-'+thisTabId).datepicker('getDate').getTime()/1000;
+	if (date >= now && date != null) {
+		jQuery('#vs-conf-date-error-'+thisTabId).text('');
+		return false;
+	}
+	else {
+		jQuery('#vs-conf-date-error-'+thisTabId).text('The conference should be set after today.');
+		return true;
+	}
+},
+
+addRecipientForConference : function(thisTabId) {
+	var email = jQuery('#visualscience-conference-add-recipient-email-' + thisTabId).val();
+	if (email.indexOf('@') != -1) {
+		var nbRecipients = parseInt(jQuery('#visualscience-conference-add-recipient-button-' + thisTabId).attr('nbRecipients'));
+		insertEmailIntoRecipientsDiv(thisTabId, email, nbRecipients);
+		jQuery('#visualscience-conference-add-recipient-button-' + thisTabId).attr('nbRecipients', nbRecipients + 1);
+		renameConferenceTab(thisTabId);
+		jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
+	} else {
+		alert('Please enter a valid email');
+	}
+},
+deleteRecipientToConference : function(thisTabId, entryNb) {
+	jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).hide(350, function() {
+		jQuery('#visualscience-recipients-entry-' + thisTabId + '-' + entryNb).remove();
+		renameConferenceTab(thisTabId);
+	});
+}
+};
 })();
