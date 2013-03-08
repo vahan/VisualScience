@@ -1,5 +1,16 @@
 var vsConference = (function() {
-	var renameConferenceTab, insertEmailIntoRecipientsDiv;
+	var renameConferenceTab, insertEmailIntoRecipientsDiv, checkForFormErrors, checkAtLeastOneUser;
+
+	checkForFormErrors = function (thisTabId) {
+		return vsDatabase.checkConfDate() || vsDatabase.checkConfTitle() || checkAtLeastOneUser(thisTabId);
+	};
+
+	checkAtLeastOneUser = function (thisTabId) {
+		jQuery('[id^="visualscience-recipients-entry-'+thisTabId+'"]').each(function(index, element) {
+			return false;
+		});
+		return true;
+	};
 
 	renameConferenceTab =  function (thisTabId) {
 		var nbRecipients = jQuery('#visualscience-recipient-div-content-'+thisTabId+' p').size();
@@ -82,17 +93,27 @@ var vsConference = (function() {
 
 checkAndSendConference: function (thisTabId) {
 	var errors = checkForFormErrors(thisTabId);
-/**
-* Here what we want to do is to have check error functions, that will return true and write error text 
-* if there are indeed errors, or delete(if needed) the error text and return false. Each method will be called onKeyUp 
-* in the view, and can also be used for the verification process.
-*/
-if (!errors) {
-//Proceed with sending
-}
-else {
-	alert('Please double check the form as there seems to be some errors.');
-}
+	if (!errors) {
+		var title = jQuery('#vs-conf-title-'+thisTabId).val();
+		var date = jQuery('#vs-conf-date-'+thisTabId).datepicker('getDate').getTime()/1000;
+		var start = jQuery('#vs-conf-start-'+thisTabId).timeEntry('getTime');
+		var end = jQuery('#vs-conf-end-'+thisTabId).timeEntry('getTime');
+		var message = jQuery('#vs-conf-message-' + thisTabId).val();
+		var recipients = new Array();
+		var attachments = vsUtils.getJsonOfAttachments(thisTabId);
+		start = date + start.getHours()*3600 + start.getSeconds();
+		end = date + end.getHours()*3600 + end.getSeconds();
+		jQuery('p[id*="visualscience-recipients-entry-' + thisTabId + '"]').each(function(i) {
+			recipients[i] = new Array(2);
+			recipients[i][0] = jQuery(this).children(':nth-child(2)').text();
+			recipients[i][1] = jQuery(this).children(':nth-child(2)').attr('href').substring(7);
+		});
+		//Just make the ajax request now.
+
+	}
+	else {
+		alert('Please double check the form as there seems to be some errors.');
+	}
 },
 
 checkConfTitle: function (thisTabId) {
