@@ -48,13 +48,8 @@ var vsUtils = (function() {
 		 	jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
 		 },
 
-		 loadTimepickr: function(callback) {
-		 	if (document.createStyleSheet) {
-		 		document.createStyleSheet(installFolder + '/css/visualscience.jquery.timepicker.css');
-		 	} else {
-		 		jQuery("head").append(jQuery("<link rel='stylesheet' href='" + installFolder + "/css/visualscience.jquery.timepicker.css' type='text/css' media='screen' />"));
-		 	}
-		 	jQuery.getScript(installFolder+'/javascript/lib/visualscience.jquery.timepicker.js', callback);
+		 loadTimepicker: function(callback) {
+		 	jQuery.getScript(installFolder+'/javascript/lib/visualscience.jquery.timeentry.js', callback);
 		 },
 
 		 uploadSubmittedFiles : function(tabId) {
