@@ -99,7 +99,7 @@ vsLivingscience = (function() {
 		 		setWidthForMapsAndRelations('ls-list-' + thisTabId, 'ls-map-' + thisTabId, 'ls-relations-' + thisTabId);
 		 		vsDatabase.setParametersForLSDB(thisTabId);
 		 		vsLivingscience.actualizeLivingScienceDisplay(database, thisTabId);
-		 	});
+	 		});
 		 },
 		/*
 		 * Actualizes the display of a LivingScience result.

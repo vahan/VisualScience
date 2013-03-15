@@ -241,3 +241,21 @@ width:48%;
 width:48%;
 float:right;
 }
+.scrollable {
+	overflow-y:scroll;
+}
+::-webkit-scrollbar {
+	width:8px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 0px #000000; 
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0); 
+    -webkit-box-shadow: inset 0 0 20px #575757;
+}

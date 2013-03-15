@@ -25,7 +25,7 @@ var vsInterface = (function() {
 		jQuery.each(listOfViews, function(index, element){
 			vsInterface.storeViewInDB(element);
 		});
-		//Creating the Overlay without title bar, modal and 
+		//Creating the dialog div. Check vsInterface.dialog for more infos
 		overlayModal = jQuery('<div id="visualscience-overlay-modal"></div>').hide().appendTo('body');
 	});
 
