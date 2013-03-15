@@ -29,6 +29,10 @@ var vsUtils = (function() {
 			return SendMailURL;
 		},
 
+		isLoggedIn: function() {
+			return !!(Drupal.settings.username);
+		},
+
 		/*
 		 * Automatically turns a table into a sortable table.(jQuery Plugin: Tablesorter 2.0)
 		 * the parameter idOfTable is the actual id of the table to be sorted.

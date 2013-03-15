@@ -343,6 +343,7 @@ function visualscience_forms($form_id, $args) {
  * Creates the visualscience page
  */
 function visualscience_page($clear = true) {
+  global $user;
   drupal_add_library('system', 'ui.autocomplete');
   drupal_add_library('system', 'ui.datepicker');
   drupal_add_library('system', 'ui.dialog');
@@ -357,6 +358,7 @@ function visualscience_page($clear = true) {
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
   //Settings necessary to VisualScience:
   drupal_add_js(array('installFolder' => url(drupal_get_path('module', 'visualscience')).'/'), 'setting');
+  drupal_add_js(array('username' => $user->name), 'setting');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');

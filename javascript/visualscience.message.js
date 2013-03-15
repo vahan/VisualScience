@@ -84,6 +84,12 @@ var vsMessage = (function() {
 		 			vsUtils.loadCLEditor('visualscience-message-input-' + thisTabId);
 		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
 		 			vsUtils.loadUploadScripts('upload-button-' + thisTabId);
+		 			if (!vsUtils.isLoggedIn()) {
+		 				jQuery('#visualscience-send-message-button-'+thisTabId).attr({
+		 					disabled: true,
+		 					value: 'Please Login'
+		 				});
+		 			}
 		 		});
 		 	} else {
 		 		vsInterface.dialog('Please select at least one user.');
