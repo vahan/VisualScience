@@ -44,6 +44,7 @@ var vsInterface = (function() {
 	 };
 
 	 return {
+	 	livingscience: false,
 
 	 	getTabbedInterface: function (){
 	 		return tabbedInterface;
@@ -115,6 +116,43 @@ var vsInterface = (function() {
 	 			else {
 	 				return source;
 	 			}
+	 		}
+	 	},
+
+	 	createTab: function (tabType, idOfThisTab) {
+	 		switch (tabType) {
+	 			case 'message':
+	 			if (vsMessage) {
+	 				vsMessage.createTabSendMessage(idOfThisTab);
+	 			}
+	 			else {
+	 				vsInterface.dialog('<p>The script file for messages has failed to load. Please try again a bit later.<p>', 'File Error');
+	 			}
+	 			break;
+	 			case 'csv':
+	 			if (vsCSV) {
+	 				vsCSV.exportUsersCSV(idOfThisTab);
+	 			}
+	 			else {
+	 				vsInterface.dialog('<p>The script file for CSV exportations has failed to load. Please try again a bit later.<p>', 'File Error');
+	 			}
+	 			break;
+	 			case 'livingscience':
+	 			if (vsLivingscience && vsInterface.livingscience) {
+	 				vsLivingscience.createTabLivingScience(idOfThisTab);
+	 			}
+	 			else {
+	 				vsInterface.dialog('<p>The scripts file for LivingScience have failed to load. This is may be due to LivingScience being unreachable. Please try again later.<p>', 'File Error');
+	 			}
+	 			break;
+	 			case 'conference':
+	 			if (vsConference) {
+	 				vsConference.createTabConference(idOfThisTab);
+	 			}
+	 			else {
+	 				vsInterface.dialog('<p>The script file for conferences has failed to load. Please try again a bit later.<p>', 'File Error');
+	 			}
+	 			break;
 	 		}
 	 	},
 

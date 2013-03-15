@@ -1,17 +1,21 @@
 var vsLivingscience;
-// We have to wait until the livingscience.nocache.js file is loaded.
-jQuery(window).load(function() {
-	vsLivingscience = (function() {
-		var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
-	//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
-	//API instance to make search
-	livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
-	//API instance to generate list
-	lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
-	//API instance to generate map
-	lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
-	//API instance to generate relations
-	lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
+vsLivingscience = (function() {
+	var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
+	// We have to wait until the livingscience.nocache.js file is loaded.
+	jQuery(window).load(function() {	
+		//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
+		//API instance to make search
+		livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
+		//API instance to generate list
+		lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
+		//API instance to generate map
+		lsmap = new ch.ethz.livingscience.gwtclient.api.LivingScienceMap();
+		//API instance to generate relations
+		lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
+		if (livingscience) {
+			vsInterface.livingscience = true;
+		}
+	});
 
 	/*
 	 * This function is the callback when a livingscience search is done.
@@ -182,4 +186,3 @@ jQuery(window).load(function() {
 		};
 
 	})();
-});
