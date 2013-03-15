@@ -87,7 +87,7 @@ var vsConference = (function() {
 		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
 		 		});
 } else {
-	alert('Please select at least one user.');
+	vsInterface.dialog('Please select at least one user.');
 }
 },
 
@@ -112,7 +112,7 @@ checkAndSendConference: function (thisTabId) {
 
 	}
 	else {
-		alert('Please double check the form as there seems to be some errors.');
+		vsInterface.dialog('Please double check the form as there seems to be some errors.');
 	}
 },
 
@@ -150,7 +150,7 @@ addRecipientForConference : function(thisTabId) {
 		renameConferenceTab(thisTabId);
 		jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
 	} else {
-		alert('Please enter a valid email');
+		vsInterface.dialog('Please enter a valid email');
 	}
 },
 deleteRecipientToConference : function(thisTabId, entryNb) {

@@ -86,7 +86,7 @@ var vsMessage = (function() {
 		 			vsUtils.loadUploadScripts('upload-button-' + thisTabId);
 		 		});
 		 	} else {
-		 		alert('Please select at least one user.');
+		 		vsInterface.dialog('Please select at least one user.');
 		 	}
 		 },
 		/*
@@ -104,7 +104,7 @@ var vsMessage = (function() {
 		 	var recipientsArray = getRecipientsOfMessage(thisTabId);
 		 	var flagAllDone = false;
 		 	if (recipientsArray.length < 1) {
-		 		alert('Please insert at least one recipient.');
+		 		vsInterface.dialog('Please insert at least one recipient.');
 		 		jQuery('#visualscience-send-message-button-' + thisTabId).attr({
 		 			'value' : 'Send Message',
 		 			'disabled' : false
@@ -127,7 +127,7 @@ var vsMessage = (function() {
 		 			type : 'POST',
 		 			data : jsonObject,
 		 			error : function(req, msg, obj) {
-		 				alert('An error occured on the server side while sending the message. Please contact the administrator if this happens again.');
+		 				vsInterface.dialog('An error occured on the server side while sending the message. Please contact the administrator if this happens again.');
 		 				console.log(req);
 		 				console.log(msg);
 		 				console.log(obj);
@@ -138,7 +138,7 @@ var vsMessage = (function() {
 		 			},
 		 			success : function(data) {
 		 				if (parseInt(data) != 1) {
-		 					alert('There was a problem while sending the email. Please try again later.');
+		 					vsInterface.dialog('There was a problem while sending the email. Please try again later.');
 		 					jQuery('#visualscience-send-message-button-' + thisTabId).attr({
 		 						'value' : 'Re-try now',
 		 						'disabled' : false
@@ -168,7 +168,7 @@ var vsMessage = (function() {
 		 		renameMessageTab(thisTabId);
 		 		jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
 		 	} else {
-		 		alert('Please enter a valid email');
+		 		vsInterface.dialog('Please enter a valid email');
 		 	}
 		 },
 		 deleteRecipientToMessage : function(thisTabId, entryNb) {
