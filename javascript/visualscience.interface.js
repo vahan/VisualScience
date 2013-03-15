@@ -1,6 +1,6 @@
 var vsInterface = (function() {
 
-	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews;
+	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal;
 
 	//This variable checks if the whole tabbed interface has been created yet.
 	tabbedInterfaceExists = false;
@@ -25,6 +25,8 @@ var vsInterface = (function() {
 		jQuery.each(listOfViews, function(index, element){
 			vsInterface.storeViewInDB(element);
 		});
+		//Creating the Overlay without title bar, modal and 
+		overlayModal = jQuery('<div id="visualscience-overlay-modal"></div>').hide().appendTo('body');
 	});
 
 	/*
@@ -53,6 +55,38 @@ var vsInterface = (function() {
 
 	 	setTabId : function(newTabId) {
 	 		tabId = newTabId;
+	 	},
+
+	 	dialog: function (content, title, buttons, callback) {
+	 		jQuery(overlayModal).dialog('destroy');
+	 		jQuery(overlayModal).html(content);
+	 		var modalButtons;
+	 		if (buttons) {
+	 			modalButtons = buttons;
+	 		}
+	 		else {
+	 			modalButtons = [
+	 			{
+	 				text: "OK",
+	 				click: function() {
+	 					jQuery(overlayModal).dialog("destroy");
+	 				}
+	 			}
+	 			]
+	 		}
+	 		jQuery(overlayModal).dialog({
+	 			modal: true,
+	 			draggable: false,
+	 			resizable: false,
+	 			buttons: modalButtons,
+	 			title: title
+	 		});
+	 		if (!title) {
+	 			jQuery(overlayModal).siblings('.ui-dialog-titlebar').hide();
+	 		}
+	 		if (callback) {
+	 			callback();
+	 		}
 	 	},
 
 	 	storeViewInDB: function (viewPathSource, callback) {
