@@ -3,87 +3,16 @@
 /**
  * @file
  * This module is used to search and visualize users/nodes.
- * The visualization must be done by separate modules, which will be shown as tabs. To do so your module must implement the following:
- * 1. Implement hook_science_title() - just returns the title of the tab
- * 2. Implement hook_science_tab($list) - return the HTMLed visualization of the given list
- * 3. keep all the content inside <div id="visualscince_MODULENAME">...</div> - this is needed to update the tab according to the search (using AJAX)
- * 
  */
 
-require_once 'includes/visualscience.search.inc';
 require_once 'includes/visualscience.settings.inc';
 require_once 'includes/visualscience.utils.inc';
-
-/**
- * TODO: feature: change the current search, get the results directly from the DB(in process, Vahan)
- * TODO: bug: inner not does not work!
- * TODO: bug: very quickly check/uncheck fields to show. Then user lsit columns are brocken
- * TODO: bug: set currect email text and subject
- * TODO: feature: add the list of users to whom the message is being sent to the message sending page;
- * TODO: feature: make the search box the default active field
- * FIXED: bug: fix positions when ajax is in process
- * TODO: bug: after clicking on letters autocomplete does not work
- * DONE: bug: empty search returns nothing, should return a complete list
- * DONE: feature: after loading a search search is not done, still there is a need to refine the search
- * FIXED: bug: if nothing is found a full list is returned, but should return nothing
- * TODO: bug: sometimes the search load/save puts a wrong url - additional "q=userlist", FIXED at 22.06.2011, see line 259.
- * TODO: feature: save shown fields with the saved search
- * TODO: change all inner links to use l() functionuser
- * TODO: the help text on top doesn't make too much sence. Especially the part with blocks and permissions.
- * 
- * FIXED: bug 1: after ajax search, the bottom links to access paginated search are not updated. If you try to click on them you get an error msg.
- * FIXED: bug 2: authenticated role does not show up?  See get_user_role in includes\user_list.utils.inc
- * FIXED: bug 3: no-more 'select all' checkbox after an ajax request?
- * 
- * DONE: feature 1: We need to create an easier and more powerful way to handle to ajax search. We need to be able to use boolean logic: OR, AND, NOT  
- * DONE: feature 2: add button search/reset next to the ajax search
- * TODO: feature 3: we leave on a side the 'selected_users' table. Instead we display all the users within a box which has a vertical scroll bar
- * DONE: feature 4: The ajax search will hide what we don't want to see on a particular moment              
- * DONE: feature 5: save the query strings on the server, so that we immediately found our old search results with updated users.
- * TODO: feature 6: we will need to test it with huge amount of users to see how well it performs...
- * DONE: feature 7: userlist/export/ create automatic exports for roles
- * FIXED: BUG when loading search on urls with ?q
- */
 
 /**
  * Implementation of hook_menu().
  */
 function visualscience_menu() {
-  $items['admin/settings/visualscience'] = array(
-    'title' => 'Visual Science',
-    'description' => 'Change the format and types of search and menus that appear on the site.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('visualscience_settings_form'),
-    'access arguments' => array('administer visualscience'),
-    'type' => MENU_CALLBACK,
-    'access callback' => TRUE,
-    );
-  
-  $items['admin/visualscience'] = array(
-    'title' => 'Visual Science',
-    'description' => 'Visual Science',
-    'page callback' => 'visualscience_redirect_to_visualscience',
-    'access arguments' => array('access visualscience'),
-    'type' => MENU_NORMAL_ITEM,
-    );
-  
-  // Autocompletion Url
-  $items['visualscience/autocomplete'] = array(
-    'title' => 'Autocomplete Visual Science',
-    'page callback' => 'visualscience_autocomplete',
-    'access arguments' => array('access visualscience'),
-    'type' => MENU_CALLBACK,
-    );  
 
-  // The Url to realod the searchform on the original page
-  $items['visualscience/searchform'] = array(
-    'title' => 'Visual Science',
-    'page callback' => 'visualscience_searchform',
-    'access arguments' => array('access visualscience'),
-    'type' => MENU_CALLBACK,
-    );  
-  
-  
   $items['visualscience'] = array(
     'title' => 'Visual Science',
     'description' => 'Visual Science description',
@@ -92,74 +21,34 @@ function visualscience_menu() {
     'access callback' => TRUE,
     'weight' => 30,
     );
-  /*   
-  $tabs = module_implements("science_title"); //Each module that wants to have a view in VisualScience must implement hook_science_view
-  $weight = -1;
-  foreach($tabs as $tab_name) {
-    $weight++;
-    $tab_title = module_invoke($tab_name, 'science_title');*/
-    /*if ($weight == 0) {
-      // Create the visualscience page
-      $items['visualscience'] = array(
-        'title' => 'Visual Science',
-        'description' => 'Visual Science description',
-        'page callback' => 'visualscience_page',
-      	'page arguments' => array($tab_name),
-        'access callback' => TRUE,
-        'weight' => 30,
-      );
-      $items['visualscience/default'] = array( //create a default tab
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-        'title' => $tab_title,
-        'weight' => $weight,
-      );
-      continue;
-    }*/
-    /*$items["visualscience/".$tab_name] = array(
-      'type' => MENU_LOCAL_TASK,
-      'title' => $tab_title,
-      'page callback' => 'visualscience_page',
-      'page arguments' => array($tab_name),
-      'access callback' => TRUE,
-      'weight' => $weight,
+
+
+  $items['visualscience/upload'] = array(
+    'title' => 'VisualScience Upload',
+    'description' => 'Upload a file in VisualScience',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('visualscience_upload_form'),
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_CALLBACK,
     );
-}*/
-  /*$items["visualscience/test"] = array(
-    'type' => MENU_LOCAL_TASK,
-    'title' => "Test",
-    'page callback' => 'visualscience_page',
-    'page arguments' => array("<div>TEST</div>", "test"),
+
+  $items['visualscience/file'] = array(
+    'title' => 'VisualScience Attachment Access',
+    'description' => 'Access a file uploaded from VisualScience',
+    'page callback' => 'visualscience_get_file_with_id',
     'access callback' => TRUE,
-    'weight' => 10,adfsdf
-    );*/
+    'type' => MENU_CALLBACK,
+    );
 
-  //Seb
-$items['visualscience/upload'] = array(
-  'title' => 'VisualScience Upload',
-  'description' => 'Upload a file in VisualScience',
-  'page callback' => 'drupal_get_form',
-  'page arguments' => array('visualscience_upload_form'),
-  'access arguments' => array('access visualscience'),
-  'type' => MENU_CALLBACK,
-  );
+  $items['visualscience/mail'] = array(
+    'title' => 'VisualScience Mail Send',
+    'description' => 'Send Mail from VisualScience',
+    'page callback' => 'visualscience_send_message',
+    'access arguments' => array('access visualscience'),
+    'type' => MENU_CALLBACK,
+    );
 
-$items['visualscience/file'] = array(
-  'title' => 'VisualScience Attachment Access',
-  'description' => 'Access a file uploaded from VisualScience',
-  'page callback' => 'visualscience_get_file_with_id',
-  'access callback' => TRUE,
-  'type' => MENU_CALLBACK,
-  );
-
-$items['visualscience/mail'] = array(
-  'title' => 'VisualScience Mail Send',
-  'description' => 'Send Mail from VisualScience',
-  'page callback' => 'visualscience_send_message',
-  'access arguments' => array('access visualscience'),
-  'type' => MENU_CALLBACK,
-  );
-
-return $items;
+  return $items;
 }
 
 /**
@@ -321,23 +210,6 @@ else {
   form_set_error(t('You did not chose a file.'));
 }	
 }
-
-/**
- * 
- * Function to take care of having multiple instances of the same form on the page
- * @param $form_id the id of the form
- * @param $args arguments
- */
-function visualscience_forms($form_id, $args) {
-  if (strpos($form_id, 'visualscience_search_form') !== FALSE) {
-    $forms[$form_id] = array(
-      'callback' => 'visualscience_search_form',
-      'callback arguments' => array($form_id),
-      );
-    return $forms;
-  }
-}
-
 /**
  * 
  * Creates the visualscience page
@@ -370,90 +242,10 @@ function visualscience_page($clear = true) {
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.conference.js');
   drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.livingscience.js');
-
-  if (!isset($_SESSION["searchNumber"])) {
-  	$_SESSION["searchNumber"] = 0;
-  }
   
-  variable_set('visualscience_current_tab', 'user_list');
-  $output = "<div class='visualscience-container' id='visualscience-container-".$_SESSION["searchNumber"]."'><div id='container-".$_SESSION["searchNumber"]."-0'>";
-  // must declare a variable: otherwise get error "Strict warning: Only variables should be passed by reference"
-  $form = drupal_get_form('visualscience_search_form_'.$_SESSION["searchNumber"]);
-  $output .= drupal_render($form);
-  $list = variable_get('visualscience_list');
-//  if (isset($_GET['search'])) {
-//  	$output .= "<script type='text/javascript' class='.remove_after_loaded'>openDialog(".$_SESSION["searchNumber"].")</script>";
-//  }
-  $output .= module_invoke('user_list', 'science_tab', $list, $_SESSION["searchNumber"]);
-  $output .= "<span id='activate_actions'></span></div></div>";
-  if ($clear) {
-    //variable_del('visualscience_current_tab');
-    //variable_del('visualscience_list');
-    //variable_del('visualscience_search_table');
-  }
+  //In output, you'll have to put your actual html.
+  $output = "asdfasdf";
   return $output;
 }
 
-/**
- * 
- * Used to create menu tabs
- * @param string $tab_name	name of the tab to shown, if NULL the default tab is shown
- */
-/*function _visualscience_tab($tab_name) {
-  variable_set("visualscience_current_tab", $tab_name);
-  $list = variable_get("visualscience_list");
-  $output = drupal_render(drupal_get_form('visualscience_search_form'));
-  $output .= module_invoke($tab_name, 'science_tab', $list);
-  return $output;
-}*/
-
-/**
- * 
- * Enter description here ...
- */
-function visualscience_theme() {
-  return array(
-    'visualscience' => array(
-      'variables' => array('output', NULL),
-      'template' => 'visualscience',
-      )
-    );
-}
-
-//function theme_default_out($variables) {
-//	$node = $variables['output'];
-//	return $node;
-//}
-
-function visualscience_preprocess_page(&$vars)
-{
-  if (isset($_GET['ajax']) && $_GET['ajax'] == 1)
-  {
-    $vars['theme_hook_suggestions'][] = 'page__ajax';
-  }
-}
-
-/**
- * Implements hook_theme_registry_alter()
-**/
-function visualscience_theme_registry_alter(&$theme_registry) {
-  $mod_path = drupal_get_path('module', 'mymodule');
-  $theme_registry_copy = $theme_registry;       // munge on a copy
-  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'pow', $mod_path);
-  $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
-  $hooks = array('node');
-  foreach ($hooks as $h) {
-    _visualscience_insert_after_first_element($theme_registry[$h]['theme paths'], $mod_path);
-  }
-}
-
-/**
- * Helper function for re-ordering arrays (needed by theme_registry_alter)
-*/
-function _visualscience_insert_after_first_element(&$a, $element) {
-  if(is_array($a)) {
-    $first_element = array_shift($a);
-    array_unshift($a, $first_element, $element);
-  }
-}
 ?>
