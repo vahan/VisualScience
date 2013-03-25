@@ -5,8 +5,14 @@
  * This module is used to search and visualize users/nodes.
  */
 
+//Tools pre-made by Vahe
 require_once 'includes/visualscience.settings.inc';
 require_once 'includes/visualscience.utils.inc';
+
+//Classes for each functionality
+include('includes/visualscience.searchtable.class.php');
+include('includes/visualscience.message.class.php');
+include('includes/visualscience.upload.class.php');
 
 /**
  * Implementation of hook_menu().

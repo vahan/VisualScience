@@ -80,35 +80,6 @@ function visualscience_schema() {
     'primary key' => array('fid')
   );
   
-  //table for tabs
-  /*$schema[visualscience_get_tabs_table_name()] = array(
-    'description' => 'Stores data of the tabs.',
-    'fields' => array(
-      'tid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Tab ID of the tab.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 1024,
-        'default' => '',
-        'description' => 'tab name.',
-      ),
-      'content' => array(
-        'type' => 'text',
-        'description' => 'content to be shown in the tab (in HTML).',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'length' => 1024,
-        'default' => 0,
-        'description' => 'tab\'s weight in the menu', 
-      ),
-    ),
-  );*/
-  
   return $schema;
 }
 
