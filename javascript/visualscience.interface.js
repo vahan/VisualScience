@@ -62,9 +62,11 @@ var vsInterface = (function() {
 	 		jQuery(overlayModal).dialog("destroy");
 	 	},
 
-	 	dialog: function (content, title, buttons, callback) {
+	 	dialog: function (content, title, buttons, callback, width, height) {
 	 		jQuery(overlayModal).dialog('destroy');
 	 		jQuery(overlayModal).html(content);
+	 		width = width || 300;
+	 		height = height || auto;
 	 		var modalButtons;
 	 		if (buttons) {
 	 			modalButtons = buttons;
@@ -84,7 +86,9 @@ var vsInterface = (function() {
 	 			draggable: false,
 	 			resizable: false,
 	 			buttons: modalButtons,
-	 			title: title
+	 			title: title,
+	 			width: width,
+	 			height: height
 	 		});
 	 		if (!title) {
 	 			jQuery(overlayModal).siblings('.ui-dialog-titlebar').hide();
