@@ -14,6 +14,12 @@ include('includes/visualscience.searchtable.class.php');
 include('includes/visualscience.message.class.php');
 include('includes/visualscience.upload.class.php');
 
+//Initialization of the main objects
+$search = new Search();
+$message = new Message();
+$upload = new Upload();
+
+
 /**
  * Implementation of hook_menu().
  */
@@ -57,198 +63,37 @@ function visualscience_menu() {
   return $items;
 }
 
-/**
- * Page callback: Upload form
- *
- */
-function visualscience_upload_form($form, &$form_state) {
-  $form['visualscience_upload_file'] = array(
-    '#type' => 'file',
-    '#size' => 20,
-    '#required' => FALSE,
-    );
-  
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-    );
-  
-  $form['#submit'][] = 'visualscience_upload_submit'; 
+function visualscience_upload_form ($form, &$form_state) {
+  return $upload->visualscience_upload_form($form, &$form_state);
+} 
 
-  return $form;
-}
 
 /**
  * 
  */	
 function visualscience_get_file_with_id () {
-	$fileId = doubleval($_GET['id']);
-	global $user;
-	global $base_url;
-	$uid = $user->uid;
-	if ($uid) {
-		$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND fid = :fid', array(':uid'=>$uid, ':fid'=>$fileId));
-		$result = $result->fetchObject();
-		if(!is_null($result) && !empty($result)){
-			$url = $result->url;
-			$name = $result->name;
-			$mimetype = file_get_mimetype($name);
-      $headers = array(
-        'Content-Type' => $mimetype,
-        'Content-Disposition' => ' attachment; filename='.$name,
-        'Content-Transfer-Encoding' => 'binary',
-        'Expires' => '0',
-        'Cache-Control' => 'must-revalidate',
-        'Pragma' => 'no-cache',
-        'Content-Length' => filesize($url),
-        );
-      if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
-       $headers['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0';
-       $headers['Pragma'] = 'public';
-     }
-     file_transfer($url, $headers);
-   }
-   else{
-     drupal_set_message(t('You don\'t have the permission to access the file.'), 'error');
-     header( 'Location: '.$base_url.'/visualscience/' );
-   }
- }
- else {
-  drupal_set_message(t('Please log in to access uploaded files.'), 'warning');
-  header( 'Location: '.$base_url.'/user?destination=' . substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/visualscience/file')+1) );
-}
+	return $upload->visualscience_get_file_with_id();
 }
 
 /**
  * 
  */
 function visualscience_send_message() {
-	$subject =  $_POST['subject'];
-	$email = $_POST['recipients']['email'];
-	$name =  $_POST['recipients']['name'];
-	$message =  $_POST['message'];
-	$attachments=  $_POST['attachments'];//[0][0] will give the name of object n°0, while [0][1] will give its URL
-	if ($attachments[0]) {
-		$attachmentsText = t('<br /><h3>Attached Files</h3>');
-		foreach ($attachments as $entry) {
-			$attachmentsText .= t('- <a href="'.$entry[1].'" _target="blank">'.$entry[0].'</a><br />');
-		}
-	}
-	else {
-		$attachmentsText = '';
-	}
-	$final_text = $message.$attachmentsText;
-	
-	
-	global $user;
-	$module = 'VisualScience';
-  $key = uniqid('mail');
-  $language = language_default();
-  $params = array();
-  $from = $user->mail;
-  $send = FALSE;
-  $message = drupal_mail($module, $key, $email, $language, $params, $from, $send);
-
-  $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
-  $message['headers']['From'] = $message['headers']['Sender'] = $message['headers']['Return-Path'] = $from;
-  $message['subject'] = $subject;
-  $message['body'] = $final_text;
-
-    // Retrieve the responsible implementation for this message.
-  $system = drupal_mail_system($module, $key);
-
-    // Send e-mail.
-  $message['result'] = $system->mail($message);
-	//If no errors, let's add file access to the user.
-  if ($message['result'] == 1) {
-		//getting user id from email.
-    $users = db_query('SELECT uid FROM {users} WHERE mail = :mail LIMIT 1', array(':mail' => $email,));
-		//In the "impossible" case where two emails are the same in the db
-    $users = $users->fetchObject();
-    $uid = $users->uid;
-		//actually adding the access to the user.
-    if (!is_null($uid) && isset($uid)) {	
-     foreach ($attachments as $file) {
-      $query = db_insert('visualscience_uploaded_files')->fields(array(
-       'uid' => $uid,
-       'email' => $from,
-       'name' => $file[0],
-       'url' => $file[1],
-       ));
-      $query->execute();
-    }
-  }
-  echo '1';
-}
-else {
-  echo '0';
-}
+	return $message->visualscience_send_message();
 }
 
-//TODO: Change so that it can handle multiple uploads(Hint:Look for MultiUpload File Widget)
+
 function visualscience_upload_submit($form, &$form_state) {
-	$dir = 'private://';
-	$validators = array();
-	$file = 'visualscience_upload_file';
-	if (!empty($file)) {
-		$file = file_save_upload($file, $validators, $dir, FILE_EXISTS_RENAME);
-   if (!empty($file)) {
-    global $user;
-    $uid = $user->uid;
-    $email = $user->mail;
-    $query = db_insert('visualscience_uploaded_files')->fields(array(
-     'uid' => $uid,
-     'email' => $email,
-     'name' => $file->filename,
-     'url' => $file->uri,
-     ));
-    $query->execute();
-    $result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND url = :url', array(':uid'=>$uid, ':url'=>$file->uri))->fetchObject();
-    $id = $result->fid;
-    global $base_url;
-    drupal_set_message(t('The file has been uploaded to:').$base_url.'/visualscience/file?id='.$id);
-  }
-  else {
-    form_set_error(t('An error occured when uploading the file.'));
-  }
+  return $upload->visualscience_upload_submit($form, &$form_state);	
 }
-else {
-  form_set_error(t('You did not chose a file.'));
-}	
-}
+
 /**
  * 
  * Creates the visualscience page
  */
 function visualscience_page($clear = true) {
-  global $user;
-  drupal_add_library('system', 'ui.autocomplete');
-  drupal_add_library('system', 'ui.datepicker');
-  drupal_add_library('system', 'ui.dialog');
-  drupal_add_library('system', 'ui.tabs');
-  
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.jquery.layout.js');
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.layout.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.jquery.tablesorter.js');
-  drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.tablesorter.css');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.handlebars.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
-  //Settings necessary to VisualScience:
-  drupal_add_js(array('installFolder' => url(drupal_get_path('module', 'visualscience')).'/'), 'setting');
-  drupal_add_js(array('username' => $user->name), 'setting');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.message.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.csv.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.userlist.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.lscomparison.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.conference.js');
-  drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.livingscience.js');
-  
+  $search->getClienteSideFiles();
+
   //In output, you'll have to put your actual html.
   $output = "asdfasdf";
   return $output;
