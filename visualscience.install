@@ -9,8 +9,8 @@ include_once 'includes/visualscience.search.inc';
 * @return array  the created schema
 */
 function visualscience_schema() {
-  //table for saved searches 
-  $schema[visualscience_get_save_table_name()] = array(
+  //table for saved searches  Seb: Keep it, just in case you need to save the searches.
+ /* $schema[visualscience_get_save_table_name()] = array(
     'description' => 'Stores searches.',
     'fields' => array(
       'sid' => array(
@@ -40,7 +40,7 @@ function visualscience_schema() {
     ),
     'primary key' => array('sid'),
     'unique keys' => array('name' => array('name'))
-  );
+  );*/
   
   //table for uploaded files and their permissions
   $schema['visualscience_uploaded_files'] = array(

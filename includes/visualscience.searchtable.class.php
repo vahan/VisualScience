@@ -5,13 +5,13 @@ class Search {
 		return $search;
 	}
 
-	public function getHtmlSearchBar (searchValue= "") {
+	public function getHtmlSearchBar ($searchValue= "") {
 		$safeSearchVal = $this->ensureSearchSafety($searchValue);
 
 		return '<div align="center">
 		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
 		<div style="width:48%;" align="left">
-		<a class="visualscience-right" align="right">Help</a>
+		<p class="visualscience-right" align="right">'.l(t("Help"), "admin/help/visualscience").'</p>
 		<a class="visualscience-left" align="left">Save/Load</a>
 		</div>
 		</div>';
