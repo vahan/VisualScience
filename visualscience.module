@@ -10,15 +10,9 @@ require_once 'includes/visualscience.settings.inc';
 require_once 'includes/visualscience.utils.inc';
 
 //Classes for each functionality
-include('includes/visualscience.searchtable.class.php');
-include('includes/visualscience.message.class.php');
-include('includes/visualscience.upload.class.php');
-
-//Initialization of the main objects
-$search = new Search();
-$message = new Message();
-$upload = new Upload();
-
+require_once 'includes/visualscience.searchtable.class.php';
+include_once 'includes/visualscience.message.class.php';
+include_once 'includes/visualscience.upload.class.php';
 
 /**
  * Implementation of hook_menu().
@@ -64,38 +58,41 @@ function visualscience_menu() {
 }
 
 function visualscience_upload_form ($form, &$form_state) {
-  return $upload->visualscience_upload_form($form, &$form_state);
+  $upload = new Upload;
+  $upload->visualscience_upload_form($form, $form_state);
 } 
-
 
 /**
  * 
  */	
 function visualscience_get_file_with_id () {
-	return $upload->visualscience_get_file_with_id();
+  $upload = new Upload;
+  $upload->visualscience_get_file_with_id();
 }
 
 /**
  * 
  */
 function visualscience_send_message() {
-	return $message->visualscience_send_message();
+  $message = new Message;
+	$message->visualscience_send_message();
 }
 
 
 function visualscience_upload_submit($form, &$form_state) {
-  return $upload->visualscience_upload_submit($form, &$form_state);	
+  $upload = new Upload;
+  $upload->visualscience_upload_submit($form, $form_state);	
 }
 
 /**
- * 
  * Creates the visualscience page
  */
 function visualscience_page($clear = true) {
-  $search->getClienteSideFiles();
-
-  //In output, you'll have to put your actual html.
-  $output = "asdfasdf";
+  $search = new Search;
+  $search->getClientSideFiles();
+  $searchBar = $search->getHtmlSearchBar();
+  $searchTable = $search->getHtmlSearchTable();
+  $output = $searchBar.$searchTable;
   return $output;
 }
 

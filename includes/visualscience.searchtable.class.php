@@ -1,14 +1,21 @@
 <?php
 class Search {
-	public function mySuperFunction () {
 
+	public function getHtmlSearchBar () {
+		return '<div align="center">
+		<input type="search" placeholder="Search..." class="visualscience-search-main" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
+		<div style="width:48%;" align="left">
+		<p class="visualscience-right" align="right">Help</p>
+		<p class="visualscience-left" align="left">Save/Load</p>
+		</div>
+		</div>';
 	}
 
-	private function mySecondSuperFunction () {
-
+	public function getHtmlSearchTable () {
+		return '<p>Here there will be the table witht the users.</p>';
 	}
 
-	public getClientSideFiles () {
+	public function getClientSideFiles () {
 		global $user;
 		drupal_add_library('system', 'ui.autocomplete');
 		drupal_add_library('system', 'ui.datepicker');

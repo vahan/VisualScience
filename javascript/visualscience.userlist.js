@@ -3,6 +3,9 @@ var vsUserlist = (function() {
 
 	 return {
 	 	//Public methods and variables.
+	 	search: function () {
+	 		console.log('Searched for: ' + jQuery('#visualscience-search-bar').val());
+	 	}
 	};
 
 })();
