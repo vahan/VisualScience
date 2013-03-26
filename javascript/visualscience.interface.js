@@ -58,6 +58,10 @@ var vsInterface = (function() {
 	 		tabId = newTabId;
 	 	},
 
+	 	closeDialog: function () {
+	 		jQuery(overlayModal).dialog("destroy");
+	 	},
+
 	 	dialog: function (content, title, buttons, callback) {
 	 		jQuery(overlayModal).dialog('destroy');
 	 		jQuery(overlayModal).html(content);
