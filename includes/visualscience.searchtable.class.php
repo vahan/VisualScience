@@ -1,12 +1,18 @@
 <?php
 class Search {
 
-	public function getHtmlSearchBar () {
+	private function ensureSearchSafety ($search) {
+		return $search;
+	}
+
+	public function getHtmlSearchBar (searchValue= "") {
+		$safeSearchVal = $this->ensureSearchSafety($searchValue);
+
 		return '<div align="center">
-		<input type="search" placeholder="Search..." class="visualscience-search-main" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
+		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
 		<div style="width:48%;" align="left">
-		<p class="visualscience-right" align="right">Help</p>
-		<p class="visualscience-left" align="left">Save/Load</p>
+		<a class="visualscience-right" align="right">Help</a>
+		<a class="visualscience-left" align="left">Save/Load</a>
 		</div>
 		</div>';
 	}
