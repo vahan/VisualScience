@@ -66,7 +66,7 @@ var vsInterface = (function() {
 	 		jQuery(overlayModal).dialog('destroy');
 	 		jQuery(overlayModal).html(content);
 	 		width = width || 300;
-	 		height = height || auto;
+	 		height = height || 'auto';
 	 		var modalButtons;
 	 		if (buttons) {
 	 			modalButtons = buttons;

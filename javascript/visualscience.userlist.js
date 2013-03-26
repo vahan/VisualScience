@@ -25,7 +25,7 @@ var vsUserlist = (function() {
 						vsInterface.closeDialog();
 					}
 				}];
-				vsInterface.dialog(content, 'Save a Search', button);
+				vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
 			});
 		}
 
