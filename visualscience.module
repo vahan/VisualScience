@@ -54,6 +54,14 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
     );
 
+  $items['admin/config/media/visualscience'] = array(
+    'title' => 'VisualScience Configuration',
+    'description' => 'Configuration for the VisualScience module.',
+    'page callback' => 'visualscience_config_page',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
@@ -88,6 +96,19 @@ function visualscience_upload_submit($form, &$form_state) {
  * Creates the visualscience page
  */
 function visualscience_page($clear = true) {
+  $search = new Search;
+  $searchToPerform = $search->getSavedSearch();
+  $search->getClientSideFiles();
+  $searchBar = $search->getHtmlSearchBar($searchToPerform);
+  $searchTable = $search->getHtmlSearchTable();
+  $output = $searchBar.$searchTable;
+  return $output;
+}
+
+/**
+ * Creates the visualscience configuration page
+ */
+function visualscience_config_page($clear = true) {
   $search = new Search;
   $searchToPerform = $_GET['search'];
   $search->getClientSideFiles();

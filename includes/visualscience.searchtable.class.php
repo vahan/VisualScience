@@ -5,6 +5,13 @@ class Search {
 		return $search;
 	}
 
+	public function getSavedSearch () {
+		if (isset($_GET['search'])) {
+			return $_GET['search'];
+		}
+		return '';
+	}
+
 	public function getHtmlSearchBar ($searchValue= "") {
 		$safeSearchVal = $this->ensureSearchSafety($searchValue);
 
@@ -28,6 +35,7 @@ class Search {
 		drupal_add_library('system', 'ui.dialog');
 		drupal_add_library('system', 'ui.tabs');
 
+		drupal_add_js('http://livingscience.ethz.ch/livingscience/livingscience/livingscience.nocache.js', 'external');
 		drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.css');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.jquery.layout.js');
 		drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.jquery.layout.css');
