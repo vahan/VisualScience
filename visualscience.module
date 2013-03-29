@@ -13,6 +13,7 @@ require_once 'includes/visualscience.utils.inc';
 require_once 'includes/visualscience.searchtable.class.php';
 include_once 'includes/visualscience.message.class.php';
 include_once 'includes/visualscience.upload.class.php';
+include_once 'includes/visualscience.config.class.php';
 
 /**
  * Implementation of hook_menu().
