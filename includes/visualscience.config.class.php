@@ -68,7 +68,6 @@ class Config {
 
 	private function saveUserFields () {
 		$userFields = $this->getUserFields();
-		$table = 'visualscience_search_config';
 		foreach ($userFields as $field) {
 			if (isset($_POST['first']) && $_POST['first'] == $field) {
 				$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 0);
@@ -86,7 +85,21 @@ class Config {
 	}
 
 	private function savedCreatedFields () {
-
+		$createdFields = $this->getCreatedFields();
+		foreach ($createdFields as $field) {
+			if (isset($_POST['first']) && $_POST['first'] == $field) {
+				$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 1);
+			}
+			else if (isset($_POST['last']) && $_POST['last'] == $field) {
+				$this->insertIntoSearchConfig($field, 1, 1, 0, 1, 1);
+			}
+			else if (isset($_POST[$field.'-mini']) && intval($_POST[$field.'-mini']) == 1) {
+				$this->insertIntoSearchConfig($field, 1, 1, 0, 0, 1);
+			}
+			else if (isset($_POST[$field.'-full']) && intval($_POST[$field.'-full']) == 1){
+				$this->insertIntoSearchConfig($field, 0, 1, 0, 0, 1);
+			}
+		}
 	}
 
 	public function getHtmlConfigPage () {
