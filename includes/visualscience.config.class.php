@@ -110,7 +110,12 @@ class Config {
 		$userFields = $this->getUserFields();
 		foreach ($userFields as $field) {
 			if (isset($_POST['first']) && $_POST['first'] == $field) {
-				$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 0);
+				if (isset($_POST['last']) && $_POST['last'] == $field) {
+					$this->insertIntoSearchConfig($field, 1, 1, 1, 1, 0);
+				}
+				else {
+					$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 0);
+				}
 			}
 			else if (isset($_POST['last']) && $_POST['last'] == $field) {
 				$this->insertIntoSearchConfig($field, 1, 1, 0, 1, 0);
@@ -128,7 +133,12 @@ class Config {
 		$createdFields = $this->getCreatedFields();
 		foreach ($createdFields as $field) {
 			if (isset($_POST['first']) && $_POST['first'] == $field) {
-				$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 1);
+				if (isset($_POST['last']) && $_POST['last'] == $field) {
+					$this->insertIntoSearchConfig($field, 1, 1, 1, 1, 1);
+				}
+				else {
+					$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 1);					
+				}
 			}
 			else if (isset($_POST['last']) && $_POST['last'] == $field) {
 				$this->insertIntoSearchConfig($field, 1, 1, 0, 1, 1);
