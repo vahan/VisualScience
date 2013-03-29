@@ -113,8 +113,8 @@ function visualscience_config_page($clear = true) {
   $config = new Config;
   $output = '';
   if (isset($_POST['visualscience_config_form'])) {
-    //Process with registration of the values
-    $output .= 'Yahoooooo';
+    $config->saveSentValues();
+    drupal_set_message(t('Configuration Saved !'), 'status');
   }
   $output .= $config->getHtmlConfigPage();
   return $output;

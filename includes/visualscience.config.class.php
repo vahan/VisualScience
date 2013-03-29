@@ -2,12 +2,12 @@
 class Config {
 
 	private function getIntroduction () {
-		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module.');
+		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Note that every field that is in the minimized table will also be in the full one. And the last name and full name are required in the mini table.');
 
 	}
 
 	private function getUserFields () {
-		return array(t('Id'), t('Name'), t('Email'), t('Signature'), t('Creation Date'), t('Last Access'), t('Status'), t('Language'), t('Role'));
+		return array(t('Id'), t('Name'), t('Email'), t('Signature'), t('CreationDate'), t('LastAccess'), t('Status'), t('Language'), t('Role'));
 	}
 
 	private function getCreatedFields () {
@@ -22,10 +22,10 @@ class Config {
 		foreach ($list as $l) {
 			$row = array(
 				$l,
-				'<input type="checkbox" name="'.$l.'-mini" />',  
-				'<input type="checkbox" name="'.$l.'-full" />',  
-				'<input type="radio" name="first" value="'.$l.'-first" />',  
-				'<input type="radio" name="last" value="'.$l.'-last" />',
+				'<input type="checkbox" name="'.$l.'-mini" value="1" />',  
+				'<input type="checkbox" name="'.$l.'-full" value="1" />',  
+				'<input type="radio" name="first" value="'.$l.'" />',  
+				'<input type="radio" name="last" value="'.$l.'" />',
 				);
 			array_push($rows, $row);
 		}
@@ -48,6 +48,47 @@ class Config {
 		return $button;
 	}
 
+	private function emptyOldValues () {
+		$query = db_delete('visualscience_search_config');
+		$query->execute();
+	}
+
+	private function insertIntoSearchConfig ($name, $mini, $full, $first, $last, $field = 0) {
+		$table = 'visualscience_search_config';
+		$query = db_insert($table)->fields(array(
+			'name' => $name,
+			'mini' => $mini,
+			'full' => $full,
+			'first' => $first,
+			'last' => $last,
+			'field' => $field,
+			));
+		$query->execute();
+	}
+
+	private function saveUserFields () {
+		$userFields = $this->getUserFields();
+		$table = 'visualscience_search_config';
+		foreach ($userFields as $field) {
+			if (isset($_POST['first']) && $_POST['first'] == $field) {
+				$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 0);
+			}
+			else if (isset($_POST['last']) && $_POST['last'] == $field) {
+				$this->insertIntoSearchConfig($field, 1, 1, 0, 1, 0);
+			}
+			else if (isset($_POST[$field.'-mini']) && intval($_POST[$field.'-mini']) == 1) {
+				$this->insertIntoSearchConfig($field, 1, 1, 0, 0, 0);
+			}
+			else if (isset($_POST[$field.'-full']) && intval($_POST[$field.'-full']) == 1){
+				$this->insertIntoSearchConfig($field, 0, 1, 0, 0, 0);
+			}
+		}
+	}
+
+	private function savedCreatedFields () {
+
+	}
+
 	public function getHtmlConfigPage () {
 		$userFields = $this->getUserFields();
 		$otherFields = $this->getCreatedFields();
@@ -57,5 +98,11 @@ class Config {
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
 		return $formStart.$intro.$fieldsTable.$saveButton.$formEnd;
+	}
+
+	public function saveSentValues () {
+		$this->emptyOldValues();
+		$this->saveUserFields();
+		$this->savedCreatedFields();
 	}
 }
