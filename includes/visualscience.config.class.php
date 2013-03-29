@@ -2,7 +2,8 @@
 class Config {
 
 	private function getIntroduction () {
-		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Choose Wisely. Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Choose Wisely. Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Choose Wisely. Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Choose Wisely. Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Choose Wisely. Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Choose Wisely.');
+		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module.');
+
 	}
 
 	private function getUserFields () {
@@ -21,10 +22,11 @@ class Config {
 		foreach ($list as $l) {
 			$row = array(
 				$l,
-				'<input type="checkbox" />',  
-				'<input type="checkbox" />',  
-				'<input type="radio" name="first" />',  
-				'<input type="radio" name="last" />');
+				'<input type="checkbox" name="'.$l.'-mini" />',  
+				'<input type="checkbox" name="'.$l.'-full" />',  
+				'<input type="radio" name="first" value="'.$l.'-first" />',  
+				'<input type="radio" name="last" value="'.$l.'-last" />',
+				);
 			array_push($rows, $row);
 		}
 		return $rows;
@@ -35,13 +37,14 @@ class Config {
 			t('Show in minimized table ?'), 
 			t('Show in full table ?'), 
 			t('Which one is the First Name field ?'), 
-			t('Which one is the Last Name field ?'));
+			t('Which one is the Last Name field ?'),
+			);
 		$rows = array_merge($this->createRows($user), $this->createRows($fields));
 		return theme('table', array('header' => $header, 'rows' => $rows));
 	}
 
 	private function createSaveButton () {
-		$button = '<input type="button" value="Save">';
+		$button = '<input type="submit" value="'.t('Save').'" class="form-submit" />';
 		return $button;
 	}
 
@@ -51,6 +54,8 @@ class Config {
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($userFields, $otherFields);
 		$saveButton = $this->createSaveButton();
-		return $intro.$fieldsTable.$saveButton;
+		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
+		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
+		return $formStart.$intro.$fieldsTable.$saveButton.$formEnd;
 	}
 }

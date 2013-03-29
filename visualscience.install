@@ -40,6 +40,66 @@ function visualscience_schema() {
     'primary key' => array('sid'),
     'unique keys' => array('name' => array('name'))
   );*/
+
+//Table to save the config of visualscience search tables
+$schema['visualscience_search_config'] = array(
+    'description' => 'Stores VisualScience Configuration.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique Field ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'description' => 'Machine readable name of the field.',
+      ),
+      'mini' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default'  => 0,
+        'size' => 'tiny',
+        'description' => 'Should this field be present in the mini table ? 1 or 0',
+      ),
+      'full' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default'  => 0,
+        'size' => 'tiny',
+        'description' => 'Should this field be present in the full table ? 1 or 0',
+      ),
+      'first' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default'  => 0,
+        'size' => 'tiny',
+        'description' => 'Is this the First Name field ? 1 or 0',
+      ),
+      'last' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default'  => 0,
+        'size' => 'tiny',
+        'description' => 'Is this the last name field ? 1 or 0',
+      ),
+      'field' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default'  => 0,
+        'size' => 'tiny',
+        'description' => 'Is this field contained in field_config ? 1 or 0',
+      ),
+    ),
+    'primary key' => array('cid'),
+  );
   
   //table for uploaded files and their permissions
   $schema['visualscience_uploaded_files'] = array(
