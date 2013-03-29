@@ -1,6 +1,10 @@
 <?php 
 class Config {
 
+	function __construct () {
+		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.config.js');
+	}
+
 	private function getIntroduction () {
 		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Note that every field that is in the minimized table will also be in the full one. And the last name and full name are required in the mini table.');
 
