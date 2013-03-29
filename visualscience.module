@@ -109,12 +109,8 @@ function visualscience_page($clear = true) {
  * Creates the visualscience configuration page
  */
 function visualscience_config_page($clear = true) {
-  $search = new Search;
-  $searchToPerform = $_GET['search'];
-  $search->getClientSideFiles();
-  $searchBar = $search->getHtmlSearchBar($searchToPerform);
-  $searchTable = $search->getHtmlSearchTable();
-  $output = $searchBar.$searchTable;
+  $config = new Config;
+  $output = $config->getHtmlConfigPage();
   return $output;
 }
 
