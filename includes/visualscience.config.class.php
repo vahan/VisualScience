@@ -62,10 +62,10 @@ class Config {
 			}
 			$row = array(
 				$l,
-				'<input type="checkbox" name="'.$l.'-mini" value="1" '.$mini.' />',  
-				'<input type="checkbox" name="'.$l.'-full" value="1" '.$full.' />',  
-				'<input type="radio" name="first" value="'.$l.'" '.$first.' />',  
-				'<input type="radio" name="last" value="'.$l.'" '.$last.' />',
+				'<input class="mini" type="checkbox" name="'.$l.'-mini" value="1" '.$mini.' />',  
+				'<input class="full" type="checkbox" name="'.$l.'-full" value="1" '.$full.' />',  
+				'<input class="first" type="radio" name="first" value="'.$l.'" '.$first.' />',  
+				'<input class="last" type="radio" name="last" value="'.$l.'" '.$last.' />',
 				);
 			array_push($rows, $row);
 		}
