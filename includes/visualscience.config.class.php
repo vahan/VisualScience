@@ -40,11 +40,17 @@ class Config {
 		return theme('table', array('header' => $header, 'rows' => $rows));
 	}
 
+	private function createSaveButton () {
+		$button = '<input type="button" value="Save">';
+		return $button;
+	}
+
 	public function getHtmlConfigPage () {
 		$userFields = $this->getUserFields();
 		$otherFields = $this->getCreatedFields();
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($userFields, $otherFields);
-		return $intro.$fieldsTable;
+		$saveButton = $this->createSaveButton();
+		return $intro.$fieldsTable.$saveButton;
 	}
 }
