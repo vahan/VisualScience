@@ -7,6 +7,7 @@ class Config {
 	}
 
 	private function getUserFields () {
+		//Don't put spaces -> problem when saving request
 		return array(t('Id'), t('Name'), t('Email'), t('Signature'), t('CreationDate'), t('LastAccess'), t('Status'), t('Language'), t('Role'));
 	}
 
@@ -17,29 +18,64 @@ class Config {
 		return $fields;
 	}
 
-	private function createRows ($list) {
+	private function getOldUserFields () {
+		$query = db_select('visualscience_search_config', 'f')
+		->fields('f', array('name', 'mini', 'full', 'first', 'last'))
+		->condition('field', 1, '<');
+		$result = $query->execute();
+		$final = array();
+		while ($record = $result->fetchAssoc()) {
+			$final[$record['name']] = $record;
+		}
+		return $final;
+	}
+
+	private function getOldCreatedFields () {
+		$query = db_select('visualscience_search_config', 'f')
+		->fields('f', array('name', 'mini', 'full', 'first', 'last'))
+		->condition('field', 1, '>=');
+		$result = $query->execute();
+		$final = array();
+		while ($record = $result->fetchAssoc()) {
+			$final[$record['name']] = $record;
+		}
+		return $final;
+	}
+
+	private function createRows ($list, $oldList) {
 		$rows = array();
 		foreach ($list as $l) {
+			$mini = '';
+			$full = ''; 
+			$first = '';
+			$last = '';
+			if (isset($oldList[$l])) {
+				$actual = $oldList[$l];
+				$mini = $actual['mini'] == 1 ? 'checked': '';
+				$full = $actual['full'] == 1 ? 'checked': '';
+				$first = $actual['first'] == 1 ? 'checked': '';
+				$last = $actual['last'] == 1 ? 'checked': '';
+			}
 			$row = array(
 				$l,
-				'<input type="checkbox" name="'.$l.'-mini" value="1" />',  
-				'<input type="checkbox" name="'.$l.'-full" value="1" />',  
-				'<input type="radio" name="first" value="'.$l.'" />',  
-				'<input type="radio" name="last" value="'.$l.'" />',
+				'<input type="checkbox" name="'.$l.'-mini" value="1" '.$mini.' />',  
+				'<input type="checkbox" name="'.$l.'-full" value="1" '.$full.' />',  
+				'<input type="radio" name="first" value="'.$l.'" '.$first.' />',  
+				'<input type="radio" name="last" value="'.$l.'" '.$last.' />',
 				);
 			array_push($rows, $row);
 		}
 		return $rows;
 	}
 
-	private function createFieldsTable ($user, $fields) {
+	private function createFieldsTable ($user, $fields, $oldUser, $oldFields) {
 		$header = array(t('Field Name'), 
 			t('Show in minimized table ?'), 
 			t('Show in full table ?'), 
 			t('Which one is the First Name field ?'), 
 			t('Which one is the Last Name field ?'),
 			);
-		$rows = array_merge($this->createRows($user), $this->createRows($fields));
+		$rows = array_merge($this->createRows($user, $oldUser), $this->createRows($fields, $oldFields));
 		return theme('table', array('header' => $header, 'rows' => $rows));
 	}
 
@@ -105,8 +141,10 @@ class Config {
 	public function getHtmlConfigPage () {
 		$userFields = $this->getUserFields();
 		$otherFields = $this->getCreatedFields();
+		$oldUserFields = $this->getOldUserFields();
+		$oldOtherFields = $this->getOldCreatedFields();
 		$intro = $this->getIntroduction();
-		$fieldsTable = $this->createFieldsTable($userFields, $otherFields);
+		$fieldsTable = $this->createFieldsTable($userFields, $otherFields, $oldUserFields, $oldOtherFields);
 		$saveButton = $this->createSaveButton();
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
