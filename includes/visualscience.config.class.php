@@ -12,7 +12,7 @@ class Config {
 
 	private function getUserFields () {
 		//Don't put spaces -> problem when saving request
-		return array(t('Id'), t('Name'), t('Email'), t('Signature'), t('CreationDate'), t('LastAccess'), t('Status'), t('Language'), t('Role'));
+		return array(t('uid'), t('name'), t('mail'), t('signature'), t('created'), t('access'), t('status'), t('language'), t('role'));
 	}
 
 	private function getCreatedFields () {
