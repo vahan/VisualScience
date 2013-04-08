@@ -7,13 +7,14 @@ class Search {
 	}
 
 	private function getFieldsFromConfig () {
-		$query = db_select('visualscience_search_config', 'f');
+	/*	$query = db_select('visualscience_search_config', 'f', array());
 		$result = $query->execute();
 		$final = array();
 		for ($i=0; $record = $result->fetchAssoc(); $i++) {
 			$final[$i] = $record;
 		}
-		return $final;	}
+		return $final;	*/
+	}
 
 	private function getUsers ($fields) {
 		$fieldsToCatch = array();
@@ -80,7 +81,9 @@ class Search {
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
   		//Settings necessary to VisualScience:
 		drupal_add_js(array('installFolder' => url(drupal_get_path('module', 'visualscience')).'/'), 'setting');
-		drupal_add_js(array('username' => $user->name), 'setting');
+		if (isset($user->name)) {
+			drupal_add_js(array('username' => $user->name), 'setting');
+		}
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');

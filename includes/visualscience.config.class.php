@@ -72,14 +72,14 @@ class Config {
 		return $rows;
 	}
 
-	private function createFieldsTable ($user, $fields, $oldUser, $oldFields) {
+	private function createFieldsTable ($fields, $oldFields) {
 		$header = array(t('Field Name'), 
 			t('Show in minimized table ?'), 
 			t('Show in full table ?'), 
 			t('Which one is the First Name field ?'), 
 			t('Which one is the Last Name field ?'),
 			);
-		$rows = array_merge($this->createRows($user, $oldUser), $this->createRows($fields, $oldFields));
+		$rows = $this->createRows($fields, $oldFields);
 		return theme('table', array('header' => $header, 'rows' => $rows));
 	}
 
@@ -152,13 +152,28 @@ class Config {
 		}
 	}
 
+	private function getListOfFields () {
+		$listFields = array();
+		$userFields = user_load(0);
+		return array_keys(get_object_vars($userFields));
+	}
+
+	private function getSelectedFields () {
+		$query = db_select('visualscience_search_config', 'f')
+		->fields('f', array('name', 'mini', 'full', 'first', 'last'));
+		$result = $query->execute();
+		$final = array();
+		while ($record = $result->fetchAssoc()) {
+			$final[$record['name']] = $record;
+		}
+		return $final;
+	}
+
 	public function getHtmlConfigPage () {
-		$userFields = $this->getUserFields();
-		$otherFields = $this->getCreatedFields();
-		$oldUserFields = $this->getOldUserFields();
-		$oldOtherFields = $this->getOldCreatedFields();
+		$fieldsList = $this->getListOfFields();
+		$oldFields = $this->getSelectedFields();
 		$intro = $this->getIntroduction();
-		$fieldsTable = $this->createFieldsTable($userFields, $otherFields, $oldUserFields, $oldOtherFields);
+		$fieldsTable = $this->createFieldsTable($fieldsList, $oldFields);
 		$saveButton = $this->createSaveButton();
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
