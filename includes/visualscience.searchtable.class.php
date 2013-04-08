@@ -7,33 +7,42 @@ class Search {
 	}
 
 	private function getFieldsFromConfig () {
-	/*	$query = db_select('visualscience_search_config', 'f', array());
+		$query = db_select('visualscience_search_config', 'f')
+		->fields('f', array('name','mini','full','first','last'));
 		$result = $query->execute();
 		$final = array();
 		for ($i=0; $record = $result->fetchAssoc(); $i++) {
-			$final[$i] = $record;
+			$final[$record['name']] = $record;
 		}
-		return $final;	*/
+		return $final;	
 	}
 
-	private function getUsers ($fields) {
-		$fieldsToCatch = array();
-		for ($i=0; $i < $fields.length; $i++) {
-			if ($fields->field == 0 && $field->name != 'role') {
-				array_push($fieldsToCatch, $fields[$i]->name);
+	private function getUsersFields ($fields) {
+		$usersIds = $this->getAllUsersIds();
+		$users = user_load_multiple($usersIds);
+		$userFields = array();
+		foreach ($users as $user) {
+			foreach ($fields as $field) {
+				//Change and create a 2-dim. array.(each user has each field in fields with mini, full, etc...)
+				echo $user->$field['name'];
 			}
 		}
-		$query = db_select('users', 'u')
-		->fields('u', $fieldsToCatch);
+		return $userFields;
+	}
+
+	private function getAllUsersIds () {
+		$query = db_select('users', 'f')
+		->fields('f', array('uid'));
 		$result = $query->execute();
 		$final = array();
 		for ($i=0; $record = $result->fetchAssoc(); $i++) {
-			$final[$i] = $record;
+			array_push($final, $record['uid']);
 		}
-		return $final;		
+		return $final;
 	}
 
 	public function getSavedSearch () {
+		//TODO: Implement it
 		if (isset($_GET['search'])) {
 			return $_GET['search'];
 		}
@@ -59,7 +68,7 @@ class Search {
 	public function getJsonDatabase () {
 		$searchDB = '';
 		$fields = $this->getFieldsFromConfig();
-		$usersAndFields = $this->getUsers($fields);
+		$usersAndFields = $this->getUsersFields($fields);
 
 		return '<script type="text/javascript" charset="utf-8">var searchDB = '. $searchDB .';</script>';
 	}
