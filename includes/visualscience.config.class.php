@@ -10,42 +10,6 @@ class Config {
 
 	}
 
-	private function getUserFields () {
-		//Don't put spaces -> problem when saving request
-		return array(t('uid'), t('name'), t('mail'), t('signature'), t('created'), t('access'), t('status'), t('language'), t('role'));
-	}
-
-	private function getCreatedFields () {
-		$dbQuery = db_select('field_config', 'f');
-		$dbQuery->fields('f', array('id', 'field_name'));
-		$fields = $dbQuery->execute()->fetchAllKeyed();
-		return $fields;
-	}
-
-	private function getOldUserFields () {
-		$query = db_select('visualscience_search_config', 'f')
-		->fields('f', array('name', 'mini', 'full', 'first', 'last'))
-		->condition('field', 1, '<');
-		$result = $query->execute();
-		$final = array();
-		while ($record = $result->fetchAssoc()) {
-			$final[$record['name']] = $record;
-		}
-		return $final;
-	}
-
-	private function getOldCreatedFields () {
-		$query = db_select('visualscience_search_config', 'f')
-		->fields('f', array('name', 'mini', 'full', 'first', 'last'))
-		->condition('field', 1, '>=');
-		$result = $query->execute();
-		$final = array();
-		while ($record = $result->fetchAssoc()) {
-			$final[$record['name']] = $record;
-		}
-		return $final;
-	}
-
 	private function createRows ($list, $oldList) {
 		$rows = array();
 		foreach ($list as $l) {
@@ -106,9 +70,26 @@ class Config {
 		$query->execute();
 	}
 
-	private function saveUserFields () {
-		$userFields = $this->getUserFields();
-		foreach ($userFields as $field) {
+	private function getListOfFields () {
+		$listFields = array();
+		$userFields = user_load(0);
+		return array_keys(get_object_vars($userFields));
+	}
+
+	private function getSelectedFields () {
+		$query = db_select('visualscience_search_config', 'f')
+		->fields('f', array('name', 'mini', 'full', 'first', 'last'));
+		$result = $query->execute();
+		$final = array();
+		while ($record = $result->fetchAssoc()) {
+			$final[$record['name']] = $record;
+		}
+		return $final;
+	}
+
+	private function saveFields () {
+		$fieldsList = $this->getListOfFields();
+		foreach ($fieldsList as $field) {
 			if (isset($_POST['first']) && $_POST['first'] == $field) {
 				if (isset($_POST['last']) && $_POST['last'] == $field) {
 					$this->insertIntoSearchConfig($field, 1, 1, 1, 1, 0);
@@ -129,48 +110,9 @@ class Config {
 		}
 	}
 
-	private function savedCreatedFields () {
-		$createdFields = $this->getCreatedFields();
-		foreach ($createdFields as $field) {
-			if (isset($_POST['first']) && $_POST['first'] == $field) {
-				if (isset($_POST['last']) && $_POST['last'] == $field) {
-					$this->insertIntoSearchConfig($field, 1, 1, 1, 1, 1);
-				}
-				else {
-					$this->insertIntoSearchConfig($field, 1, 1, 1, 0, 1);					
-				}
-			}
-			else if (isset($_POST['last']) && $_POST['last'] == $field) {
-				$this->insertIntoSearchConfig($field, 1, 1, 0, 1, 1);
-			}
-			else if (isset($_POST[$field.'-mini']) && intval($_POST[$field.'-mini']) == 1) {
-				$this->insertIntoSearchConfig($field, 1, 1, 0, 0, 1);
-			}
-			else if (isset($_POST[$field.'-full']) && intval($_POST[$field.'-full']) == 1){
-				$this->insertIntoSearchConfig($field, 0, 1, 0, 0, 1);
-			}
-		}
-	}
-
-	private function getListOfFields () {
-		$listFields = array();
-		$userFields = user_load(0);
-		return array_keys(get_object_vars($userFields));
-	}
-
-	private function getSelectedFields () {
-		$query = db_select('visualscience_search_config', 'f')
-		->fields('f', array('name', 'mini', 'full', 'first', 'last'));
-		$result = $query->execute();
-		$final = array();
-		while ($record = $result->fetchAssoc()) {
-			$final[$record['name']] = $record;
-		}
-		return $final;
-	}
-
 	public function getHtmlConfigPage () {
 		$fieldsList = $this->getListOfFields();
+
 		$oldFields = $this->getSelectedFields();
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($fieldsList, $oldFields);
@@ -182,7 +124,6 @@ class Config {
 
 	public function saveSentValues () {
 		$this->emptyOldValues();
-		$this->saveUserFields();
-		$this->savedCreatedFields();
+		$this->saveFields();
 	}
 }
