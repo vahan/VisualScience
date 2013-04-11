@@ -76,8 +76,7 @@ function visualscience_help($path, $arg) {
 
     <h2>Living Science Module</h2>
 
-    <p>Adds livingscience visualisation functionality to the userlist module. By selecting a user (or several users) The administratior can visualize their publication data on the livingscience map, and also as a livingscience list.<br />
-    Configure the module '.l("here", "admin/config/media/livingscience").'</p>';
+    <p>Adds livingscience visualisation functionality to the userlist module. By selecting a user (or several users) The administratior can visualize their publication data on the livingscience map, and also as a livingscience list.<br />';
     return t($output
       ,
       array('!admin' => l('admin/settings/userlist', 'admin/settings/userlist'), '!block' => l('admin/structure/block', 'admin/structure/block'), '!access' => l('admin/people/permissions', 'admin/people/permissions'), '!visualscience' => l('userlist', 'userlist'))
