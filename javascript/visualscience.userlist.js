@@ -1,8 +1,24 @@
 var vsUserlist = (function() {
-	var sendSearchToSave;
+	var sendSearchToSave, startAutoComplete, searchDB;
 
 	sendSearchToSave = function (search) {
 		console.log('Implement search saving for:' + search);
+	};
+
+	jQuery(document).ready(function() {
+		//vsSearchDB is defined by the backend.
+		searchDB = vsSearchDB;
+		vsUserlist.search();
+		startAutoComplete();
+	});
+
+	startAutoComplete = function (inputId, source) {
+		source = source || vsUserlist.getUsersNamesFromDB();
+		inputId = inputId || 'visualscience-search-bar';
+		jQuery('#'+inputId).autocomplete({
+			source: source,
+			select: vsUserlist.search()
+		});
 	};
 
 	return {
@@ -27,6 +43,25 @@ var vsUserlist = (function() {
 				}];
 				vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
 			});
+		},
+
+		getUsersNamesFromDB: function () {
+			var names = [];
+			var users = searchDB.users;
+			for (var user in users) {
+				names.push(vsUserlist.getFullName(users[user]));
+			}
+			return names;
+		},
+
+		getFullName: function (user) {
+			if (!user.first) {
+				return 'anonymous';
+			}
+			if (!user.last) {
+				return user.first;
+			}
+			return user.first + ' ' + user.last;
 		}
 
 
