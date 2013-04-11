@@ -22,12 +22,34 @@ class Search {
 		$users = user_load_multiple($usersIds);
 		$userFields = array();
 		foreach ($users as $user) {
+			$userFields[$user->uid] = array();
 			foreach ($fields as $field) {
-				//Change and create a 2-dim. array.(each user has each field in fields with mini, full, etc...)
-				echo $user->$field['name'];
+				$valueOfField = $user->$field['name'];
+				if ($field['first'] == 1) {
+					$userFields[$user->uid]['first'] = $valueOfField;
+				}
+				else if ($field['last'] == 1) {
+					$userFields[$user->uid]['last'] = $valueOfField;
+				}
+				else {
+					$userFields[$user->uid][$field['name']] = $valueOfField;
+				}
 			}
 		}
 		return $userFields;
+	}
+
+	private function getJsonUsersFields ($fields) {
+		return json_encode($this->getUsersFields($fields));
+	}
+
+	private function getJsonDisplayConfig ($fields) {
+		$config = '{"fields": [';
+		foreach ($fields as $field) {
+			$config .= '{"name": "'.$field['name'].'","mini": '.$field['mini'].', "full": '.$field['full'].'},';
+		}
+		$config = substr($config, 0, $config.length-1) . ']}';
+		return $config;
 	}
 
 	private function getAllUsersIds () {
@@ -66,11 +88,11 @@ class Search {
 	}
 
 	public function getJsonDatabase () {
-		$searchDB = '';
 		$fields = $this->getFieldsFromConfig();
-		$usersAndFields = $this->getUsersFields($fields);
-
-		return '<script type="text/javascript" charset="utf-8">var searchDB = '. $searchDB .';</script>';
+		$jsonUsersAndFields = $this->getJsonUsersFields($fields);
+		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.'}';
+		return '<script type="text/javascript" charset="utf-8">var vsSearchDB = '. $searchDB .';</script>';
 	}
 
 	public function getClientSideFiles () {
