@@ -48,7 +48,7 @@ class Search {
 		foreach ($fields as $field) {
 			$config .= '{"name": "'.$field['name'].'","mini": '.$field['mini'].', "full": '.$field['full'].'},';
 		}
-		$config = substr($config, 0, $config.length-1) . ']}';
+		$config = substr($config, 0, strlen($config) -1) . ']}';
 		return $config;
 	}
 
