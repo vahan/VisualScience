@@ -35,10 +35,9 @@ var vsInterface = (function() {
 	 * Firstly, it however checks if the interface does not already exists, because otherwise this could create bugs.
 	 */
 	 createTabbedInterface = function(title, idOfThisTab) {
-	 	var dialogNumber = '0';
 	 	if (!tabbedInterfaceExists) {
 	 		tabbedInterfaceExists = true;
-	 		jQuery('#container-' + dialogNumber + '-0').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
+	 		jQuery('#visualscience-container').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
 	 		jQuery('#' + tabbedInterface).tabs({
 	 			cache : true
 	 		});

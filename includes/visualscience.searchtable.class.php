@@ -84,7 +84,7 @@ class Search {
 	}
 
 	public function getHtmlSearchTable () {
-		return '<p>Here there will be the table witht the users.</p>';
+		return '<div id="visualscience-container"></div>';
 	}
 
 	public function getJsonDatabase () {

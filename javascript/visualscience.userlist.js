@@ -11,16 +11,15 @@ var vsUserlist = (function() {
 		startAutoComplete();
 		//Timeout so that the views have time to load.
 		setTimeout(function() {
-			//vsUserlist.search();
-		}, 5000);
+			vsUserlist.search();
+		}, 1000);
 	});
 
 	startAutoComplete = function (inputId, source) {
 		source = source || vsUserlist.getUsersNamesFromDB();
 		inputId = inputId || 'visualscience-search-bar';
 		jQuery('#'+inputId).autocomplete({
-			source: source,
-			select: vsUserlist.search()
+			source: source
 		});
 	};
 
