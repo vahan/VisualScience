@@ -71,34 +71,40 @@ var vsSearch = (function() {
 		 getSelectedUsersFromSearchTable : function(idOfTheTab) {
 		 	var tableId = 'visualscience-user_list-result-' + idOfTheTab;
 		 	var completeNamesArray = new Array();
-		 	if (!isNaN(parseInt(vsUtils.getThWithContent(tableId, 'First Name')))) {
-		 		var firstFieldNumber = vsUtils.getThWithContent(tableId, 'First Name');
-		 		var secondFieldNumber = vsUtils.getThWithContent(tableId, 'Last Name');
+		 	var firsts = new Array();
+		 	var lasts = new Array();
+		 	if (jQuery('#'+tableId+' .visualscience-search-field-last').length > 0) {
+		 		var nbLastRow = vsUtils.getRowNbWithClass(tableId, 'visualscience-search-field-last');
 		 		jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 		 			index++;
-					//That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
-					if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-						var first = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + firstFieldNumber + ')').text();
-						var last = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + secondFieldNumber + ')').text();
-						completeNamesArray.push(first + ' ' + last);
-					}
-				});
-		 	} else {
-		 		var firstFieldNumber = vsUtils.getThWithContent(tableId, 'name');
-		 		jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
-		 			index++;
-					//That's because index will go from 0(no nth-child) to n-1, missing n(interesting)
-					if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-						completeNamesArray.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + firstFieldNumber + ')').text());
-						//To delete when comments enabled
-					}
-				});
+		 			if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
+		 				lasts.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + nbLastRow + ')').text());
+		 			}
+		 		});
 		 	}
+		 	//firsts, to do anyway
+		 	var nbFirstRow = vsUtils.getRowNbWithClass(tableId, 'visualscience-search-field-first');
+		 	jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
+		 		index++;
+		 		if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
+		 			firsts.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbFirstRow+1) + ')').text());
+		 		}
+		 	});
+		 	//merging both
+		 	if (lasts.length > 0) {
+		 		jQuery.each(lasts, function(i, el) {
+		 			completeNamesArray.push(firsts[i]+' '+lasts[i]);
+		 		});
+		 	}
+		 	else {
+		 		completeNamesArray = firsts
+		 	}
+
 		 	return completeNamesArray;
 		 },
 		/*
 		 * This function gets every selected user's email from the user-list of results.
-		 * It returns an array with the full name of each users.
+		 * It returns an array with the email of each users.
 		 */
 		 getSelectedUsersEmailFromSearchTable : function(idOfTheTab) {
 		 	var tableId = 'visualscience-user_list-result-' + idOfTheTab;
@@ -136,6 +142,7 @@ var vsSearch = (function() {
 		 getTableUserListOptions : function(fields, idOfThisTab) {
 		 	var divOptions = '<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">';
 		 	jQuery.each(fields, function(i, el) {
+		 		el = el.replace(/<(?:.|\n)*?>/gm, '');
 		 		if (el != '') {
 		 			divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + el + idOfThisTab + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + idOfThisTab + '\',' + (i + 1) + ');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + el + idOfThisTab + '" id="checkbox-visibility-' + el + idOfThisTab + '" /> ' + el + ' </label></div>';
 		 		}

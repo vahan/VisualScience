@@ -30,6 +30,7 @@ var vsUserlist = (function() {
 		type = type || 1;
 		var result = {};
 		result.fields = getSearchFields(type);
+		result.fields = tagMarkNameFields(result.fields);
 		result.users = [];
 		result.searchQuery = search;
 		var id=0;
@@ -67,6 +68,21 @@ var vsUserlist = (function() {
 			}
 		}
 		return result;
+	}
+
+	tagMarkNameFields = function (fields) {
+		var first = searchDB.config.first;
+		var last = searchDB.config.last;
+		for (var field in fields) {
+			if (fields[field] == first) {
+				fields[field] = '<span class="visualscience-search-field-first">'+fields[field]+'</span>';
+			}
+			else if (fields[field] == last) {
+				fields[field] = '<span class="visualscience-search-field-last">'+fields[field]+'</span>';
+			}
+
+		}
+		return fields;
 	}
 
 

@@ -243,7 +243,18 @@ getJsonOfAttachments : function(thisTabId) {
 		 		values[i] = jQuery(this).html();
 		 	})
 		 	return values;
+		 },
+
+		 getRowNbWithClass: function (tableId, classToFind) {
+		 	var result = 0;
+		 	jQuery('#'+tableId+' th').each(function(i, el) {
+		 		if (jQuery(el).children().length > 0 && jQuery(el+':first-child').hasClass(classToFind)) {
+		 			result = i;
+		 		}
+		 	});
+		 	return result;
 		 }
+
 		};
 
 	})();

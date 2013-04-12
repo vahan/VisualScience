@@ -45,10 +45,17 @@ class Search {
 
 	private function getJsonDisplayConfig ($fields) {
 		$config = '{"fields": [';
+		$endConfig = ']';
 		foreach ($fields as $field) {
 			$config .= '{"name": "'.$field['name'].'","mini": '.$field['mini'].', "full": '.$field['full'].'},';
+			if ($field['first'] == 1) {
+				$endConfig .= ', first: "'.$field['name'].'"';
+			}
+			if ($field['last'] == 1) {
+				$endConfig .= ', last: "'.$field['name'].'"';
+			}
 		}
-		$config = substr($config, 0, strlen($config) -1) . ']}';
+		$config = substr($config, 0, strlen($config) -1) .$endConfig. '}';
 		return $config;
 	}
 
