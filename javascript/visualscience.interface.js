@@ -13,8 +13,9 @@ var vsInterface = (function() {
 
 	//List of all the views that have to be pre-loaded
 	listOfViews = new Array(
-		'livingscienceLoading.html',
 		'actionBar.html',
+		'tableUserSearch.html',
+		'livingscienceLoading.html',
 		'msgRecipientsLayout.html',
 		'lsComparisonLayout.html',
 		'confRecipientsLayout.html'
@@ -33,13 +34,15 @@ var vsInterface = (function() {
 	 * This function creates a tabbed-interface, out of the variable tabbedInterface.
 	 * Firstly, it however checks if the interface does not already exists, because otherwise this could create bugs.
 	 */
-	 createTabbedInterface = function(dialogNumber) {
+	 createTabbedInterface = function(title, idOfThisTab) {
+	 	var dialogNumber = '0';
 	 	if (!tabbedInterfaceExists) {
 	 		tabbedInterfaceExists = true;
 	 		jQuery('#container-' + dialogNumber + '-0').append('<div id="' + tabbedInterface + '"><ul id="tab-list"></ul></div>');
 	 		jQuery('#' + tabbedInterface).tabs({
 	 			cache : true
 	 		});
+	 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
 	 	}
 	 };
 
@@ -169,22 +172,31 @@ var vsInterface = (function() {
 		 * It will first check if the tabbed interface is loaded and load it if not.
 		 * Then it adds a new tab to the interface, with the result of the search.
 		 */
-		 openUserListTab : function(dialogNumber_) {
-		 	dialogNumber = dialogNumber_;
-			setTimeout(function() {//(Bad style) The tab creation should be delayed, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
-				createTabbedInterface(dialogNumber);
-				var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
-				title = ((title || title == '') ? 'All Users' : title);
-				var idOfThisTab = vsInterface.getTabId();
-				vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
-				//Insert the table result in a new div
-				var content = vsSearch.createUserSearchResult(dialogNumber, idOfThisTab);
-				jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-				vsSearch.makeActionBarMoveable(idOfThisTab);
-				vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-				vsSearch.makeRowsSelectable();
-			}, 1);
-		},
+		 openUserListTab : function(searchObject) {
+		 	var title = 'Search: ' + searchObject.searchQuery;
+		 	var idOfThisTab = vsInterface.getTabId();
+		 	createTabbedInterface(title, idOfThisTab);
+		 	//click on the search tab
+		 	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
+		 	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
+		 	vsSearch.makeActionBarMoveable(idOfThisTab);
+		 	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+		 	vsSearch.makeRowsSelectable();
+
+			// setTimeout(function() {//(Bad style) The tab creation should be delayed, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
+			// 	createTabbedInterface(dialogNumber);
+			// 	var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
+			// 	title = ((title || title == '') ? 'All Users' : title);
+			// 	var idOfThisTab = vsInterface.getTabId();
+			// 	vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
+			// 	//Insert the table result in a new div
+			// 	var content = vsSearch.createUserSearchResult(dialogNumber, idOfThisTab);
+			// 	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
+			// 	vsSearch.makeActionBarMoveable(idOfThisTab);
+			// 	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+			// 	vsSearch.makeRowsSelectable();
+			// }, 1);
+},
 		/*
 		 * This function adds a new tab to the tabbed interface.
 		 * The url parameter should be a local url and it can contain a fragment identifier(#something)

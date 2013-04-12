@@ -9,8 +9,10 @@ var vsUserlist = (function() {
 		//vsSearchDB is defined by the backend.
 		searchDB = vsSearchDB;
 		startAutoComplete();
-		vsInterface.openUserListTab();
-		vsUserlist.search();
+		//Timeout so that the views have time to load.
+		setTimeout(function() {
+			//vsUserlist.search();
+		}, 5000);
 	});
 
 	startAutoComplete = function (inputId, source) {
@@ -22,9 +24,18 @@ var vsUserlist = (function() {
 		});
 	};
 
+	getSearchResult = function (search) {
+		return {
+			"searchQuery": search
+		};
+	}
+
 	return {
 		search: function () {
-			console.log('Searched for: ' + jQuery('#visualscience-search-bar').val());
+			var search = jQuery('#visualscience-search-bar').val() || '';
+			console.log('Searched for: ' + search);
+			var searchResult = getSearchResult(search);
+			vsInterface.openUserListTab(searchResult);
 		},
 
 		saveSearch: function () {

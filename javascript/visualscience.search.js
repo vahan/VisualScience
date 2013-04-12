@@ -19,9 +19,9 @@ var vsSearch = (function() {
 		 * -the action bar, which is the bar with every buttons(Message, CSV, LS and Conference)
 		 * -The table with the result and its options.(Sort table, hide fields, etc...)
 		 */
-		 createUserSearchResult : function(dialogNumber, idOfThisTab) {
+		 createUserSearchResult : function(searchObject, idOfThisTab) {
 		 	var actionBar = vsSearch.createActionBar(idOfThisTab);
-		 	var tableUserList = vsSearch.createTableUserList(dialogNumber, idOfThisTab);
+		 	var tableUserList = vsSearch.createTableUserList(searchObject, idOfThisTab);
 		 	return '<h3>User List</h3>' + actionBar + tableUserList;
 		 },
 
@@ -117,22 +117,21 @@ var vsSearch = (function() {
 		 * Creates the table of users, which can be sorted.
 		 */
 
-		 createTableUserList : function(dialogNumber, idOfThisTab) {
-		 	var divFinalContent = vsSearch.createTableUserListHead(idOfThisTab, dialogNumber);
-		 	var arrayOfUserResults = vsUtils.getArrayFromTable('user_list-list-' + dialogNumber);
-		 	var nbColsInTable = vsUtils.countColumnsInTable('user_list-list-' + dialogNumber);
-		 	for (var i = 1; i < arrayOfUserResults.length + 1; i++) {
-		 		divFinalContent += '<td>' + arrayOfUserResults[i - 1] + '</td>';
-		 		if (i % nbColsInTable == 0 && i != arrayOfUserResults.length) {
-		 			if ((i / nbColsInTable) % 2 == 0) {
-		 				divFinalContent += '</tr><tr class="odd clickable clickToSelect" >';
-		 			} else {
-		 				divFinalContent += '</tr><tr class="even clickable clickToSelect" >';
-		 			}
-		 		}
-		 	}
-		 	divFinalContent += '</tr></tbody></table></div>';
-		 	divFinalContent += vsSearch.getTableUserListOptions('user_list-list-' + dialogNumber, idOfThisTab, nbColsInTable);
+		 createTableUserList : function(searchObject, idOfThisTab) {
+		 	var searchTable = vsInterface.getView('tableUserSearch.html');
+		 	var parameters = {
+		 		header: ['name','email','field'],
+		 		tabId: idOfThisTab,
+		 		users: [
+		 		{type: 'odd', id: 1, fields: ['asdf','asdf@asdf', 'qwer']},
+		 		{type: 'even', id: 2, fields: ['asdf1','asdf@asdf1', 'qwer1']},
+		 		{type: 'odd', id: 3, fields: ['asdf2', 'asdf@asdf2', 'qwer2']}
+		 		]
+		 	};
+		 	var divFinalContent = searchTable(parameters);
+		 	console.log(divFinalContent);
+		 	var nbColsInTable = 0;
+		 	divFinalContent += vsSearch.getTableUserListOptions('user_list-list-0', idOfThisTab, nbColsInTable);
 		 	return divFinalContent;
 		 },
 		/*
