@@ -8,8 +8,8 @@ var vsInterface = (function() {
 	//Variable who contains the name of the actual tabbed interface.
 	tabbedInterface = 'tabbed-interface';
 
-	//Variable to differentiate each tab from each other
-	tabId = 0;
+	//Variable to differentiate each tab from each other(0 is for search tab)
+	tabId = 1;
 
 	nameMaxLength = 25;
 
@@ -175,9 +175,8 @@ var vsInterface = (function() {
 		 */
 		 openUserListTab : function(searchObject) {
 		 	var title = searchObject.searchQuery ? 'Search: '+ searchObject.searchQuery: 'Search';
-		 	var idOfThisTab = vsInterface.getTabId();
+		 	var idOfThisTab = 0;
 		 	createTabbedInterface(title, idOfThisTab);
-		 	//click on the search tab
 		 	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
 		 	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
 		 	vsSearch.makeActionBarMoveable(idOfThisTab);
@@ -194,8 +193,12 @@ var vsInterface = (function() {
 		 	oldTitle = oldTitle.substring(0, oldTitle.length -1);
 		 	var tabTitleContent = firstTab.html().replace(oldTitle, newTitle);
 		 	firstTab.html(tabTitleContent);
-		 	
-
+		 	var idOfThisTab = 0;
+		 	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
+		 	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
+		 	vsSearch.makeActionBarMoveable(idOfThisTab);
+		 	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+		 	vsSearch.makeRowsSelectable();
 		 },
 
 		/*
