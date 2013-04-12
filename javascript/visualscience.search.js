@@ -113,23 +113,18 @@ var vsSearch = (function() {
 			});
 		 	return emailArray;
 		 },
+
 		/*
 		 * Creates the table of users, which can be sorted.
 		 */
-
 		 createTableUserList : function(searchObject, idOfThisTab) {
 		 	var searchTable = vsInterface.getView('tableUserSearch.html');
 		 	var parameters = {
-		 		header: ['name','email','field'],
+		 		header: searchObject.fields,
 		 		tabId: idOfThisTab,
-		 		users: [
-		 		{type: 'odd', id: 1, fields: ['asdf','asdf@asdf', 'qwer']},
-		 		{type: 'even', id: 2, fields: ['asdf1','asdf@asdf1', 'qwer1']},
-		 		{type: 'odd', id: 3, fields: ['asdf2', 'asdf@asdf2', 'qwer2']}
-		 		]
+		 		users: searchObject.users
 		 	};
 		 	var divFinalContent = searchTable(parameters);
-		 	console.log(divFinalContent);
 		 	var nbColsInTable = 0;
 		 	divFinalContent += vsSearch.getTableUserListOptions('user_list-list-0', idOfThisTab, nbColsInTable);
 		 	return divFinalContent;
@@ -148,23 +143,6 @@ var vsSearch = (function() {
 		 	});
 		 	divOptions += '</div></div></fieldset>';
 		 	return divOptions;
-		 },
-		/*
-		 * This creates the thead of the user list search table.
-		 * It takes every thead from the hidden table and generates the thead witht that.
-		 */
-		 createTableUserListHead : function(idOfThisTab, dialogNumber) {
-		 	var header = '<div style="display:inline-block;max-width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + idOfThisTab + '" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr>';
-		 	jQuery('#user_list-list-' + dialogNumber + ' > thead > tr > th').each(function() {
-				//header += '<th style="min-width:35px;">'+jQuery(this).html()+'</th>';
-				if (jQuery(this).html().indexOf('form-checkbox') != -1) {
-					header += '<th style="min-width:35px;" onClick="vsSearch.selectAllBoxes(' + idOfThisTab + ')"><input type="checkbox" id="user-list_master_checkbox-' + idOfThisTab + '" class="form-checkbox" title="Select all rows in this table" onClick="vsSearch.selectAllBoxes(' + idOfThisTab + ')" /></th>';
-				} else {
-					header += '<th style="min-width:35px;">' + jQuery(this).html() + '</th>';
-				}
-			});
-		 	header += '</tr></thead><tbody><tr class="odd clickable clickToSelect" >';
-		 	return header;
 		 },
 		/*
 		 * This function selects all checkboxes once you click on the top

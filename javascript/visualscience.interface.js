@@ -179,7 +179,7 @@ var vsInterface = (function() {
 		 	//click on the search tab
 		 	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
 		 	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-		 	vsSearch.makeActionBarMoveable(idOfThisTab);
+		 	//vsSearch.makeActionBarMoveable(idOfThisTab);
 		 	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
 		 	vsSearch.makeRowsSelectable();
 

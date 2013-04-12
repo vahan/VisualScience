@@ -24,17 +24,52 @@ var vsUserlist = (function() {
 		});
 	};
 
-	getSearchResult = function (search) {
-		return {
-			"searchQuery": search
-		};
+	// type = 0 ->full
+	getSearchResult = function (search, type) {
+		type = type || 1;
+		var result = {};
+		result.fields = getSearchFields(type);
+		result.users = [];
+		var id=0;
+		for (var user in searchDB.users) {
+			for (var field in user) {
+				if (field.indexOf(search) !== -1 && !jQuery.inArray(user, result.users)) {
+					id++;
+					var temp = {
+						id: id,
+						type: id%2 == 0 ? 'even':'odd'
+					};
+					temp.fields = user;
+					result.users.push(user);
+				}
+			}
+		}
+		return result;
 	}
 
+	getSearchFields = function (type) {
+		var result = [];
+		if (type != 0) {
+			for (var field in searchDB.config.fields) {
+				if (field.mini == 1) {
+					result.push(field.name);
+				}
+			}
+		}
+		else {
+			for (var field in searchDB.config.fields) {
+				result.push(field.name)
+			}
+		}
+		return result;
+	}
+
+
 	return {
-		search: function () {
+		search: function (type) {
 			var search = jQuery('#visualscience-search-bar').val() || '';
 			console.log('Searched for: ' + search);
-			var searchResult = getSearchResult(search);
+			var searchResult = getSearchResult(search, type);
 			vsInterface.openUserListTab(searchResult);
 		},
 
