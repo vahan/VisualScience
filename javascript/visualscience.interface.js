@@ -174,7 +174,7 @@ var vsInterface = (function() {
 			setTimeout(function() {//(Bad style) The tab creation should be delayed, so that the ajax results can be put in the display:none; div(#visualscience-user_list-dialogNumber)
 				createTabbedInterface(dialogNumber);
 				var title = jQuery("#visualscience-search-query-" + dialogNumber).val();
-				title = (title == '' ? 'All Users' : title);
+				title = ((title || title == '') ? 'All Users' : title);
 				var idOfThisTab = vsInterface.getTabId();
 				vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
 				//Insert the table result in a new div

@@ -8,8 +8,9 @@ var vsUserlist = (function() {
 	jQuery(document).ready(function() {
 		//vsSearchDB is defined by the backend.
 		searchDB = vsSearchDB;
-		vsUserlist.search();
 		startAutoComplete();
+		vsInterface.openUserListTab();
+		vsUserlist.search();
 	});
 
 	startAutoComplete = function (inputId, source) {
