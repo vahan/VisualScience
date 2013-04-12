@@ -1,5 +1,7 @@
 var vsUserlist = (function() {
-	var sendSearchToSave, startAutoComplete, searchDB;
+	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated;
+
+	isInterfaceCreated = false;
 
 	sendSearchToSave = function (search) {
 		console.log('Implement search saving for:' + search);
@@ -74,7 +76,13 @@ var vsUserlist = (function() {
 			console.log('Searched for: ' + search);
 			var searchResult = getSearchResult(search, type);
 			console.log(searchResult);
-			vsInterface.openUserListTab(searchResult);
+			if (!isInterfaceCreated) {
+				vsInterface.openUserListTab(searchResult);
+				isInterfaceCreated = true;
+			}
+			else {
+				vsInterface.manageNewSearch(searchResult);
+			}
 		},
 
 		saveSearch: function () {
