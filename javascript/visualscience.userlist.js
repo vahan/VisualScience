@@ -29,6 +29,7 @@ var vsUserlist = (function() {
 		var result = {};
 		result.fields = getSearchFields(type);
 		result.users = [];
+		result.searchQuery = search;
 		var id=0;
 		for (var user in searchDB.users) {
 			var singleUser = searchDB.users[user];

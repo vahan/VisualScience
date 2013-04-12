@@ -125,8 +125,7 @@ var vsSearch = (function() {
 		 		users: searchObject.users
 		 	};
 		 	var divFinalContent = searchTable(parameters);
-		 	var nbColsInTable = 0;
-		 	divFinalContent += vsSearch.getTableUserListOptions('user_list-list-0', idOfThisTab, nbColsInTable);
+		 	divFinalContent += vsSearch.getTableUserListOptions(searchObject.fields, idOfThisTab);
 		 	return divFinalContent;
 		 },
 		/*
@@ -134,11 +133,11 @@ var vsSearch = (function() {
 		 * firstly it takes every th field from the header table, and generates the checkbox witht these labels.
 		 * On the checkbox there is a function that toggles the visibility of the wanted element.
 		 */
-		 getTableUserListOptions : function(tableId, idOfThisTab, nbColsInTable) {
+		 getTableUserListOptions : function(fields, idOfThisTab) {
 		 	var divOptions = '<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">';
-		 	jQuery('#' + tableId + ' > thead > tr > th').each(function(i) {
-		 		if (jQuery(this).text() != '') {
-		 			divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + idOfThisTab + '\',' + i + ');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" id="checkbox-visibility-' + jQuery(this).text() + idOfThisTab + '" /> ' + jQuery(this).text() + ' </label></div>';
+		 	jQuery.each(fields, function(i, el) {
+		 		if (el != '') {
+		 			divOptions += '<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + el + idOfThisTab + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + idOfThisTab + '\',' + (i + 1) + ');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + el + idOfThisTab + '" id="checkbox-visibility-' + el + idOfThisTab + '" /> ' + el + ' </label></div>';
 		 		}
 		 	});
 		 	divOptions += '</div></div></fieldset>';
