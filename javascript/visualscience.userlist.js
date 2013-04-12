@@ -32,15 +32,18 @@ var vsUserlist = (function() {
 		result.users = [];
 		var id=0;
 		for (var user in searchDB.users) {
-			for (var field in user) {
-				if (field.indexOf(search) !== -1 && !jQuery.inArray(user, result.users)) {
+			var singleUser = searchDB.users[user];
+			var isIn = 0;
+			for (var field in singleUser) {
+				if (singleUser[field].indexOf(search) !== -1 && isIn != 1) {
 					id++;
 					var temp = {
 						id: id,
 						type: id%2 == 0 ? 'even':'odd'
 					};
-					temp.fields = user;
-					result.users.push(user);
+					temp.fields = singleUser;
+					result.users.push(temp);
+					isIn = 1;
 				}
 			}
 		}
@@ -51,14 +54,14 @@ var vsUserlist = (function() {
 		var result = [];
 		if (type != 0) {
 			for (var field in searchDB.config.fields) {
-				if (field.mini == 1) {
-					result.push(field.name);
+				if (searchDB.config.fields[field].mini == 1) {
+					result.push(searchDB.config.fields[field].name);
 				}
 			}
 		}
 		else {
 			for (var field in searchDB.config.fields) {
-				result.push(field.name)
+				result.push(searchDB.config.fields[field].name)
 			}
 		}
 		return result;
@@ -70,6 +73,7 @@ var vsUserlist = (function() {
 			var search = jQuery('#visualscience-search-bar').val() || '';
 			console.log('Searched for: ' + search);
 			var searchResult = getSearchResult(search, type);
+			console.log(searchResult);
 			vsInterface.openUserListTab(searchResult);
 		},
 
