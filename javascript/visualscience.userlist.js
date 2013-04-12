@@ -73,9 +73,7 @@ var vsUserlist = (function() {
 	return {
 		search: function (type) {
 			var search = jQuery('#visualscience-search-bar').val() || '';
-			console.log('Searched for: ' + search);
 			var searchResult = getSearchResult(search, type);
-			console.log(searchResult);
 			if (!isInterfaceCreated) {
 				vsInterface.openUserListTab(searchResult);
 				isInterfaceCreated = true;
