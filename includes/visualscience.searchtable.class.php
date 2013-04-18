@@ -17,6 +17,14 @@ class Search {
 		return $final;	
 	}
 
+	private function getValueOfField ($field, $user) {
+		$value = $user->$field['name'];
+		if (gettype($value) == 'array' && isset(field_view_field('user', $user, $field['name'])[0]['#markup'])) {
+			return field_view_field('user', $user, $field['name'])[0]['#markup'];
+		}
+		return $value;
+	}
+
 	private function getUsersFields ($fields) {
 		$usersIds = $this->getAllUsersIds();
 		$users = user_load_multiple($usersIds);
@@ -24,7 +32,7 @@ class Search {
 		foreach ($users as $user) {
 			$userFields[$user->uid] = array();
 			foreach ($fields as $field) {
-				$valueOfField = $user->$field['name'];
+				$valueOfField = $this->getValueOfField($field, $user);
 				if ($field['first'] == 1) {
 					$userFields[$user->uid]['first'] = $valueOfField;
 				}

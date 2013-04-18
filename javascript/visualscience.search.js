@@ -78,7 +78,7 @@ var vsSearch = (function() {
 		 		jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 		 			index++;
 		 			if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-		 				lasts.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + nbLastRow + ')').text());
+		 				lasts.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbLastRow+1) + ')').text());
 		 			}
 		 		});
 		 	}
