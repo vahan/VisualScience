@@ -25,7 +25,13 @@ class Search {
 		if (gettype($value) == 'array') {
 			$list = '';
 			foreach ($value as $innerVal) {
-				$list .= $innerVal . '; ';
+				if (gettype($innerVal) == 'array') {
+					$list .= 'RDF Field';
+					break;
+				}
+				else {
+					$list .= $innerVal . '; ';
+				}
 			}
 			$value = $list;
 		}
