@@ -29,7 +29,7 @@ class Search {
 			}
 			$value = $list;
 		}
-		return $value;
+		return $value.'';
 	}
 
 	private function getUsersFields ($fields) {
