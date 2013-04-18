@@ -20,7 +20,14 @@ class Search {
 	private function getValueOfField ($field, $user) {
 		$value = $user->$field['name'];
 		if (gettype($value) == 'array' && isset(field_view_field('user', $user, $field['name'])[0]['#markup'])) {
-			return field_view_field('user', $user, $field['name'])[0]['#markup'];
+			$value = field_view_field('user', $user, $field['name'])[0]['#markup'];
+		}
+		if (gettype($value) == 'array') {
+			$list = '';
+			foreach ($value as $innerVal) {
+				$list .= $innerVal . '; ';
+			}
+			$value = $list;
 		}
 		return $value;
 	}
