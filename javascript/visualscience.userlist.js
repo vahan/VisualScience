@@ -1,5 +1,8 @@
 var vsUserlist = (function() {
-	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated;
+	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation;
+
+	maxAutocompleteEntries = 5;
+	delayBeforeTableCreation = 1000;
 
 	isInterfaceCreated = false;
 
@@ -14,14 +17,17 @@ var vsUserlist = (function() {
 		//Timeout so that the views have time to load.
 		setTimeout(function() {
 			vsUserlist.search();
-		}, 1000);
+		}, delayBeforeTableCreation);
 	});
 
 	startAutoComplete = function (inputId, source) {
 		source = source || vsUserlist.getUsersNamesFromDB();
 		inputId = inputId || 'visualscience-search-bar';
 		jQuery('#'+inputId).autocomplete({
-			source: source
+			source: function (request, response) {
+				var results = $.ui.autocomplete.filter(src, request.term);
+				response(results.slice(0, maxAutocompleteEntries));
+			}
 		});
 	};
 
