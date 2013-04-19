@@ -67,7 +67,6 @@ vsLivingscience = (function() {
 		 		livingscience.searchMultipleAuthors(selectedUsers, function(results) {
 		 			onLivingScienceResults(results, 'livingscience-tab-' + thisTabId, thisTabId);
 		 		});
-		 		alert(selectedUsers);
 		 		vsInterface.getView('livingscienceLoading.html', function(loadingPage) {
 		 			var inputs = {installFolder: vsUtils.getInstallFolder()};
 		 			jQuery('#livingscience-tab-' + thisTabId).html(loadingPage(inputs));

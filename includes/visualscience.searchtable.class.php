@@ -14,13 +14,17 @@ class Search {
 		for ($i=0; $record = $result->fetchAssoc(); $i++) {
 			$final[$record['name']] = $record;
 		}
-		return $final;	
+		return $final;
 	}
 
 	private function getValueOfField ($field, $user) {
 		$value = $user->$field['name'];
 		$ifDefField = field_view_field('user', $user, $field['name']);
-		if (gettype($value) == 'array' && isset($ifDefField)) {
+		if (gettype($value) == 'object') {
+			$vars = get_object_vars($value);
+			$value = $value->$vars[0] .'';
+		}
+		if (gettype($value) == 'array' && !empty($ifDefField)) {
 			$value = $ifDefField[0]['#markup'];
 		}
 		if (gettype($value) == 'array') {
