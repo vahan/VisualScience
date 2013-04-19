@@ -23,7 +23,8 @@ class Search {
 		if (gettype($value) == 'object') {
 			$vars = get_object_vars($value);
 			reset($vars);
-			$value = $value->key($vars) .'';
+			$vars ? key($vars)
+			$value = $value->$vars .'';
 		}
 		if (gettype($value) == 'array' && !empty($ifDefField)) {
 			$value = $ifDefField[0]['#markup'];
