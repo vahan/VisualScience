@@ -19,8 +19,9 @@ class Search {
 
 	private function getValueOfField ($field, $user) {
 		$value = $user->$field['name'];
-		if (gettype($value) == 'array' && isset(field_view_field('user', $user, $field['name'])[0]['#markup'])) {
-			$value = field_view_field('user', $user, $field['name'])[0]['#markup'];
+		$ifDefField = field_view_field('user', $user, $field['name']);
+		if (gettype($value) == 'array' && isset($ifDefField)) {
+			$value = $ifDefField[0]['#markup'];
 		}
 		if (gettype($value) == 'array') {
 			$list = '';
