@@ -21,10 +21,7 @@ class Search {
 		$value = $user->$field['name'];
 		$ifDefField = field_view_field('user', $user, $field['name']);
 		if (gettype($value) == 'object') {
-			$vars = get_object_vars($value);
-			reset($vars);
-			$vars ? key($vars)
-			$value = $value->$vars .'';
+			$value = 'Object';
 		}
 		if (gettype($value) == 'array' && !empty($ifDefField)) {
 			$value = $ifDefField[0]['#markup'];
