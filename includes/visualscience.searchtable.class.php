@@ -30,7 +30,7 @@ class Search {
 			$list = '';
 			foreach ($value as $innerVal) {
 				if (gettype($innerVal) == 'array') {
-					$list .= 'RDF Field';
+					$list .= 'Array';
 					break;
 				}
 				else {
