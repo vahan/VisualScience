@@ -78,7 +78,9 @@ var vsSearch = (function() {
 		 		jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 		 			index++;
 		 			if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-		 				lasts.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbLastRow+1) + ')').text());
+		 				var last = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbLastRow+1) + ')').text();
+		 				last = vsUtils.stripSpacesStartEnd(last);
+		 				lasts.push(last);
 		 			}
 		 		});
 		 	}
@@ -87,9 +89,12 @@ var vsSearch = (function() {
 		 	jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
 		 		index++;
 		 		if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-		 			firsts.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbFirstRow+1) + ')').text());
+		 			var first = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbFirstRow+1) + ')').text();
+		 			first = vsUtils.stripSpacesStartEnd(first);
+		 			firsts.push(first);
 		 		}
 		 	});
+		 	vsUtils.stripSpacesStartEnd();
 		 	//merging both
 		 	if (lasts.length > 0) {
 		 		jQuery.each(lasts, function(i, el) {
