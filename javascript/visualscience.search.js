@@ -6,10 +6,12 @@ var vsSearch = (function() {
 				var cur = jQuery(this).children().children().children();
 				var newState = !(cur.attr('checked'));
 				cur.attr('checked', newState);
+				jQuery(this).toggleClass('vsSelectedRow');
 			});
 			jQuery('.clickToSelect').children().children().children().click(function() {
 				var newState = !(jQuery(this).attr('checked'));
 				jQuery(this).attr('checked', newState);
+				jQuery(this).toggleClass('vsSelectedRow');
 			});
 		},
 

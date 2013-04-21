@@ -274,3 +274,8 @@ span.preselected {
  	background: rgba(0,0,0,0); 
  	-webkit-box-shadow: inset 0 0 20px #575757;
  }
+ table .vsSelectedRow {
+ 	border:solid #757575 2px;
+ 	-webkit-box-shadow: inset 0px 0px 7px 0px #757575;
+ 	box-shadow: inset 0px 0px 7px 0px #757575;
+ }
