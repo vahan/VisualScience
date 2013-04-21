@@ -1,5 +1,5 @@
 var vsUserlist = (function() {
-	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation;
+	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult;
 
 	maxAutocompleteEntries = 5;
 	delayBeforeTableCreation = 1000;
@@ -39,18 +39,30 @@ var vsUserlist = (function() {
 		result.fields = tagMarkNameFields(result.fields);
 		result.users = [];
 		result.searchQuery = search;
+		var fieldsInTable = getSearchFields(type);
+		var lastIndex = fieldsInTable.indexOf(searchDB.config.last);
+		var firstIndex = fieldsInTable.indexOf(searchDB.config.first);
+		if (lastIndex != -1) {
+			fieldsInTable[lastIndex] = 'last';
+		}
+		if (firstIndex != -1) {
+			fieldsInTable[firstIndex] = 'first';
+		}
 		var id=0;
 		for (var user in searchDB.users) {
 			var singleUser = searchDB.users[user];
 			var isIn = 0;
-			for (var field in singleUser) {
-				if (singleUser[field].indexOf(search) !== -1 && isIn != 1) {
+			for (var field in fieldsInTable) {
+				if (isIn != 1 && singleUser[fieldsInTable[field]].indexOf(search) !== -1) {
 					id++;
 					var temp = {
 						id: id,
 						type: id%2 == 0 ? 'even':'odd'
 					};
-					temp.fields = singleUser;
+					temp.fields = [];
+					for (var innerField in fieldsInTable) {
+						temp.fields.push(singleUser[fieldsInTable[innerField]]);
+					}
 					result.users.push(temp);
 					isIn = 1;
 				}
