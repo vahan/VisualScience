@@ -43,7 +43,7 @@ var vsInterface = (function() {
 	 		jQuery('#' + tabbedInterface).tabs({
 	 			cache : true
 	 		});
-	 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab);
+	 		vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/search.png" width="13px" alt="image for visualscience search" /> ', title, '#visualscience-search-tab-content-' + idOfThisTab, true);
 	 	}
 	 };
 
@@ -206,13 +206,20 @@ var vsInterface = (function() {
 		 * The url parameter should be a local url and it can contain a fragment identifier(#something)
 		 * The name parameter is the name you want the tab to have.
 		 */
-		 addTab : function(icon, name, url) {
+		 addTab : function(icon, name, url, closeCross) {
+		 	// closeCross = closeCross || false;
+		 	console.log(closeCross);
 		 	if (name.length > nameMaxLength) {
 		 		name = name.substring(0, nameMaxLength) + '... ';
 		 	}
 		 	vsInterface.setTabId(vsInterface.getTabId()+1);
 		 	var nbTabs = jQuery('#' + tabbedInterface).tabs('length');
-		 	jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="vsInterface.closeTab(\'' + url + '\')">X</span>');
+		 	if (closeCross) {
+		 		jQuery('#' + tabbedInterface).tabs('add', url, icon + name);
+		 	}
+		 	else {
+		 		jQuery('#' + tabbedInterface).tabs('add', url, icon + name + '<span class="close-tab-cross" onClick="vsInterface.closeTab(\'' + url + '\')">X</span>');
+		 	}
 		 	jQuery('#' + tabbedInterface).tabs('select', nbTabs);
 		 	jQuery('#' + tabbedInterface + ' > .ui-tabs-panel').css({
 		 		'display' : 'inline-block',
