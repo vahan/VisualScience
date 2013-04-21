@@ -187,10 +187,11 @@ var vsInterface = (function() {
 		 manageNewSearch: function (searchObject) {
 		 	var firstTab = jQuery(jQuery(jQuery('#tab-list').children()[0]).children()[0]);
 		 	firstTab.click();
-		 	var newTitle = searchObject.searchQuery ? 'Search: '+ searchObject.searchQuery: 'Search';
+
+		 	var newTitle = searchObject.searchQuery ? ' Search: '+ searchObject.searchQuery: ' Search';
 		 	newTitle = newTitle.length > nameMaxLength ? newTitle.substring(0, nameMaxLength) + '... ' : newTitle;
 		 	var oldTitle = firstTab.text();
-		 	oldTitle = oldTitle.substring(0, oldTitle.length -1);
+		 	oldTitle = oldTitle.substring(0, oldTitle.length);
 		 	var tabTitleContent = firstTab.html().replace(oldTitle, newTitle);
 		 	firstTab.html(tabTitleContent);
 		 	var idOfThisTab = 0;
