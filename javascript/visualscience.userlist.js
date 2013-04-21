@@ -28,6 +28,9 @@ var vsUserlist = (function() {
 				var results = jQuery.ui.autocomplete.filter(source, request.term);
 				response(results.slice(0, maxAutocompleteEntries));
 				return response;
+			},
+			change: function (event, ui) {
+				vsUserlist.search();
 			}
 		});
 	};
