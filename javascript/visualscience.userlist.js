@@ -25,8 +25,9 @@ var vsUserlist = (function() {
 		inputId = inputId || 'visualscience-search-bar';
 		jQuery('#'+inputId).autocomplete({
 			source: function (request, response) {
-				var results = $.ui.autocomplete.filter(src, request.term);
+				var results = jQuery.ui.autocomplete.filter(source, request.term);
 				response(results.slice(0, maxAutocompleteEntries));
+				return response;
 			}
 		});
 	};
