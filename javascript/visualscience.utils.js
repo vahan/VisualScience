@@ -195,10 +195,13 @@ getJsonOfAttachments : function(thisTabId) {
 		 */
 		 getThWithContent : function(tableId, fieldContent) {
 		 	for (var i = 0; i <= vsUtils.countColumnsInTable(tableId); i++) {
-		 		if (jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text() == fieldContent) {
+		 		var thTitle = jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text();
+		 		thTitle = vsUtils.stripSpacesStartEnd(thTitle);
+		 		if (thTitle == fieldContent) {
 		 			return i;
 		 		}
 		 	}
+		 	return -1;
 		 },
 		 getLastNameCommaFirstName : function(name) {
 		 	var first = name.substring(0, name.lastIndexOf(' '));
