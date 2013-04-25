@@ -57,7 +57,7 @@ var vsUserlist = (function() {
 			var singleUser = searchDB.users[user];
 			var isIn = 0;
 			for (var field in fieldsInTable) {
-				if (isIn != 1 && singleUser[fieldsInTable[field]].indexOf(search) !== -1) {
+				if (isIn != 1 && singleUser[fieldsInTable[field]].toLowerCase().indexOf(search.toLowerCase()) !== -1) {
 					id++;
 					var temp = {
 						id: id,

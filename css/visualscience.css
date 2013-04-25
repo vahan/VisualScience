@@ -235,15 +235,11 @@ span.preselected {
  	border: 1px solid #b8b8b8;
  }
  .visualscience-search-main {
- 	-webkit-border-radius: 20px;
- 	-moz-border-radius: 20px;
- 	border-radius: 20px;
-
  	-moz-box-shadow:inset 2px 2px 5px #ccc;
  	box-shadow:inset 2px 2px 5px #ccc;
 
  	font-size: 20px;
- 	width: 50%;
+ 	width: 100%;
  }
  .visualscience-search-main::-webkit-input-placeholder, .visualscience-search-main::-moz-placeholder {
  	font-style: italic;
