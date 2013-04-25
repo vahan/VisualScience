@@ -1,6 +1,4 @@
-This branch is for Developpement. If you use it, don't forget to :
-	1. Change the value of installFolder in visualscience.js
-	2. "Clear all caches" in Drupal.
+Currently in development branch. Implementation of the new backend and re-implementation of the old working functionnalities that are now not working.
 # VisualScience
 
 A module providing an easy-to-use intuitive search interface for your Drupal Database. With just a single search box and advanced autocomplete you can get the targeted list of entities (users or nodes) within several seconds. You can also save your searches to have quick access to commonly used lists. **No configuration needed!**
