@@ -149,6 +149,41 @@ function visualscience_uninstall() {
   drupal_uninstall_schema('visualscience');
 }
 
+/**
+ * Implementation of hook_install().
+ */
+function visualscience_install() {
+  //drupal_install_schema('visualscience');
+  $name = new StdClass();
+  $mail = new StdClass();
+  $roles = new StdClass();
+
+  $name->name = 'name';
+  $name->mini = 1;
+  $name->full = 1;
+  $name->first = 1;
+  $mail->last = 1;
+  $name->field = 0;
+
+  $roles->name = 'roles';
+  $roles->mini = 1;
+  $roles->full = 1;
+  $roles->first = 0;
+  $roles->field = 0;
+  $mail->last = 0;
+
+  $mail->name = 'mail';
+  $mail->mini = 1;
+  $mail->full = 1;
+  $mail->first = 0;
+  $mail->field = 0;
+  $mail->last = 0;
+
+  drupal_write_record('visualscience_search_config', $name);
+  drupal_write_record('visualscience_search_config', $mail);
+  drupal_write_record('visualscience_search_config', $roles);
+}
+
 
 
 
