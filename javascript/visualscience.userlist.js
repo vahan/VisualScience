@@ -53,22 +53,26 @@ var vsUserlist = (function() {
 			fieldsInTable[firstIndex] = 'first';
 		}
 		var id=0;
+		searchKeys = search.split(' ');
 		for (var user in searchDB.users) {
 			var singleUser = searchDB.users[user];
 			var isIn = 0;
-			for (var field in fieldsInTable) {
-				if (isIn != 1 && singleUser[fieldsInTable[field]].toLowerCase().indexOf(search.toLowerCase()) !== -1) {
-					id++;
-					var temp = {
-						id: id,
-						type: id%2 == 0 ? 'even':'odd'
-					};
-					temp.fields = [];
-					for (var innerField in fieldsInTable) {
-						temp.fields.push(singleUser[fieldsInTable[innerField]]);
+			for (var searchKey in searchKeys) {
+				search = searchKeys[searchKey];
+				for (var field in fieldsInTable) {
+					if (isIn != 1 && singleUser[fieldsInTable[field]].toLowerCase().indexOf(search.toLowerCase()) !== -1) {
+						id++;
+						var temp = {
+							id: id,
+							type: id%2 == 0 ? 'even':'odd'
+						};
+						temp.fields = [];
+						for (var innerField in fieldsInTable) {
+							temp.fields.push(singleUser[fieldsInTable[innerField]]);
+						}
+						result.users.push(temp);
+						isIn = 1;
 					}
-					result.users.push(temp);
-					isIn = 1;
 				}
 			}
 		}
