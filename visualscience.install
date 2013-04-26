@@ -157,6 +157,8 @@ function visualscience_install() {
   $name = new StdClass();
   $mail = new StdClass();
   $roles = new StdClass();
+  $last = new StdClass();
+  $first = new StdClass();
 
   $name->name = 'name';
   $name->mini = 1;
@@ -179,9 +181,37 @@ function visualscience_install() {
   $mail->field = 0;
   $mail->last = 0;
 
-  drupal_write_record('visualscience_search_config', $name);
-  drupal_write_record('visualscience_search_config', $mail);
-  drupal_write_record('visualscience_search_config', $roles);
+  $first->name = 'first_name';
+  $first->mini = 1;
+  $first->full = 1;
+  $first->first = 1;
+  $first->field = 0;
+  $first->last = 0;
+
+  $last->name = 'last_name';
+  $last->mini = 1;
+  $last->full = 1;
+  $last->first = 0;
+  $last->field = 0;
+  $last->last = 1;
+
+  $existFirst = field_info_field('first_name');
+  $existLast = field_info_field('last_name');
+  $existFirstField = field_info_field('field_first_name');
+  $existLastField = field_info_field('field_last_name');
+
+
+  if ((isset($existFirst) || isset($existFirstField)) && (isset($existLast) || isset($existLastField))) {
+    drupal_write_record('visualscience_search_config', $first);
+    drupal_write_record('visualscience_search_config', $last);
+
+  }
+  else {
+    drupal_write_record('visualscience_search_config', $name);
+    drupal_write_record('visualscience_search_config', $roles);
+  }
+
+    drupal_write_record('visualscience_search_config', $mail);
 }
 
 
