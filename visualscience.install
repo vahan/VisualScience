@@ -181,8 +181,6 @@ function visualscience_install() {
 
   drupal_write_record('visualscience_search_config', $name);
   drupal_write_record('visualscience_search_config', $mail);
-  // drupal_set_message('VisualScience fault...', 'error');
-  watchdog('warning', 'VisualScience fault...');
   drupal_write_record('visualscience_search_config', $roles);
 }
 
