@@ -214,16 +214,4 @@ function visualscience_install() {
     drupal_write_record('visualscience_search_config', $mail);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
