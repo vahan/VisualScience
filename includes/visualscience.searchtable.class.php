@@ -159,4 +159,8 @@ class Search {
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.conference.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.livingscience.js');
 	}
+
+	public function getPatternConfiguration () {
+		return $this->getFieldsFromConfig();
+	}
 }
