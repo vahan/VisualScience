@@ -52,7 +52,6 @@ function visualscience_insert_config ($form_id, $form_state) {
 		break;
 
 		case 'none':
-		case true:
 		default:
 		$status = PATTERNS_SUCCESS;
 		$msg = '';
@@ -65,7 +64,46 @@ function visualscience_insert_config ($form_id, $form_state) {
 function visualscience_modify_config ($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
-	$config->modifyPatternConfig($field);
+
+	$error = 'none';
+	$error = $config->checkCompletefield($field);
+	$error = $config->fieldExistsInDB($field);
+
+	$status = PATTERNS_ERR;
+	$msg = 'An error occured in your file.';
+
+	switch ($error) {
+		case 'notExist' :
+		$msg = 'The field does not already exist in the database.';
+		break;
+
+		case 'name' :
+		$msg = 'The field "name" is not defined.';
+		break;
+
+		case 'full' :
+		$msg = 'The field "full" is not defined.';
+		break;
+
+		case 'first' :
+		$msg = 'The field "first" is not defined.';
+		break;
+
+		case 'last' :
+		$msg = 'The field "last" is not defined.';
+		break;
+
+		case 'mini' :
+		$msg = 'The field "mini" is not defined.';
+		break;
+
+		default:
+		$status = PATTERNS_SUCCESS;
+		$msg = '';
+		$config->modifyPatternConfig($field);		
+	}
+
+	return patterns_results($status, $msg);
 }
 
 function visualscience_export_config ($args = NULL, &$result = NULL) {

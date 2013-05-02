@@ -70,6 +70,20 @@ class Config {
 		$query->execute();
 	}
 
+	private function updateSearchConfig ($name, $mini, $full, $first, $last, $field = 0) {
+		$table = 'visualscience_search_config';
+		$query = db_update($table)->fields(array(
+			'mini' => $mini,
+			'full' => $full,
+			'first' => $first,
+			'last' => $last,
+			'field' => $field,
+			));
+		
+		$query->condition('name', $name);
+		$query->execute();
+	}
+
 	private function getListOfFields () {
 		$listFields = array();
 		$userFields = user_load(0);
@@ -132,7 +146,8 @@ class Config {
 	}
 
 	public function modifyPatternConfig ($field) {
-		//Modify the entry.
+		$this->updateSearchConfig($field['name'], $field['mini'],$field['full'],$field['first'],$field['last']);
+
 	}
 
 	public function checkCompleteField ($field) {
