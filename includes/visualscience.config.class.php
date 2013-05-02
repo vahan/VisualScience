@@ -127,8 +127,11 @@ class Config {
 		$this->saveFields();
 	}
 
-	public function savePatternConfig ($field) {
-		print_r($field);
+	public function insertPatternConfig ($field) {
 		$this->insertIntoSearchConfig($field['field_name'], $field['field_mini'],$field['field_full'],$field['field_first'],$field['field_last']);
+	}
+
+	public function modifyPatternConfig ($field) {
+		//Modify the entry.
 	}
 }
