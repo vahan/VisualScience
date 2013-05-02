@@ -155,6 +155,16 @@ class Config {
 	}
 
 	public function fieldExistsInDB ($field) {
-		if exists return 'exists' else return 'notExists';
+		$result = db_select('visualscience_search_config', 'c')
+		->fields('c', array('name'))
+		->condition('name', $field['name'])
+		->range(0, 1)
+		->execute()
+		->rowCount();
+
+		if ($result) {
+			return 'exist';
+		}
+		return 'notExist';
 	}
 }
