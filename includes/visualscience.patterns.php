@@ -19,8 +19,47 @@ function visualscience_patterns ($data = NULL)  {
 function visualscience_insert_config ($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
-	//TODO: Add conditions here so that it returns the right semantic
-	$config->insertPatternConfig($field);
+	$error = 'none';
+	$error = $config->checkCompletefield($field);
+	$error = $config->fieldExistsInDB($field);
+
+	$status = PATTERNS_ERR;
+	$msg = 'An error occured in your file.';
+
+	switch ($error) {
+		case 'exist' :
+		$msg = 'The field already exists in the database.';
+		break;
+
+		case 'name' :
+		$msg = 'The field "name" is not defined.';
+		break;
+
+		case 'full' :
+		$msg = 'The field "full" is not defined.';
+		break;
+
+		case 'first' :
+		$msg = 'The field "first" is not defined.';
+		break;
+
+		case 'last' :
+		$msg = 'The field "last" is not defined.';
+		break;
+
+		case 'mini' :
+		$msg = 'The field "mini" is not defined.';
+		break;
+
+		case 'none':
+		case true:
+		default:
+		$status = PATTERNS_SUCCESS;
+		$msg = '';
+		$config->insertPatternConfig($field);		
+	}
+
+	return patterns_results($status, $msg);
 }
 
 function visualscience_modify_config ($form_id, $form_state) {
@@ -42,11 +81,11 @@ function visualscience_export_config ($args = NULL, &$result = NULL) {
 	foreach ($fields as $field) {
 		$action = array($action_type => array(
 			'tag' => 'visualscience_config', 
-			'field_name' => $field['name'], 
-			'field_mini' => $field['mini'], 
-			'field_full' => $field['full'], 
-			'field_first' => $field['first'], 
-			'field_last' => $field['last']
+			'name' => $field['name'], 
+			'mini' => $field['mini'], 
+			'full' => $field['full'], 
+			'first' => $field['first'], 
+			'last' => $field['last']
 			));
 
 		array_push($actions, $action);

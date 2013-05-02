@@ -128,10 +128,33 @@ class Config {
 	}
 
 	public function insertPatternConfig ($field) {
-		$this->insertIntoSearchConfig($field['field_name'], $field['field_mini'],$field['field_full'],$field['field_first'],$field['field_last']);
+		$this->insertIntoSearchConfig($field['name'], $field['mini'],$field['full'],$field['first'],$field['last']);
 	}
 
 	public function modifyPatternConfig ($field) {
 		//Modify the entry.
+	}
+
+	public function checkCompleteField ($field) {
+		if (!isset($field['name'])) {
+			return 'name';
+		}
+		if (!isset($field['mini'])) {
+			return 'mini';
+		}
+		if (!isset($field['full'])) {
+			return 'full';
+		}
+		if (!isset($field['last'])) {
+			return 'last';
+		}
+		if (!isset($field['first'])) {
+			return 'first';
+		}
+		return true;
+	}
+
+	public function fieldExistsInDB ($field) {
+		if exists return 'exists' else return 'notExists';
 	}
 }
