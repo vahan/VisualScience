@@ -31,18 +31,18 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 				}
 				else {
 					$status = PATTERNS_ERR;
-					$msg = t('The field '.$wrongValueType.' has a wrong value type for '.$field['name'].'.');
+					$msg = t('The field "'.$wrongValueType.'" has a wrong value type for "'.$field['name'].'".');
 				}
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field '.$uncompleteField.' is not defined for '.$field['name'].'.');
+				$msg = t('The field "'.$uncompleteField.'" is not defined for "'.$field['name'].'".');
 			}
 		}
 		else {
 			$msg = t('The field already exists in the database.');
 			$result[] = array(
-				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field '.$field['name'].' already exists in the database.')
+				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "'.$field['name'].'" already exists in the database.')
 				);
 		}
 	}
@@ -55,16 +55,16 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 				}
 				else {
 					$status = PATTERNS_ERR;
-					$msg = t('The field '.$wrongValueType.' has a wrong value type for '.$field['name'].'.');
+					$msg = t('The field "'.$wrongValueType.'" has a wrong value type for '.$field['name'].'.');
 				}
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field '.$uncompleteField.' is not defined for '.$field['name'].'.');
+				$msg = t('The field "'.$uncompleteField.'" is not defined for '.$field['name'].'.');
 			}
 		}
 		else {
-			$msg = t('The field does not already exist in the database.');
+			$msg = t('The field "'.$field['name'].'" does not already exist in the database.');
 			$result[] = array(
 				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field '.$field['name'].' does not already exist in the database.')
 				);
