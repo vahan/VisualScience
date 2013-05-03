@@ -182,4 +182,23 @@ class Config {
 		}
 		return false;
 	}
+
+	public function checkCorrectValueTypes ($field) {
+		if (gettype($field['name']) != 'string') {
+			return 'name';
+		}
+		if ($field['first'] != '0' && $field['first'] != '1') {
+			return 'first';
+		}
+		if ($field['last'] != '0' && $field['last'] != '1') {
+			return 'last';
+		}
+		if ($field['full'] != '0' && $field['full'] != '1') {
+			return 'full';
+		}
+		if ($field['mini'] != '0' && $field['mini'] != '1') {
+			return 'mini';
+		}
+		return false;
+	}
 }

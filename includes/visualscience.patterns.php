@@ -19,18 +19,24 @@ function visualscience_patterns ($data = NULL)  {
 function visualscience_patterns_validate ($action, $tag, &$data) {
 	$config = new Config;
 	$field = $data;
-	$error = $config->checkCompletefield($field);
+	$uncompleteField = $config->checkCompletefield($field);
 	$result = [];
 	$status = PATTERNS_SUCCESS;
 	$msg = 'An error occured in your file.';
 	if ($action == PATTERNS_CREATE) {
 		if (!$config->fieldExistsInDB($field)) {
-			if (!$error) {
-				$msg = '';
+			if (!$uncompleteField) {
+				if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
+					$msg = '';
+				}
+				else {
+					$status = PATTERNS_ERR;
+					$msg = t('The field '.$wrongValueType.' has a wrong value type for '.$field['name'].'.');
+				}
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field '.$error.' is not defined for '.$field['name'].'.');
+				$msg = t('The field '.$uncompleteField.' is not defined for '.$field['name'].'.');
 			}
 		}
 		else {
@@ -43,12 +49,18 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 
 	if ($action == PATTERNS_MODIFY) {
 		if ($config->fieldExistsInDB($field)) {
-			if (!$error) {
-				$msg = '';
+			if (!$uncompleteField) {
+				if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
+					$msg = '';
+				}
+				else {
+					$status = PATTERNS_ERR;
+					$msg = t('The field '.$wrongValueType.' has a wrong value type for '.$field['name'].'.');
+				}
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field '.$error.' is not defined for '.$field['name'].'.');
+				$msg = t('The field '.$uncompleteField.' is not defined for '.$field['name'].'.');
 			}
 		}
 		else {
