@@ -16,94 +16,62 @@ function visualscience_patterns ($data = NULL)  {
 	return $action;
 }
 
+function visualscience_patterns_validate ($action, $tag, &$data) {
+	$config = new Config;
+	$field = $data;
+	$error = $config->checkCompletefield($field);
+	$result = [];
+	$status = PATTERNS_SUCCESS;
+	$msg = 'An error occured in your file.';
+	if ($action == PATTERNS_CREATE) {
+		if (!$config->fieldExistsInDB($field)) {
+			if (!$error) {
+				$msg = '';
+			}
+			else {
+				$status = PATTERNS_ERR;
+				$msg = t('The field '.$error.' is not defined for '.$field['name'].'.');
+			}
+		}
+		else {
+			$msg = t('The field already exists in the database.');
+			$result[] = array(
+				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field '.$field['name'].' already exists in the database.')
+				);
+		}
+	}
+
+	if ($action == PATTERNS_MODIFY) {
+		if ($config->fieldExistsInDB($field)) {
+			if (!$error) {
+				$msg = '';
+			}
+			else {
+				$status = PATTERNS_ERR;
+				$msg = t('The field '.$error.' is not defined for '.$field['name'].'.');
+			}
+		}
+		else {
+			$msg = t('The field does not already exist in the database.');
+			$result[] = array(
+				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field '.$field['name'].' does not already exist in the database.')
+				);
+		}
+	}
+	return patterns_results($status, $msg, $result);
+}
+
 function visualscience_insert_config ($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
-	$error = 'none';
-	$error = $config->checkCompletefield($field);
-	$error = $config->fieldExistsInDB($field);
-
-	$status = PATTERNS_ERR;
-	$msg = 'An error occured in your file.';
-
-	switch ($error) {
-		case 'exist' :
-		$msg = 'The field already exists in the database.';
-		break;
-
-		case 'name' :
-		$msg = 'The field "name" is not defined.';
-		break;
-
-		case 'full' :
-		$msg = 'The field "full" is not defined.';
-		break;
-
-		case 'first' :
-		$msg = 'The field "first" is not defined.';
-		break;
-
-		case 'last' :
-		$msg = 'The field "last" is not defined.';
-		break;
-
-		case 'mini' :
-		$msg = 'The field "mini" is not defined.';
-		break;
-
-		case 'none':
-		default:
-		$status = PATTERNS_SUCCESS;
-		$msg = '';
-		$config->insertPatternConfig($field);		
-	}
-
-	return patterns_results($status, $msg);
+	$config->insertPatternConfig($field);
+	
 }
 
 function visualscience_modify_config ($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
-
-	$error = 'none';
-	$error = $config->checkCompletefield($field);
-	$error = $config->fieldExistsInDB($field);
-
-	$status = PATTERNS_ERR;
-	$msg = 'An error occured in your file.';
-
-	switch ($error) {
-		case 'notExist' :
-		$msg = 'The field does not already exist in the database.';
-		break;
-
-		case 'name' :
-		$msg = 'The field "name" is not defined.';
-		break;
-
-		case 'full' :
-		$msg = 'The field "full" is not defined.';
-		break;
-
-		case 'first' :
-		$msg = 'The field "first" is not defined.';
-		break;
-
-		case 'last' :
-		$msg = 'The field "last" is not defined.';
-		break;
-
-		case 'mini' :
-		$msg = 'The field "mini" is not defined.';
-		break;
-
-		default:
-		$status = PATTERNS_SUCCESS;
-		$msg = '';
-		$config->modifyPatternConfig($field);		
-	}
-
-	return patterns_results($status, $msg);
+	$config->modifyPatternConfig($field);	
 }
 
 function visualscience_export_config ($args = NULL, &$result = NULL) {

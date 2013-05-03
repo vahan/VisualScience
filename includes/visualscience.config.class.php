@@ -151,22 +151,22 @@ class Config {
 	}
 
 	public function checkCompleteField ($field) {
-		if (!isset($field['name'])) {
+		if (!(isset($field['name']))) {
 			return 'name';
 		}
-		if (!isset($field['mini'])) {
+		if (!(isset($field['mini']))) {
 			return 'mini';
 		}
-		if (!isset($field['full'])) {
+		if (!(isset($field['full']))) {
 			return 'full';
 		}
-		if (!isset($field['last'])) {
+		if (!(isset($field['last']))) {
 			return 'last';
 		}
-		if (!isset($field['first'])) {
+		if (!(isset($field['first']))) {
 			return 'first';
 		}
-		return true;
+		return false;
 	}
 
 	public function fieldExistsInDB ($field) {
@@ -178,8 +178,8 @@ class Config {
 		->rowCount();
 
 		if ($result) {
-			return 'exist';
+			return true;
 		}
-		return 'notExist';
+		return false;
 	}
 }
