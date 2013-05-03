@@ -24,20 +24,9 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 	$status = PATTERNS_SUCCESS;
 	$msg = 'An error occured in your file.';
 	if ($action == PATTERNS_CREATE) {
+		//Semantic Checking
 		if (!$config->fieldExistsInDB($field)) {
-			if (!$uncompleteField) {
-				if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
-					$msg = '';
-				}
-				else {
-					$status = PATTERNS_ERR;
-					$msg = t('The field "'.$wrongValueType.'" has a wrong value type for "'.$field['name'].'".');
-				}
-			}
-			else {
-				$status = PATTERNS_ERR;
-				$msg = t('The field "'.$uncompleteField.'" is not defined for "'.$field['name'].'".');
-			}
+			$msg = '';
 		}
 		else {
 			$msg = t('The field already exists in the database.');
@@ -45,29 +34,47 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "'.$field['name'].'" already exists in the database.')
 				);
 		}
-	}
-
-	if ($action == PATTERNS_MODIFY) {
-		if ($config->fieldExistsInDB($field)) {
-			if (!$uncompleteField) {
-				if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
-					$msg = '';
-				}
-				else {
-					$status = PATTERNS_ERR;
-					$msg = t('The field "'.$wrongValueType.'" has a wrong value type for '.$field['name'].'.');
-				}
+		
+		//Syntax Checking:
+		if (!$uncompleteField) {
+			if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
+				$msg = '';
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field "'.$uncompleteField.'" is not defined for '.$field['name'].'.');
+				$msg = t('The field "'.$wrongValueType.'" has a wrong value type for "'.$field['name'].'".');
 			}
+		}
+		else {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "'.$uncompleteField.'" is not defined for "'.$field['name'].'".');
+		}
+	}
+
+	if ($action == PATTERNS_MODIFY) {
+		//Semantic Check:
+		if ($config->fieldExistsInDB($field)) {
 		}
 		else {
 			$msg = t('The field "'.$field['name'].'" does not already exist in the database.');
 			$result[] = array(
 				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field '.$field['name'].' does not already exist in the database.')
 				);
+		}
+
+		//Syntax Checking
+		if (!$uncompleteField) {
+			if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
+				$msg = '';
+			}
+			else {
+				$status = PATTERNS_ERR;
+				$msg = t('The field "'.$wrongValueType.'" has a wrong value type for '.$field['name'].'.');
+			}
+		}
+		else {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "'.$uncompleteField.'" is not defined for '.$field['name'].'.');
 		}
 	}
 	return patterns_results($status, $msg, $result);
