@@ -20,7 +20,7 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 	$config = new Config;
 	$field = $data;
 	$uncompleteField = $config->checkCompletefield($field);
-	$result = [];
+	$result = array();
 	$status = PATTERNS_SUCCESS;
 	$msg = 'An error occured in your file.';
 	if ($action == PATTERNS_CREATE) {
@@ -34,7 +34,7 @@ function visualscience_patterns_validate ($action, $tag, &$data) {
 				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "'.$field['name'].'" already exists in the database.')
 				);
 		}
-		
+
 		//Syntax Checking:
 		if (!$uncompleteField) {
 			if (!($wrongValueType = $config->checkCorrectValueTypes($field))) {
