@@ -1,5 +1,5 @@
 var vsUserlist = (function() {
-	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult;
+	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
 	maxAutocompleteEntries = 5;
 	delayBeforeTableCreation = 1000;
@@ -99,16 +99,26 @@ var vsUserlist = (function() {
 	tagMarkNameFields = function (fields) {
 		var first = searchDB.config.first;
 		var last = searchDB.config.last;
+		var formattedFields = new Array();
 		for (var field in fields) {
+			var formatted = formatFieldTitle(fields[field]);
 			if (fields[field] == first) {
-				fields[field] = '<span class="visualscience-search-field-first">'+fields[field]+'</span>';
+				formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
 			}
 			else if (fields[field] == last) {
-				fields[field] = '<span class="visualscience-search-field-last">'+fields[field]+'</span>';
+				formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
 			}
+			formattedFields.push(formatted);
 
 		}
-		return fields;
+		return formattedFields;
+	}
+
+	formatFieldTitle = function (field) {
+		field = field.replace(/_/gi, " ");
+		return field.replace(/\w\S*/g, function(txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
 	}
 
 
