@@ -139,7 +139,8 @@ var vsSearch = (function() {
 		 	var parameters = {
 		 		header: searchObject.fields,
 		 		tabId: idOfThisTab,
-		 		users: searchObject.users
+		 		users: searchObject.users,
+		 		nbEntries: searchObject.limit
 		 	};
 		 	var divFinalContent = searchTable(parameters);
 		 	divFinalContent += vsSearch.getTableUserListOptions(searchObject.fields, idOfThisTab);
