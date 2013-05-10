@@ -1,5 +1,5 @@
 var vsUserlist = (function() {
-	var mergeUsersSelections, findBestLogicalOperator, getUsersFor, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
+	var getLogicalCondition, mergeUsersSelections, findBestLogicalOperator, getUsersFor, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
 	maxAutocompleteEntries = 5;
 	delayBeforeTableCreation = 1000;
@@ -52,7 +52,7 @@ var vsUserlist = (function() {
 		if (firstIndex != -1) {
 			fieldsInTable[firstIndex] = 'first';
 		}
-		result.users = getUserFor(search.toLowerCase(), fieldsInTable);
+		result.users = getUsersFor(search.toLowerCase(), fieldsInTable);
 		// Old implementation of Search: 
 		// var id=0;
 		// searchKeys = search.split(' ');
@@ -84,17 +84,125 @@ var vsUserlist = (function() {
 
 	// We assume that search is always in lower case form.
 	getUsersFor = function (search, fields) {
+		search = vsUtils.stripSpacesStartEnd(search);
 		var logical = findBestLogicalOperator(search);
 		if (logical == -1) {
-			return false;
+			var id = 0;
+			search = vsUtils.stripSpacesStartEnd(search);
+			var shouldBeIncluded = getLogicalCondition(search);
+			var searchedValue = search.substring(search.indexOf('=')+1);
+			var result = [];
+			if (search.length == searchedValue.length) {
+				for (var user in searchDB.users) {
+					user = searchDB.users[user];
+					var isAlreadyIn = false;
+					for (var field in fields) {
+						field = fields[field];
+						if (!isAlreadyIn && shouldBeIncluded(user[field].toLowerCase(), searchedValue.toLowerCase())) {
+							isAlreadyIn = true;
+							var temp = {
+								id: id,
+								type: id%2 == 0 ? 'even':'odd'
+							};
+							temp.fields = [];
+							for (var innerField in fields) {
+								temp.fields.push(user[fields[innerField]]);
+							}
+							result.push(temp);
+							id++;
+						}
+					}
+				}
+
+			}
+			else {
+				if (search.indexOf('!*=') != -1) {
+					searchedField = search.substring(0, search.indexOf('!*='));
+				}
+				else if (search.indexOf('!=') != -1) {
+					searchedField = search.substring(0, search.indexOf('!='));
+				}
+				else if (search.indexOf('*=') != -1) {
+					searchedField = search.substring(0, search.indexOf('*='));
+				}
+				else if (search.indexOf('=') != -1) {
+					searchedField = search.substring(0, search.indexOf('='));
+				}
+				for (var user in searchDB.users) {
+					user = searchDB.users[user];
+					var isAlreadyIn = false;
+					if (!isAlreadyIn && shouldBeIncluded(user[searchedField].toLowerCase(), searchedValue.toLowerCase())) {
+						isAlreadyIn = true;
+						var temp = {
+							id: id,
+							type: id%2 == 0 ? 'even':'odd'
+						};
+						temp.fields = [];
+						for (var innerField in fields) {
+							temp.fields.push(user[fields[innerField]]);
+						}
+						result.push(temp);
+						id++;
+					}
+				}
+			}
+
+			return result;
 		}
 		else {
 			var leftSearch = search.substring(0, search.indexOf(logical));
-			var rightSearch = search.substring(search.indexOf(logical+logical.length+1));
+			var rightSearch = search.substring(search.indexOf(logical)+logical.length+1);
 			var leftResult = getUsersFor(leftSearch, fields);
 			var rightResult = getUsersFor(rightSearch, fields);
 			return mergeUsersSelections(leftResult, rightResult, logical);
 		}
+	};
+
+	getLogicalCondition = function (search) {
+		var logiFunction;
+		if (search.indexOf('!*=') != -1) {
+			logiFunction = function (fieldValue, valueSearched) {
+				if (fieldValue.indexOf(valueSearched) == -1) {
+					return true;
+				}
+				return false;
+			};
+		}
+		else if (search.indexOf('*=') != -1) {
+			logiFunction = function (fieldValue, valueSearched) {
+				if (fieldValue.indexOf(valueSearched) != -1) {
+					return true;
+				}
+				return false;
+			};
+		}
+		else if (search.indexOf('!=') != -1) {
+			logiFunction = function (fieldValue, valueSearched) {
+				if (fieldValue != valueSearched) {
+					return true;
+				}
+				return false;
+			};
+		}
+		else if (search.indexOf('=') != -1) {
+			logiFunction = function (fieldValue, valueSearched) {
+				if (fieldValue == valueSearched) {
+					return true;
+				}
+				return false;
+			};
+		}
+		else {
+			logiFunction = function (fieldValue, valueSearched) {
+				if (fieldValue.indexOf(valueSearched) != -1) {
+					return true;
+				}
+				return false;
+			};
+		}
+
+		return logiFunction;
+
 	};
 
 	mergeUsersSelections = function (left, right, logical) {
@@ -103,17 +211,16 @@ var vsUserlist = (function() {
 		var rightFields = [];
 		var mergedFields = [];
 		for (var entry in left) {
-			leftFields.push(left[entry].fields);
+			leftFields.push(left[entry].fields.toString());
 		}
 		for (var entry in right) {
-			rightFields.push(right[entry].fields);
+			rightFields.push(right[entry].fields.toString());
 		}
-
 		if (logical == 'and') {
 			for (var entry in left) {
-				if (jQuery.inArray(left[entry].fields, rightFields) != -1 && jQuery.inArray(left[entry].fields, mergedFields) == -1) {
+				if (jQuery.inArray(left[entry].fields.toString(), rightFields) != -1 && jQuery.inArray(left[entry].fields.toString(), mergedFields) == -1) {
 					merged.push(left[entry]);
-					mergedFields.push(left[entry].fields);
+					mergedFields.push(left[entry].fields.toString());
 				}
 			}
 		}
@@ -121,9 +228,9 @@ var vsUserlist = (function() {
 			merged = left;
 			mergedFields = leftFields;
 			for (var entry in right) {
-				if (jQuery.inArray(right[entry].fields, mergedFields) == -1) {
+				if (jQuery.inArray(right[entry].fields.toString(), mergedFields) == -1) {
 					merged.push(right[entry]);
-					mergedFields.push(right[entry].fields);
+					mergedFields.push(right[entry].fields.toString());
 				}
 			}
 		}
