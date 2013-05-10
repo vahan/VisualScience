@@ -115,7 +115,7 @@ var vsSearch = (function() {
 		 */
 		 getSelectedUsersEmailFromSearchTable : function(idOfTheTab) {
 		 	var tableId = 'visualscience-user_list-result-' + idOfTheTab;
-		 	var firstFieldNumber = vsUtils.getThWithContent(tableId, 'mail');
+		 	var firstFieldNumber = vsUtils.getThWithContent(tableId, 'Mail');
 		 	if (firstFieldNumber == -1) {
 		 		vsInterface.dialog('The email field has to be enabled to use this function.');
 		 		return false;

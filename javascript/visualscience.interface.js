@@ -208,8 +208,6 @@ var vsInterface = (function() {
 		 * The name parameter is the name you want the tab to have.
 		 */
 		 addTab : function(icon, name, url, closeCross) {
-		 	// closeCross = closeCross || false;
-		 	console.log(closeCross);
 		 	if (name.length > nameMaxLength) {
 		 		name = name.substring(0, nameMaxLength) + '... ';
 		 	}
