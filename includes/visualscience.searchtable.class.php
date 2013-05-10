@@ -47,17 +47,19 @@ class Search {
 		$users = user_load_multiple($usersIds);
 		$userFields = array();
 		foreach ($users as $user) {
-			$userFields[$user->uid] = array();
-			foreach ($fields as $field) {
-				$valueOfField = $this->getValueOfField($field, $user);
-				if ($field['first'] == 1) {
-					$userFields[$user->uid]['first'] = $valueOfField;
-				}
-				else if ($field['last'] == 1) {
-					$userFields[$user->uid]['last'] = $valueOfField;
-				}
-				else {
-					$userFields[$user->uid][$field['name']] = $valueOfField;
+			if ($user->name != '') { // check for anonymous user
+				$userFields[$user->uid] = array();
+				foreach ($fields as $field) {
+					$valueOfField = $this->getValueOfField($field, $user);
+					if ($field['first'] == 1) {
+						$userFields[$user->uid]['first'] = $valueOfField;
+					}
+					else if ($field['last'] == 1) {
+						$userFields[$user->uid]['last'] = $valueOfField;
+					}
+					else {
+						$userFields[$user->uid][$field['name']] = $valueOfField;
+					}
 				}
 			}
 		}

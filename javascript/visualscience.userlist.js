@@ -1,5 +1,5 @@
 var vsUserlist = (function() {
-	var sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
+	var getUsersFor, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
 	maxAutocompleteEntries = 5;
 	delayBeforeTableCreation = 1000;
@@ -61,7 +61,7 @@ var vsUserlist = (function() {
 				search = searchKeys[searchKey];
 				for (var field in fieldsInTable) {
 					if (isIn != 1 && singleUser[fieldsInTable[field]].toLowerCase().indexOf(search.toLowerCase()) !== -1) {
-						id++;
+						
 						var temp = {
 							id: id,
 							type: id%2 == 0 ? 'even':'odd'
@@ -72,13 +72,17 @@ var vsUserlist = (function() {
 						}
 						result.users.push(temp);
 						isIn = 1;
+						id++;
 					}
 				}
 			}
 		}
-		console.log(result);
 		return result;
 	}
+
+	getUsersFor = function (search, fields) {
+
+	};
 
 	getSearchFields = function (type) {
 		var result = [];
@@ -95,7 +99,7 @@ var vsUserlist = (function() {
 			}
 		}
 		return result;
-	}
+	};
 
 	tagMarkNameFields = function (fields) {
 		var first = searchDB.config.first;
@@ -113,14 +117,14 @@ var vsUserlist = (function() {
 
 		}
 		return formattedFields;
-	}
+	};
 
 	formatFieldTitle = function (field) {
 		field = field.replace(/_/gi, " ");
 		return field.replace(/\w\S*/g, function(txt) {
 			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 		});
-	}
+	};
 
 
 	return {
