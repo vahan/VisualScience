@@ -8,7 +8,6 @@
 //Tools pre-made by Vahe
 require_once 'includes/visualscience.settings.inc';
 require_once 'includes/visualscience.utils.inc';
-require_once 'includes/visualscience.patterns.php';
 
 //Classes for each functionality
 require_once 'includes/visualscience.searchtable.class.php';
