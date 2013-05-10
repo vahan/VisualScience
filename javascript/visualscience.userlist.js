@@ -1,5 +1,5 @@
 var vsUserlist = (function() {
-	var getUsersFor, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
+	var mergeUsersSelections, findBestLogicalOperator, getUsersFor, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
 	maxAutocompleteEntries = 5;
 	delayBeforeTableCreation = 1000;
@@ -52,37 +52,93 @@ var vsUserlist = (function() {
 		if (firstIndex != -1) {
 			fieldsInTable[firstIndex] = 'first';
 		}
-		var id=0;
-		searchKeys = search.split(' ');
-		for (var user in searchDB.users) {
-			var singleUser = searchDB.users[user];
-			var isIn = 0;
-			for (var searchKey in searchKeys) {
-				search = searchKeys[searchKey];
-				for (var field in fieldsInTable) {
-					if (isIn != 1 && singleUser[fieldsInTable[field]].toLowerCase().indexOf(search.toLowerCase()) !== -1) {
-						
-						var temp = {
-							id: id,
-							type: id%2 == 0 ? 'even':'odd'
-						};
-						temp.fields = [];
-						for (var innerField in fieldsInTable) {
-							temp.fields.push(singleUser[fieldsInTable[innerField]]);
-						}
-						result.users.push(temp);
-						isIn = 1;
-						id++;
-					}
-				}
-			}
-		}
+		result.users = getUserFor(search.toLowerCase(), fieldsInTable);
+		// Old implementation of Search: 
+		// var id=0;
+		// searchKeys = search.split(' ');
+		// for (var user in searchDB.users) {
+		// 	var singleUser = searchDB.users[user];
+		// 	var isIn = 0;
+		// 	for (var searchKey in searchKeys) {
+		// 		search = searchKeys[searchKey];
+		// 		for (var field in fieldsInTable) {
+		// 			if (isIn != 1 && singleUser[fieldsInTable[field]].toLowerCase().indexOf(search.toLowerCase()) !== -1) {
+
+		// 				var temp = {
+		// 					id: id,
+		// 					type: id%2 == 0 ? 'even':'odd'
+		// 				};
+		// 				temp.fields = [];
+		// 				for (var innerField in fieldsInTable) {
+		// 					temp.fields.push(singleUser[fieldsInTable[innerField]]);
+		// 				}
+		// 				result.users.push(temp);
+		// 				isIn = 1;
+		// 				id++;
+		// 			}
+		// 		}
+		// 	}
+		// }
 		return result;
 	}
 
+	// We assume that search is always in lower case form.
 	getUsersFor = function (search, fields) {
-
+		var logical = findBestLogicalOperator(search);
+		if (logical == -1) {
+			return false;
+		}
+		else {
+			var leftSearch = search.substring(0, search.indexOf(logical));
+			var rightSearch = search.substring(search.indexOf(logical+logical.length+1));
+			var leftResult = getUsersFor(leftSearch, fields);
+			var rightResult = getUsersFor(rightSearch, fields);
+			return mergeUsersSelections(leftResult, rightResult, logical);
+		}
 	};
+
+	mergeUsersSelections = function (left, right, logical) {
+		var merged = [];
+		var leftFields = [];
+		var rightFields = [];
+		var mergedFields = [];
+		for (var entry in left) {
+			leftFields.push(left[entry].fields);
+		}
+		for (var entry in right) {
+			rightFields.push(right[entry].fields);
+		}
+
+		if (logical == 'and') {
+			for (var entry in left) {
+				if (jQuery.inArray(left[entry].fields, rightFields) != -1 && jQuery.inArray(left[entry].fields, mergedFields) == -1) {
+					merged.push(left[entry]);
+					mergedFields.push(left[entry].fields);
+				}
+			}
+		}
+		else if (logical == 'or') {
+			merged = left;
+			mergedFields = leftFields;
+			for (var entry in right) {
+				if (jQuery.inArray(right[entry].fields, mergedFields) == -1) {
+					merged.push(right[entry]);
+					mergedFields.push(right[entry].fields);
+				}
+			}
+		}
+		return merged;
+	};
+
+	findBestLogicalOperator = function (search) {
+		var orderOperations = ['and', 'or'];
+		for (var operator in orderOperations) {
+			if (search.indexOf(orderOperations[operator]) != -1) {
+				return orderOperations[operator];
+			}
+		}
+		return -1;
+	}
 
 	getSearchFields = function (type) {
 		var result = [];
