@@ -1,5 +1,4 @@
-Branch to develop the new backend.
-To reimplement: autocomplete, save/load, better search function
+Branch to develop the new backend, but this time with NDDB instead of an array.
 # VisualScience
 
 A module providing an easy-to-use intuitive search interface for your Drupal Database. With just a single search box and advanced autocomplete you can get the targeted list of entities (users or nodes) within several seconds. You can also save your searches to have quick access to commonly used lists. **No configuration needed!**
