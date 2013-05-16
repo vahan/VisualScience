@@ -14,7 +14,7 @@ var vsUserlist = (function() {
 	jQuery(document).ready(function() {
 		//vsSearchDB is defined by the backend.
 		searchDB = vsSearchDB;
-		startAutoComplete();
+		//startAutoComplete();
 		//Timeout so that the views have time to load.
 		setTimeout(function() {
 			vsUserlist.search();

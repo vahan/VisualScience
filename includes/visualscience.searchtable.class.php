@@ -131,6 +131,7 @@ class Search {
 
 	public function getClientSideFiles () {
 		global $user;
+		global $base_path;
 		drupal_add_library('system', 'ui.autocomplete');
 		drupal_add_library('system', 'ui.datepicker');
 		drupal_add_library('system', 'ui.dialog');
@@ -145,7 +146,7 @@ class Search {
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.handlebars.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/lib/visualscience.nddb.js');
   		//Settings necessary to VisualScience:
-		drupal_add_js(array('installFolder' => url(drupal_get_path('module', 'visualscience')).'/'), 'setting');
+		drupal_add_js(array('installFolder' => $base_path.drupal_get_path('module', 'visualscience').'/'), 'setting');
 		if (isset($user->name)) {
 			drupal_add_js(array('username' => $user->name), 'setting');
 		}
