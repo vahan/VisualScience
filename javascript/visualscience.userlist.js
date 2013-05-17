@@ -12,14 +12,40 @@ var vsUserlist = (function() {
 	};
 
 	jQuery(document).ready(function() {
-		//vsSearchDB is defined by the backend.
-		searchDB = vsSearchDB;
+		if (store('vsSearchDB')) {
+			searchDB = store('vsSearchDB');
+		}
+		else {
+			searchDB = {config:{}, users:[]};
+			vsInterface.dialog('Please wait while we load the users database. No worries, it only happens the first time.', '', '', function() {
+				getSearchDataFromServer(0);
+			});
+		}
 		//startAutoComplete();
 		//Timeout so that the views have time to load.
 		setTimeout(function() {
 			vsUserlist.search();
 		}, delayBeforeTableCreation);
 	});
+
+	getSearchDataFromServer = function (from) {
+		jQuery.get(vsUtils.getRootFolder()+'visualscience/users', {
+			userId: from 
+		}, function(data) {
+			var response = jQuery.parseJSON(data);
+			if (!response.finished) {
+				getSearchDataFromServer(response.to);
+			}
+			else {
+				searchDB.config = response.config;
+				vsUserlist.search();
+				store('vsSearchDB', searchDB);
+			}
+			for (var user in response.users) {
+				searchDB.users.push(response.users[user]);
+			}
+		});
+	};
 
 	startAutoComplete = function (inputId, source) {
 		source = source || vsUserlist.getUsersNamesFromDB();

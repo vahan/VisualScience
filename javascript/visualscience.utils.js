@@ -19,6 +19,9 @@ var vsUtils = (function() {
 	var dialogNumber;
 
 	return {
+		getRootFolder: function () {
+			return rootFolder;
+		},
 		getInstallFolder: function() {
 			return installFolder;
 		},

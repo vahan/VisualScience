@@ -42,8 +42,17 @@ class Search {
 		return $value.'';
 	}
 
-	private function getUsersFields ($fields) {
-		$usersIds = $this->getAllUsersIds();
+	private function getUsersFields ($fields, $from=0, $to=0) {
+		if ($to != 0) {
+			$usersIds = array();
+			while ($from <= $to) {
+				array_push($usersIds, $from);
+				$from++;
+			}
+		}
+		else {
+			$usersIds = $this->getAllUsersIds();
+		}
 		$users = user_load_multiple($usersIds);
 		$userFields = array();
 		foreach ($users as $user) {
@@ -66,8 +75,8 @@ class Search {
 		return $userFields;
 	}
 
-	private function getJsonUsersFields ($fields) {
-		return json_encode($this->getUsersFields($fields));
+	private function getJsonUsersFields ($fields, $from, $to) {
+		return json_encode($this->getUsersFields($fields, $from, $to));
 	}
 
 	private function getJsonDisplayConfig ($fields) {
@@ -76,10 +85,10 @@ class Search {
 		foreach ($fields as $field) {
 			$config .= '{"name": "'.$field['name'].'","mini": '.$field['mini'].', "full": '.$field['full'].'},';
 			if ($field['first'] == 1) {
-				$endConfig .= ', first: "'.$field['name'].'"';
+				$endConfig .= ', "first": "'.$field['name'].'"';
 			}
 			if ($field['last'] == 1) {
-				$endConfig .= ', last: "'.$field['name'].'"';
+				$endConfig .= ', "last": "'.$field['name'].'"';
 			}
 		}
 		$config = substr($config, 0, strlen($config) -1) .$endConfig. '}';
@@ -95,6 +104,18 @@ class Search {
 			array_push($final, $record['uid']);
 		}
 		return $final;
+	}
+
+	private function getLastUserId () {
+		$query = db_select('users', 'f')
+		->fields('f', array('uid'))
+		->orderBy('uid', 'DESC');
+		$result = $query->execute();
+		$final = array();
+		for ($i=0; $record = $result->fetchAssoc(); $i++) {
+			array_push($final, $record['uid']);
+		}
+		return $final[0];
 	}
 
 	public function getSavedSearch () {
@@ -127,6 +148,7 @@ class Search {
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
 		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.'}';
 		return '<script type="text/javascript" charset="utf-8">var vsSearchDB = '. $searchDB .';</script>';
+		return $searchDB;
 	}
 
 	public function getClientSideFiles () {
@@ -165,5 +187,18 @@ class Search {
 
 	public function getPatternConfiguration () {
 		return $this->getFieldsFromConfig();
+	}
+
+	public function getUsersEntries ($from=0, $howMany=1000) {
+		$final = $from + $howMany;
+		$fields = $this->getFieldsFromConfig();
+		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
+		$finished = $final < $this->getLastUserId() ? 0: 1;
+		$jsonDisplayConfig = '""';
+		if ($finished) {
+			$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
+		}
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "finished": '.$finished.', "to":'.$final.'}';
+		return $searchDB;
 	}
 }
