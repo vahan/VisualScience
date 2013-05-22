@@ -131,9 +131,10 @@ class Search {
 
 		return '<div align="center">
 		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main visualscience-search" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
-		<div style="width:48%;" align="left">
-		<p class="visualscience-right" align="right">'.l(t("Help"), "admin/help/visualscience").'</p>
-		<p class="visualscience-left" align="left"><a onClick="vsUserlist.saveSearch();">Save/Load</a></p>
+		<div style="width:98%;" align="left">
+		<p class="visualscience-right" align="right" style="display:inline;max-width:30%;">'.l(t("Help"), "admin/help/visualscience").'</p>
+		<p class="clickable" style="display:inline;max-width:30%;text-align:center;" align="center"><a onClick="vsUserlist.reloadUserDatabase(0);">Reload User Database</a></p>
+		<p class="visualscience-left" align="right" style="display:inline;max-width:30%;text-align:center;margin-left:30%;"><a onClick="vsUserlist.saveSearch();">Save/Load</a></p>
 		</div>
 		</div>';
 	}

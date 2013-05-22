@@ -16,10 +16,7 @@ var vsUserlist = (function() {
 			searchDB = store('vsSearchDB');
 		}
 		else {
-			searchDB = {config:{}, users:[]};
-			vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
-				getSearchDataFromServer(0);
-			}, '40%', '300');
+			vsUserlist.reloadUserDatabase();
 		}
 		//startAutoComplete();
 		//Timeout so that the views have time to load.
@@ -318,6 +315,13 @@ return {
 		else {
 			vsInterface.manageNewSearch(searchResult);
 		}
+	},
+
+	reloadUserDatabase: function () {
+		searchDB = {config:{}, users:[]};
+		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+			getSearchDataFromServer(0);
+		}, '40%', '300');
 	},
 
 	saveSearch: function () {
