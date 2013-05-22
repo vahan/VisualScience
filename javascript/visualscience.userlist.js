@@ -39,8 +39,6 @@ var vsUserlist = (function () {
 		}
 	};
 
-
-
 	getSearchDataFromServer = function (from) {
 		jQuery.get(vsUtils.getRootFolder() + 'visualscience/users', {
 			userId: from 
@@ -188,7 +186,18 @@ var vsUserlist = (function () {
 		});
 	};
 
+
 	return {
+		
+		reloadUserDatabase: function () {
+			searchDB = {config:{}, users:[]};
+			vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+				jQuery('#vs-db-loading').progressbar({
+					value: 1
+				});
+				getSearchDataFromServer(0);
+			}, '40%', '300');
+		},
 
 		search: function (type) {
 			var search = jQuery('#visualscience-search-bar').val() || '';
@@ -200,13 +209,6 @@ var vsUserlist = (function () {
 			else {
 				vsInterface.manageNewSearch(searchResult);
 			}
-		},
-
-		reloadUserDatabase: function () {
-			searchDB = {config:{}, users:[]};
-			vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
-				getSearchDataFromServer(0);
-			}, '40%', '300');
 		},
 
 		saveSearch: function () {
