@@ -1,5 +1,6 @@
-var vsUserlist = (function() {
-	var searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
+var vsUserlist = (function () {
+	"use strict";
+	var createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
 	maxAutocompleteEntries = 5;
 	delayBeforeTableCreation = 1000;
@@ -11,17 +12,24 @@ var vsUserlist = (function() {
 		console.log('Implement search saving for:' + search);
 	};
 
-	jQuery(document).ready(function() {
-		//vsSearchDB is defined by the backend.
-		searchDB = vsSearchDB;
+	jQuery(document).ready(function () {
 		startAutoComplete();
-		createFullNDDB();
+		if (store('vsSearchDB')) {
+			searchDB = store('vsSearchDB');
+		}
+		else {
+			vsUserlist.reloadUserDatabase();
+		}
+		//startAutoComplete();
 		//Timeout so that the views have time to load.
-		setTimeout(function() {
+		setTimeout(function () {
 			vsUserlist.search();
 		}, delayBeforeTableCreation);
 	});
 
+	/*
+	You only need full table, because when fetching you pass the array of fields you are interested in.
+	*/
 	createFullNDDB = function () {
 		searchNDDB = new NDDB();
 		for (var user in searchDB.users) {
@@ -31,20 +39,45 @@ var vsUserlist = (function() {
 		}
 	};
 
-	startAutoComplete = function (inputId, source) {
-		source = source || vsUserlist.getUsersNamesFromDB();
-		inputId = inputId || 'visualscience-search-bar';
-		jQuery('#'+inputId).autocomplete({
-			source: function (request, response) {
-				var results = jQuery.ui.autocomplete.filter(source, request.term);
-				response(results.slice(0, maxAutocompleteEntries));
-				return response;
-			},
-			change: function (event, ui) {
+
+
+	getSearchDataFromServer = function (from) {
+		jQuery.get(vsUtils.getRootFolder() + 'visualscience/users', {
+			userId: from 
+		}, function(data) {
+			var response = jQuery.parseJSON(data);
+			jQuery('#vs-db-loading').progressbar({
+				value: (response.to/response.total)*100
+			});
+			if (!response.finished) {
+				getSearchDataFromServer(response.to);
+			}
+			else {
+				vsInterface.closeDialog();
+				searchDB.config = response.config;
+				createFullNDDB();
 				vsUserlist.search();
+				store('vsSearchDB', searchDB);
+			}
+			for (var user in response.users) {
+				searchDB.users.push(response.users[user]);
 			}
 		});
-	};
+
+		startAutoComplete = function (inputId, source) {
+			source = source || vsUserlist.getUsersNamesFromDB();
+			inputId = inputId || 'visualscience-search-bar';
+			jQuery('#'+inputId).autocomplete({
+				source: function (request, response) {
+					var results = jQuery.ui.autocomplete.filter(source, request.term);
+					response(results.slice(0, maxAutocompleteEntries));
+					return response;
+				},
+				change: function (event, ui) {
+					vsUserlist.search();
+				}
+			});
+		};
 
 	// type = 0 ->full
 	getSearchResult = function (search, type) {
@@ -66,7 +99,7 @@ var vsUserlist = (function() {
 		result.users = getUsersFor(search.toLowerCase(), fieldsInTable);
 		result.limit = maxNumberOfTableEntries;
 		return result;
-	}
+	};
 
 	getUsersFor = function (search, fields) {
 		var filtered = searchNDDB.filter(getFilterFunction(search.toLowerCase()));
@@ -155,8 +188,8 @@ var vsUserlist = (function() {
 		});
 	};
 
-
 	return {
+
 		search: function (type) {
 			var search = jQuery('#visualscience-search-bar').val() || '';
 			var searchResult = getSearchResult(search, type);
@@ -167,6 +200,13 @@ var vsUserlist = (function() {
 			else {
 				vsInterface.manageNewSearch(searchResult);
 			}
+		},
+
+		reloadUserDatabase: function () {
+			searchDB = {config:{}, users:[]};
+			vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+				getSearchDataFromServer(0);
+			}, '40%', '300');
 		},
 
 		saveSearch: function () {
@@ -206,7 +246,5 @@ var vsUserlist = (function() {
 			}
 			return user.first + ' ' + user.last;
 		}
-
-
 	};
 })();

@@ -42,8 +42,17 @@ class Search {
 		return $value.'';
 	}
 
-	private function getUsersFields ($fields) {
-		$usersIds = $this->getAllUsersIds();
+	private function getUsersFields ($fields, $from=0, $to=0) {
+		if ($to != 0) {
+			$usersIds = array();
+			while ($from <= $to) {
+				array_push($usersIds, $from);
+				$from++;
+			}
+		}
+		else {
+			$usersIds = $this->getAllUsersIds();
+		}
 		$users = user_load_multiple($usersIds);
 		$userFields = array();
 		foreach ($users as $user) {
@@ -66,8 +75,8 @@ class Search {
 		return $userFields;
 	}
 
-	private function getJsonUsersFields ($fields) {
-		return json_encode($this->getUsersFields($fields));
+	private function getJsonUsersFields ($fields, $from, $to) {
+		return json_encode($this->getUsersFields($fields, $from, $to));
 	}
 
 	private function getJsonDisplayConfig ($fields) {
@@ -76,10 +85,10 @@ class Search {
 		foreach ($fields as $field) {
 			$config .= '{"name": "'.$field['name'].'","mini": '.$field['mini'].', "full": '.$field['full'].'},';
 			if ($field['first'] == 1) {
-				$endConfig .= ', first: "'.$field['name'].'"';
+				$endConfig .= ', "first": "'.$field['name'].'"';
 			}
 			if ($field['last'] == 1) {
-				$endConfig .= ', last: "'.$field['name'].'"';
+				$endConfig .= ', "last": "'.$field['name'].'"';
 			}
 		}
 		$config = substr($config, 0, strlen($config) -1) .$endConfig. '}';
@@ -97,6 +106,18 @@ class Search {
 		return $final;
 	}
 
+	private function getLastUserId () {
+		$query = db_select('users', 'f')
+		->fields('f', array('uid'))
+		->orderBy('uid', 'DESC');
+		$result = $query->execute();
+		$final = array();
+		for ($i=0; $record = $result->fetchAssoc(); $i++) {
+			array_push($final, $record['uid']);
+		}
+		return $final[0];
+	}
+
 	public function getSavedSearch () {
 		//TODO: Implement it
 		if (isset($_GET['search'])) {
@@ -109,10 +130,11 @@ class Search {
 		$safeSearchVal = $this->ensureSearchSafety($searchValue);
 
 		return '<div align="center">
-		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
-		<div style="width:48%;" align="left">
-		<p class="visualscience-right" align="right">'.l(t("Help"), "admin/help/visualscience").'</p>
-		<p class="visualscience-left" align="left"><a onClick="vsUserlist.saveSearch();">Save/Load</a></p>
+		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main visualscience-search" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
+		<div style="width:98%;" align="left">
+		<p class="visualscience-right" align="right" style="display:inline;max-width:30%;">'.l(t("Help"), "admin/help/visualscience").'</p>
+		<p class="clickable" style="display:inline;max-width:30%;text-align:center;" align="center"><a onClick="vsUserlist.reloadUserDatabase(0);">Reload User Database</a></p>
+		<p class="visualscience-left" align="right" style="display:inline;max-width:30%;text-align:center;margin-left:30%;"><a onClick="vsUserlist.saveSearch();">Save/Load</a></p>
 		</div>
 		</div>';
 	}
@@ -127,6 +149,7 @@ class Search {
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
 		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.'}';
 		return '<script type="text/javascript" charset="utf-8">var vsSearchDB = '. $searchDB .';</script>';
+		return $searchDB;
 	}
 
 	public function getClientSideFiles () {
@@ -136,6 +159,7 @@ class Search {
 		drupal_add_library('system', 'ui.datepicker');
 		drupal_add_library('system', 'ui.dialog');
 		drupal_add_library('system', 'ui.tabs');
+		drupal_add_library('system', 'ui.progressbar');
 
 		drupal_add_js('http://livingscience.ethz.ch/livingscience/livingscience/livingscience.nocache.js', 'external');
 		drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.css');
@@ -165,5 +189,19 @@ class Search {
 
 	public function getPatternConfiguration () {
 		return $this->getFieldsFromConfig();
+	}
+
+	public function getUsersEntries ($from=0, $howMany=1000) {
+		$final = $from + $howMany;
+		$fields = $this->getFieldsFromConfig();
+		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
+		$total = $this->getLastUserId();
+		$finished = $final < $total ? 0: 1;
+		$jsonDisplayConfig = '""';
+		if ($finished) {
+			$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
+		}
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "finished": '.$finished.', "to":'.$final.', "total": '.$total.'}';
+		return $searchDB;
 	}
 }

@@ -15,6 +15,8 @@ include_once 'includes/visualscience.message.class.php';
 include_once 'includes/visualscience.upload.class.php';
 include_once 'includes/visualscience.config.class.php';
 
+define('VISUALSCIENCE_NUSER_LOADED', 1000);
+
 /**
  * Implementation of hook_menu().
  */
@@ -27,6 +29,14 @@ function visualscience_menu() {
     'page arguments' => array(true),
     'access callback' => TRUE,
     'weight' => 30,
+    );
+
+  $items['visualscience/users'] = array(
+    'title' => 'VisualScience Users Access',
+    'description' => 'Get Users of VisualScience',
+    'page callback' => 'visualscience_users',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
     );
 
   $items['visualscience/upload'] = array(
@@ -101,8 +111,7 @@ function visualscience_page($clear = true) {
   $search->getClientSideFiles();
   $searchBar = $search->getHtmlSearchBar($searchToPerform);
   $searchTable = $search->getHtmlSearchTable();
-  $searchDatabase = $search->getJsonDatabase();
-  $output = $searchBar.$searchTable.$searchDatabase;
+  $output = $searchBar.$searchTable;
   return $output;
 }
 
@@ -118,6 +127,13 @@ function visualscience_config_page($clear = true) {
   }
   $output .= $config->getHtmlConfigPage();
   return $output;
+}
+
+function visualscience_users () {
+  $search = new Search;
+  $from = intval($_GET['userId']);
+  $database = $search->getUsersEntries($from, variable_get('visualscience_nuser_loaded', VISUALSCIENCE_NUSER_LOADED));
+  echo $database;
 }
 
 ?>
