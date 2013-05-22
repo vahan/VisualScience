@@ -35,7 +35,7 @@ function visualscience_menu() {
     'title' => 'VisualScience Users Access',
     'description' => 'Get Users of VisualScience',
     'page callback' => 'visualscience_users',
-    'access arguments' => array('access visualscience'),
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     );
 

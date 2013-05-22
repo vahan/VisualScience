@@ -158,6 +158,7 @@ class Search {
 		drupal_add_library('system', 'ui.datepicker');
 		drupal_add_library('system', 'ui.dialog');
 		drupal_add_library('system', 'ui.tabs');
+		drupal_add_library('system', 'ui.progressbar');
 
 		drupal_add_js('http://livingscience.ethz.ch/livingscience/livingscience/livingscience.nocache.js', 'external');
 		drupal_add_css(drupal_get_path('module', 'visualscience') .'/css/visualscience.css');
@@ -193,12 +194,13 @@ class Search {
 		$final = $from + $howMany;
 		$fields = $this->getFieldsFromConfig();
 		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
-		$finished = $final < $this->getLastUserId() ? 0: 1;
+		$total = $this->getLastUserId();
+		$finished = $final < $total ? 0: 1;
 		$jsonDisplayConfig = '""';
 		if ($finished) {
 			$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
 		}
-		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "finished": '.$finished.', "to":'.$final.'}';
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "finished": '.$finished.', "to":'.$final.', "total": '.$total.'}';
 		return $searchDB;
 	}
 }
