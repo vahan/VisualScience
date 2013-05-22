@@ -126,14 +126,40 @@
  	box-shadow: inset 0px 0px 7px 0px #757575;
  }
 
-#visualscience-container select {
-   background: transparent;
-   width: 100%;
-   padding-top: 8px;
-   border: 0;
-   border-radius: 0;
-   height: 34px;
-}
-#visualscience-container .clickToSelect input {
-margin:10px;
-}
+ #visualscience-container select {
+ 	background: transparent;
+ 	width: 100%;
+ 	padding-top: 8px;
+ 	border: 0;
+ 	border-radius: 0;
+ 	height: 34px;
+ }
+
+ #visualscience-container .vs-userlist-table .clickToSelect input {
+ 	margin:10px;
+ }
+
+ #visualscience-container .vs-userlist-table thead tr th {
+ 	color:black;//rgb(213, 22, 17);
+ 	font-size:13px;
+ 	padding:5px;
+
+ 	background-color: #ffffff;
+ 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#c4c0c4)); /* Chrome, Safari 4+ */
+ 	background-image: -webkit-linear-gradient(top, #ffffff, #c4c0c4); /* Chrome 10-25, iOS 5+, Safari 5.1+ */
+ 	background-image:    -moz-linear-gradient(top, #ffffff, #c4c0c4); /* Firefox 3.6-15 */
+ 	background-image:      -o-linear-gradient(top, #ffffff, #c4c0c4); /* Opera 11.10-12.00 */
+ 	background-image:         linear-gradient(to bottom, #ffffff, #c4c0c4);
+ }
+
+ #visualscience-container .vs-userlist-table thead tr{
+ 	border: solid #c4c0c4 1px;
+ }
+
+ #visualscience-container input[type=button] {
+ 	padding:5px;
+ }
+
+ #visualscience-container input {
+ 	min-height:20px;
+ }
