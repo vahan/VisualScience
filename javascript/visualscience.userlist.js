@@ -40,6 +40,9 @@ var vsUserlist = (function() {
 				vsInterface.closeDialog();
 				searchDB.config = response.config;
 				vsUserlist.search();
+				store.onquotaerror = function () {
+					vsInterface.dialog('Oups, the of database users is too large for your browser. This means that every time, we\'ll have to load it from the server. To solve this problem, change the localStorage capacity in the configuration of your browser.');
+				};
 				store('vsSearchDB', searchDB);
 			}
 			for (var user in response.users) {
