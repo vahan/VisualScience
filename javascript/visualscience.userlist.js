@@ -19,7 +19,7 @@ var vsUserlist = (function() {
 			searchDB = {config:{}, users:[]};
 			vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
 				getSearchDataFromServer(0);
-			}, '40%', '200');
+			}, '40%', '300');
 		}
 		//startAutoComplete();
 		//Timeout so that the views have time to load.
