@@ -319,7 +319,10 @@ return {
 
 	reloadUserDatabase: function () {
 		searchDB = {config:{}, users:[]};
-		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+		vsInterface.dialog('<br />Please wait while we load the users from the database. No worries, we only have to do this once.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+			jQuery('#vs-db-loading').progressbar({
+				value: 0
+			});
 			getSearchDataFromServer(0);
 		}, '40%', '300');
 	},
