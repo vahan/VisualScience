@@ -25,18 +25,53 @@ var vsUserlist = (function() {
 		}, delayBeforeTableCreation);
 	});
 
+	// getSearchDataFromServer = function (from) {
+	// 	jQuery.get(vsUtils.getRootFolder()+'visualscience/users', {
+	// 		userId: from 
+	// 	}, function(data) {
+	// 		var response = jQuery.parseJSON(data);
+	// 		jQuery('#vs-db-loading').progressbar({
+	// 			value: (response.to/response.total)*100
+	// 		});
+	// 		if (!response.finished) {
+	// 			getSearchDataFromServer(response.to);
+	// 		}
+	// 		else {
+	// 			vsInterface.closeDialog();
+	// 			searchDB.config = response.config;
+	// 			vsUserlist.search();
+	// 			store.onquotaerror = function () {
+	// 				vsInterface.dialog('Oups, the database of users is too large for your browser. This means that every time, we\'ll have to load it from the server. To solve this problem, change the localStorage capacity in the configuration of your browser.');
+	// 			};
+	// 			store.localStorage('vsSearchDB', searchDB);
+	// 		}
+	// 		for (var user in response.users) {
+	// 			searchDB.users.push(response.users[user]);
+	// 		}
+	// 	});
+	// };
+
+	allRequestHaveArrived = function (total) {
+		return searchDB.users.length >= total;
+	}
+
 	getSearchDataFromServer = function (from) {
 		jQuery.get(vsUtils.getRootFolder()+'visualscience/users', {
 			userId: from 
 		}, function(data) {
 			var response = jQuery.parseJSON(data);
 			jQuery('#vs-db-loading').progressbar({
-				value: (response.to/response.total)*100
+				value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
 			});
-			if (!response.finished) {
-				getSearchDataFromServer(response.to);
+			if (response.from == 0) {
+				for (var i = response.howMany; i < response.total; i += response.howMany) {
+					getSearchDataFromServer(i);
+				}
 			}
-			else {
+			for (var user in response.users) {
+				searchDB.users.push(response.users[user]);
+			}
+			if (allRequestHaveArrived(response.total)) {
 				vsInterface.closeDialog();
 				searchDB.config = response.config;
 				vsUserlist.search();
@@ -45,26 +80,25 @@ var vsUserlist = (function() {
 				};
 				store.localStorage('vsSearchDB', searchDB);
 			}
-			for (var user in response.users) {
-				searchDB.users.push(response.users[user]);
-			}
-		});
-	};
 
-	startAutoComplete = function (inputId, source) {
-		source = source || vsUserlist.getUsersNamesFromDB();
-		inputId = inputId || 'visualscience-search-bar';
-		jQuery('#'+inputId).autocomplete({
-			source: function (request, response) {
-				var results = jQuery.ui.autocomplete.filter(source, request.term);
-				response(results.slice(0, maxAutocompleteEntries));
-				return response;
-			},
-			change: function (event, ui) {
-				vsUserlist.search();
-			}
+
 		});
-	};
+};
+
+startAutoComplete = function (inputId, source) {
+	source = source || vsUserlist.getUsersNamesFromDB();
+	inputId = inputId || 'visualscience-search-bar';
+	jQuery('#'+inputId).autocomplete({
+		source: function (request, response) {
+			var results = jQuery.ui.autocomplete.filter(source, request.term);
+			response(results.slice(0, maxAutocompleteEntries));
+			return response;
+		},
+		change: function (event, ui) {
+			vsUserlist.search();
+		}
+	});
+};
 
 	// type = 0 ->full
 	getSearchResult = function (search, type) {
@@ -308,6 +342,7 @@ formatFieldTitle = function (field) {
 
 
 return {
+
 	search: function (type) {
 		var search = jQuery('#visualscience-search-bar').val() || '';
 		var searchResult = getSearchResult(search, type);
@@ -320,13 +355,14 @@ return {
 		}
 	},
 
-	reloadUserDatabase: function () {
+	reloadUserDatabase: function (from) {
+		from = from || 0;
 		searchDB = {config:{}, users:[]};
 		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
 			jQuery('#vs-db-loading').progressbar({
 				value: 1
 			});
-			getSearchDataFromServer(0);
+			getSearchDataFromServer(from);
 		}, '40%', '250');
 	},
 
