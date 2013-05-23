@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * @file
+ * The install file for the VisualScience module. 
+ * It includes:
+ * - Definition of the DB tables
+ * - Definition of the basic configuration for VisualScience
+ */
+
 include_once 'includes/visualscience.utils.inc';
 
 /**
@@ -154,11 +162,11 @@ function visualscience_uninstall() {
  */
 function visualscience_install() {
   //drupal_install_schema('visualscience');
-  $name = new StdClass();
-  $mail = new StdClass();
-  $roles = new StdClass();
-  $last = new StdClass();
-  $first = new StdClass();
+  $name = new stdClass();
+  $mail = new stdClass();
+  $roles = new stdClass();
+  $last = new stdClass();
+  $first = new stdClass();
 
   $name->name = 'name';
   $name->mini = 1;
@@ -195,13 +203,13 @@ function visualscience_install() {
   $last->field = 0;
   $last->last = 1;
 
-  $existFirst = field_info_field('first_name');
-  $existLast = field_info_field('last_name');
-  $existFirstField = field_info_field('field_first_name');
-  $existLastField = field_info_field('field_last_name');
+  $exist_first = field_info_field('first_name');
+  $exist_last = field_info_field('last_name');
+  $exist_first_field = field_info_field('field_first_name');
+  $exist_last_field = field_info_field('field_last_name');
 
 
-  if ((isset($existFirst) || isset($existFirstField)) && (isset($existLast) || isset($existLastField))) {
+  if ((isset($exist_first) || isset($exist_first_field)) && (isset($exist_last) || isset($exist_last_field))) {
     drupal_write_record('visualscience_search_config', $first);
     drupal_write_record('visualscience_search_config', $last);
 
@@ -213,5 +221,3 @@ function visualscience_install() {
 
     drupal_write_record('visualscience_search_config', $mail);
 }
-
-?>
