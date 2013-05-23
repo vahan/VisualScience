@@ -137,7 +137,7 @@ loadCLEditor : function(areaId) {
 		 * Modifies a Drupal-generated form into a visually more estheatical form.
 		 */
 		 loadDrupalHTMLUploadForm : function(html, location, thisTabId) {
-		 	jQuery('#' + location).load(UploadModuleURL + ' .content', function(response, status, xhr) {
+		 	jQuery('#' + location).load(UploadModuleURL + ' #visualscience-upload-form', function(response, status, xhr) {
 		 		if (status == "error") {
 		 			if (xhr.status == 403) {
 		 				vsInterface.dialog('Please login to be able to send messages.(403)');
@@ -148,7 +148,6 @@ loadCLEditor : function(areaId) {
 		 				vsInterface.dialog('An error occured:\n' + 'Status:' + xhr.status + ':\n' + xhr.statusText);
 		 			}
 		 		} else {
-		 			jQuery('#' + location).children().children(':not(#visualscience-upload-form)').hide();
 		 			jQuery('#' + location + ' #edit-submit').hide();
 		 			jQuery('#' + location + ' #edit-visualscience-upload-file').attr({
 		 				'onChange' : 'vsUtils.uploadSubmittedFiles(\'' + thisTabId + '\');',
