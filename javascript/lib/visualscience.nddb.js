@@ -1093,8 +1093,13 @@ store.addType = function (type, storage) {
 	}
 };
 
+store.onquotaerror = undefined;
+
 store.error = function() {
-	return "shelf quota exceeded"; 
+    if ('function' === typeof store.onquotaerror) {
+        store.onquotaerror(null);
+    }
+    return 'shelf quota exceeded'; 
 };
 
 store.log = function(text) {
