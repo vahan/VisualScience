@@ -79,22 +79,22 @@ function visualscience_menu() {
 
 function visualscience_upload_form($form, &$form_state) {
   $upload = new Upload;
-  $upload->visualscience_upload_form($form, $form_state);
+  return $upload->visualscience_upload_form($form, $form_state);
 } 
 
 function visualscience_get_file_with_id() {
   $upload = new Upload;
-  $upload->visualscience_get_file_with_id();
+  return $upload->visualscience_get_file_with_id();
 }
 
 function visualscience_send_message() {
   $message = new Message;
-  $message->visualscience_send_message();
+  return $message->visualscience_send_message();
 }
 
 function visualscience_upload_submit($form, &$form_state) {
   $upload = new Upload;
-  $upload->visualscience_upload_submit($form, $form_state);
+  return $upload->visualscience_upload_submit($form, $form_state);
 }
 
 /**
