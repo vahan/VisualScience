@@ -25,32 +25,6 @@ var vsUserlist = (function() {
 		}, delayBeforeTableCreation);
 	});
 
-	// getSearchDataFromServer = function (from) {
-	// 	jQuery.get(vsUtils.getRootFolder()+'visualscience/users', {
-	// 		userId: from 
-	// 	}, function(data) {
-	// 		var response = jQuery.parseJSON(data);
-	// 		jQuery('#vs-db-loading').progressbar({
-	// 			value: (response.to/response.total)*100
-	// 		});
-	// 		if (!response.finished) {
-	// 			getSearchDataFromServer(response.to);
-	// 		}
-	// 		else {
-	// 			vsInterface.closeDialog();
-	// 			searchDB.config = response.config;
-	// 			vsUserlist.search();
-	// 			store.onquotaerror = function () {
-	// 				vsInterface.dialog('Oups, the database of users is too large for your browser. This means that every time, we\'ll have to load it from the server. To solve this problem, change the localStorage capacity in the configuration of your browser.');
-	// 			};
-	// 			store.localStorage('vsSearchDB', searchDB);
-	// 		}
-	// 		for (var user in response.users) {
-	// 			searchDB.users.push(response.users[user]);
-	// 		}
-	// 	});
-	// };
-
 	allRequestHaveArrived = function (total) {
 		return searchDB.users.length >= total;
 	}
@@ -80,8 +54,6 @@ var vsUserlist = (function() {
 				};
 				store.localStorage('vsSearchDB', searchDB);
 			}
-
-
 		});
 };
 
