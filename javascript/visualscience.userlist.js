@@ -12,7 +12,7 @@ var vsUserlist = (function() {
 	};
 
 	jQuery(document).ready(function() {
-		if (store('vsSearchDB')) {
+		if (typeof store != 'undefined' && store('vsSearchDB')) {
 			searchDB = store('vsSearchDB');
 		}
 		else {
@@ -25,43 +25,52 @@ var vsUserlist = (function() {
 		}, delayBeforeTableCreation);
 	});
 
+	allRequestHaveArrived = function (total) {
+		return searchDB.users.length >= total;
+	}
+
 	getSearchDataFromServer = function (from) {
 		jQuery.get(vsUtils.getRootFolder()+'visualscience/users', {
 			userId: from 
 		}, function(data) {
 			var response = jQuery.parseJSON(data);
 			jQuery('#vs-db-loading').progressbar({
-				value: (response.to/response.total)*100
+				value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
 			});
-			if (!response.finished) {
-				getSearchDataFromServer(response.to);
-			}
-			else {
-				vsInterface.closeDialog();
-				searchDB.config = response.config;
-				vsUserlist.search();
-				store('vsSearchDB', searchDB);
+			if (response.from == 0) {
+				for (var i = response.howMany; i < response.total; i += response.howMany) {
+					getSearchDataFromServer(i);
+				}
 			}
 			for (var user in response.users) {
 				searchDB.users.push(response.users[user]);
 			}
-		});
-	};
-
-	startAutoComplete = function (inputId, source) {
-		source = source || vsUserlist.getUsersNamesFromDB();
-		inputId = inputId || 'visualscience-search-bar';
-		jQuery('#'+inputId).autocomplete({
-			source: function (request, response) {
-				var results = jQuery.ui.autocomplete.filter(source, request.term);
-				response(results.slice(0, maxAutocompleteEntries));
-				return response;
-			},
-			change: function (event, ui) {
+			if (allRequestHaveArrived(response.total)) {
+				vsInterface.closeDialog();
+				searchDB.config = response.config;
 				vsUserlist.search();
+				store.onquotaerror = function () {
+					vsInterface.dialog('Oups, the database of users is too large for your browser. This means that every time, we\'ll have to load it from the server. To solve this problem, change the localStorage capacity in the configuration of your browser.');
+				};
+				store.localStorage('vsSearchDB', searchDB);
 			}
 		});
-	};
+};
+
+startAutoComplete = function (inputId, source) {
+	source = source || vsUserlist.getUsersNamesFromDB();
+	inputId = inputId || 'visualscience-search-bar';
+	jQuery('#'+inputId).autocomplete({
+		source: function (request, response) {
+			var results = jQuery.ui.autocomplete.filter(source, request.term);
+			response(results.slice(0, maxAutocompleteEntries));
+			return response;
+		},
+		change: function (event, ui) {
+			vsUserlist.search();
+		}
+	});
+};
 
 	// type = 0 ->full
 	getSearchResult = function (search, type) {
@@ -305,6 +314,7 @@ formatFieldTitle = function (field) {
 
 
 return {
+
 	search: function (type) {
 		var search = jQuery('#visualscience-search-bar').val() || '';
 		var searchResult = getSearchResult(search, type);
@@ -317,14 +327,15 @@ return {
 		}
 	},
 
-	reloadUserDatabase: function () {
+	reloadUserDatabase: function (from) {
+		from = from || 0;
 		searchDB = {config:{}, users:[]};
-		vsInterface.dialog('<br />Please wait while we load the users from the database. No worries, we only have to do this once.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
 			jQuery('#vs-db-loading').progressbar({
-				value: 0
+				value: 1
 			});
-			getSearchDataFromServer(0);
-		}, '40%', '300');
+			getSearchDataFromServer(from);
+		}, '40%', '250');
 	},
 
 	saveSearch: function () {

@@ -106,16 +106,11 @@ class Search {
 		return $final;
 	}
 
-	private function getLastUserId () {
+	private function getCountOfUsers () {
 		$query = db_select('users', 'f')
-		->fields('f', array('uid'))
-		->orderBy('uid', 'DESC');
-		$result = $query->execute();
-		$final = array();
-		for ($i=0; $record = $result->fetchAssoc(); $i++) {
-			array_push($final, $record['uid']);
-		}
-		return $final[0];
+		->fields(NULL, array('uid'));
+		$result = $query->execute()->fetchAll();
+		return count($result);
 	}
 
 	public function getSavedSearch () {
@@ -195,13 +190,9 @@ class Search {
 		$final = $from + $howMany;
 		$fields = $this->getFieldsFromConfig();
 		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
-		$total = $this->getLastUserId();
-		$finished = $final < $total ? 0: 1;
-		$jsonDisplayConfig = '""';
-		if ($finished) {
-			$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
-		}
-		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "finished": '.$finished.', "to":'.$final.', "total": '.$total.'}';
+		$total = $this->getCountOfUsers();
+		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "total": '.$total.'}';
 		return $searchDB;
 	}
 }
