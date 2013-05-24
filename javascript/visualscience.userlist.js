@@ -31,7 +31,7 @@ var vsUserlist = (function() {
 	}
 
 	getSearchDataFromServer = function (from) {
-		jQuery.get(vsUtils.getRootFolder()+'visualscience/users', {
+		jQuery.get(vsUtils.getUsersPath(), {
 			userId: from 
 		}, function(data) {
 			var response = jQuery.parseJSON(data);

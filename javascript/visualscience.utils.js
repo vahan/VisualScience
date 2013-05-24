@@ -1,14 +1,23 @@
 var vsUtils = (function() {
-	var rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL;
+	var urlPath, rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL, usersPath;
 	jQuery(document).ready(function() {
-		//This is the root folder, where the installation has been done.(Could be implemented with: Drupal.settings.basePath)
+		//This is the root folder, where the installation has been done.
 		rootFolder = 'http://' + window.location.hostname + '' + Drupal.settings.basePath;
 		//This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
 		installFolder = Drupal.settings.installFolder;//'sites/all/modules/visualscience/';
+
+		urlPath = (function () {
+			var detect = 'visualscience';
+			var idx = -1;
+			idx = unescape(location.href).lastIndexOf(detect);
+			return unescape(location.href).substring(0,idx + detect.length);
+		})();
+
+		usersPath = urlPath + '/users';
 		//This is the URL to the php upload module
-		UploadModuleURL = rootFolder + '/visualscience/upload/';
+		UploadModuleURL = rootFolder + 'visualscience/upload/';
 		//This is the URL to the php that handles the mail
-		SendMailURL = rootFolder + '/visualscience/mail/';
+		SendMailURL = rootFolder + 'visualscience/mail/';
 		csvURL = installFolder + 'includes/stringToCSV.php?text=';
 		//Testing wether the browser is IE6-8:
 		if (jQuery.browser.mise && parseInt(jQuery.browser.version.slice(0,3)) < 9) {
@@ -19,6 +28,12 @@ var vsUtils = (function() {
 	var dialogNumber;
 
 	return {
+		getUrlPath: function ()  {
+			return urlPath;
+		},
+		getUsersPath: function () {
+			return usersPath;
+		},
 		getRootFolder: function () {
 			return rootFolder;
 		},
@@ -160,18 +175,18 @@ loadCLEditor : function(areaId) {
 		 			});
 		 		}
 		 	});
-},
+		 },
 
-getJsonOfAttachments : function(thisTabId) {
-	var attachments = new Array();
-	jQuery('p[id*="visualscience-upload-file-entry-' + thisTabId + '"]').each(function(i) {
-		attachments[i] = new Array(2);
+		 getJsonOfAttachments : function(thisTabId) {
+		 	var attachments = new Array();
+		 	jQuery('p[id*="visualscience-upload-file-entry-' + thisTabId + '"]').each(function(i) {
+		 		attachments[i] = new Array(2);
 				//Name of File:
 				attachments[i][0] = jQuery(this).children(':nth-child(2)').text();
 				//URL of File:
 				attachments[i][1] = jQuery(this).children(':nth-child(2)').attr('href');
 			});
-	return attachments;
+		 	return attachments;
 			//window.JSON.stringify(attachments);
 		},
 		changeArrayToOrString : function(selectedUsers) {
