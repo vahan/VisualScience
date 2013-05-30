@@ -17,8 +17,7 @@ class Upload {
 			'#value' => t('Save'),
 			);
 
-		$form['#submit'][] = 'visualscience_upload_submit'; 
-
+		$form['#submit'][] = 'visualscience_upload_submit';
 		return $form;
 	}
 

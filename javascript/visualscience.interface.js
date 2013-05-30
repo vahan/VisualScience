@@ -15,18 +15,18 @@ var vsInterface = (function() {
 
     //List of all the views that have to be pre-loaded
     listOfViews = new Array(
-    	'actionBar.html',
-    	'tableUserSearch.html',
-    	'livingscienceLoading.html',
-    	'msgRecipientsLayout.html',
-    	'lsComparisonLayout.html',
-    	'confRecipientsLayout.html'
-    	);
-    
+        'actionBar.html',
+        'tableUserSearch.html',
+        'livingscienceLoading.html',
+        'msgRecipientsLayout.html',
+        'lsComparisonLayout.html',
+        'confRecipientsLayout.html'
+        );
+
     jQuery(document).ready(function() {
         //Pre-loading the views when the html is loaded
         jQuery.each(listOfViews, function(index, element){
-        	vsInterface.storeViewInDB(element);
+            vsInterface.storeViewInDB(element);
         });
         //Creating the dialog div. Check vsInterface.dialog for more infos
         overlayModal = jQuery('<div id="visualscience-overlay-modal"></div>').hide().appendTo('body');

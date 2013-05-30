@@ -41,6 +41,13 @@ function visualscience_menu() {
     'type' => MENU_CALLBACK,
     );
 
+  // $items['visualscience/upload'] = array(
+  //   'title' => 'VisualScience Upload',
+  //   'description' => 'Upload a file in VisualScience',
+  //   'page callback' => 'visualscience_upload_form',
+  //   'access arguments' => array('access visualscience'),
+  //   'type' => MENU_CALLBACK,
+  //   );
   $items['visualscience/upload'] = array(
     'title' => 'VisualScience Upload',
     'description' => 'Upload a file in VisualScience',
@@ -77,10 +84,21 @@ function visualscience_menu() {
   return $items;
 }
 
+// function visualscience_upload_form($form, &$form_state) {
+//   // if (!isset($_FILES['visualscience_upload_file'])) {
+//   //   $form = drupal_get_form('visualscience_get_upload_form');
+//   //   print drupal_render($form);
+//   // }
+//   // else {
+//   //   return visualscience_get_upload_form($form, $form_state);
+//   // }
+//   return drupal_get_form('visualscience_get_upload_form');
+// } 
+// 
 function visualscience_upload_form($form, &$form_state) {
   $upload = new Upload;
   return $upload->visualscience_upload_form($form, $form_state);
-} 
+}
 
 function visualscience_get_file_with_id() {
   $upload = new Upload;
