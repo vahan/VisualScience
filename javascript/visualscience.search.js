@@ -1,3 +1,9 @@
+/*
+ * @file 
+ * File that manages everything linked with the display of users in a table.
+ *
+ * Note: For searching users functionnalities, you have to check userlist.js
+ */
 var vsSearch = (function() {
 
 	return {

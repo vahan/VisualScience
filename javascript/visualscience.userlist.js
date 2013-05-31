@@ -1,3 +1,10 @@
+/*
+ * @file 
+ * File that manages everything linked with storing the data of users in JS.
+ *
+ * Note that it also provide the searching functions.
+ */
+
 var vsUserlist = (function() {
 	var maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 

@@ -1,3 +1,7 @@
+/*
+ * @file 
+ * File that manages everything linked with configuration page.
+ */
 var vsConfig = (function() {
 
 	jQuery(document).ready(function(){

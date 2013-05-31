@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * File that manages everything linked with the conference tab.
+ */
+
 var vsConference = (function() {
 	var renameConferenceTab, insertEmailIntoRecipientsDiv, checkForFormErrors, checkAtLeastOneUser;
 

@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * The HandlebarsJS Library, to load views in your app.
+ */
+
 // lib/handlebars/base.js
 
 /*jshint eqnull:true*/

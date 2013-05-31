@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * File that manages everything linked with the UI of the app, and how it is managed.
+ */
+
 var vsInterface = (function() {
 
 	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
