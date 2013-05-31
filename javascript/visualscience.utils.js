@@ -1,16 +1,16 @@
 var vsUtils = (function() {
-	var urlPath, rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL, usersPath;
-	jQuery(document).ready(function() {
+    var urlPath, rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL, usersPath;
+    jQuery(document).ready(function() {
         //This is the root folder, where the installation has been done.
         rootFolder = 'http://' + window.location.hostname + '' + Drupal.settings.basePath;
         //This is the folder in which visualscience is installed (Should be already defined thanks to PHP.)
         installFolder = Drupal.settings.installFolder;//'sites/all/modules/visualscience/';
 
         urlPath = (function () {
-        	var detect = 'visualscience';
-        	var idx = -1;
-        	idx = unescape(location.href).lastIndexOf(detect);
-        	return unescape(location.href).substring(0,idx + detect.length);
+            var detect = 'visualscience';
+            var idx = -1;
+            idx = unescape(location.href).lastIndexOf(detect);
+            return unescape(location.href).substring(0,idx + detect.length);
         })();
 
         usersPath = urlPath + '/users';
@@ -20,8 +20,8 @@ var vsUtils = (function() {
         SendMailURL = rootFolder + 'visualscience/mail/';
         csvURL = installFolder + 'includes/stringToCSV.php?text=';
         //Testing wether the browser is IE6-8:
-        if (jQuery.browser.mise && parseInt(jQuery.browser.version.slice(0,3)) < 9) {
-        	jQuery.getScript(installFolder + '/javascript/lib/visualscience.shim.IE9.js');
+        if (jQuery.browser.mise && parseInt(jQuery.browser.version.slice(0, 3)) < 9) {
+            jQuery.getScript(installFolder + '/javascript/lib/visualscience.shim.IE9.js');
         }
     });
     //This is the DialogNumber variable. Setting it global makes everything much more easier to use.
@@ -105,7 +105,7 @@ var vsUtils = (function() {
                         	var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
                         	var link = messages.substring(messages.indexOf('The file has been uploaded to:') + 30);
                         	var fileName = jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').val().replace('c:\\fakepath\\', '').replace('C:\\fakepath\\', '');
-                        	var newLine = '<p id="visualscience-upload-file-entry-' + tabId + '-' + (nbFilesEntered + 1) + '" style="border-bottom:solid black 1px;margin:0px;padding:0px;"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="vsUtils.deleteFileToUpload(' + tabId + ', ' + (nbFilesEntered + 1) + ');" id="visualscience-message-close-cross-' + tabId + '-' + (nbFilesEntered + 1) + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="' + link + '" target="_blank">' + fileName + '</a></p>';
+                        	var newLine = '<p id="visualscience-upload-file-entry-' + tabId + '-' + (nbFilesEntered + 1) + '" class="entryFile"><a onMouseOut="jQuery(this).css(\'color\', \'\');" onMouseOver="jQuery(this).css({\'color\': \'#FF0000\', \'text-decoration\':\'none\'});" onClick="vsUtils.deleteFileToUpload(' + tabId + ', ' + (nbFilesEntered + 1) + ');" id="visualscience-message-close-cross-' + tabId + '-' + (nbFilesEntered + 1) + '" style="border-right:solid black 1px;font-size:20px;padding-right:15px;padding-left:15px;margin-right:20px;">X</a><a class="visualscience-upload-file-entry-name" href="' + link + '" target="_blank">' + fileName + '</a></p>';
                         	jQuery('#visualscience-message-attachments-div-show-' + tabId).append(newLine);
                         	jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + 1)
                         	jQuery('#visualscience-message-attachments-div-show-' + tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
