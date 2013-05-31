@@ -79,8 +79,13 @@ class Upload {
 				$query->execute();
 				$result = db_query('SELECT * FROM {visualscience_uploaded_files} WHERE uid = :uid AND url = :url', array(':uid'=>$uid, ':url'=>$file->uri))->fetchObject();
 				$id = $result->fid;
-				global $base_url;
-				drupal_set_message(t('The file has been uploaded to:').$base_url.'/visualscience/file?id='.$id);
+				$vsURL = drupal_get_path('module', 'visualscience');
+				if (strpos($vsURL, '?')) { // Handling the clean url problem
+					drupal_set_message(t('The file has been uploaded to:').$base_url.'/visualscience/file&id='.$id);
+				}
+				else {
+					drupal_set_message(t('The file has been uploaded to:').$base_url.'/visualscience/file?id='.$id);
+				}
 			}
 			else {
 				form_set_error(t('An error occured when uploading the file.'));
