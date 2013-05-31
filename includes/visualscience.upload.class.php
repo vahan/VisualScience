@@ -89,7 +89,5 @@ class Upload {
 		else {
 			form_set_error(t('You did not chose a file.'));
 		}	
-
-		//To avoid the js when doing the ajax request:
 	}
 }

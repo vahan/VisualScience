@@ -94,7 +94,6 @@ var vsUtils = (function() {
                  },
                  success : function(data, textStatus, jqXHR) {
                     var invisible = data.substring(data.indexOf('</head>'));
-                    console.log(invisible);
                     jQuery('html').append('<div id="invisible" style="display:none;">' + invisible + '</div>');
                     jQuery('#invisible').html(jQuery('#invisible .messages').html());
                     var messages = jQuery('#invisible').text();
