@@ -1,3 +1,7 @@
+/*
+ * @file 
+ * File that manages everything linked with downloading users as CSV file.
+ */
 var vsCSV = (function() {
 
 	return {

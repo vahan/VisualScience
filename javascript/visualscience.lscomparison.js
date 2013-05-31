@@ -1,3 +1,7 @@
+/*
+ * @file 
+ * File that manages everything linked with the LivingScience Comparison Display tab.
+ */
 var vsLscomparison = (function() {
 	var createComparisonInterface, createComparisonStatisticTable, getComparisonTableStatistics, getSprikiColor, createComparisonSpriki, createComparisonPublication;
 
@@ -149,8 +153,8 @@ var vsLscomparison = (function() {
 		 	var start = vsDatabase.lsDB[idDBToSearch].resolveTag('start');
 		 	var howMany = vsDatabase.lsDB[idDBToSearch].resolveTag('howMany');
 		 	vsLivingscience.generatePublicationsDiv(searchedDB, start, howMany, location);
-		 
-		}
-	};
 
-})();
+		 }
+		};
+
+	})();

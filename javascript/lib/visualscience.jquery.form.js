@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * PLugin that allows to submit forms via Ajax. (Uploading file included)
+ */
+
 /*!
  * jQuery Form Plugin
  * version: 3.18 (28-SEP-2012)
