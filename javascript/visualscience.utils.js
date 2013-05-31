@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * File that provides some usefull tools to other files.
+ */
+
 var vsUtils = (function() {
     var urlPath, rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL, usersPath;
     jQuery(document).ready(function() {

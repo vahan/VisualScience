@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * File that manages everything linked with the Livingscience tab.
+ */
+
 var vsLivingscience;
 vsLivingscience = (function() {
 	var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;

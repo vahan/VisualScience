@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * The jquery time picker plugin.
+ */
+
 /* http://keith-wood.name/timeEntry.html
    Time entry for jQuery v1.5.0.
    Written by Keith Wood (kbwood{at}iinet.com.au) June 2007.

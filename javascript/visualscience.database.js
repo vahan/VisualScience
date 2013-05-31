@@ -1,3 +1,8 @@
+/*
+ * @file 
+ * File that manages everything linked with the storing of data.
+ */
+
 var vsDatabase = (function() {
 
 	var uploadDB, numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
