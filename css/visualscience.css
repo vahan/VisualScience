@@ -163,3 +163,9 @@
  #visualscience-container input {
  	min-height:20px;
  }
+
+ .entryRecipient, .entryFile {
+ 	border-bottom: solid black 1px;
+ 	margin: 0px;
+ 	padding: 8px;
+ }
