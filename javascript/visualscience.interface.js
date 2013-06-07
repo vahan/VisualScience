@@ -186,10 +186,10 @@ var vsInterface = (function() {
          	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
          	vsSearch.makeActionBarMoveable(idOfThisTab);
          	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-         	vsSearch.makeRowsSelectable();
          },
 
          manageNewSearch: function (searchObject) {
+            console.log('Object received for display');
          	var firstTab = jQuery(jQuery(jQuery('#tab-list').children()[0]).children()[0]);
          	firstTab.click();
 
@@ -201,10 +201,13 @@ var vsInterface = (function() {
          	firstTab.html(tabTitleContent);
          	var idOfThisTab = 0;
          	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
+            console.log('Display to be inserted');
          	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
+            console.log('Inserted table, making it interactive');
          	vsSearch.makeActionBarMoveable(idOfThisTab);
+            console.log('Action Bar moveable');
          	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-         	vsSearch.makeRowsSelectable();
+            console.log('Table sortable');
          },
 
         /*

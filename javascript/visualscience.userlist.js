@@ -4,13 +4,13 @@
  *
  * Note that it also provide the searching functions.
  */
+ var tagMarkNameFields,getFilterFunction, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
  var vsUserlist = (function() {
  	"use strict";
- 	var tagMarkNameFields, getFilterFunction, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
  	maxAutocompleteEntries = 5;
- 	delayBeforeTableCreation = 1000;
+ 	delayBeforeTableCreation = 2000;
  	maxNumberOfTableEntries = 150;
 
  	isInterfaceCreated = false;
@@ -22,15 +22,16 @@
  	jQuery(document).ready(function() {
  		if (typeof store != 'undefined' && store('vsSearchDB')) {
  			searchDB = store('vsSearchDB');
- 		}
- 		else {
- 			vsUserlist.reloadUserDatabase();
- 		}
+ 			createFullNDDB();
+	        //Timeout so that the views have time to load.
+            setTimeout(function () {
+             vsUserlist.search();
+         }, delayBeforeTableCreation);
+        }
+        else {
+            vsUserlist.reloadUserDatabase();
+        }
         //startAutoComplete();
-        //Timeout so that the views have time to load.
-        setTimeout(function () {
-        	vsUserlist.search();
-        }, delayBeforeTableCreation);
     });
 
     /*
@@ -69,6 +70,7 @@
     		if (allRequestHaveArrived(response.total)) {
     			vsInterface.closeDialog();
     			searchDB.config = response.config;
+    			createFullNDDB();
     			vsUserlist.search();
     			store.onquotaerror = function () {
     				vsInterface.dialog('Oups, the database of users is too large for your browser. This means that every time, we\'ll have to load it from the server. To solve this problem, change the localStorage capacity in the configuration of your browser.', null, null, null, '40%');
@@ -126,143 +128,146 @@ startAutoComplete = function (inputId, source) {
     		temp.fields = JSUS.subobj(result[el], fields);
     		result[el] = temp;
     	}
+    	console.log('Search finished in NDDB');
     	return result;
     };
 
- getFilterFunction = function (search) {
- 	search = vsUtils.stripSpacesStartEnd(search);
- 	if (search == '') {
- 		search = 'true';
- 	}
- 	else {
- 		searchArray = search.split(' ');
- 		for (var index in searchArray) {
- 			word = searchArray[index];
- 			if (word == 'and') {
- 				word = '&&';
- 			}
- 			else if (word == 'or') {
- 				word = '||';
- 			}
- 			else if (word.indexOf('=') != -1) {
- 				word = 'el.' + word.replace('=', '== "') + '"';
- 			}
- 			else {
- 				word = 'el.indexOf("'+word+'") != -1';
- 			}
- 			searchArray[index] = word;
- 		}
- 		search = searchArray.join(' ');
- 	}
- 	var funcCode = 'if ('+search+') { return true;} return false;';
- 	console.log(funcCode);
- 	var filter = new Function('el', funcCode);
- 	return filter;
- };
+    getFilterFunction = function (search) {
+    	search = vsUtils.stripSpacesStartEnd(search);
+    	if (search == '') {
+    		search = 'true';
+    	}
+    	else {
+    		var searchArray = search.split(' ');
+    		var word;
+    		for (var index in searchArray) {
+    			word = searchArray[index];
+    			if (word == 'and') {
+    				word = '&&';
+    			}
+    			else if (word == 'or') {
+    				word = '||';
+    			}
+    			else if (word.indexOf('=') != -1) {
+    				word = 'el.' + word.replace('=', '== "') + '"';
+    			}
+    			else {
+    				word = 'el.indexOf("'+word+'") != -1';
+    			}
+    			searchArray[index] = word;
+    		}
+    		search = searchArray.join(' ');
+    	}
+    	var funcCode = 'if ('+search+') { return true;} return false;';
+    	console.log(funcCode);
+    	var filter = new Function('el', funcCode);
+    	return filter;
+    };
 
- getSearchFields = function (type) {
- 	var result = [];
- 	if (type != 0) {
- 		for (var field in searchDB.config.fields) {
- 			if (searchDB.config.fields[field].mini == 1) {
- 				result.push(searchDB.config.fields[field].name);
- 			}
- 		}
- 	}
- 	else {
- 		for (var field in searchDB.config.fields) {
- 			result.push(searchDB.config.fields[field].name)
- 		}
- 	}
- 	return result;
- };
+    getSearchFields = function (type) {
+    	var result = [];
+    	if (type != 0) {
+    		for (var field in searchDB.config.fields) {
+    			if (searchDB.config.fields[field].mini == 1) {
+    				result.push(searchDB.config.fields[field].name);
+    			}
+    		}
+    	}
+    	else {
+    		for (var field in searchDB.config.fields) {
+    			result.push(searchDB.config.fields[field].name)
+    		}
+    	}
+    	return result;
+    };
 
- tagMarkNameFields = function (fields) {
- 	var first = searchDB.config.first;
- 	var last = searchDB.config.last;
- 	var formattedFields = new Array();
- 	for (var field in fields) {
- 		var formatted = formatFieldTitle(fields[field]);
- 		if (fields[field] == first) {
- 			formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
- 		}
- 		else if (fields[field] == last) {
- 			formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
- 		}
- 		formattedFields.push(formatted);
+    tagMarkNameFields = function (fields) {
+    	var first = searchDB.config.first;
+    	var last = searchDB.config.last;
+    	var formattedFields = new Array();
+    	for (var field in fields) {
+    		var formatted = formatFieldTitle(fields[field]);
+    		if (fields[field] == first) {
+    			formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
+    		}
+    		else if (fields[field] == last) {
+    			formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
+    		}
+    		formattedFields.push(formatted);
 
- 	}
- 	return formattedFields;
- };
+    	}
+    	return formattedFields;
+    };
 
- formatFieldTitle = function (field) {
- 	field = field.replace(/_/gi, " ");
- 	return field.replace(/\w\S*/g, function(txt) {
- 		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
- 	});
- };
+    formatFieldTitle = function (field) {
+    	field = field.replace(/_/gi, " ");
+    	return field.replace(/\w\S*/g, function(txt) {
+    		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    	});
+    };
 
- return {
+    return {
 
- 	search: function (type) {
- 		var search = jQuery('#visualscience-search-bar').val() || '';
- 		var searchResult = getSearchResult(search, type);
- 		if (!isInterfaceCreated) {
- 			vsInterface.openUserListTab(searchResult);
- 			isInterfaceCreated = true;
- 		}
- 		else {
- 			vsInterface.manageNewSearch(searchResult);
- 		}
- 	},
+    	search: function (type) {
+    		var search = jQuery('#visualscience-search-bar').val() || '';
+    		var searchResult = getSearchResult(search, type);
+    		if (!isInterfaceCreated) {
+    			vsInterface.openUserListTab(searchResult);
+    			isInterfaceCreated = true;
+    		}
+    		else {
+    			vsInterface.manageNewSearch(searchResult);
+    		}
+    		console.log('Search finished everywhere');
+    	},
 
- 	reloadUserDatabase: function (from) {
- 		from = from || 0;
- 		searchDB = {config:{}, users:[]};
- 		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
- 			jQuery('#vs-db-loading').progressbar({
- 				value: 1
- 			});
- 			getSearchDataFromServer(from);
- 		}, '40%', '250');
- 	},
+    	reloadUserDatabase: function (from) {
+    		from = from || 0;
+    		searchDB = {config:{}, users:[]};
+    		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+    			jQuery('#vs-db-loading').progressbar({
+    				value: 1
+    			});
+    			getSearchDataFromServer(from);
+    		}, '40%', '250');
+    	},
 
- 	saveSearch: function () {
- 		var search = jQuery('#visualscience-search-bar').val();
- 		vsInterface.getView('saveSearchDialog.html', function(dialogContent) {
- 			var parameters = {
- 				search: search
- 			}
- 			var content = dialogContent(parameters);
- 			var button = [{
- 				text: 'Save',
- 				click: function () {
- 					var toSaveSearch = jQuery('#visualscience-save-search').val();
- 					sendSearchToSave(toSaveSearch);
- 					vsInterface.closeDialog();
- 				}
- 			}];
- 			vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
- 		});
- 	},
+    	saveSearch: function () {
+    		var search = jQuery('#visualscience-search-bar').val();
+    		vsInterface.getView('saveSearchDialog.html', function(dialogContent) {
+    			var parameters = {
+    				search: search
+    			}
+    			var content = dialogContent(parameters);
+    			var button = [{
+    				text: 'Save',
+    				click: function () {
+    					var toSaveSearch = jQuery('#visualscience-save-search').val();
+    					sendSearchToSave(toSaveSearch);
+    					vsInterface.closeDialog();
+    				}
+    			}];
+    			vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
+    		});
+    	},
 
- 	getUsersNamesFromDB: function () {
- 		var names = [];
- 		var users = searchDB.users;
- 		for (var user in users) {
- 			names.push(vsUserlist.getFullName(users[user]));
- 		}
- 		return names;
- 	},
+    	getUsersNamesFromDB: function () {
+    		var names = [];
+    		var users = searchDB.users;
+    		for (var user in users) {
+    			names.push(vsUserlist.getFullName(users[user]));
+    		}
+    		return names;
+    	},
 
- 	getFullName: function (user) {
- 		if (!user.first) {
- 			return 'anonymous';
- 		}
- 		if (!user.last) {
- 			return user.first;
- 		}
- 		return user.first + ' ' + user.last;
- 	}
- };
+    	getFullName: function (user) {
+    		if (!user.first) {
+    			return 'anonymous';
+    		}
+    		if (!user.last) {
+    			return user.first;
+    		}
+    		return user.first + ' ' + user.last;
+    	}
+    };
 })();

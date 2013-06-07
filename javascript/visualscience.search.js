@@ -4,22 +4,21 @@
  *
  * Note: For searching users functionnalities, you have to check userlist.js
  */
-var vsSearch = (function() {
+ var vsSearch = (function() {
 
-	return {
-		makeRowsSelectable : function() {
-			jQuery('.clickToSelect').click(function() {
-				var cur = jQuery(this).children().children().children();
-				var newState = !(cur.attr('checked'));
-				cur.attr('checked', newState);
-				jQuery(this).toggleClass('vsSelectedRow');
-			});
-			jQuery('.clickToSelect').children().children().children().click(function() {
-				var newState = !(jQuery(this).attr('checked'));
-				jQuery(this).attr('checked', newState);
-				jQuery(this).toggleClass('vsSelectedRow');
-			});
-		},
+ 	return {
+ 		selectThisUser : function(row) {
+ 			var cur = jQuery(row).children(' input[type=checkbox]');
+ 			console.log('asdf');
+ 			var newState = !(cur.attr('checked'));
+ 			console.log('asdf');
+ 			cur.attr('checked', newState);
+ 			console.log('asdf');
+ 			jQuery(row).toggleClass('vsSelectedRow');
+ 			console.log('asdf');
+ 			console.log(jQuery(row + ' input[type=checkbox]').attr('checked'));
+ 			console.log('asdf');
+ 		},
 
 		/*
 		 * This function creates the whole tab, which will be displayed to the user.
@@ -148,6 +147,7 @@ var vsSearch = (function() {
 		 		users: searchObject.users,
 		 		nbEntries: searchObject. limit
 		 	};
+		 	console.log('Creating the table in handlebarsJS');
 		 	var divFinalContent = searchTable(parameters);
 		 	divFinalContent += vsSearch.getTableUserListOptions(searchObject.fields, idOfThisTab);
 		 	return divFinalContent;

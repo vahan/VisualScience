@@ -15,10 +15,10 @@
 		<tbody>
 			{{#each users}}
 
-			<tr class="{{type}} clickable clickToSelect">
+			<tr class="{{type}} clickable clickToSelect" onClick="vsSearch.selectThisUser(this);">
 				<td>
 					<div class="form-item form-type-checkbox form-item-list-{{this.id}}">
-						<input id="user_list-list-{{tabId}}" type="checkbox" name="list[{{this.id}}]" value="{{this.id}}" class="form-checkbox">
+						<input id="user_list-list-{{tabId}}" type="checkbox" name="list[{{this.id}}]" value="{{this.id}}" class="form-checkbox" onClick="vsSearch.selectThisUser(this);">
 					</div>
 				</td>
 				{{#each fields}}
