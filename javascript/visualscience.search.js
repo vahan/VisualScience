@@ -8,16 +8,13 @@
 
  	return {
  		selectThisUser : function(row) {
- 			var cur = jQuery(row).children(' input[type=checkbox]');
- 			console.log('asdf');
- 			var newState = !(cur.attr('checked'));
- 			console.log('asdf');
- 			cur.attr('checked', newState);
- 			console.log('asdf');
+ 			if (row.nodeName === 'INPUT') {
+ 				row.checked = !row.checked;
+ 				return false;
+ 			}
+ 			var cur = row.getElementsByClassName('form-checkbox')[0];
+ 			cur.checked = !cur.checked;
  			jQuery(row).toggleClass('vsSelectedRow');
- 			console.log('asdf');
- 			console.log(jQuery(row + ' input[type=checkbox]').attr('checked'));
- 			console.log('asdf');
  		},
 
 		/*
@@ -44,7 +41,7 @@
 		 		installFolder: vsUtils.getInstallFolder()
 		 	};
 		 	return actionBar(parameters);
-		 },
+		 },	
 		/*
 		 * Depending on what the user sees, the action bar will be static at the top of the page,
 		 * or fixed on the left, when he scrolls down.
