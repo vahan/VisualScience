@@ -28,8 +28,8 @@ function visualscience_menu() {
     'title' => 'Visual Science',
     'description' => 'Visual Science description',
     'page callback' => 'visualscience_page',
-    'page arguments' => array('access visualscience'),
-    'access callback' => TRUE,
+    'access arguments' => array('access visualscience'),
+    // 'access callback' => TRUE,
     'weight' => 30,
     );
 
@@ -61,7 +61,7 @@ function visualscience_menu() {
     'title' => 'VisualScience Attachment Access',
     'description' => 'Access a file uploaded from VisualScience',
     'page callback' => 'visualscience_get_file_with_id',
-    'access callback' => TRUE,
+    // 'access callback' => TRUE,
     'type' => MENU_CALLBACK,
     );
 
