@@ -43,3 +43,9 @@ In the Save field you can save the current search query or load a previously sav
 
 ## UserList Module
 This is the main visualization module for visualscience. The search results are displayed via the UserList module. It is easily extendible to add different actions and visualisation mechanisms to the list of results. For more information see the UserList module itself
+
+Tweaks and Hacks
+===
+Here's a list of some "tweaks and hacks" we had to use, to make things work better, generally because the original ones were having performance issues.
+
+ * ** jQuery UI Theme Replacement: ** The file SITE/misc/ui/jquery.ui.theme.css was making the page's checkboxes slow. Therefore we replace it with our own flavoured one. (VisualScience/css/visualscience.jquery.ui.theme.css)
