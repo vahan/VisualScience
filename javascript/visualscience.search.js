@@ -14,6 +14,7 @@
  			}
  			var cur = row.getElementsByClassName('form-checkbox')[0];
  			cur.checked = !cur.checked;
+ 			console.profileEnd('test');
  			jQuery(row).toggleClass('vsSelectedRow');
  		},
 
@@ -23,10 +24,20 @@
 		 * -the action bar, which is the bar with every buttons(Message, CSV, LS and Conference)
 		 * -The table with the result and its options.(Sort table, hide fields, etc...)
 		 */
-		 createUserSearchResult : function(searchObject, idOfThisTab) {
-		 	var actionBar = vsSearch.createActionBar(idOfThisTab);
-		 	var tableUserList = vsSearch.createTableUserList(searchObject, idOfThisTab);
-		 	return '<h3>User List</h3>' + actionBar + tableUserList;
+		 createUserSearchResult : function(searchObject, idOfThisTab, callback) {
+		 	if (callback) {
+		 		var exeCallback = function exeCallback() {
+		 			var actionBar = vsSearch.createActionBar(idOfThisTab);
+		 			var tableUserList = vsSearch.createTableUserList(searchObject, idOfThisTab);
+		 			callback('<h3>User List</h3>' + actionBar + tableUserList);
+		 		};
+		 		var timeout = setTimeout(exeCallback, 1);
+		 	}
+		 	else {
+		 		var actionBar = vsSearch.createActionBar(idOfThisTab);
+		 		var tableUserList = vsSearch.createTableUserList(searchObject, idOfThisTab);
+		 		return '<h3>User List</h3>' + actionBar + tableUserList;
+		 	}
 		 },
 
 		/*
@@ -47,6 +58,10 @@
 		 * or fixed on the left, when he scrolls down.
 		 */
 		 makeActionBarMoveable : function(idOfThisTab) {
+		 	var execFunction = function execFunction() {
+
+		 	};
+		 	console.time('actionBar');
 		 	var top_offset = jQuery('#action-bar-container' + idOfThisTab).offset().top;
 		 	var tableHeight = jQuery('#visualscience-user_list-result-' + idOfThisTab).height();
 		 	var actionBarHeight = jQuery('#actionBar' + idOfThisTab).height();
@@ -67,6 +82,7 @@
 					el.css('top', '');
 				}
 			});
+		 	console.timeEnd('actionBar');
 		 },
 		/*
 		 * This function gets every selected user from the user-list of results.
@@ -137,6 +153,7 @@
 		 * Creates the table of users, which can be sorted.
 		 */
 		 createTableUserList : function(searchObject, idOfThisTab) {
+		 	console.time('Table Creation Handlebars');
 		 	var searchTable = vsInterface.getView('tableUserSearch.html');
 		 	var parameters = {
 		 		header: searchObject.fields,
@@ -144,9 +161,9 @@
 		 		users: searchObject.users,
 		 		nbEntries: searchObject. limit
 		 	};
-		 	console.log('Creating the table in handlebarsJS');
 		 	var divFinalContent = searchTable(parameters);
-		 	divFinalContent += vsSearch.getTableUserListOptions(searchObject.fields, idOfThisTab);
+		 	// divFinalContent += vsSearch.getTableUserListOptions(searchObject.fields, idOfThisTab);
+		 	console.timeEnd('Table Creation Handlebars');
 		 	return divFinalContent;
 		 },
 		/*

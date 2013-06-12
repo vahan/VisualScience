@@ -3,9 +3,9 @@
  * File that manages everything linked with the UI of the app, and how it is managed.
  */
 
-var vsInterface = (function() {
+ var vsInterface = (function() {
 
-	var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
+     var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
 
     //This variable checks if the whole tabbed interface has been created yet.
     tabbedInterfaceExists = false;
@@ -182,33 +182,37 @@ var vsInterface = (function() {
          	var title = searchObject.searchQuery ? 'Search: '+ searchObject.searchQuery: 'Search';
          	var idOfThisTab = 0;
          	createTabbedInterface(title, idOfThisTab);
-         	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
-         	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-         	vsSearch.makeActionBarMoveable(idOfThisTab);
-         	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+         	vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
+                jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
+                // vsSearch.makeActionBarMoveable(idOfThisTab);
+                vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+            });
          },
 
          manageNewSearch: function (searchObject) {
             console.log('Object received for display');
-         	var firstTab = jQuery(jQuery(jQuery('#tab-list').children()[0]).children()[0]);
-         	firstTab.click();
+            var firstTab = jQuery(jQuery(jQuery('#tab-list').children()[0]).children()[0]);
+            firstTab.click();
 
-         	var newTitle = searchObject.searchQuery ? ' Search: '+ searchObject.searchQuery: ' Search';
-         	newTitle = newTitle.length > nameMaxLength ? newTitle.substring(0, nameMaxLength) + '... ' : newTitle;
-         	var oldTitle = firstTab.text();
-         	oldTitle = oldTitle.substring(0, oldTitle.length);
-         	var tabTitleContent = firstTab.html().replace(oldTitle, newTitle);
-         	firstTab.html(tabTitleContent);
-         	var idOfThisTab = 0;
-         	var content = vsSearch.createUserSearchResult(searchObject, idOfThisTab);
-            console.log('Display to be inserted');
-         	jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-            console.log('Inserted table, making it interactive');
-         	vsSearch.makeActionBarMoveable(idOfThisTab);
-            console.log('Action Bar moveable');
-         	vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-            console.log('Table sortable');
-         },
+            var newTitle = searchObject.searchQuery ? ' Search: '+ searchObject.searchQuery: ' Search';
+            newTitle = newTitle.length > nameMaxLength ? newTitle.substring(0, nameMaxLength) + '... ' : newTitle;
+            var oldTitle = firstTab.text();
+            oldTitle = oldTitle.substring(0, oldTitle.length);
+            var tabTitleContent = firstTab.html().replace(oldTitle, newTitle);
+            firstTab.html(tabTitleContent);
+            var idOfThisTab = 0;
+            vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
+                console.log('Display to be inserted');
+                jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
+                console.log('Inserted table, making it interactive');
+                // vsSearch.makeActionBarMoveable(idOfThisTab);
+                console.log('Action Bar moveable');
+                vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+                console.time('sortable');
+                console.log('Table sortable');
+                console.timeEnd('sortable');
+            });
+        },
 
         /*
          * This function adds a new tab to the tabbed interface.
