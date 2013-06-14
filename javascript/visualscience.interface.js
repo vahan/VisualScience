@@ -28,11 +28,12 @@
         'confRecipientsLayout.html'
         );
 
+
     jQuery(document).ready(function() {
         //Pre-loading the views when the html is loaded
-        jQuery.each(listOfViews, function(index, element){
-            vsInterface.storeViewInDB(element);
-        });
+        for (var i=0; i < listOfViews.length; i++) {
+            vsInterface.storeViewInDB(listOfViews[i]);
+        }
         //Creating the dialog div. Check vsInterface.dialog for more infos
         overlayModal = jQuery('<div id="visualscience-overlay-modal"></div>').hide().appendTo('body');
     });
@@ -173,44 +174,30 @@
          	}
          },
 
-        /*
-         * This function is called when the user launches the search from the bar.
-         * It will first check if the tabbed interface is loaded and load it if not.
-         * Then it adds a new tab to the interface, with the result of the search.
-         */
-         openUserListTab : function(searchObject) {
-         	var title = searchObject.searchQuery ? 'Search: '+ searchObject.searchQuery: 'Search';
-         	var idOfThisTab = 0;
-         	createTabbedInterface(title, idOfThisTab);
-         	vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
-                jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-                // vsSearch.makeActionBarMoveable(idOfThisTab);
-                vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-            });
-         },
-
          manageNewSearch: function (searchObject) {
-            console.log('Object received for display');
-            var firstTab = jQuery(jQuery(jQuery('#tab-list').children()[0]).children()[0]);
-            firstTab.click();
-
+            var idOfThisTab = 0;
             var newTitle = searchObject.searchQuery ? ' Search: '+ searchObject.searchQuery: ' Search';
             newTitle = newTitle.length > nameMaxLength ? newTitle.substring(0, nameMaxLength) + '... ' : newTitle;
-            var oldTitle = firstTab.text();
-            oldTitle = oldTitle.substring(0, oldTitle.length);
-            var tabTitleContent = firstTab.html().replace(oldTitle, newTitle);
-            firstTab.html(tabTitleContent);
-            var idOfThisTab = 0;
+            if (!tabbedInterfaceExists) {
+                createTabbedInterface(newTitle, idOfThisTab);
+            }
+            else {
+                var firstTab = jQuery(jQuery(jQuery('#tab-list').children()[0]).children()[0]);
+                firstTab.click();
+                var oldTitle = firstTab.text();
+                oldTitle = oldTitle.substring(0, oldTitle.length);
+                var tabTitleContent = firstTab.html().replace(oldTitle, newTitle);
+                firstTab.html(tabTitleContent);
+            }
             vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
-                console.log('Display to be inserted');
-                jQuery('#visualscience-search-tab-content-' + idOfThisTab).html(content).css('display', 'block');
-                console.log('Inserted table, making it interactive');
-                // vsSearch.makeActionBarMoveable(idOfThisTab);
-                console.log('Action Bar moveable');
-                vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-                console.time('sortable');
-                console.log('Table sortable');
-                console.timeEnd('sortable');
+                //http://blog.stevenlevithan.com/archives/faster-than-innerhtml
+                document.getElementById('visualscience-search-tab-content-' + idOfThisTab).innerHTML = ''; //= content;
+                vsSearch.makeActionBarMoveable(idOfThisTab);
+                if (searchObject.users.length < vsSearch.nbUsersHideOptions) {
+                    setTimeout(function makeSortable() {
+                        vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+                    }, 10);
+                }
             });
         },
 

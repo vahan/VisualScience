@@ -4,16 +4,14 @@
  *
  * Note that it also provide the searching functions.
  */
- var tagMarkNameFields,getFilterFunction, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, isInterfaceCreated, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
+ var tagMarkNameFields,getFilterFunction, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
  var vsUserlist = (function() {
  	"use strict";
 
  	maxAutocompleteEntries = 5;
- 	delayBeforeTableCreation = 2000;
+ 	delayBeforeTableCreation = 3000;
  	maxNumberOfTableEntries = 150;
-
- 	isInterfaceCreated = false;
 
  	sendSearchToSave = function (search) {
  		console.log('Implement search saving for:' + search);
@@ -128,7 +126,6 @@ startAutoComplete = function (inputId, source) {
     		temp.fields = JSUS.subobj(result[el], fields);
     		result[el] = temp;
     	}
-    	console.log('Search finished in NDDB');
     	return result;
     };
 
@@ -159,7 +156,6 @@ startAutoComplete = function (inputId, source) {
     		search = searchArray.join(' ');
     	}
     	var funcCode = 'if ('+search+') { return true;} return false;';
-    	console.log(funcCode);
     	var filter = new Function('el', funcCode);
     	return filter;
     };
@@ -209,16 +205,10 @@ startAutoComplete = function (inputId, source) {
     return {
 
     	search: function (type) {
-    		var search = jQuery('#visualscience-search-bar').val() || '';
+            var search = document.getElementById('visualscience-search-bar').value || '';
+    		// var search = jQuery('#visualscience-search-bar').val() || '';
     		var searchResult = getSearchResult(search, type);
-    		if (!isInterfaceCreated) {
-    			vsInterface.openUserListTab(searchResult);
-    			isInterfaceCreated = true;
-    		}
-    		else {
-    			vsInterface.manageNewSearch(searchResult);
-    		}
-    		console.log('Search finished everywhere');
+            vsInterface.manageNewSearch(searchResult);
     	},
 
     	reloadUserDatabase: function (from) {

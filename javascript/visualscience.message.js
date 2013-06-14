@@ -139,9 +139,6 @@
          			data : jsonObject,
          			error : function(req, msg, obj) {
          				vsInterface.dialog('An error occured on the server side while sending the message. Please contact the administrator if this happens again.');
-         				console.log(req);
-         				console.log(msg);
-         				console.log(obj);
          				jQuery('#visualscience-send-message-button-' + thisTabId).attr({
          					'value' : 'Re-try now',
          					'disabled' : false

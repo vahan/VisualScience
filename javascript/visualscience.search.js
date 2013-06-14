@@ -5,8 +5,42 @@
  * Note: For searching users functionnalities, you have to check userlist.js
  */
  var vsSearch = (function() {
+ 	var getHTMLSearchTable;
+
+ 	getHTMLSearchTable = function getHTMLSearchTable(parameters) {
+ 		console.time('test');
+ 		var html = [];
+ 		html.push('<div style="display:inline-block;width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + parameters.tabId + '" class="vs-userlist-table tablesorter sticky-header"><thead><tr><th style="min-width:35px;" onclick="vsSearch.selectAllBoxes(' + parameters.tabId + ', this)" ><input type="checkbox" id="user-list_master_checkbox-' + parameters.tabId + '" class="form-checkbox" title="Select all rows in this table" onclick="vsSearch.selectAllBoxes(' + parameters.tabId + ', this)" /></th>');
+ 		for (var i=0; i < parameters.header.length; i++) {
+ 			html.push('<th style="min-width:35px;" class="header">' + parameters.header[i] + '</th>');
+ 		}
+ 		html.push('</tr></thead><tbody>');
+ 		for (var j=0; j < parameters.users.length; j++) {
+ 			var user = parameters.users[j];
+ 			html.push('<tr class="' + user.type + ' clickable clickToSelect" onClick="vsSearch.selectThisUser(this);" ><td><div class="form-item form-type-checkbox form-item-list-' + user.id + '"><input type="checkbox" name="list[' + user.id + ']" value="' + user.id + '" class="form-checkbox" onClick="vsSearch.selectThisUser(this);" /></div></td>');
+ 			for (var prop in user.fields) {
+ 				html.push('<td>' + user.fields[prop] + '</td>');
+ 			}
+ 			html.push('</tr>');
+ 		}
+ 		html.push('</tbody></table>');
+ 		if (parameters.displayOptions) {
+ 			html.push('<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">');
+ 			for (var i=0; i < parameters.header.length; i++) {
+ 				var header = parameters.header[i];
+ 				html.push('<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + header + '' + parameters.tabId + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + parameters.tabId + '\',\'' + i + '\');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + header + '' + parameters.tabId + '" id="checkbox-visibility-' + header + '' + parameters.tabId + '" />' + header + '</label></div>');
+ 			}
+ 			html.push('</div></div></fieldset>');
+ 		}
+ 		html.push('</div>');
+ 		html = html.join('');
+ 		console.timeEnd('test');
+ 		return html;
+ 	};
 
  	return {
+ 		nbUsersHideOptions : 1000,
+
  		selectThisUser : function(row, state) {
  			if (row.nodeName === 'INPUT') {
  				row.checked = !row.checked;
@@ -68,7 +102,6 @@
 		 */
 		 makeActionBarMoveable : function(idOfThisTab) {
 		 	var execFunction = function execFunction() {
-		 		console.profile('Testing');
 		 		var top_offset = jQuery('#action-bar-container' + idOfThisTab).offset().top;
 		 		var tableHeight = jQuery('#visualscience-user_list-result-' + idOfThisTab).height();
 		 		var actionBarHeight = jQuery('#actionBar' + idOfThisTab).height();
@@ -89,8 +122,6 @@
 		 				el.css('top', '');
 		 			}
 		 		});
-
-		 		console.profileEnd('Testing');
 		 	};
 		 	
 		 	setTimeout(execFunction, 1);
@@ -164,18 +195,32 @@
 		 * Creates the table of users, which can be sorted.
 		 */
 		 createTableUserList : function(searchObject, idOfThisTab) {
-		 	console.time('Table Creation Handlebars');
-		 	var searchTable = vsInterface.getView('tableUserSearch.html');
 		 	var parameters = {
 		 		header: searchObject.fields,
 		 		tabId: idOfThisTab,
 		 		users: searchObject.users,
-		 		nbEntries: searchObject. limit
+		 		nbEntries: searchObject.limit,
+		 		displayOptions: searchObject.users.length > vsSearch.nbUsersHideOptions ? false: true
 		 	};
-		 	var divFinalContent = searchTable(parameters);
-		 	// divFinalContent += vsSearch.getTableUserListOptions(searchObject.fields, idOfThisTab);
-		 	console.timeEnd('Table Creation Handlebars');
+		 	var divFinalContent = getHTMLSearchTable(parameters);
 		 	return divFinalContent;
+
+
+
+
+
+
+
+		 	// var searchTable = vsInterface.getView('tableUserSearch.html');
+		 	// var parameters = {
+		 	// 	header: searchObject.fields,
+		 	// 	tabId: idOfThisTab,
+		 	// 	users: searchObject.users,
+		 	// 	nbEntries: searchObject.limit,
+		 	// 	displayOptions: searchObject.users.length > vsSearch.nbUsersHideOptions ? false: true
+		 	// };
+		 	// var divFinalContent = searchTable(parameters);
+		 	// return divFinalContent;
 		 },
 		/*
 		 * This function creates the visibility options for the user list search.
@@ -201,8 +246,8 @@
 		 selectAllBoxes : function(idOfThisTab, clickTarget) {
 		 	var master, state, lines;
 		 	if (clickTarget.nodeName === 'INPUT') {
- 				clickTarget.checked = !clickTarget.checked;
- 				return false;
+		 		clickTarget.checked = !clickTarget.checked;
+		 		return false;
 		 	}
 		 	master = document.getElementById('user-list_master_checkbox-' + idOfThisTab);
 		 	master.checked = !master.checked;
