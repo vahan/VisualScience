@@ -7,15 +7,26 @@
  var vsSearch = (function() {
 
  	return {
- 		selectThisUser : function(row) {
+ 		selectThisUser : function(row, state) {
  			if (row.nodeName === 'INPUT') {
  				row.checked = !row.checked;
  				return false;
  			}
  			var cur = row.getElementsByClassName('form-checkbox')[0];
- 			cur.checked = !cur.checked;
- 			console.profileEnd('test');
- 			jQuery(row).toggleClass('vsSelectedRow');
+ 			if (typeof state === 'undefined') {
+ 				state = !cur.checked;
+ 			}
+ 			cur.checked = state;
+ 			var classes = row.getAttribute('class');
+ 			if (state) {
+ 				row.setAttribute('class', classes + ' vsSelectedRow');
+ 				// jQuery(row).addClass('vsSelectedRow');
+ 			}
+ 			else {
+ 				classes = classes.replace('vsSelectedRow', '');
+ 				row.setAttribute('class', classes);
+ 				// jQuery(row).removeClass('vsSelectedRow');
+ 			}
  		},
 
 		/*
@@ -59,30 +70,32 @@
 		 */
 		 makeActionBarMoveable : function(idOfThisTab) {
 		 	var execFunction = function execFunction() {
+		 		console.profile('Testing');
+		 		var top_offset = jQuery('#action-bar-container' + idOfThisTab).offset().top;
+		 		var tableHeight = jQuery('#visualscience-user_list-result-' + idOfThisTab).height();
+		 		var actionBarHeight = jQuery('#actionBar' + idOfThisTab).height();
+		 		if (tableHeight > actionBarHeight) {
+		 			jQuery('#action-bar-container' + idOfThisTab).height(tableHeight);
+		 		}
+		 		var el = jQuery('#actionBar' + idOfThisTab);
+		 		jQuery(window).bind('scroll', function() {
+		 			var scroll_top = jQuery(window).scrollTop();
+		 			var threshold = 100;
+		 			//a threshold so the bar does not stick to the top
+		 			var tabHeight = jQuery('#visualscience-search-tab-content-' + idOfThisTab).height();
+		 			if (scroll_top + threshold + actionBarHeight > top_offset + tableHeight && tabHeight > 350) {
+		 				el.css('top', tableHeight - actionBarHeight);
+		 			} else if (scroll_top > top_offset - threshold) {
+		 				el.css('top', scroll_top - top_offset + threshold);
+		 			} else {
+		 				el.css('top', '');
+		 			}
+		 		});
 
+		 		console.profileEnd('Testing');
 		 	};
-		 	console.time('actionBar');
-		 	var top_offset = jQuery('#action-bar-container' + idOfThisTab).offset().top;
-		 	var tableHeight = jQuery('#visualscience-user_list-result-' + idOfThisTab).height();
-		 	var actionBarHeight = jQuery('#actionBar' + idOfThisTab).height();
-		 	if (tableHeight > actionBarHeight) {
-		 		jQuery('#action-bar-container' + idOfThisTab).height(tableHeight);
-		 	}
-		 	var el = jQuery('#actionBar' + idOfThisTab);
-		 	jQuery(window).bind('scroll', function() {
-		 		var scroll_top = jQuery(window).scrollTop();
-		 		var threshold = 100;
-				//a threshold so the bar does not stick to the top
-				var tabHeight = jQuery('#visualscience-search-tab-content-' + idOfThisTab).height();
-				if (scroll_top + threshold + actionBarHeight > top_offset + tableHeight && tabHeight > 350) {
-					el.css('top', tableHeight - actionBarHeight);
-				} else if (scroll_top > top_offset - threshold) {
-					el.css('top', scroll_top - top_offset + threshold);
-				} else {
-					el.css('top', '');
-				}
-			});
-		 	console.timeEnd('actionBar');
+		 	
+		 	setTimeout(execFunction, 1);
 		 },
 		/*
 		 * This function gets every selected user from the user-list of results.
@@ -187,17 +200,21 @@
 		 * checkbox of a user-list search table. It firstly checks if the
 		 * top box is checked or not, and then apply the state to all the boxes.
 		 */
-		 selectAllBoxes : function(idOfThisTab) {
-		 	var newState;
-		 	if (jQuery('#user-list_master_checkbox-' + idOfThisTab).attr('checked') == true) {
-		 		newState = false;
-		 	} else {
-		 		newState = true;
+		 selectAllBoxes : function(idOfThisTab, clickTarget) {
+		 	var master, state, lines;
+		 	if (clickTarget.nodeName === 'INPUT') {
+ 				clickTarget.checked = !clickTarget.checked;
+ 				return false;
 		 	}
-		 	jQuery('#user-list_master_checkbox-' + idOfThisTab).attr('checked', newState);
-		 	jQuery('#visualscience-user_list-result-' + idOfThisTab + ' input[id|="user_list-list"]').each(function() {
-		 		jQuery(this).attr('checked', newState);
-		 	});
+		 	master = document.getElementById('user-list_master_checkbox-' + idOfThisTab);
+		 	master.checked = !master.checked;
+		 	state = master.checked;
+		 	lines = document.getElementById('visualscience-user_list-result-'+idOfThisTab).getElementsByTagName('tr');
+		 	console.time('checkingAll');
+		 	for (var i=1; i < lines.length; i++) {
+		 		vsSearch.selectThisUser(lines[i], state);
+		 	}
+		 	console.timeEnd('checkingAll');
 		 },
 		/*
 		 * toggles the visibility of a column in a table.
