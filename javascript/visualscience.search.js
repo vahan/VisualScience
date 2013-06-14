@@ -20,12 +20,10 @@
  			var classes = row.getAttribute('class');
  			if (state) {
  				row.setAttribute('class', classes + ' vsSelectedRow');
- 				// jQuery(row).addClass('vsSelectedRow');
  			}
  			else {
- 				classes = classes.replace('vsSelectedRow', '');
+ 				classes = classes.replace(/vsSelectedRow/g, '');
  				row.setAttribute('class', classes);
- 				// jQuery(row).removeClass('vsSelectedRow');
  			}
  		},
 
@@ -210,11 +208,9 @@
 		 	master.checked = !master.checked;
 		 	state = master.checked;
 		 	lines = document.getElementById('visualscience-user_list-result-'+idOfThisTab).getElementsByTagName('tr');
-		 	console.time('checkingAll');
 		 	for (var i=1; i < lines.length; i++) {
 		 		vsSearch.selectThisUser(lines[i], state);
 		 	}
-		 	console.timeEnd('checkingAll');
 		 },
 		/*
 		 * toggles the visibility of a column in a table.
