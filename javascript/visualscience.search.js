@@ -8,7 +8,6 @@
  	var getHTMLSearchTable;
 
  	getHTMLSearchTable = function getHTMLSearchTable(parameters) {
- 		console.time('test');
  		var html = [];
  		html.push('<div style="display:inline-block;width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + parameters.tabId + '" class="vs-userlist-table tablesorter sticky-header"><thead><tr><th style="min-width:35px;" onclick="vsSearch.selectAllBoxes(' + parameters.tabId + ', this)" ><input type="checkbox" id="user-list_master_checkbox-' + parameters.tabId + '" class="form-checkbox" title="Select all rows in this table" onclick="vsSearch.selectAllBoxes(' + parameters.tabId + ', this)" /></th>');
  		for (var i=0; i < parameters.header.length; i++) {
@@ -34,7 +33,6 @@
  		}
  		html.push('</div>');
  		html = html.join('');
- 		console.timeEnd('test');
  		return html;
  	};
 

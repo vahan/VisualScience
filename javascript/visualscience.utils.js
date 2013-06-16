@@ -3,7 +3,7 @@
  * File that provides some usefull tools to other files.
  */
 
-var vsUtils = (function() {
+ var vsUtils = (function() {
     var urlPath, rootFolder, installFolder, UploadModuleURL, SendMailURL, csvURL, usersPath;
     jQuery(document).ready(function() {
         //This is the root folder, where the installation has been done.
@@ -71,37 +71,46 @@ var vsUtils = (function() {
          	});
          },
 
-         loadUploadScripts : function(areaId, callback) {
-         	jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
-         },
+         insertFastHTML : function (location, html) {
+            var oldContent, newContent;
+            oldContent = typeof location === "string" ? document.getElementById(location) : location;
+            newContent = oldContent.cloneNode(false);
+            newContent.innerHTML = html;
+            oldContent.parentNode.replaceChild(newContent, oldContent);
+            return newContent;
+        },
 
-         loadTimepicker: function(callback) {
-         	jQuery.getScript(installFolder+'/javascript/lib/visualscience.jquery.timeentry.js', callback);
-         },
+        loadUploadScripts : function(areaId, callback) {
+          jQuery.getScript(installFolder + '/javascript/lib/visualscience.jquery.form.js');
+      },
 
-         uploadSubmittedFiles : function(tabId) {
-         	var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
-         	var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
-         	var content = '';
-         	if (!vsDatabase.getUploadDB()[tabId]) {
-         		vsDatabase.setUploadDB(tabId, new Array());
-                jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
-                    clearForm : true,
-                    beforeSend : function() {
-                     jQuery('#progress-upload-' + tabId).text('Progress: Preparing File...').css({
-                      'background-color' : 'yellow',
-                      'display' : 'block',
-                      'color' : 'white'
-                  });
-                 },
-                 uploadProgress : function() {
-                     jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
-                 },
-                 success : function(data, textStatus, jqXHR) {
-                    var invisible = data.substring(data.indexOf('</head>'));
-                    jQuery('html').append('<div id="invisible" style="display:none;">' + invisible + '</div>');
-                    jQuery('#invisible').html(jQuery('#invisible .messages').html());
-                    var messages = jQuery('#invisible').text();
+      loadTimepicker: function(callback) {
+          jQuery.getScript(installFolder+'/javascript/lib/visualscience.jquery.timeentry.js', callback);
+      },
+
+      uploadSubmittedFiles : function(tabId) {
+          var nbFilesEntered = parseInt(jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles'));
+          var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
+          var content = '';
+          if (!vsDatabase.getUploadDB()[tabId]) {
+           vsDatabase.setUploadDB(tabId, new Array());
+           jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
+            clearForm : true,
+            beforeSend : function() {
+             jQuery('#progress-upload-' + tabId).text('Progress: Preparing File...').css({
+              'background-color' : 'yellow',
+              'display' : 'block',
+              'color' : 'white'
+          });
+         },
+         uploadProgress : function() {
+             jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
+         },
+         success : function(data, textStatus, jqXHR) {
+            var invisible = data.substring(data.indexOf('</head>'));
+            jQuery('html').append('<div id="invisible" style="display:none;">' + invisible + '</div>');
+            jQuery('#invisible').html(jQuery('#invisible .messages').html());
+            var messages = jQuery('#invisible').text();
                         if (messages.indexOf('Error') != -1) {//Check for errors
                         	jQuery('#progress-upload-' + tabId).text('Upload Failed: ' + messages).css({
                         		'background-color' : 'red'

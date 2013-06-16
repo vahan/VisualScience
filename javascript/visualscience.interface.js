@@ -5,7 +5,7 @@
 
  var vsInterface = (function() {
 
-     var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
+   var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
 
     //This variable checks if the whole tabbed interface has been created yet.
     tabbedInterfaceExists = false;
@@ -190,8 +190,15 @@
                 firstTab.html(tabTitleContent);
             }
             vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
-                //http://blog.stevenlevithan.com/archives/faster-than-innerhtml
-                document.getElementById('visualscience-search-tab-content-' + idOfThisTab).innerHTML = ''; //= content;
+                var fast;
+
+                fast = function fast() {
+                    console.time('fast');
+                    vsUtils.insertFastHTML('visualscience-search-tab-content-' + idOfThisTab, content);
+                    console.timeEnd('fast');
+                };
+                setTimeout(fast, 1);
+
                 vsSearch.makeActionBarMoveable(idOfThisTab);
                 if (searchObject.users.length < vsSearch.nbUsersHideOptions) {
                     setTimeout(function makeSortable() {
