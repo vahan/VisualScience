@@ -105,7 +105,7 @@
                   });
                },
                uploadProgress : function() {
-                   jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
+                   jQuery('#progress-upload-' + tabId).text(vsText.sendingFile).css('background-color', 'orange');
                },
                success : function(data, textStatus, jqXHR) {
                 var invisible = data.substring(data.indexOf('</head>'));
@@ -124,18 +124,18 @@
                         	jQuery('#visualscience-message-attachments-div-show-' + tabId).append(newLine);
                         	jQuery('#upload-form-' + tabId + ' #edit-visualscience-upload-file').attr('nbFiles', nbFilesEntered + 1)
                         	jQuery('#visualscience-message-attachments-div-show-' + tabId).scrollTop(jQuery('#visualscience-message-attachments-div-show-'+tabId)[0].scrollHeight);
-                        	jQuery('#progress-upload-' + tabId).text('File Successfully Uploaded ! You may select another one.').css({
+                        	jQuery('#progress-upload-' + tabId).text(vsText.uploadSuccess).css({
                         		'background-color' : 'green'
                         	});
                         } else {//Improbable, there was an error.
-                        	jQuery('#progress-upload-' + tabId).text('Progress: Upload Unsuccessful. Please Try Again.').css({
+                        	jQuery('#progress-upload-' + tabId).text(vsText.uploadNotSuccessful).css({
                         		'background-color' : 'red'
                         	});
                         }
                         jQuery('#invisible').remove();
                     },
                     error : function(jqXHR, textStatus, errorThrown) {
-                    	jQuery('#progress-upload-' + tabId).text('Progress: Error ' + textStatus + ': ' + errorThrown).css({
+                    	jQuery('#progress-upload-' + tabId).text(vsText.uploadError + textStatus + ': ' + errorThrown).css({
                     		'background-color' : 'red'
                     	});
                     }
@@ -171,12 +171,12 @@ loadCLEditor : function(areaId) {
          	jQuery('#' + location).load(UploadModuleURL + ' #visualscience-upload-form', function(response, status, xhr) {
          		if (status == "error") {
          			if (xhr.status == 403) {
-         				vsInterface.dialog('Please login to be able to send messages.(403)');
-         				jQuery('#' + location).html('<p align="center" font-color="red">Please login to be able to send messages.</p>');
+         				vsInterface.dialog(vsText.loginForMessages);
+         				jQuery('#' + location).html('<p align="center" font-color="red">' + vsText.loginForMessages +'</p>');
          			} else if (xhr.status == 404) {
-         				vsInterface.dialog('Please come back later, there is a problem with the server.(404)');
+         				vsInterface.dialog(vsText.messageServerNotFound);
          			} else {
-         				vsInterface.dialog('An error occured:\n' + 'Status:' + xhr.status + ':\n' + xhr.statusText);
+         				vsInterface.dialog(vsText.messageUnknownError + xhr.status + ':\n' + xhr.statusText);
          			}
          		} else {
          			jQuery('#' + location + ' #edit-submit').hide();
@@ -218,7 +218,7 @@ getJsonOfAttachments : function(thisTabId) {
          */
          getTitleFromUsers : function(selectedUsers) {
          	var nbUsers = selectedUsers.length;
-         	title = (nbUsers > 1 ? nbUsers + ' Users' : selectedUsers[0]);
+         	title = (nbUsers > 1 ? nbUsers + ' ' + vsText.users : selectedUsers[0]);
          	return title;
          },
         /*

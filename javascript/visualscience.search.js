@@ -72,14 +72,14 @@
 		 		var exeCallback = function exeCallback() {
 		 			var actionBar = vsSearch.createActionBar(idOfThisTab);
 		 			var tableUserList = vsSearch.createTableUserList(searchObject, idOfThisTab);
-		 			callback('<h3>User List</h3>' + actionBar + tableUserList);
+		 			callback('<h3>' + vsText.userList + '</h3>' + actionBar + tableUserList);
 		 		};
 		 		var timeout = setTimeout(exeCallback, 1);
 		 	}
 		 	else {
 		 		var actionBar = vsSearch.createActionBar(idOfThisTab);
 		 		var tableUserList = vsSearch.createTableUserList(searchObject, idOfThisTab);
-		 		return '<h3>User List</h3>' + actionBar + tableUserList;
+		 		return '<h3>' + vsText.userList + '</h3>' + actionBar + tableUserList;
 		 	}
 		 },
 
@@ -151,7 +151,7 @@
 		 	emailsArray = [];
 		 	usersId = vsDatabase.getSelectedUsers();
 		 	if (!(vsUserlist.getUserFromId(0).mail)) {
-		 		vsInterface.dialog('The email field has to be enabled to use this function.');
+		 		vsInterface.dialog(vsText.emailNotEnabled);
 		 		return false;
 		 	}
 		 	for (iter=0; iter < usersId.length; iter++) {
@@ -182,7 +182,7 @@
 		 * On the checkbox there is a function that toggles the visibility of the wanted element.
 		 */
 		 getTableUserListOptions : function(fields, idOfThisTab) {
-		 	var divOptions = '<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">';
+		 	var divOptions = '<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">' + vsText.optionsToShow + '</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">';
 		 	jQuery.each(fields, function(i, el) {
 		 		el = el.replace(/<(?:.|\n)*?>/gm, '');
 		 		if (el != '') {

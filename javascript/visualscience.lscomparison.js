@@ -18,11 +18,11 @@ var vsLscomparison = (function() {
 			//Databases to work out
 			db : [idFirstDB, idSecondDB],
 			//Fields of the table. 0:fieldname, 1:function to fill field.
-			fields : [['N° Publications', vsDatabase.getNbPublicationsOfLSDB], ['Journals', vsDatabase.getListJournalsFromLSDB], ['Co-Authors', vsDatabase.getListCoauthorsFromLSDB], ['Period of activity', vsDatabase.getPeriodActivityFromLSDB], ['Top 3 Publications', vsDatabase.getFamousPublicationFromLSDB]]
+			fields : [[vsText.nbPubs, vsDatabase.getNbPublicationsOfLSDB], [vsText.journals, vsDatabase.getListJournalsFromLSDB], [vsText.coauthors, vsDatabase.getListCoauthorsFromLSDB], [vsText.activityPeriod, vsDatabase.getPeriodActivityFromLSDB], [vsText.topPublications, vsDatabase.getFamousPublicationFromLSDB]]
 		};
 
 		var finalTable = getComparisonTableStatistics(idOfThisTab, objectOfStatistics);
-		jQuery('#ls-compare-statistics-' + idOfThisTab).html('<h3>Statistics</h3>' + finalTable);
+		jQuery('#ls-compare-statistics-' + idOfThisTab).html('<h3>' + vsText.statistics + '</h3>' + finalTable);
 		vsUtils.makeTableSortable('ls-compare-statistics-table-' + idOfThisTab);
 	};
 	getComparisonTableStatistics = function(idOfTab, object) {
@@ -99,7 +99,7 @@ var vsLscomparison = (function() {
 		 */
 		 compareLSTabsTogether : function(thisTabId) {
 		 	var selectedTabId = parseInt(jQuery('#comparison-ls-result-' + thisTabId).val());
-		 	var title = 'Comparison Interface';
+		 	var title = vsText.comparisonInterface;
 		 	var idOfThisTab = vsInterface.getTabId();
 		 	vsInterface.addTab('<img src="' + vsUtils.getInstallFolder() + 'images/earth.png" width="13px" alt="image for LivingScience" /> ', title, '#livingscience-tab-' + idOfThisTab);
 		 	createComparisonInterface(idOfThisTab);
@@ -114,7 +114,7 @@ var vsLscomparison = (function() {
 		 */
 		 getListOfTabsForLSComparison : function(thisTabId) {
 		 	var currentTabs = vsLscomparison.getLSTabs(thisTabId);
-		 	var newSelectList = '<option value="nothing">Select a tab...</option>';
+		 	var newSelectList = '<option value="nothing">' + vsText.selectTab + '</option>';
 		 	jQuery(currentTabs).each(function(i) {
 		 		newSelectList += '<option value="' + currentTabs[i][1] + '">' + currentTabs[i][0] + '</option>';
 		 	});

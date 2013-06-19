@@ -107,15 +107,15 @@
 				}
 			}
 
-			var wordResult = 'Result';
+			var wordResult = vsText.result;
 			if (vsDatabase.lsDB[thisTabId].length == 0) {
 				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
-				jQuery('#ls-list-' + thisTabId).html('<p align="center"><strong>There is no result for your search.</strong></p>');
+				jQuery('#ls-list-' + thisTabId).html('<p align="center"><strong>' + vsText.noSearchResult + '</strong></p>');
 			} else if (vsDatabase.lsDB[thisTabId].length == 1) {
 				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 			} else {
 				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
-				wordResult = 'Results';
+				wordResult = ;
 			}
 			jQuery('#search-ls-nb-result-' + thisTabId).html(vsDatabase.lsDB[thisTabId].length + ' ' + wordResult);
 		},
@@ -150,7 +150,7 @@
 			});
 			html += '</ul></div>';
 			var nbJournals = journals.length;
-			return '<p><strong>' + nbJournals + ' Journals</strong></p>' + html;
+			return '<p><strong>' + nbJournals + ' ' + vsText.journals + '</strong></p>' + html;
 		},
 		getListCoauthorsFromLSDB : function(idOfDB) {
 			var allAuthors = new Array();
@@ -181,7 +181,7 @@
 			html += '</ul></div>';
 			var nbOfCoauthors = authors.length;
 
-			return '<p><strong>' + nbOfCoauthors + ' Co-authors</strong></p>' + html;
+			return '<p><strong>' + nbOfCoauthors + ' ' + vsText.coauthors + '</strong></p>' + html;
 		},
 		getPeriodActivityFromLSDB : function(idOfDB) {
 			var min = vsDatabase.lsDBOriginal[idOfDB].min('year');

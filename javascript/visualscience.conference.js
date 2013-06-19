@@ -24,10 +24,10 @@ var vsConference = (function() {
 			title = ' ' + jQuery('#visualscience-recipient-div-content-'+thisTabId+' p a:nth-child(2)').text();
 		}
 		else if (nbRecipients == 0) {
-			title = ' No User';
+			title = ' ' + vsText.noUser;
 		}
 		else {
-			title = ' ' + nbRecipients + ' Users';
+			title = ' ' + nbRecipients + ' ' + vsText.users;
 		}
 		var oldTitle = jQuery('a[href="#conference-tab-' + thisTabId + '"]').text();
 		oldTitle = oldTitle.substring(0, oldTitle.length -1);
@@ -92,7 +92,7 @@ var vsConference = (function() {
 		 			vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
 		 		});
 } else {
-	vsInterface.dialog('Please select at least one user.');
+	vsInterface.dialog(vsText.selectOneUser);
 }
 },
 
@@ -117,7 +117,7 @@ checkAndSendConference: function (thisTabId) {
 
 	}
 	else {
-		vsInterface.dialog('Please double check the form as there seems to be some errors.');
+		vsInterface.dialog(vsText.doubleCheckForm);
 	}
 },
 
@@ -127,7 +127,7 @@ checkConfTitle: function (thisTabId) {
 		return false;
 	}
 	else {
-		jQuery('#vs-conf-title-error-'+thisTabId).text('You have to set a title.');
+		jQuery('#vs-conf-title-error-'+thisTabId).text(vsText.titleError);
 		return true;
 	}
 },
@@ -141,7 +141,7 @@ checkConfDate: function (thisTabId) {
 		return false;
 	}
 	else {
-		jQuery('#vs-conf-date-error-'+thisTabId).text('The conference should be set after today.');
+		jQuery('#vs-conf-date-error-'+thisTabId).text(vsText.confAfterToday);
 		return true;
 	}
 },
@@ -155,7 +155,7 @@ addRecipientForConference : function(thisTabId) {
 		renameConferenceTab(thisTabId);
 		jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
 	} else {
-		vsInterface.dialog('Please enter a valid email');
+		vsInterface.dialog(vsText.enterValidEmail);
 	}
 },
 deleteRecipientToConference : function(thisTabId, entryNb) {

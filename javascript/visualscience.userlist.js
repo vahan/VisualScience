@@ -73,7 +73,7 @@
     			createFullNDDB();
     			vsUserlist.search();
     			store.onquotaerror = function () {
-    				vsInterface.dialog('Oups, the database of users is too large for your browser. This means that every time, we\'ll have to load it from the server. To solve this problem, change the localStorage capacity in the configuration of your browser.', null, null, null, '40%');
+    				vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
     			};
     			store.localStorage('vsSearchDB', searchDB);
     		}
@@ -220,7 +220,7 @@ return {
         reloadUserDatabase: function (from) {
           from = from || 0;
           searchDB = {config:{}, users:[]};
-          vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+          vsInterface.dialog('<br />' + vsText.waitLoadingDB + '<br /><br /><div id="vs-db-loading"></div>', vsText.loadDBTitle, null, function() {
            jQuery('#vs-db-loading').progressbar({
             value: 1
         });
@@ -243,7 +243,7 @@ return {
              vsInterface.closeDialog();
          }
      }];
-     vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
+     vsInterface.dialog(content, vsText.saveSearchTitle, button, undefined, 'auto');
  });
       },
 

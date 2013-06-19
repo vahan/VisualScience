@@ -144,7 +144,7 @@
          			vsMessage.createTabSendMessage(idOfThisTab);
          		}
          		else {
-         			vsInterface.dialog('<p>The script file for messages has failed to load. Please try again a bit later.<p>', 'File Error');
+         			vsInterface.dialog('<p>' + vsText.messageScriptNotLoaded + '<p>', vsText.fileErrorTitle);
          		}
          		break;
          		case 'csv':
@@ -152,7 +152,7 @@
          			vsCSV.exportUsersCSV(idOfThisTab);
          		}
          		else {
-         			vsInterface.dialog('<p>The script file for CSV exportations has failed to load. Please try again a bit later.<p>', 'File Error');
+         			vsInterface.dialog('<p>' + vsText.csvScriptNotLoaded + '<p>', vsText.fileErrorTitle);
          		}
          		break;
          		case 'livingscience':
@@ -160,7 +160,7 @@
          			vsLivingscience.createTabLivingScience(idOfThisTab);
          		}
          		else {
-         			vsInterface.dialog('<p>The scripts file for LivingScience have failed to load. This is may be due to LivingScience being unreachable. Please try again later.<p>', 'File Error');
+         			vsInterface.dialog('<p>' + vsText.livingscienceScriptNotLoaded + '<p>', vsText.fileErrorTitle);
          		}
          		break;
          		case 'conference':
@@ -168,7 +168,7 @@
          			vsConference.createTabConference(idOfThisTab);
          		}
          		else {
-         			vsInterface.dialog('<p>The script file for conferences has failed to load. Please try again a bit later.<p>', 'File Error');
+         			vsInterface.dialog('<p>' + vsText.conferenceScriptNotLoaded + '<p>', vsText.fileErrorTitle);
          		}
          		break;
          	}
@@ -176,7 +176,7 @@
 
          manageNewSearch: function (searchObject) {
             var idOfThisTab = 0;
-            var newTitle = searchObject.searchQuery ? ' Search: '+ searchObject.searchQuery: ' Search';
+            var newTitle = searchObject.searchQuery ? ' ' + vsText.search + ': '+ searchObject.searchQuery: ' ' + vsText.search;
             newTitle = newTitle.length > nameMaxLength ? newTitle.substring(0, nameMaxLength) + '... ' : newTitle;
             if (!tabbedInterfaceExists) {
                 createTabbedInterface(newTitle, idOfThisTab);

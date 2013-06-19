@@ -92,12 +92,12 @@
                  	if (!vsUtils.isLoggedIn()) {
                  		jQuery('#visualscience-send-message-button-'+thisTabId).attr({
                  			disabled: true,
-                 			value: 'Please Login'
+                 			value: vsText.pleaseLogin
                  		});
                  	}
                  });
              } else {
-             	vsInterface.dialog('Please select at least one user.');
+             	vsInterface.dialog(vsText.selectOneUser);
              }
          },
         /*
@@ -115,7 +115,7 @@
          	var recipientsArray = getRecipientsOfMessage(thisTabId);
          	var flagAllDone = false;
          	if (recipientsArray.length < 1) {
-         		vsInterface.dialog('Please insert at least one recipient.');
+         		vsInterface.dialog(vsText.insertOneRecipient);
          		jQuery('#visualscience-send-message-button-' + thisTabId).attr({
          			'value' : 'Send Message',
          			'disabled' : false
@@ -138,7 +138,7 @@
          			type : 'POST',
          			data : jsonObject,
          			error : function(req, msg, obj) {
-         				vsInterface.dialog('An error occured on the server side while sending the message. Please contact the administrator if this happens again.');
+         				vsInterface.dialog(vsText.errorServerSendingMessage);
          				jQuery('#visualscience-send-message-button-' + thisTabId).attr({
          					'value' : 'Re-try now',
          					'disabled' : false
@@ -146,7 +146,7 @@
          			},
          			success : function(data) {
          				if (parseInt(data) != 1) {
-         					vsInterface.dialog('There was a problem while sending the email. Please try again later.');
+         					vsInterface.dialog(vsText.errorSendingMail);
          					jQuery('#visualscience-send-message-button-' + thisTabId).attr({
          						'value' : 'Re-try now',
          						'disabled' : false
@@ -160,7 +160,7 @@
          	}
             while (!flagAllDone);//Barrier to wait until all the requests has been made
             jQuery('#visualscience-send-message-button-' + thisTabId).attr({
-            	'value' : 'Message Sent. Send again ?',
+            	'value' : vsText.messageSent,
             	'disabled' : false
             });
         },
@@ -176,7 +176,7 @@
          		renameMessageTab(thisTabId);
          		jQuery('#visualscience-recipient-div-content-' + thisTabId).scrollTop(jQuery('#visualscience-recipient-div-content-'+thisTabId)[0].scrollHeight);
          	} else {
-         		vsInterface.dialog('Please enter a valid email');
+         		vsInterface.dialog(vsText.enterValidEmail);
          	}
          },
          deleteRecipientToMessage : function(thisTabId, entryNb) {

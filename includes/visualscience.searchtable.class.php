@@ -169,6 +169,7 @@ class Search {
 		if (isset($user->name)) {
 			drupal_add_js(array('username' => $user->name), 'setting');
 		}
+		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.text.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');

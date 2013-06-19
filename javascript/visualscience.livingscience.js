@@ -77,7 +77,7 @@ vsLivingscience = (function() {
 		 			jQuery('#livingscience-tab-' + thisTabId).html(loadingPage(inputs));
 		 		});
 		 	} else {
-		 		vsInterface.dialog('Please select at least one user');
+		 		vsInterface.dialog(vsText.selectOneUser);
 		 	}
 		 },
 		/*
