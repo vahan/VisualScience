@@ -3,9 +3,9 @@
  * File that manages everything linked with the storing of data.
  */
 
-var vsDatabase = (function() {
+ var vsDatabase = (function() {
 
-	var uploadDB, numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
+ 	var selectedUsers, uploadDB, numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
 
 	//This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
 	uploadDB = new Array();
@@ -23,8 +23,31 @@ var vsDatabase = (function() {
 		}
 	};
 
+	selectedUsers = {};
+	window.selected = selectedUsers;
+
 	return {
 		htmlViewsDB : new Array(),
+
+		getSelectedUsers : function() {
+			var iter, userId;
+			var count = 0;
+			for (iter in selectedUsers) {
+				userId = selectedUsers[iter];
+				if (userId) {
+					count++;
+				}
+			}
+			console.log(count + ' users selected.');
+		},
+
+		addSelectedUserId : function(id) {
+			selectedUsers[id] = true;
+		},
+
+		removeSelectedUserId : function(id) {
+			selectedUsers[id] = false;
+		},
 
 		getUploadDB : function() {
 			return uploadDB;

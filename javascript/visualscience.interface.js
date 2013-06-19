@@ -193,9 +193,7 @@
                 var fast;
 
                 fast = function fast() {
-                    console.time('fast');
                     vsUtils.insertFastHTML('visualscience-search-tab-content-' + idOfThisTab, content);
-                    console.timeEnd('fast');
                 };
                 setTimeout(fast, 1);
 

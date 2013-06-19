@@ -61,6 +61,7 @@
          * the parameter idOfTable is the actual id of the table to be sorted.
          * Warning: The first column won't be sortable.(That's the reason for parameter headers:{0...})
          */
+         
          makeTableSortable : function(idOfTable) {
          	jQuery('#' + idOfTable).tablesorter({
          		headers : {
@@ -93,24 +94,24 @@
           var fileList = jQuery('#upload-form-'+tabId+' #edit-visualscience-upload-file')[0];
           var content = '';
           if (!vsDatabase.getUploadDB()[tabId]) {
-           vsDatabase.setUploadDB(tabId, new Array());
-           jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
-            clearForm : true,
-            beforeSend : function() {
-             jQuery('#progress-upload-' + tabId).text('Progress: Preparing File...').css({
-              'background-color' : 'yellow',
-              'display' : 'block',
-              'color' : 'white'
-          });
-         },
-         uploadProgress : function() {
-             jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
-         },
-         success : function(data, textStatus, jqXHR) {
-            var invisible = data.substring(data.indexOf('</head>'));
-            jQuery('html').append('<div id="invisible" style="display:none;">' + invisible + '</div>');
-            jQuery('#invisible').html(jQuery('#invisible .messages').html());
-            var messages = jQuery('#invisible').text();
+             vsDatabase.setUploadDB(tabId, new Array());
+             jQuery('#upload-form-' + tabId + ' #visualscience-upload-form').ajaxForm({
+                clearForm : true,
+                beforeSend : function() {
+                   jQuery('#progress-upload-' + tabId).text('Progress: Preparing File...').css({
+                      'background-color' : 'yellow',
+                      'display' : 'block',
+                      'color' : 'white'
+                  });
+               },
+               uploadProgress : function() {
+                   jQuery('#progress-upload-' + tabId).text('Progress: Sending File... Please Wait.').css('background-color', 'orange');
+               },
+               success : function(data, textStatus, jqXHR) {
+                var invisible = data.substring(data.indexOf('</head>'));
+                jQuery('html').append('<div id="invisible" style="display:none;">' + invisible + '</div>');
+                jQuery('#invisible').html(jQuery('#invisible .messages').html());
+                var messages = jQuery('#invisible').text();
                         if (messages.indexOf('Error') != -1) {//Check for errors
                         	jQuery('#progress-upload-' + tabId).text('Upload Failed: ' + messages).css({
                         		'background-color' : 'red'

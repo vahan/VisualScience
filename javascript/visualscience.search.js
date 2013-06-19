@@ -16,7 +16,7 @@
  		html.push('</tr></thead><tbody>');
  		for (var j=0; j < parameters.users.length; j++) {
  			var user = parameters.users[j];
- 			html.push('<tr class="' + user.type + ' clickable clickToSelect" onClick="vsSearch.selectThisUser(this);" ><td><div class="form-item form-type-checkbox form-item-list-' + user.id + '"><input type="checkbox" name="list[' + user.id + ']" value="' + user.id + '" class="form-checkbox" onClick="vsSearch.selectThisUser(this);" /></div></td>');
+ 			html.push('<tr class="' + user.type + ' clickable clickToSelect" onClick="vsSearch.selectThisUser(' + user.id + ', this);" ><td><div class="form-item form-type-checkbox form-item-list-' + user.id + '"><input type="checkbox" name="list[' + user.id + ']" value="' + user.id + '" class="form-checkbox" onClick="vsSearch.selectThisUser(' + user.id + ', this);" /></div></td>');
  			for (var prop in user.fields) {
  				html.push('<td>' + user.fields[prop] + '</td>');
  			}
@@ -39,7 +39,7 @@
  	return {
  		nbUsersHideOptions : 1000,
 
- 		selectThisUser : function(row, state) {
+ 		selectThisUser : function(userId, row, state) {
  			if (row.nodeName === 'INPUT') {
  				row.checked = !row.checked;
  				return false;
@@ -52,10 +52,12 @@
  			var classes = row.getAttribute('class');
  			if (state) {
  				row.setAttribute('class', classes + ' vsSelectedRow');
+ 				vsDatabase.addSelectedUserId(userId);
  			}
  			else {
  				classes = classes.replace(/vsSelectedRow/g, '');
  				row.setAttribute('class', classes);
+ 				vsDatabase.removeSelectedUserId(userId);
  			}
  		},
 
@@ -252,7 +254,7 @@
 		 	state = master.checked;
 		 	lines = document.getElementById('visualscience-user_list-result-'+idOfThisTab).getElementsByTagName('tr');
 		 	for (var i=1; i < lines.length; i++) {
-		 		vsSearch.selectThisUser(lines[i], state);
+		 		vsSearch.selectThisUser((i-1), lines[i], state);
 		 	}
 		 },
 		/*
