@@ -10,22 +10,22 @@
     var tagMarkNameFields,getFilterFunction, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchFields, getSearchResult, formatFieldTitle;
 
 
- 	maxAutocompleteEntries = 5;
- 	delayBeforeTableCreation = 3000;
- 	maxNumberOfTableEntries = 150;
+    maxAutocompleteEntries = 5;
+    delayBeforeTableCreation = 3000;
+    maxNumberOfTableEntries = 150;
 
- 	sendSearchToSave = function (search) {
- 		console.log('Implement search saving for:' + search);
- 	};
+    sendSearchToSave = function (search) {
+     console.log('Implement search saving for:' + search);
+ };
 
- 	jQuery(document).ready(function() {
- 		if (typeof store != 'undefined' && store('vsSearchDB')) {
- 			searchDB = store('vsSearchDB');
- 			createFullNDDB();
+ jQuery(document).ready(function() {
+     if (typeof store != 'undefined' && store('vsSearchDB')) {
+        searchDB = store('vsSearchDB');
+        createFullNDDB();
 	        //Timeout so that the views have time to load.
             setTimeout(function () {
-             vsUserlist.search();
-         }, delayBeforeTableCreation);
+               vsUserlist.search();
+           }, delayBeforeTableCreation);
         }
         else {
             vsUserlist.reloadUserDatabase();
@@ -205,60 +205,64 @@ startAutoComplete = function (inputId, source) {
 
     return {
 
-    	search: function (type) {
+        getUserFromId: function(id) {
+            return searchNDDB.db[id];
+        },
+
+        search: function (type) {
             var search = document.getElementById('visualscience-search-bar').value || '';
     		// var search = jQuery('#visualscience-search-bar').val() || '';
     		var searchResult = getSearchResult(search, type);
             vsInterface.manageNewSearch(searchResult);
-    	},
+        },
 
-    	reloadUserDatabase: function (from) {
-    		from = from || 0;
-    		searchDB = {config:{}, users:[]};
-    		vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
-    			jQuery('#vs-db-loading').progressbar({
-    				value: 1
-    			});
-    			getSearchDataFromServer(from);
-    		}, '40%', '250');
-    	},
+        reloadUserDatabase: function (from) {
+          from = from || 0;
+          searchDB = {config:{}, users:[]};
+          vsInterface.dialog('<br />Please wait while we load the users database. No worries, it only happens the first time.<br /><br /><div id="vs-db-loading"></div>', 'Loading Users Database', null, function() {
+             jQuery('#vs-db-loading').progressbar({
+                value: 1
+            });
+             getSearchDataFromServer(from);
+         }, '40%', '250');
+      },
 
-    	saveSearch: function () {
-    		var search = jQuery('#visualscience-search-bar').val();
-    		vsInterface.getView('saveSearchDialog.html', function(dialogContent) {
-    			var parameters = {
-    				search: search
-    			}
-    			var content = dialogContent(parameters);
-    			var button = [{
-    				text: 'Save',
-    				click: function () {
-    					var toSaveSearch = jQuery('#visualscience-save-search').val();
-    					sendSearchToSave(toSaveSearch);
-    					vsInterface.closeDialog();
-    				}
-    			}];
-    			vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
-    		});
-    	},
+      saveSearch: function () {
+          var search = jQuery('#visualscience-search-bar').val();
+          vsInterface.getView('saveSearchDialog.html', function(dialogContent) {
+             var parameters = {
+                search: search
+            }
+            var content = dialogContent(parameters);
+            var button = [{
+                text: 'Save',
+                click: function () {
+                   var toSaveSearch = jQuery('#visualscience-save-search').val();
+                   sendSearchToSave(toSaveSearch);
+                   vsInterface.closeDialog();
+               }
+           }];
+           vsInterface.dialog(content, 'Save a Search', button, undefined, 'auto');
+       });
+      },
 
-    	getUsersNamesFromDB: function () {
-    		var names = [];
-    		var users = searchDB.users;
-    		for (var user in users) {
-    			names.push(vsUserlist.getFullName(users[user]));
-    		}
-    		return names;
-    	},
+      getUsersNamesFromDB: function () {
+          var names = [];
+          var users = searchDB.users;
+          for (var user in users) {
+             names.push(vsUserlist.getFullName(users[user]));
+         }
+         return names;
+     },
 
-    	getFullName: function (user) {
-    		if (!user.first) {
-    			return 'anonymous';
-    		}
-    		if (!user.last) {
-    			return user.first;
-    		}
-    		return user.first + ' ' + user.last;
-    	}
-    };
+     getFullName: function (user) {
+      if (!user.first) {
+         return 'anonymous';
+     }
+     if (!user.last) {
+         return user.first;
+     }
+     return user.first + ' ' + user.last;
+ }
+};
 })();

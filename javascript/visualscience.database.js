@@ -30,23 +30,24 @@
 		htmlViewsDB : new Array(),
 
 		getSelectedUsers : function() {
-			var iter, userId;
-			var count = 0;
+			var iter, usersId;
+			usersId = [];
 			for (iter in selectedUsers) {
-				userId = selectedUsers[iter];
-				if (userId) {
-					count++;
+				if (selectedUsers[iter]) {
+					usersId.push(iter);
 				}
 			}
-			console.log(count + ' users selected.');
+			return usersId;
 		},
 
 		addSelectedUserId : function(id) {
 			selectedUsers[id] = true;
+			return true;
 		},
 
 		removeSelectedUserId : function(id) {
 			selectedUsers[id] = false;
+			return true;
 		},
 
 		getUploadDB : function() {
