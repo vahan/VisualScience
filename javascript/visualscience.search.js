@@ -204,23 +204,6 @@
 		 	};
 		 	var divFinalContent = getHTMLSearchTable(parameters);
 		 	return divFinalContent;
-
-
-
-
-
-
-
-		 	// var searchTable = vsInterface.getView('tableUserSearch.html');
-		 	// var parameters = {
-		 	// 	header: searchObject.fields,
-		 	// 	tabId: idOfThisTab,
-		 	// 	users: searchObject.users,
-		 	// 	nbEntries: searchObject.limit,
-		 	// 	displayOptions: searchObject.users.length > vsSearch.nbUsersHideOptions ? false: true
-		 	// };
-		 	// var divFinalContent = searchTable(parameters);
-		 	// return divFinalContent;
 		 },
 		/*
 		 * This function creates the visibility options for the user list search.
