@@ -140,65 +140,26 @@
 		 	}
 
 		 	return completeNamesArray;
-
-		 	// var tableId = 'visualscience-user_list-result-' + idOfTheTab;
-		 	// var completeNamesArray = new Array();
-		 	// var firsts = new Array();
-		 	// var lasts = new Array();
-		 	// if (jQuery('#'+tableId+' .visualscience-search-field-last').length > 0) {
-		 	// 	var nbLastRow = vsUtils.getRowNbWithClass(tableId, 'visualscience-search-field-last');
-		 	// 	jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
-		 	// 		index++;
-		 	// 		if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-		 	// 			var last = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbLastRow+1) + ')').text();
-		 	// 			last = vsUtils.stripSpacesStartEnd(last);
-		 	// 			lasts.push(last);
-		 	// 		}
-		 	// 	});
-		 	// }
-		 	// //firsts, to do anyway
-		 	// var nbFirstRow = vsUtils.getRowNbWithClass(tableId, 'visualscience-search-field-first');
-		 	// jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
-		 	// 	index++;
-		 	// 	if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-		 	// 		var first = jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + (nbFirstRow+1) + ')').text();
-		 	// 		first = vsUtils.stripSpacesStartEnd(first);
-		 	// 		firsts.push(first);
-		 	// 	}
-		 	// });
-		 	// vsUtils.stripSpacesStartEnd();
-		 	// //merging both
-		 	// if (lasts.length > 0) {
-		 	// 	jQuery.each(lasts, function(i, el) {
-		 	// 		completeNamesArray.push(firsts[i]+' '+lasts[i]);
-		 	// 	});
-		 	// }
-		 	// else {
-		 	// 	completeNamesArray = firsts
-		 	// }
-
-		 	// return completeNamesArray;
 		 },
 		/*
 		 * This function gets every selected user's email from the user-list of results.
 		 * It returns an array with the email of each users.
 		 */
 		 getSelectedUsersEmailFromSearchTable : function(idOfTheTab) {
-		 	var tableId = 'visualscience-user_list-result-' + idOfTheTab;
-		 	var firstFieldNumber = vsUtils.getThWithContent(tableId, 'Mail');
-		 	if (firstFieldNumber == -1) {
+
+		 	var usersId, emailsArray, iter, user;
+		 	emailsArray = [];
+		 	usersId = vsDatabase.getSelectedUsers();
+		 	if (!(vsUserlist.getUserFromId(0).mail)) {
 		 		vsInterface.dialog('The email field has to be enabled to use this function.');
 		 		return false;
 		 	}
-		 	var emailArray = new Array();
-		 	jQuery('#' + tableId + ' > tbody > tr').each(function(index) {
-		 		index++;
-				//That's because index will go from 0(no nth-child) to n-1, missing n (interesting)
-				if (jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') input').is(':checked')) {
-					emailArray.push(jQuery('#' + tableId + ' > tbody > tr:nth-child(' + index + ') > td:nth-child(' + firstFieldNumber + ')').text());
-				}
-			});
-		 	return emailArray;
+		 	for (iter=0; iter < usersId.length; iter++) {
+		 		user = vsUserlist.getUserFromId(usersId[iter]);
+		 		emailsArray.push(user.mail);
+		 	}
+
+		 	return emailsArray;
 		 },
 
 		/*
