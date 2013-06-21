@@ -24,7 +24,6 @@
 	};
 
 	selectedUsers = {};
-	window.selected = selectedUsers;
 
 	return {
 		
