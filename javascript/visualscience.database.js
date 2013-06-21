@@ -27,6 +27,7 @@
 	window.selected = selectedUsers;
 
 	return {
+		
 		htmlViewsDB : new Array(),
 
 		getSelectedUsers : function() {
@@ -47,6 +48,11 @@
 
 		removeSelectedUserId : function(id) {
 			selectedUsers[id] = false;
+			return true;
+		},
+
+		resetSelectedUserId : function(id) {
+			selectedUsers = {};
 			return true;
 		},
 
@@ -115,7 +121,7 @@
 				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
 			} else {
 				vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
-				wordResult = ;
+				wordResult = vsText.results;
 			}
 			jQuery('#search-ls-nb-result-' + thisTabId).html(vsDatabase.lsDB[thisTabId].length + ' ' + wordResult);
 		},
