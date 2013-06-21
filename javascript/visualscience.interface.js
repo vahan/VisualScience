@@ -194,6 +194,7 @@
 
                 fast = function fast() {
                     vsUtils.insertFastHTML('visualscience-search-tab-content-' + idOfThisTab, content);
+                    vsSearch.updateActionBar();
                 };
                 setTimeout(fast, 1);
 

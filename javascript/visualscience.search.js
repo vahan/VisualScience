@@ -62,6 +62,7 @@
  				row.setAttribute('class', classes);
  				vsDatabase.removeSelectedUserId(userId);
  			}
+		 	vsSearch.updateActionBar();
  		},
 
 		/*
@@ -200,6 +201,13 @@
 		 	}
 		 	button.setAttribute('onclick', 'vsSearch.showMoreUsers(\'' + table.id +'\', ' + (from + NumberUsersPerPage) + ', this); return false;');
 		 	vsSearch.makeActionBarMoveable(0);
+		 	vsSearch.updateActionBar(from + NumberUsersPerPage);
+		 },
+
+		 updateActionBar: function(nbShown) {
+		 	document.getElementById('action-bar-selected').innerText = vsDatabase.getSelectedUsers().length;
+		 	nbShown = nbShown || NumberUsersPerPage;
+		 	document.getElementById('action-bar-displayed').innerText = nbShown;
 		 },
 
 		/*
