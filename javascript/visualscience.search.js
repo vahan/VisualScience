@@ -201,13 +201,12 @@
 		 	}
 		 	button.setAttribute('onclick', 'vsSearch.showMoreUsers(\'' + table.id +'\', ' + (from + NumberUsersPerPage) + ', this); return false;');
 		 	vsSearch.makeActionBarMoveable(0);
-		 	vsSearch.updateActionBar(from + NumberUsersPerPage);
+		 	vsSearch.updateActionBar();
 		 },
 
-		 updateActionBar: function(nbShown) {
+		 updateActionBar: function() {
 		 	document.getElementById('action-bar-selected').innerText = vsDatabase.getSelectedUsers().length;
-		 	nbShown = nbShown || NumberUsersPerPage;
-		 	document.getElementById('action-bar-displayed').innerText = nbShown;
+		 	document.getElementById('action-bar-displayed').innerText = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
 		 },
 
 		/*

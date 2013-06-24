@@ -292,10 +292,7 @@ getJsonOfAttachments : function(thisTabId) {
          },
 
          stripSpacesStartEnd: function (str) {
-         	if (str) {
-         		return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-         	}
-         	return str+'';
+         	return str.trim();
          }
 
      };

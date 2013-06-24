@@ -4,7 +4,7 @@
  *
  * Note that it also provide the searching functions.
  */
- var currentSearchNDDB, tagMarkNameFields, getFilterFunction, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
+ var currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
 
  var vsUserlist = (function() {
  	"use strict";
@@ -120,7 +120,7 @@
     };
 
     getUsersFor = function (search, fields) {
-    	currentSearchNDDB = searchNDDB.filter(getFilterFunction(search.toLowerCase()));
+    	currentSearchNDDB = getFilteredDatabase(search.toLowerCase());
       var temp, result, el;
       result = currentSearchNDDB.fetch();
       for (el in result) {
@@ -134,53 +134,43 @@
      return result;
    };
 
-   getFilterFunction = function (search) {
-     search = vsUtils.stripSpacesStartEnd(search);
-     if (search == '') {
-      search = 'true';
-    }
-    else {
-      var searchArray = search.split(' ');
-      var word;
-      for (var index in searchArray) {
-       word = searchArray[index];
-       if (word == 'and') {
-        word = '&&';
-      }
-      else if (word == 'or') {
-        word = '||';
-      }
-      else if (word.indexOf('=') != -1) {
-        word = 'el.' + word.replace('=', '== "') + '"';
-      }
-      else {
-        word = 'el.indexOf("'+word+'") != -1';
-      }
-      searchArray[index] = word;
-    }
-    search = searchArray.join(' ');
-  }
-  var funcCode = 'if ('+search+') { return true;} return false;';
-  var filter = new Function('el', funcCode);
-  return filter;
-};
+   getFilteredDatabase = function (search) {
+    var filtered, operators, queries, queryRest, iter, breakQueryInThree;
+    breakQueryInThree = function breakQueryInThree(query) {
+      /*
+      Should break a query like : A=B into ['A', '=', 'B']
+       */
+      var paramters;
+      parameters = [];
+      return 
+    };
+    operators = ['AND', 'and', 'OR', 'or'];
+    queries = JSUS.tokenize(search, operators);
+    filtered = searchNDDB;
+    queryRest = search;
+    filtered.select(breakQueryInThree(queries[0]));
+    for (iter=1; queryRest.indexOf(' ') != -1; iter++) {
 
-tagMarkNameFields = function (fields) {
- var first = searchDB.config.first;
- var last = searchDB.config.last;
- var formattedFields = new Array();
- for (var field in fields) {
-  var formatted = formatFieldTitle(fields[field]);
-  if (fields[field] == first) {
-   formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
- }
- else if (fields[field] == last) {
-   formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
- }
- formattedFields.push(formatted);
+    }
+    return filtered;
+  };
 
-}
-return formattedFields;
+  tagMarkNameFields = function (fields) {
+   var first = searchDB.config.first;
+   var last = searchDB.config.last;
+   var formattedFields = new Array();
+   for (var field in fields) {
+    var formatted = formatFieldTitle(fields[field]);
+    if (fields[field] == first) {
+     formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
+   }
+   else if (fields[field] == last) {
+     formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
+   }
+   formattedFields.push(formatted);
+
+ }
+ return formattedFields;
 };
 
 formatFieldTitle = function (field) {
