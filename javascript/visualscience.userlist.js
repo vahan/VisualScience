@@ -50,15 +50,24 @@
    };
 
    addLikeOperator = function (db) {
+
+    RegExp.escape = function(str) { 
+      return str.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1'); 
+    };
    /*
-    * These lines add the SQL Like operator to an NDDB.
+    * These lines add the SQL Like operator to an NDDB.(Case Insensitive)
     */
     db.query.registerOperator('~', function registerLikeOperator(d, value, comparator) {
+      var regex;
+      regex = value;
+      regex = RegExp.escape(value);
+      regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
+      regex = new RegExp('^' + regex + '$', 'i');
       return function(elem) {
-        if (elem[d].indexOf(value) !== -1) {
+        if (regex.test(elem[d])) {
           return elem;
         }
-      };
+      }
     });
   };
 
@@ -168,7 +177,7 @@
          * the E operator.
          */
          if (operators[iter].indexOf('in') == -1) {
-          search = search.replace(new RegExp('\\s+' + operators[iter] + '\\s+|' + operators[iter], 'g'), ' ' + operators[iter] + ' ');
+          search = search.replace(new RegExp('\\s*' + operators[iter] + '\\s*', 'g'), ' ' + operators[iter] + ' ');
         }
       }
       filtered = searchNDDB.breed();
