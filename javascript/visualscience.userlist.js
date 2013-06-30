@@ -120,7 +120,6 @@
     };
 
     getUsersFor = function (search, fields) {
-       debugger;
     	currentSearchNDDB = getFilteredDatabase(search);
       var temp, result, el;
       result = currentSearchNDDB.fetch();
@@ -150,7 +149,8 @@
     //TODO: Change how the operators are selected.
     debugger;
     for (iter = 0; iter < operators.length -2; iter++) {
-      search = search.replace(new RegExp(' '+operators[iter]+' | '+operators[iter]+'|'+operators[iter]+' |'+operators[iter]+'', 'g'), ' ' + operators[iter] + ' ');
+      search = search.replace(new RegExp('\\s+' + operators[iter] + '\\s+|' + operators[iter], 'g'), ' ' + operators[iter] + ' ');
+      // search = search.replace(new RegExp(' '+operators[iter]+' | '+operators[iter]+'|'+operators[iter]+' |'+operators[iter]+'', 'g'), ' ' + operators[iter] + ' ');
     }
     filtered = searchNDDB.breed();
     queries = search.split(' ');
@@ -165,7 +165,6 @@
       }
 
     }
-    console.log(filtered.execute());
     return filtered.execute();
   };
 
