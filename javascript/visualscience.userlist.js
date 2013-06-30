@@ -137,13 +137,20 @@
 
    getFilteredDatabase = function(search) {
     //Version with spaces everywhere, in lowercase !
-    var queries, filtered, iter;
+    var queries, filtered, iter, operators;
     if (typeof search !== 'string') {
       return searchNDDB.breed();
     }
     search = search.toLowerCase().trim();
     if (search == '') {
       return searchNDDB.breed();
+    }
+    operators = Object.keys(searchNDDB.query.operators);
+    operators[0] = '=';
+    //TODO: Change how the operators are selected.
+    debugger;
+    for (iter = 0; iter < operators.length -2; iter++) {
+      search = search.replace(new RegExp(' '+operators[iter]+' | '+operators[iter]+'|'+operators[iter]+' |'+operators[iter]+'', 'g'), ' ' + operators[iter] + ' ');
     }
     filtered = searchNDDB.breed();
     queries = search.split(' ');
