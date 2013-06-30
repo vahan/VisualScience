@@ -4,7 +4,7 @@
  *
  * Note that it also provide the searching functions.
  */
- var currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
+ var addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
 
  var vsUserlist = (function() {
  	"use strict";
@@ -46,9 +46,23 @@
        searchNDDB.insert(user);
      }
      searchNDDB = searchNDDB.shuffle();
+     addLikeOperator(searchNDDB);
    };
 
-   allRequestHaveArrived = function (total) {
+   addLikeOperator = function (db) {
+   /*
+    * These lines add the SQL Like operator to an NDDB.
+    */
+    db.query.registerOperator('~', function registerLikeOperator(d, value, comparator) {
+      return function(elem) {
+        if (elem[d].indexOf(value) !== -1) {
+          return elem;
+        }
+      };
+    });
+  };
+
+  allRequestHaveArrived = function (total) {
         var threshold = 5; // Should be >= 1 -> anonymous user not counted
         return searchDB.users.length >= total - threshold;
       };
@@ -135,7 +149,6 @@
    };
 
    getFilteredDatabase = function(search) {
-    //Version with spaces everywhere, in lowercase !
     var queries, filtered, iter, operators;
     if (typeof search !== 'string') {
       return searchNDDB.breed();
@@ -146,27 +159,34 @@
     }
     operators = Object.keys(searchNDDB.query.operators);
     operators[0] = '=';
-    //TODO: Change how the operators are selected.
-    debugger;
-    for (iter = 0; iter < operators.length -2; iter++) {
-      search = search.replace(new RegExp('\\s+' + operators[iter] + '\\s+|' + operators[iter], 'g'), ' ' + operators[iter] + ' ');
-      // search = search.replace(new RegExp(' '+operators[iter]+' | '+operators[iter]+'|'+operators[iter]+' |'+operators[iter]+'', 'g'), ' ' + operators[iter] + ' ');
-    }
-    filtered = searchNDDB.breed();
-    queries = search.split(' ');
-    filtered.select(queries[0], queries[1], queries[2]);
-    for (iter = 3; iter < queries.length; iter+= 4) {
-
-      if (queries[iter] === 'and') {
-        filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+    for (iter = 0; iter < operators.length; iter++) {
+        /*
+         * We don't want the the operators containing 'in', as they could 
+         * modify the search query in an unexpected way. 
+         * Example: nameinhelbing -> name in helb in g
+         * That's also why we changed operators[0] = '=', to avoid having 
+         * the E operator.
+         */
+         if (operators[iter].indexOf('in') == -1) {
+          search = search.replace(new RegExp('\\s+' + operators[iter] + '\\s+|' + operators[iter], 'g'), ' ' + operators[iter] + ' ');
+        }
       }
-      else {
-        filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
-      }
+      filtered = searchNDDB.breed();
+      addLikeOperator(filtered);
+      queries = search.split(' ');
+      filtered.select(queries[0], queries[1], queries[2]);
+      for (iter = 3; iter < queries.length; iter+= 4) {
 
-    }
-    return filtered.execute();
-  };
+        if (queries[iter] === 'and') {
+          filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+        }
+        else {
+          filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+        }
+
+      }
+      return filtered.execute();
+    };
 
    // getFilteredDatabase = function (search) {
    //  /*
