@@ -139,8 +139,12 @@
  	margin:10px;
  }
 
+ .vs-userlist-table {
+ 	width: 100%;
+ }
+
  #visualscience-container .vs-userlist-table thead tr th {
- 	color:black;//rgb(213, 22, 17);
+ 	color:black;
  	font-size:13px;
  	padding:5px;
 
