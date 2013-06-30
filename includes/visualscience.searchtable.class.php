@@ -123,9 +123,8 @@ class Search {
 
 	public function getHtmlSearchBar ($searchValue= "") {
 		$safeSearchVal = $this->ensureSearchSafety($searchValue);
-// add onKeyUp="vsUserlist.search();
 		return '<div align="center">
-		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main visualscience-search" id="visualscience-search-bar" " />
+		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main visualscience-search" id="visualscience-search-bar" " onKeyUp="vsUserlist.search();" />
 		<div style="width:98%;" align="left">
 		<p class="visualscience-right" align="right" style="display:inline;max-width:30%;">'.l(t("Help"), "admin/help/visualscience").'</p>
 		<p class="clickable" style="display:inline;max-width:30%;text-align:center;" align="center"><a onClick="vsUserlist.reloadUserDatabase(0);">Reload User Database</a></p>

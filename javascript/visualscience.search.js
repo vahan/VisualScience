@@ -175,7 +175,7 @@
 		 		users: searchObject.users,
 		 		nbEntries: searchObject.limit,
 		 		displayOptions: NumberUsersPerPage > vsSearch.nbUsersHideOptions ? false: true,
-		 		showHowMany: NumberUsersPerPage
+		 		showHowMany: NumberUsersPerPage > searchObject.users.length ? searchObject.users.length : NumberUsersPerPage
 		 	};
 		 	var divFinalContent = getHTMLSearchTable(parameters);
 		 	return divFinalContent;

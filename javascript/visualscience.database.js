@@ -50,7 +50,7 @@
 			return true;
 		},
 
-		resetSelectedUserId : function(id) {
+		resetSelectedUser : function(id) {
 			selectedUsers = {};
 			return true;
 		},
