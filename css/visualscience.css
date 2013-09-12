@@ -102,7 +102,7 @@
  	width:48%;
  	float:right;
  }
- .scrollable {
+ .scrollable:hover {
  	overflow-y:scroll;
  }
  ::-webkit-scrollbar {

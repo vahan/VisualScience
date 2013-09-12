@@ -54,10 +54,28 @@
     RegExp.escape = function(str) { 
       return str.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1'); 
     };
+
+   /*
+    * These lines add the SQL Like operator to an NDDB.(Case Sensitive)
+    */
+    db.query.registerOperator('~s', function registerLikeOperator(d, value, comparator) {
+      var regex;
+      regex = value;
+      regex = RegExp.escape(value);
+      regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
+      regex = new RegExp('^' + regex + '$');
+      return function(elem) {
+        if (regex.test(elem[d])) {
+          return elem;
+        }
+      };
+    });
+
+
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Insensitive)
     */
-    db.query.registerOperator('~', function registerLikeOperator(d, value, comparator) {
+    db.query.registerOperator('~i', function registerLikeOperator(d, value, comparator) {
       var regex;
       regex = value;
       regex = RegExp.escape(value);
@@ -67,7 +85,7 @@
         if (regex.test(elem[d])) {
           return elem;
         }
-      }
+      };
     });
   };
 
@@ -176,106 +194,52 @@
          * That's also why we changed operators[0] = '=', to avoid having 
          * the E operator.
          */
-         if (operators[iter].indexOf('in') == -1) {
+         if (!(/[a-z]/.test(operators[iter]))) {// operators[iter].indexOf('in') == -1
           search = search.replace(new RegExp('\\s*' + operators[iter] + '\\s*', 'g'), ' ' + operators[iter] + ' ');
-        }
       }
-      filtered = searchNDDB.breed();
-      addLikeOperator(filtered);
-      queries = search.split(' ');
-      filtered.select(queries[0], queries[1], queries[2]);
-      for (iter = 3; iter < queries.length; iter+= 4) {
+    }
+    filtered = searchNDDB.breed();
+    addLikeOperator(filtered);
+    queries = search.split(' ');
+    filtered.select(queries[0], queries[1], queries[2]);
+    for (iter = 3; iter < queries.length; iter+= 4) {
 
-        if (queries[iter] === 'and') {
-          filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
-        }
-        else {
-          filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
-        }
-
+      if (queries[iter] === 'and') {
+        filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
       }
-      return filtered.execute();
-    };
+      else {
+        filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+      }
+    }
+    return filtered.execute();
+  };
 
-   // getFilteredDatabase = function (search) {
-   //  /*
-   //   * Notices: You MUST put a space around the operation. Ex: ' = '
-   //   * To correct that, see line if(currentQuery.indexOf()...
-   //     */
-   //    debugger;
-   //     var filtered, operators, queries, queryRest, iter, iter2, operations, usedOperation, currentQuery, splitted, breakQueryInThree;
-   //     if (search == '') {
-   //      return searchNDDB;
-   //    }
-   //    breakQueryInThree = function breakQueryInThree(query, operations) {
-   //      /*
-   //       * What if currentQuery = 'dirk' ? Handle that case !
-   //       */
-   //       var splitted, iter2, usedOperation;
-   //       for (iter2=0; iter2 <  operations.length; iter2++) {
-   //        if (query.indexOf(' ' + operations[iter2] + ' ') !== -1) {
-   //          usedOperation = operations[iter2];
-   //        }
-   //      }
-   //      if (usedOperation == undefined) {
-   //        return [query, 'E', query];
-   //      }
-   //      splitted = query.split(usedOperation);
-   //      return [splitted[0], usedOperation, splitted[1]];
-   //    };
-   //    operators = [' AND ', ' and ', ' OR ', ' or '];
-   //    operations = Object.keys(searchNDDB.query.operators);
-   //    queries = JSUS.tokenize(search, operators);
-   //    filtered = searchNDDB;
-   //    queryRest = search;
-   //    filtered.select(breakQueryInThree(queries[0], operations));
-   //    for (iter=1; iter < queries.length; iter++) {
-   //      currentQuery = queries[iter];
-
-   //      //Getting what operator has been used:
-   //      splitted = breakQueryInThree(currentQuery, operations);
-   //      /*
-   //       * What if currentQuery = 'dirk' ? Handle that case ! -> Check if splitted[1] == undefined
-   //       */
-   //       queryRest = queryRest.substring(queryRest.indexOf(currentQuery) + currentQuery.length);
-   //      //Checking if AND or OR:
-   //      if (queryRest.toLowerCase().indexOf(' and ') < queryRest.toLowerCase().indexOf(' or ')) {
-   //        filtered.and(splitted[0], usedOperation, splitted[1]);
-   //      }
-   //      else {
-   //        filtered.or(splitted[0], usedOperation, splitted[1]);
-   //      }
-   //    }
-
-   //    return filtered.execute();
-   //  };
-
-   tagMarkNameFields = function (fields) {
-     var first = searchDB.config.first;
-     var last = searchDB.config.last;
-     var formattedFields = new Array();
-     for (var field in fields) {
-      var formatted = formatFieldTitle(fields[field]);
-      if (fields[field] == first) {
-       formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
-     }
-     else if (fields[field] == last) {
-       formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
-     }
-     formattedFields.push(formatted);
-
+  tagMarkNameFields = function (fields) {
+   var first = searchDB.config.first;
+   var last = searchDB.config.last;
+   var formattedFields = new Array();
+   for (var field in fields) {
+    var formatted = formatFieldTitle(fields[field]);
+    if (fields[field] == first) {
+     formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
    }
-   return formattedFields;
- };
+   else if (fields[field] == last) {
+     formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
+   }
+   formattedFields.push(formatted);
 
- formatFieldTitle = function (field) {
-   field = field.replace(/_/gi, " ");
-   return field.replace(/\w\S*/g, function(txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  });
- };
+ }
+ return formattedFields;
+};
 
- return {
+formatFieldTitle = function (field) {
+ field = field.replace(/_/gi, " ");
+ return field.replace(/\w\S*/g, function(txt) {
+  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+});
+};
+
+return {
 
   getUserFromId: function(id) {
     return searchNDDB.select('id', '=', id).execute().fetch()[0];
