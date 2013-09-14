@@ -51,8 +51,8 @@
 
    addLikeOperator = function (db) {
 
-    RegExp.escape = function(str) { 
-      return str.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1'); 
+    RegExp.escape = function(str) {
+      return str.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
     };
 
    /*
@@ -63,9 +63,10 @@
       regex = value;
       regex = RegExp.escape(value);
       regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
-      regex = new RegExp('^' + regex + '$');
+      regex = new RegExp('^' + regex + '$', 'g');
+      console.log(regex);
       return function(elem) {
-        if (regex.test(elem[d])) {
+        if (regex.test(elem[d].trim())) {
           return elem;
         }
       };
@@ -96,7 +97,7 @@
 
       getSearchDataFromServer = function (from) {
        jQuery.get(vsUtils.getUsersPath(), {
-        userId: from 
+        userId: from
       }, function(data) {
         var response = jQuery.parseJSON(data);
         jQuery('#vs-db-loading').progressbar({
@@ -155,7 +156,7 @@
       if (firstIndex != -1) {
         fieldsInTable[firstIndex] = 'first';
       }
-      result.users = getUsersFor(search.toLowerCase(), fieldsInTable);
+      result.users = getUsersFor(search, fieldsInTable);
       result.limit = maxNumberOfTableEntries;
       return result;
     };
@@ -180,7 +181,7 @@
     if (typeof search !== 'string') {
       return searchNDDB.breed();
     }
-    search = search.toLowerCase().trim();
+    search = search.trim();
     if (search == '') {
       return searchNDDB.breed();
     }
@@ -204,7 +205,7 @@
     filtered.select(queries[0], queries[1], queries[2]);
     for (iter = 3; iter < queries.length; iter+= 4) {
 
-      if (queries[iter] === 'and') {
+      if (queries[iter].toLowerCase() === 'and') {
         filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
       }
       else {
