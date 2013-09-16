@@ -223,7 +223,9 @@
     for (iter = 3; iter < queries.length; iter += 4) {
 
       debugger;
-
+      /*
+       * WARNING: Only works if the last query is 3-worded.
+       */
       if (queries[iter].toLowerCase() === 'and') {
 
         if (!queries[iter+4] || queries[iter+4].toLowerCase() !== 'and' || queries[iter+4].toLowerCase() !== 'or') {
@@ -238,7 +240,14 @@
       }
       else {
         if (!queries[iter+4] || queries[iter+4].toLowerCase() !== 'and' || queries[iter+4].toLowerCase() !== 'or') {
-
+          filtered = filtered.execute();
+          var test = nddbSelSearchAll(searchNDDB.breed(), queries[iter+1]).diff(filtered);
+          for (var entry in test.db) {
+            filtered.insert(test.db[entry]);
+          }
+          // filtered.insert(filtered.diff());
+          iter -= 2;
+          addLikeOperator(filtered);
         }
         else {
           filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
