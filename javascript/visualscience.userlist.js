@@ -4,7 +4,7 @@
  *
  * Note that it also provide the searching functions.
  */
- var addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
+ var nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
 
  var vsUserlist = (function() {
  	"use strict";
@@ -38,7 +38,7 @@
      * You only need full table, because when fetching you pass the array of fields you are interested in.
      */
      createFullNDDB = function () {
-     	searchNDDB = new NDDB();
+      searchNDDB = new NDDB();
       var user, id;
       for (id in searchDB.users) {
        user = searchDB.users[id];
@@ -64,9 +64,8 @@
       regex = RegExp.escape(value);
       regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
       regex = new RegExp('^' + regex + '$', 'g');
-      console.log(regex);
       return function(elem) {
-        if (regex.test(elem[d].trim())) {
+        if (regex.test(elem[d])) {
           return elem;
         }
       };
@@ -89,7 +88,6 @@
       };
     });
   };
-
   allRequestHaveArrived = function (total) {
         var threshold = 5; // Should be >= 1 -> anonymous user not counted
         return searchDB.users.length >= total - threshold;
@@ -176,18 +174,24 @@
      return result;
    };
 
-   getFilteredDatabase = function(search) {
-    var queries, filtered, iter, operators;
-    if (typeof search !== 'string') {
-      return searchNDDB.breed();
-    }
-    search = search.trim();
-    if (search == '') {
-      return searchNDDB.breed();
-    }
-    operators = Object.keys(searchNDDB.query.operators);
-    operators[0] = '=';
-    for (iter = 0; iter < operators.length; iter++) {
+   /*
+    * To change for general NDDB implementation: 
+    * - searchNDDB
+    * - operators in addLikeOperators
+    * - 
+    */
+    getFilteredDatabase = function(search) {
+      var queries, filtered, iter, operators;
+      if (typeof search !== 'string') {
+        return searchNDDB.breed();
+      }
+      search = search.trim();
+      if (search == '') {
+        return searchNDDB.breed();
+      }
+      operators = Object.keys(searchNDDB.query.operators);
+      operators[0] = '=';
+      for (iter = 0; iter < operators.length; iter++) {
         /*
          * We don't want the the operators containing 'in', as they could 
          * modify the search query in an unexpected way. 
@@ -202,17 +206,67 @@
     filtered = searchNDDB.breed();
     addLikeOperator(filtered);
     queries = search.split(' ');
-    filtered.select(queries[0], queries[1], queries[2]);
-    for (iter = 3; iter < queries.length; iter+= 4) {
+
+
+    // if (!queries[3] || queries[3].toLowerCase() !== 'and' || queries[3].toLowerCase() !== 'or') {
+    //   filtered = nddbSelSearchAll(filtered, queries[0]);
+    //   filtered.or('', '~i', '%'); //Sets filtered in "select" mode and selects everything.
+    // }
+    // else {
+      filtered.select(queries[0], queries[1], queries[2]);
+    // }
+
+
+
+
+
+    for (iter = 3; iter < queries.length; iter += 4) {
+
+      debugger;
 
       if (queries[iter].toLowerCase() === 'and') {
-        filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+
+        if (!queries[iter+4] || queries[iter+4].toLowerCase() !== 'and' || queries[iter+4].toLowerCase() !== 'or') {
+          filtered = filtered.execute();
+          filtered = nddbSelSearchAll(filtered, queries[iter+1]);
+          iter -= 2;
+          addLikeOperator(filtered);
+        }
+        else {
+          filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+        }
       }
       else {
-        filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+        if (!queries[iter+4] || queries[iter+4].toLowerCase() !== 'and' || queries[iter+4].toLowerCase() !== 'or') {
+
+        }
+        else {
+          filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+        }
+
       }
     }
+
+
     return filtered.execute();
+  };
+
+  nddbSelSearchAll = function nddbSelSearchAll (db, query) {
+    var entry, field, result, alreadyIn, regex;
+    result = db.breed().remove();
+    db = db.db;
+    regex = new RegExp('.*' + query + '.*', 'i');
+    for (entry in db) {
+      alreadyIn = false;
+      for (field in db[entry]) {
+        if (!alreadyIn && regex.test(db[entry][field])) {
+          result.insert(db[entry]);
+          alreadyIn = true;
+        }
+      }
+    }
+    addLikeOperator(result);
+    return result;
   };
 
   tagMarkNameFields = function (fields) {
