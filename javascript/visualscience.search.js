@@ -27,14 +27,14 @@
  		}
  		html.push('</tbody></table></div><br /><div align="center"><input type="button" class="vsLongButton" value="' + vsText.addMoreUsers + '" onclick="vsSearch.showMoreUsers(\'visualscience-user_list-result-' + parameters.tabId + '\', ' + parameters.showHowMany + ', this); return false;"  /></div>');
  		//COmment form here until .join() to disable display options.
- 		 if (parameters.displayOptions) {
- 			html.push('<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">');
- 			for (var i=0; i < parameters.header.length; i++) {
- 				var header = parameters.header[i];
- 				html.push('<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + header.replace(/(<([^>]+)>)/ig,"") + '' + parameters.tabId + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + parameters.tabId + '\',\'' + i + '\');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + header.replace(/(<([^>]+)>)/ig,"") + '' + parameters.tabId + '" id="checkbox-visibility-' + header.replace(/(<([^>]+)>)/ig,"") + '' + parameters.tabId + '" />' + header + '</label></div>');
- 			}
- 			html.push('</div></div></fieldset>');
- 		}
+ 		//  if (parameters.displayOptions) {
+ 		// 	html.push('<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">');
+ 		// 	for (var i=0; i < parameters.header.length; i++) {
+ 		// 		var header = parameters.header[i];
+ 		// 		html.push('<div class="form-item form-type-checkbox form-item-user-data-name" style="width:50%; display:inline-block;"><label for="checkbox-visibility-' + header.replace(/(<([^>]+)>)/ig,"") + '' + parameters.tabId + '" class="option"><input type="checkbox" onClick="vsSearch.toggleColNbFromTable(\'visualscience-user_list-result-' + parameters.tabId + '\',\'' + i + '\');" checked="checked" class="form-checkbox" name="checkbox-visibility-' + header.replace(/(<([^>]+)>)/ig,"") + '' + parameters.tabId + '" id="checkbox-visibility-' + header.replace(/(<([^>]+)>)/ig,"") + '' + parameters.tabId + '" />' + header + '</label></div>');
+ 		// 	}
+ 		// 	html.push('</div></div></fieldset>');
+ 		// }
  		html = html.join('');
  		return html;
  	};
