@@ -29,7 +29,6 @@
 	 * Then, thanks to this database, we generate the nice table in the div under the tab.
 	 */
 	 onLivingScienceResults = function(listOfPublications, idDivUnderTab, thisTabId) {
-	 	debugger;
 	 	listOfPublications = lslist.getPubs(listOfPublications);
 	 	if (listOfPublications.length === 0) {
 	 		vsInterface.closeTab('#livingscience-tab-' + thisTabId);
@@ -74,7 +73,7 @@
 		 		selectedUsers = vsSearch.getSelectedUsersFromSearchTable(idOfTheTab);
 		 	}
 		 	for (iter in selectedUsers) {
-		 		if (!selectedUsers || selectedUsers == '') {
+		 		if (!selectedUsers[iter] || selectedUsers[iter].trim() == '') {
 		 			vsInterface.dialog(vsText.userHasNoName, vsText.titleUserNameUndefined);
 		 			return false;
 		 		}

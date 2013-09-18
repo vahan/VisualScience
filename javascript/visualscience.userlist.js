@@ -123,7 +123,7 @@
             var i, len;
             len = d.length;
             for (i = 0; i < len ; i++) {
-              if (regex.test(elem[d])) {
+              if (regex.test(elem[d[i]])) {
                 return elem;
               }
             }
@@ -242,13 +242,13 @@
      * Returns: an NDDB, whose entries have an id, are even or odd and only contains the asked fields.
      */
      getUsersFor = function (search, fields) {
-       currentSearchNDDB = getFilteredDatabase(search);
+       currentSearchNDDB = getFilteredDatabase(search, fields);
        var temp, result, el;
        result = currentSearchNDDB.fetch();
        for (el in result) {
         temp = {
          id: result[el].id,
-         type: el%2 == 0 ? 'even':'odd'
+         type: el%2 === 0 ? 'even':'odd'
        };
        temp.fields = JSUS.subobj(result[el], fields);
        result[el] = temp;
