@@ -21,7 +21,7 @@
     * so that the user can see it directly form the load searches view.
     * (Not implemented yet.)
     */
-   sendSearchToSave = function (search) {
+    sendSearchToSave = function (search) {
      console.log('Implement search saving for:' + search);
    };
 
@@ -59,51 +59,103 @@
     * Adds the SQL Like operator to the NDDB passed as parameter. 
     * It firstly needs to define the a way to escape a strign to put it into a regex.
     */
-   addLikeOperator = function (db) {
+    addLikeOperator = function (db) {
 
-    RegExp.escape = function(str) {
-      return str.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
-    };
+      RegExp.escape = function(str) {
+        return str.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
+      };
 
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Sensitive)
     */
-    db.query.registerOperator('~s', function registerLikeOperator(d, value, comparator) {
-      var regex;
-      regex = value;
-      regex = RegExp.escape(value);
-      regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
-      regex = new RegExp('^' + regex + '$', 'g');
-      return function(elem) {
-        if (regex.test(elem[d])) {
-          return elem;
+    // db.query.registerOperator('~s', function registerLikeOperator(d, value, comparator) {
+      db.addFilter('~s', function registerLikeOperator(d, value, comparator) {
+        var regex;
+        regex = value;
+        regex = RegExp.escape(value);
+        regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
+        regex = new RegExp('^' + regex + '$', 'g');
+        if ('object' === typeof d) {
+          return function(elem) {
+            var i, len;
+            len = d.length;
+            for (i = 0; i < len ; i++) {
+              if (regex.test(elem[d])) {
+                return elem;
+              }
+            }
+          };
         }
-      };
-    });
+        else if (d === '*') {
+          return function(elem) {
+            var d, c;
+            for (d in elem) {
+              c = db.getComparator(d);
+              value[d] = value[0]['*'];
+              if (regex.test(elem[d])) {
+                return elem;
+              }
+            }
+          };
+        }
+        else {
+          return function(elem) {
+            if (regex.test(elem[d])) {
+              return elem;
+            }
+          };
+        }
+      });
 
 
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Insensitive)
     */
-    db.query.registerOperator('~i', function registerLikeOperator(d, value, comparator) {
-      var regex;
-      regex = value;
-      regex = RegExp.escape(value);
-      regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
-      regex = new RegExp('^' + regex + '$', 'i');
-      return function(elem) {
-        if (regex.test(elem[d])) {
-          return elem;
+    // db.query.registerOperator('~i', function registerLikeOperator(d, value, comparator) {
+      db.addFilter('~i', function registerLikeOperator(d, value, comparator) {
+        var regex;
+        regex = value;
+        regex = RegExp.escape(value);
+        regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
+        regex = new RegExp('^' + regex + '$', 'i');
+        if ('object' === typeof d) {
+          return function(elem) {
+            var i, len;
+            len = d.length;
+            for (i = 0; i < len ; i++) {
+              if (regex.test(elem[d])) {
+                return elem;
+              }
+            }
+          };
         }
-      };
-    });
-  };
+        else if (d === '*') {
+          return function(elem) {
+            var d, c;
+            for (d in elem) {
+              c = db.getComparator(d);
+              value[d] = value[0]['*'];
+              if (regex.test(elem[d])) {
+                return elem;
+              }
+            }
+          };
+        }
+        else {
+          return function(elem) {
+            if (regex.test(elem[d])) {
+              return elem;
+            }
+          };
+        }
+      });
+};
 
   /*
    * True if the number of users in the main DB (searchDB) is equal or 
    * greater than the number of users on the server.
    */
-  allRequestHaveArrived = function (total) {
+   allRequestHaveArrived = function (total) {
         var threshold = 5; // Should be >= 1 -> anonymous user not counted
         return searchDB.users.length >= total - threshold;
       };
@@ -112,40 +164,40 @@
        * Gets Users form the server's DB, stores them asynchornuously into a variable and
        * tries to store them into the localStorage of the browser. (Throws exception if it can't.) 
        */
-      getSearchDataFromServer = function (from) {
-       jQuery.get(vsUtils.getUsersPath(), {
-        userId: from
-      }, function(data) {
-        var response = jQuery.parseJSON(data);
-        jQuery('#vs-db-loading').progressbar({
-         value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
-       });
-        if (response.from == 0) {
-         for (var i = response.howMany; i < response.total; i += response.howMany) {
-          getSearchDataFromServer(i);
+       getSearchDataFromServer = function (from) {
+         jQuery.get(vsUtils.getUsersPath(), {
+          userId: from
+        }, function(data) {
+          var response = jQuery.parseJSON(data);
+          jQuery('#vs-db-loading').progressbar({
+           value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
+         });
+          if (response.from == 0) {
+           for (var i = response.howMany; i < response.total; i += response.howMany) {
+            getSearchDataFromServer(i);
+          }
         }
+        for (var user in response.users) {
+         searchDB.users.push(response.users[user]);
+       }
+       if (allRequestHaveArrived(response.total)) {
+         vsInterface.closeDialog();
+         searchDB.config = response.config;
+         createFullNDDB();
+         vsUserlist.search();
+         store.onquotaerror = function () {
+          vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
+        };
+        store.localStorage('vsSearchDB', searchDB);
       }
-      for (var user in response.users) {
-       searchDB.users.push(response.users[user]);
-     }
-     if (allRequestHaveArrived(response.total)) {
-       vsInterface.closeDialog();
-       searchDB.config = response.config;
-       createFullNDDB();
-       vsUserlist.search();
-       store.onquotaerror = function () {
-        vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
-      };
-      store.localStorage('vsSearchDB', searchDB);
-    }
-  });
-     };
+    });
+       };
 
      /*
       * Initializes and enables the autocomplete feature.
       * (Not usefull yet and never called in document.ready())
       */
-     startAutoComplete = function (inputId, source) {
+      startAutoComplete = function (inputId, source) {
        source = source || vsUserlist.getUsersNamesFromDB();
        inputId = inputId || 'visualscience-search-bar';
        jQuery('#'+inputId).autocomplete({
@@ -164,17 +216,17 @@
       * Input: search string and whether it is a full (type = 0) or minimum search
       * Returns: An NDDB, with the search results, and the good type of fields, ready to be printed.
       */
-    getSearchResult = function (search, type) {
-    	type = type || 1;
-    	var result = {};
-      var fieldsInTable = vsUserlist.getSearchFields(type);
-      result.fields = fieldsInTable;
-      result.fields = tagMarkNameFields(result.fields);
-      result.users = [];
-      result.searchQuery = search;
-      var lastIndex = fieldsInTable.indexOf(searchDB.config.last);
-      var firstIndex = fieldsInTable.indexOf(searchDB.config.first);
-      if (lastIndex != -1) {
+      getSearchResult = function (search, type) {
+       type = type || 1;
+       var result = {};
+       var fieldsInTable = vsUserlist.getSearchFields(type);
+       result.fields = fieldsInTable;
+       result.fields = tagMarkNameFields(result.fields);
+       result.users = [];
+       result.searchQuery = search;
+       var lastIndex = fieldsInTable.indexOf(searchDB.config.last);
+       var firstIndex = fieldsInTable.indexOf(searchDB.config.first);
+       if (lastIndex != -1) {
         fieldsInTable[lastIndex] = 'last';
       }
       if (firstIndex != -1) {
@@ -189,11 +241,11 @@
      * Input: Search string and fields to show
      * Returns: an NDDB, whose entries have an id, are even or odd and only contains the asked fields.
      */
-    getUsersFor = function (search, fields) {
-    	currentSearchNDDB = getFilteredDatabase(search);
-      var temp, result, el;
-      result = currentSearchNDDB.fetch();
-      for (el in result) {
+     getUsersFor = function (search, fields) {
+       currentSearchNDDB = getFilteredDatabase(search);
+       var temp, result, el;
+       result = currentSearchNDDB.fetch();
+       for (el in result) {
         temp = {
          id: result[el].id,
          type: el%2 == 0 ? 'even':'odd'
@@ -206,13 +258,14 @@
 
    /*
     * This function receives the search string and returns the results from the search in the main searchNDDB, in a cloned variable.
+    * The optional parameter fields(is an array) specifies which fields to make the search on. If not defined, the search will be on evry fields.(Default)
     * 
     *  To change for general NDDB implementation: 
     * - searchNDDB
     * - operators in addLikeOperators
     * - like-operation symbols in the code (ie, ~i and ~s)
     */
-    getFilteredDatabase = function(search) {
+    getFilteredDatabase = function(search, fields) {
       var queries, filtered, iter, operators, wildcard;
       if (typeof search !== 'string') {
         return searchNDDB.breed();
@@ -221,7 +274,8 @@
       if (search == '') {
         return searchNDDB.breed();
       }
-      operators = Object.keys(searchNDDB.query.operators);
+      wildcard = fields || '*';
+      operators = Object.keys(searchNDDB.filters);
       operators[0] = '=';
       for (iter = 0; iter < operators.length; iter++) {
         /*
@@ -238,62 +292,6 @@
     filtered = searchNDDB.breed();
     addLikeOperator(filtered);
     queries = search.split(' ');
-
-    // if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
-    //   filtered = nddbSelSearchAll(filtered, queries[0]);
-    //   filtered.select('mail', '~i', '%');
-    //   iter = 1;
-    // }
-    // else {
-    //   filtered.select(queries[0], queries[1], queries[2]);
-    //   iter = 3;
-    // }
-
-
-
-
-
-    // for ( ;iter < queries.length; iter += 4) {
-
-    //   debugger;
-    //   /*
-    //    * WARNING: Only works if the last query is 3-worded.
-    //    * Try to remove the addLikeOperator, it should work !
-    //    */
-    //    if (queries[iter].toLowerCase() === 'and') {
-
-    //     if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
-    //       filtered = filtered.execute();
-    //       filtered = nddbSelSearchAll(filtered, queries[iter+1]);
-    //       iter -= 2;
-    //       addLikeOperator(filtered);
-    //       filtered.select('mail', '~i', '%');
-    //     }
-    //     else {
-    //       filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
-    //     }
-    //   }
-    //   else {
-    //     if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
-    //       filtered = filtered.execute();
-    //       var test = nddbSelSearchAll(searchNDDB.breed(), queries[iter+1]);
-    //       test = test.diff(filtered);
-    //       for (var entry in test.db) {
-    //         filtered.insert(test.db[entry]);
-    //       }
-    //       iter -= 2;
-    //       addLikeOperator(filtered);
-    //       filtered.select('mail', '~i', '%');
-    //     }
-    //     else {
-    //       filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
-    //     }
-
-    //   }
-    // }
-    // 
-    
-    wildcard = '*';
     if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
       filtered.select(wildcard, '~i', '%' + queries[0] + '%');
       iter = 1;
@@ -327,24 +325,6 @@
   }
   return filtered.execute();
 };
-
-// nddbSelSearchAll = function nddbSelSearchAll (db, query) {
-//   var entry, field, result, alreadyIn, regex;
-//   result = db.breed().remove();
-//   db = db.db;
-//   regex = new RegExp('.*' + query + '.*', 'i');
-//   for (entry in db) {
-//     alreadyIn = false;
-//     for (field in db[entry]) {
-//       if (!alreadyIn && regex.test(db[entry][field])) {
-//         result.insert(db[entry]);
-//         alreadyIn = true;
-//       }
-//     }
-//   }
-//   addLikeOperator(result);
-//   return result;
-// };
 
 tagMarkNameFields = function (fields) {
  var first = searchDB.config.first;
