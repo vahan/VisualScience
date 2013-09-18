@@ -131,7 +131,7 @@ function visualscience_config_page($clear = TRUE) {
 function visualscience_users() {
   $search = new Search;
   $from = intval($_GET['userId']);
-  $database = $search->getUsersEntries($from, variable_get('visualscience_nuser_loaded', VISUALSCIENCE_NUSER_LOADED));
+  $database = $search->getUsersEntries($from, variable_get('visualscience_user_sent_per_ajax_request', 1000));
   echo $database;
 }
 

@@ -155,6 +155,9 @@ return $schema;
  */
 function visualscience_uninstall() {
   drupal_uninstall_schema('visualscience');
+  //deleting the previously set persistent variables 
+  variable_del('visualscience_user_sent_per_ajax_request');
+  variable_del('visualscience_user_per_search_page');
 }
 
 /**
@@ -212,12 +215,14 @@ function visualscience_install() {
   if ((isset($exist_first) || isset($exist_first_field)) && (isset($exist_last) || isset($exist_last_field))) {
     drupal_write_record('visualscience_search_config', $first);
     drupal_write_record('visualscience_search_config', $last);
-
   }
   else {
     drupal_write_record('visualscience_search_config', $name);
     drupal_write_record('visualscience_search_config', $roles);
   }
+  drupal_write_record('visualscience_search_config', $mail);
 
-    drupal_write_record('visualscience_search_config', $mail);
+  //Setting some persistent variables that can be changed in the config page.
+  variable_set('visualscience_user_sent_per_ajax_request', 1000);
+  variable_set('visualscience_user_per_search_page', 150);
 }

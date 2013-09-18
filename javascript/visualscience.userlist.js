@@ -165,33 +165,37 @@
        * tries to store them into the localStorage of the browser. (Throws exception if it can't.) 
        */
        getSearchDataFromServer = function (from) {
-         jQuery.get(vsUtils.getUsersPath(), {
-          userId: from
-        }, function(data) {
-          var response = jQuery.parseJSON(data);
-          jQuery('#vs-db-loading').progressbar({
-           value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
-         });
-          if (response.from == 0) {
-           for (var i = response.howMany; i < response.total; i += response.howMany) {
-            getSearchDataFromServer(i);
+         jQuery.get(
+          vsUtils.getUsersPath(), 
+          {
+            userId: from
+          }, 
+          function(data) {
+            var response = jQuery.parseJSON(data);
+            jQuery('#vs-db-loading').progressbar({
+             value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
+           });
+            if (response.from == 0) {
+             for (var i = response.howMany; i < response.total; i += response.howMany) {
+              getSearchDataFromServer(i);
+            }
           }
+          for (var user in response.users) {
+           searchDB.users.push(response.users[user]);
+         }
+         if (allRequestHaveArrived(response.total)) {
+          maxNumberOfTableEntries = response.nbUsersPerPage;
+          vsInterface.closeDialog();
+          searchDB.config = response.config;
+          createFullNDDB();
+          vsUserlist.search();
+          store.onquotaerror = function () {
+            vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
+          };
+          store.localStorage('vsSearchDB', searchDB);
         }
-        for (var user in response.users) {
-         searchDB.users.push(response.users[user]);
-       }
-       if (allRequestHaveArrived(response.total)) {
-         vsInterface.closeDialog();
-         searchDB.config = response.config;
-         createFullNDDB();
-         vsUserlist.search();
-         store.onquotaerror = function () {
-          vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
-        };
-        store.localStorage('vsSearchDB', searchDB);
-      }
-    });
-       };
+      });
+};
 
      /*
       * Initializes and enables the autocomplete feature.
