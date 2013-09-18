@@ -350,8 +350,10 @@ return {
   },
 
   search: function (type) {
-    var search = document.getElementById('visualscience-search-bar').value || '';
-    var searchResult = getSearchResult(search, type);
+    var search, searchResult;
+    search = document.getElementById('visualscience-search-bar').value || '';
+    searchResult = getSearchResult(search, type);
+    vsDatabase.resetSelectedUser();
     vsInterface.manageNewSearch(searchResult);
   },
 
