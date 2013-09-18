@@ -191,8 +191,9 @@ class Search {
 		$fields = $this->getFieldsFromConfig();
 		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
 		$total = $this->getCountOfUsers();
+		$nbUsersPerPage = $from == 0 ? variable_get('visualscience_user_per_search_page', 150) : 150;
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
-		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .variable_get('visualscience_user_per_search_page', 150). ' "total": '.$total.'}';
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "total": '.$total.'}';
 		return $searchDB;
 	}
 }

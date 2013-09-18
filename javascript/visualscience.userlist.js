@@ -4,11 +4,10 @@
  *
  * Note that it also provide the searching functions.
  */
- var nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
-
  var vsUserlist = (function() {
  	"use strict";
 
+   var nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
 
 
    maxAutocompleteEntries = 5;
@@ -166,7 +165,7 @@
        */
        getSearchDataFromServer = function (from) {
          jQuery.get(
-          vsUtils.getUsersPath(), 
+          vsUtils.getUsersPath(),
           {
             userId: from
           }, 
@@ -176,25 +175,25 @@
              value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
            });
             if (response.from == 0) {
-             for (var i = response.howMany; i < response.total; i += response.howMany) {
-              getSearchDataFromServer(i);
+              maxNumberOfTableEntries = response.nbUsersPerPage;
+              for (var i = response.howMany; i < response.total; i += response.howMany) {
+                getSearchDataFromServer(i);
+              }
             }
+            for (var user in response.users) {
+             searchDB.users.push(response.users[user]);
+           }
+           if (allRequestHaveArrived(response.total)) {
+            vsInterface.closeDialog();
+            searchDB.config = response.config;
+            createFullNDDB();
+            vsUserlist.search();
+            store.onquotaerror = function () {
+              vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
+            };
+            store.localStorage('vsSearchDB', searchDB);
           }
-          for (var user in response.users) {
-           searchDB.users.push(response.users[user]);
-         }
-         if (allRequestHaveArrived(response.total)) {
-          maxNumberOfTableEntries = response.nbUsersPerPage;
-          vsInterface.closeDialog();
-          searchDB.config = response.config;
-          createFullNDDB();
-          vsUserlist.search();
-          store.onquotaerror = function () {
-            vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
-          };
-          store.localStorage('vsSearchDB', searchDB);
-        }
-      });
+        });
 };
 
      /*
@@ -359,6 +358,10 @@ return {
 
   totalNumberOfUsers: function totalNumberOfUsers () {
     return searchNDDB.count();
+  },
+
+  getNumberUsersPerPage: function getNumberUsersPerPage () {
+    return maxNumberOfTableEntries;
   },
 
   getUserFromId: function(id) {

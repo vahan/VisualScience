@@ -5,9 +5,7 @@
  * Note: For searching users functionnalities, you have to check userlist.js
  */
  var vsSearch = (function() {
- 	var getHTMLSearchTable, NumberUsersPerPage;
-
- 	NumberUsersPerPage = 150;
+ 	var getHTMLSearchTable;
 
  	getHTMLSearchTable = function getHTMLSearchTable(parameters) {
  		var html = [];
@@ -175,8 +173,8 @@
 		 		tabId: idOfThisTab,
 		 		users: searchObject.users,
 		 		nbEntries: searchObject.limit,
-		 		displayOptions: NumberUsersPerPage > vsSearch.nbUsersHideOptions ? false: true,
-		 		showHowMany: NumberUsersPerPage > searchObject.users.length ? searchObject.users.length : NumberUsersPerPage
+		 		displayOptions: vsUserlist.getNumberUsersPerPage() > vsSearch.nbUsersHideOptions ? false: true,
+		 		showHowMany: vsUserlist.getNumberUsersPerPage() > searchObject.users.length ? searchObject.users.length : vsUserlist.getNumberUsersPerPage()
 		 	};
 		 	var divFinalContent = getHTMLSearchTable(parameters);
 		 	return divFinalContent;
@@ -185,7 +183,7 @@
 
 		 showMoreUsers: function(table, from, button) {
 		 	var tbody, nbRows, users, user, i, j, row, cell, actionbarContainer;
-		 	users = vsUserlist.getCurrentUsersFrom(from, NumberUsersPerPage);
+		 	users = vsUserlist.getCurrentUsersFrom(from, vsUserlist.getNumberUsersPerPage());
 		 	table = document.getElementById(table)
 		 	tbody = table.getElementsByTagName('tbody')[0];
 		 	for (i=0; i < users.length; i++) {
@@ -200,7 +198,7 @@
 		 		row.setAttribute('onclick', 'vsSearch.selectThisUser(' + (user.id) + ', this); return false;');
 		 		row.innerHTML = cell;
 		 	}
-		 	button.setAttribute('onclick', 'vsSearch.showMoreUsers(\'' + table.id +'\', ' + (from + NumberUsersPerPage) + ', this); return false;');
+		 	button.setAttribute('onclick', 'vsSearch.showMoreUsers(\'' + table.id +'\', ' + (from + vsUserlist.getNumberUsersPerPage()) + ', this); return false;');
 		 	vsSearch.makeActionBarMoveable(0);
 		 	vsSearch.updateActionBar();
 		 },
