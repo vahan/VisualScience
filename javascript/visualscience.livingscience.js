@@ -3,9 +3,9 @@
  * File that manages everything linked with the Livingscience tab.
  */
 
-var vsLivingscience;
-vsLivingscience = (function() {
-	var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
+ var vsLivingscience;
+ vsLivingscience = (function() {
+ 	var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
 	// We have to wait until the livingscience.nocache.js file is loaded.
 	jQuery(window).load(function() {	
 		//Object to instatiate the livingscience results (Thanks to this, you will be able to have the ls results) /!\ Needs to be loaded after the file livingscience.nocache.js
@@ -29,9 +29,16 @@ vsLivingscience = (function() {
 	 * Then, thanks to this database, we generate the nice table in the div under the tab.
 	 */
 	 onLivingScienceResults = function(listOfPublications, idDivUnderTab, thisTabId) {
+	 	debugger;
+	 	listOfPublications = lslist.getPubs(listOfPublications);
+	 	if (listOfPublications.length === 0) {
+	 		vsInterface.closeTab('#livingscience-tab-' + thisTabId);
+	 		vsInterface.dialog(vsText.lsNoResult, vsText.lsNoResultTitle);
+	 		return false;
+	 	}
 	 	jQuery('#' + idDivUnderTab).empty();
 	 	vsDatabase.db = new NDDB(vsDatabase.getOptionsForNDDB());
-	 	vsDatabase.db.importDB(lslist.getPubs(listOfPublications));
+	 	vsDatabase.db.importDB(listOfPublications);
 	 	vsDatabase.lsDB[thisTabId] = vsDatabase.db;
 	 	vsDatabase.lsDBOriginal[thisTabId] = vsDatabase.db;
 	 	vsLivingscience.generateLivingScienceFromDB(vsDatabase.lsDB[thisTabId], idDivUnderTab, thisTabId);
@@ -62,8 +69,15 @@ vsLivingscience = (function() {
 		 * is usefull when you already know which are the selected users and is a string separated with ORs (and only ORs).
 		 */
 		 createTabLivingScience : function(idOfTheTab, selectedUsers) {
+		 	var iter;
 		 	if (selectedUsers == undefined) {
 		 		selectedUsers = vsSearch.getSelectedUsersFromSearchTable(idOfTheTab);
+		 	}
+		 	for (iter in selectedUsers) {
+		 		if (!selectedUsers || selectedUsers == '') {
+		 			vsInterface.dialog(vsText.userHasNoName, vsText.titleUserNameUndefined);
+		 			return false;
+		 		}
 		 	}
 		 	if (selectedUsers.length > 0) {
 		 		var title = vsUtils.getTitleFromUsers(selectedUsers);
@@ -76,7 +90,8 @@ vsLivingscience = (function() {
 		 			var inputs = {installFolder: vsUtils.getInstallFolder()};
 		 			jQuery('#livingscience-tab-' + thisTabId).html(loadingPage(inputs));
 		 		});
-		 	} else {
+		 	} 
+		 	else {
 		 		vsInterface.dialog(vsText.selectOneUser);
 		 	}
 		 },
@@ -104,7 +119,7 @@ vsLivingscience = (function() {
 		 		setWidthForMapsAndRelations('ls-list-' + thisTabId, 'ls-map-' + thisTabId, 'ls-relations-' + thisTabId);
 		 		vsDatabase.setParametersForLSDB(thisTabId);
 		 		vsLivingscience.actualizeLivingScienceDisplay(database, thisTabId);
-	 		});
+		 	});
 		 },
 		/*
 		 * Actualizes the display of a LivingScience result.
