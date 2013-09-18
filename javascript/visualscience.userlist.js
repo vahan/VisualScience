@@ -15,6 +15,12 @@
    delayBeforeTableCreation = 3000;
    maxNumberOfTableEntries = 150;
 
+   /*
+    * Saves a user-defined search into the server, only for this user. 
+    * Don't forget to add it to the list of saved searches, 
+    * so that the user can see it directly form the load searches view.
+    * (Not implemented yet.)
+    */
    sendSearchToSave = function (search) {
      console.log('Implement search saving for:' + search);
    };
@@ -49,6 +55,10 @@
      addLikeOperator(searchNDDB);
    };
 
+   /*
+    * Adds the SQL Like operator to the NDDB passed as parameter. 
+    * It firstly needs to define the a way to escape a strign to put it into a regex.
+    */
    addLikeOperator = function (db) {
 
     RegExp.escape = function(str) {
@@ -88,11 +98,20 @@
       };
     });
   };
+
+  /*
+   * True if the number of users in the main DB (searchDB) is equal or 
+   * greater than the number of users on the server.
+   */
   allRequestHaveArrived = function (total) {
         var threshold = 5; // Should be >= 1 -> anonymous user not counted
         return searchDB.users.length >= total - threshold;
       };
 
+      /*
+       * Gets Users form the server's DB, stores them asynchornuously into a variable and
+       * tries to store them into the localStorage of the browser. (Throws exception if it can't.) 
+       */
       getSearchDataFromServer = function (from) {
        jQuery.get(vsUtils.getUsersPath(), {
         userId: from
@@ -122,6 +141,10 @@
   });
      };
 
+     /*
+      * Initializes and enables the autocomplete feature.
+      * (Not usefull yet and never called in document.ready())
+      */
      startAutoComplete = function (inputId, source) {
        source = source || vsUserlist.getUsersNamesFromDB();
        inputId = inputId || 'visualscience-search-bar';
@@ -137,7 +160,10 @@
      });
      };
 
-    // type = 0 ->full
+     /*
+      * Input: search string and whether it is a full (type = 0) or minimum search
+      * Returns: An NDDB, with the search results, and the good type of fields, ready to be printed.
+      */
     getSearchResult = function (search, type) {
     	type = type || 1;
     	var result = {};
@@ -159,6 +185,10 @@
       return result;
     };
 
+    /*
+     * Input: Search string and fields to show
+     * Returns: an NDDB, whose entries have an id, are even or odd and only contains the asked fields.
+     */
     getUsersFor = function (search, fields) {
     	currentSearchNDDB = getFilteredDatabase(search);
       var temp, result, el;
@@ -175,10 +205,12 @@
    };
 
    /*
-    * To change for general NDDB implementation: 
+    * This function receives the search string and returns the results from the search in the main searchNDDB, in a cloned variable.
+    * 
+    *  To change for general NDDB implementation: 
     * - searchNDDB
     * - operators in addLikeOperators
-    * - 
+    * - like-operation symbols in the code (ie, ~i and ~s)
     */
     getFilteredDatabase = function(search) {
       var queries, filtered, iter, operators, wildcard;
@@ -296,23 +328,23 @@
   return filtered.execute();
 };
 
-nddbSelSearchAll = function nddbSelSearchAll (db, query) {
-  var entry, field, result, alreadyIn, regex;
-  result = db.breed().remove();
-  db = db.db;
-  regex = new RegExp('.*' + query + '.*', 'i');
-  for (entry in db) {
-    alreadyIn = false;
-    for (field in db[entry]) {
-      if (!alreadyIn && regex.test(db[entry][field])) {
-        result.insert(db[entry]);
-        alreadyIn = true;
-      }
-    }
-  }
-  addLikeOperator(result);
-  return result;
-};
+// nddbSelSearchAll = function nddbSelSearchAll (db, query) {
+//   var entry, field, result, alreadyIn, regex;
+//   result = db.breed().remove();
+//   db = db.db;
+//   regex = new RegExp('.*' + query + '.*', 'i');
+//   for (entry in db) {
+//     alreadyIn = false;
+//     for (field in db[entry]) {
+//       if (!alreadyIn && regex.test(db[entry][field])) {
+//         result.insert(db[entry]);
+//         alreadyIn = true;
+//       }
+//     }
+//   }
+//   addLikeOperator(result);
+//   return result;
+// };
 
 tagMarkNameFields = function (fields) {
  var first = searchDB.config.first;
