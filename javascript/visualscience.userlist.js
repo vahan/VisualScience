@@ -181,7 +181,7 @@
     * - 
     */
     getFilteredDatabase = function(search) {
-      var queries, filtered, iter, operators;
+      var queries, filtered, iter, operators, wildcard;
       if (typeof search !== 'string') {
         return searchNDDB.breed();
       }
@@ -199,7 +199,7 @@
          * That's also why we changed operators[0] = '=', to avoid having 
          * the E operator.
          */
-         if (!(/[a-z]/.test(operators[iter]))) {// operators[iter].indexOf('in') == -1
+         if (!(/[a-z]/.test(operators[iter]))) { // operators[iter].indexOf('in') == -1
           search = search.replace(new RegExp('\\s*' + operators[iter] + '\\s*', 'g'), ' ' + operators[iter] + ' ');
       }
     }
@@ -207,93 +207,129 @@
     addLikeOperator(filtered);
     queries = search.split(' ');
 
-
-    // if (!queries[3] || queries[3].toLowerCase() !== 'and' || queries[3].toLowerCase() !== 'or') {
+    // if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
     //   filtered = nddbSelSearchAll(filtered, queries[0]);
-    //   filtered.or('', '~i', '%'); //Sets filtered in "select" mode and selects everything.
+    //   filtered.select('mail', '~i', '%');
+    //   iter = 1;
     // }
     // else {
-      filtered.select(queries[0], queries[1], queries[2]);
+    //   filtered.select(queries[0], queries[1], queries[2]);
+    //   iter = 3;
     // }
 
 
 
 
 
-    for (iter = 3; iter < queries.length; iter += 4) {
+    // for ( ;iter < queries.length; iter += 4) {
 
-      debugger;
-      /*
-       * WARNING: Only works if the last query is 3-worded.
-       */
-      if (queries[iter].toLowerCase() === 'and') {
+    //   debugger;
+    //   /*
+    //    * WARNING: Only works if the last query is 3-worded.
+    //    * Try to remove the addLikeOperator, it should work !
+    //    */
+    //    if (queries[iter].toLowerCase() === 'and') {
 
-        if (!queries[iter+4] || queries[iter+4].toLowerCase() !== 'and' || queries[iter+4].toLowerCase() !== 'or') {
-          filtered = filtered.execute();
-          filtered = nddbSelSearchAll(filtered, queries[iter+1]);
-          iter -= 2;
-          addLikeOperator(filtered);
-        }
-        else {
-          filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
-        }
+    //     if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+    //       filtered = filtered.execute();
+    //       filtered = nddbSelSearchAll(filtered, queries[iter+1]);
+    //       iter -= 2;
+    //       addLikeOperator(filtered);
+    //       filtered.select('mail', '~i', '%');
+    //     }
+    //     else {
+    //       filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+    //     }
+    //   }
+    //   else {
+    //     if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+    //       filtered = filtered.execute();
+    //       var test = nddbSelSearchAll(searchNDDB.breed(), queries[iter+1]);
+    //       test = test.diff(filtered);
+    //       for (var entry in test.db) {
+    //         filtered.insert(test.db[entry]);
+    //       }
+    //       iter -= 2;
+    //       addLikeOperator(filtered);
+    //       filtered.select('mail', '~i', '%');
+    //     }
+    //     else {
+    //       filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+    //     }
+
+    //   }
+    // }
+    // 
+    
+    wildcard = '*';
+    if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
+      filtered.select(wildcard, '~i', '%' + queries[0] + '%');
+      iter = 1;
+    }
+    else {
+      filtered.select(queries[0], queries[1], queries[2]);
+      iter = 3;
+    }
+    while (iter < queries.length) {
+     if (queries[iter].toLowerCase() === 'and') {
+
+      if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+        filtered.and(wildcard, '~i', '%' + queries[iter+1] + '%');
+        iter -= 2;
       }
       else {
-        if (!queries[iter+4] || queries[iter+4].toLowerCase() !== 'and' || queries[iter+4].toLowerCase() !== 'or') {
-          filtered = filtered.execute();
-          var test = nddbSelSearchAll(searchNDDB.breed(), queries[iter+1]).diff(filtered);
-          for (var entry in test.db) {
-            filtered.insert(test.db[entry]);
-          }
-          // filtered.insert(filtered.diff());
-          iter -= 2;
-          addLikeOperator(filtered);
-        }
-        else {
-          filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
-        }
-
+        filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
       }
     }
+    else {
+      if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+        filtered.or(wildcard, '~i', '%' + queries[iter+1] + '%');
+        iter -= 2;
+      }
+      else {
+        filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+      }
 
+    }
+    iter += 4;
+  }
+  return filtered.execute();
+};
 
-    return filtered.execute();
-  };
-
-  nddbSelSearchAll = function nddbSelSearchAll (db, query) {
-    var entry, field, result, alreadyIn, regex;
-    result = db.breed().remove();
-    db = db.db;
-    regex = new RegExp('.*' + query + '.*', 'i');
-    for (entry in db) {
-      alreadyIn = false;
-      for (field in db[entry]) {
-        if (!alreadyIn && regex.test(db[entry][field])) {
-          result.insert(db[entry]);
-          alreadyIn = true;
-        }
+nddbSelSearchAll = function nddbSelSearchAll (db, query) {
+  var entry, field, result, alreadyIn, regex;
+  result = db.breed().remove();
+  db = db.db;
+  regex = new RegExp('.*' + query + '.*', 'i');
+  for (entry in db) {
+    alreadyIn = false;
+    for (field in db[entry]) {
+      if (!alreadyIn && regex.test(db[entry][field])) {
+        result.insert(db[entry]);
+        alreadyIn = true;
       }
     }
-    addLikeOperator(result);
-    return result;
-  };
+  }
+  addLikeOperator(result);
+  return result;
+};
 
-  tagMarkNameFields = function (fields) {
-   var first = searchDB.config.first;
-   var last = searchDB.config.last;
-   var formattedFields = new Array();
-   for (var field in fields) {
-    var formatted = formatFieldTitle(fields[field]);
-    if (fields[field] == first) {
-     formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
-   }
-   else if (fields[field] == last) {
-     formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
-   }
-   formattedFields.push(formatted);
-
+tagMarkNameFields = function (fields) {
+ var first = searchDB.config.first;
+ var last = searchDB.config.last;
+ var formattedFields = new Array();
+ for (var field in fields) {
+  var formatted = formatFieldTitle(fields[field]);
+  if (fields[field] == first) {
+   formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
  }
- return formattedFields;
+ else if (fields[field] == last) {
+   formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
+ }
+ formattedFields.push(formatted);
+
+}
+return formattedFields;
 };
 
 formatFieldTitle = function (field) {

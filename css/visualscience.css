@@ -96,14 +96,29 @@
  }
 
  .visualscience-left {
- 	width:48%;
+ 	width:49%;
  }
  .visualscience-right {
- 	width:48%;
+ 	width:49%;
  	float:right;
  }
- .scrollable:hover {
- 	overflow-y:scroll;
+ .scrollable {
+ 	overflow-y:hidden;
+ }
+
+ .scrollable:first-child {
+ 	width:90%;
+ 	display:inline-table;
+ 	display:inline-block;
+ 	margin-right:10px;
+ }
+
+ .scrollable:first-child:hover {
+ 	margin-right:0px;
+ }
+
+ .scrollable:hover  {
+ 	overflow-y:auto;
  }
  ::-webkit-scrollbar {
  	width:8px;
