@@ -139,6 +139,14 @@ class Config {
 	public function saveSentValues () {
 		$this->emptyOldValues();
 		$this->saveFields();
+		$nbUsersPerPage = intval(filter_xss(check_plain($_POST['nbUsersPerPage'])));
+		$nbUsersPerAjax = intval(filter_xss(check_plain($_POST['nbUsersPerAjax'])));
+		if (isset($nbUsersPerPage) && $nbUsersPerPage !== 0) {
+			variable_set('visualscience_user_per_search_page', $nbUsersPerPage);
+		}
+		if (isset($nbUsersPerAjax) && $nbUsersPerAjax !== 0) {
+			variable_set('visualscience_user_sent_per_ajax_request', $nbUsersPerAjax);
+		}
 	}
 
 	public function insertPatternConfig ($field) {
