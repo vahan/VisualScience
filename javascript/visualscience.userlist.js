@@ -341,6 +341,10 @@ formatFieldTitle = function (field) {
 
 return {
 
+  totalNumberOfUsers: function totalNumberOfUsers () {
+    return searchNDDB.count();
+  },
+
   getUserFromId: function(id) {
     return searchNDDB.select('id', '=', id).execute().fetch()[0];
   },

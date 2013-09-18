@@ -43,16 +43,17 @@
  		nbUsersHideOptions : 1000,
 
  		selectThisUser : function(userId, row, state) {
+ 			var cur, classes;
  			if (row.nodeName === 'INPUT') {
  				row.checked = !row.checked;
  				return false;
  			}
- 			var cur = row.getElementsByClassName('form-checkbox')[0];
+ 			cur = row.getElementsByClassName('form-checkbox')[0];
  			if (typeof state === 'undefined') {
  				state = !cur.checked;
  			}
  			cur.checked = state;
- 			var classes = row.getAttribute('class');
+ 			classes = row.getAttribute('class');
  			if (state) {
  				row.setAttribute('class', classes + ' vsSelectedRow');
  				vsDatabase.addSelectedUserId(userId);
@@ -205,8 +206,14 @@
 		 },
 
 		 updateActionBar: function() {
-		 	document.getElementById('action-bar-selected').innerText = vsDatabase.getSelectedUsers().length;
-		 	document.getElementById('action-bar-displayed').innerText = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
+		 	var nbSelected, nbShown, total;
+		 	nbSelected = vsDatabase.getSelectedUsers().length;
+		 	nbShown = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
+		 	total = vsUserlist.totalNumberOfUsers();
+		 	document.getElementById('action-bar-selected').innerText = nbSelected
+		 	document.getElementById('action-bar-displayed').innerText = nbShown + '/' + total;
+		 	document.getElementById('action-bar-selected').textContent = nbSelected
+		 	document.getElementById('action-bar-displayed').textContent = nbShown + '/' + total;
 		 },
 
 		/*
