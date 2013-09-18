@@ -110,11 +110,6 @@
  	width:90%;
  	display:inline-table;
  	display:inline-block;
- 	margin-right:10px;
- }
-
- .scrollable:first-child:hover {
- 	margin-right:0px;
  }
 
  .scrollable:hover  {
