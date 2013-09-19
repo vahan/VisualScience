@@ -190,7 +190,7 @@
                 firstTab.html(tabTitleContent);
             }
             vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
-                var fast;
+                var fast, nbUserShown;
 
                 fast = function fast() {
                     vsUtils.insertFastHTML('visualscience-search-tab-content-' + idOfThisTab, content);
@@ -199,10 +199,11 @@
                 setTimeout(fast, 1);
 
                 vsSearch.makeActionBarMoveable(idOfThisTab);
-                if (searchObject.users.length < vsSearch.nbUsersHideOptions) {
+                nbUserShown = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
+                if (nbUserShown <= vsSearch.nbUsersHideOptions) {
                     setTimeout(function makeSortable() {
                         vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-                    }, 10);
+                    }, 100);
                 }
             });
         },

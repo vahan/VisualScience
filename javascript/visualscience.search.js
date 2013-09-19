@@ -11,7 +11,7 @@
  		var html = [];
  		html.push('<div style="display:inline-block;width:80%;overflow-x:scroll;"><table id="visualscience-user_list-result-' + parameters.tabId + '" class="vs-userlist-table tablesorter sticky-header"><thead><tr><th style="min-width:35px;" onclick="vsSearch.selectAllBoxes(' + parameters.tabId + ', this)" ><input type="checkbox" id="user-list_master_checkbox-' + parameters.tabId + '" class="form-checkbox" title="Select all rows in this table" onclick="vsSearch.selectAllBoxes(' + parameters.tabId + ', this)" /></th>');
  		for (var i=0; i < parameters.header.length; i++) {
- 			html.push('<th style="min-width:35px;" class="header">' + parameters.header[i] + '</th>');
+ 			html.push('<th style="min-width:35px;" class="">' + parameters.header[i] + '</th>');
  		}
  		html.push('</tr></thead><tbody>');
  		var length = parameters.showHowMany ? parameters.showHowMany : parameters.users.length;
@@ -207,7 +207,7 @@
 		 	var nbSelected, nbShown, total;
 		 	nbSelected = vsDatabase.getSelectedUsers().length;
 		 	nbShown = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
-		 	total = vsUserlist.totalNumberOfUsers();
+		 	total = vsUserlist.currentNumberOfUsers();
 		 	document.getElementById('action-bar-selected').innerText = nbSelected
 		 	document.getElementById('action-bar-displayed').innerText = nbShown + '/' + total;
 		 	document.getElementById('action-bar-selected').textContent = nbSelected

@@ -356,8 +356,8 @@ formatFieldTitle = function (field) {
 
 return {
 
-  totalNumberOfUsers: function totalNumberOfUsers () {
-    return searchNDDB.count();
+  currentNumberOfUsers: function totalNumberOfUsers () {
+    return currentSearchNDDB.count();
   },
 
   getNumberUsersPerPage: function getNumberUsersPerPage () {
