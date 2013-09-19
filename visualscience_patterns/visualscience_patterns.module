@@ -30,58 +30,81 @@ function visualscience_patterns_validate($action, $tag, &$data) {
 	$result = array();
 	$status = PATTERNS_SUCCESS;
 	$msg = 'An error occured in your file.';
-	if ($action == PATTERNS_CREATE) {
+
+	if (!isset($field['name'])) {
+		$status = PATTERNS_ERR;
+		$msg = t('A field doesn\'t have a name.');
+	}
+	else if ($field['name'] == 'nbUsersPerPage' || $field['name'] == 'nbUsersPerAjax') {
+		//Checking for settings: nbUsersPerPage and nbUsersPerAjax.
+			//Semantic: 
+		if (gettype($field['value']) != 'integer') {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "' . $field['name'] . '" has a wrong value type.');
+		}
+
+			//Syntax Check:
+		if (!isset($field['value'])) {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "' . $field['name'] . '" doesn\'t have a value.');
+		}
+
+	}
+	else {
+		//Here we check for every field in the MySQL Table.
+		if ($action == PATTERNS_CREATE) {
 		//Semantic Checking
-	    if (!$config->fieldExistsInDB($field)) {
-			$msg = '';
-		}
-		else {
-			$msg = t('The field already exists in the database.');
-			$result[] = array(
-				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "' . $field['name'] . '" already exists in the database.')
-				);
-		}
+			if (!$config->fieldExistsInDB($field)) {
+				$msg = '';
+			}
+			else {
+				$msg = t('The field already exists in the database.');
+				$result[] = array(
+					PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "' . $field['name'] . '" already exists in the database.')
+					);
+			}
 
 		//Syntax Checking:
-		if (!$uncomplete_field) {
-			if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
-				$msg = '';
+			if (!$uncomplete_field) {
+				if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
+					$msg = '';
+				}
+				else {
+					$status = PATTERNS_ERR;
+					$msg = t('The field "' . $wrong_value_type . '" has a wrong value type for "' . $field['name'] . '".');
+				}
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field "' . $wrong_value_type . '" has a wrong value type for "' . $field['name'] . '".');
+				$msg = t('The field "' . $uncomplete_field . '" is not defined for "' . $field['name'] . '".');
 			}
 		}
-		else {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $uncomplete_field . '" is not defined for "' . $field['name'] . '".');
-		}
-	}
 
-	if ($action == PATTERNS_MODIFY) {
-		//Semantic Check:
-		if ($config->fieldExistsInDB($field)) {
-		}
-		else {
-			$msg = t('The field "' . $field['name'] . '" does not already exist in the database.');
-			$result[] = array(
-				PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field ' . $field['name'] . ' does not already exist in the database.')
-				);
-		}
+		if ($action == PATTERNS_MODIFY) {
+			//Semantic Check:
+			if ($config->fieldExistsInDB($field)) {
+			}
+			else {
+				$msg = t('The field "' . $field['name'] . '" does not already exist in the database.');
+				$result[] = array(
+					PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field ' . $field['name'] . ' does not already exist in the database.')
+					);
+			}
 
-		//Syntax Checking
-		if (!$uncomplete_field) {
-			if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
-				$msg = '';
+			//Syntax Checking
+			if (!$uncomplete_field) {
+				if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
+					$msg = '';
+				}
+				else {
+					$status = PATTERNS_ERR;
+					$msg = t('The field "' . $wrong_value_type . '" has a wrong value type for ' . $field['name'] . '.');
+				}
 			}
 			else {
 				$status = PATTERNS_ERR;
-				$msg = t('The field "' . $wrong_value_type . '" has a wrong value type for ' . $field['name'] . '.');
+				$msg = t('The field "' . $uncomplete_field . '" is not defined for ' . $field['name'] . '.');
 			}
-		}
-		else {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $uncomplete_field . '" is not defined for ' . $field['name'] . '.');
 		}
 	}
 	return patterns_results($status, $msg, $result);
@@ -90,14 +113,29 @@ function visualscience_patterns_validate($action, $tag, &$data) {
 function visualscience_insert_config($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
-	$config->insertPatternConfig($field);
-	
+	if ($field['name'] == 'nbUsersPerPage') {
+		$config->updateNbUsersPerPage($field['value']);
+	}
+	else if ($field['name'] == 'nbUsersPerAjax') {
+		$config->updateNbUsersPerAjax($field['value']);
+	}
+	else {
+		$config->insertPatternConfig($field);
+	}
 }
 
 function visualscience_modify_config($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
-	$config->modifyPatternConfig($field);	
+	if ($field['name'] == 'nbUsersPerPage') {
+		$config->updateNbUsersPerPage($field['value']);
+	}
+	else if ($field['name'] == 'nbUsersPerAjax') {
+		$config->updateNbUsersPerAjax($field['value']);
+	}
+	else {
+		$config->modifyPatternConfig($field);
+	}	
 }
 
 function visualscience_export_config($args = NULL, &$result = NULL) {
@@ -122,6 +160,20 @@ function visualscience_export_config($args = NULL, &$result = NULL) {
 
 		array_push($actions, $action);
 	}
+
+	$action = array($action_type => array(
+		'tag' => 'visualscience_config',
+		'name' => 'nbUsersPerPage',
+		'value' => variable_get('visualscience_user_per_search_page')
+		));
+	array_push($actions, $action);
+
+	$action = array($action_type => array(
+		'tag' => 'visualscience_config',
+		'name' => 'nbUsersPerAjax',
+		'value' => variable_get('visualscience_user_sent_per_ajax_request')
+		));
+	array_push($actions, $action);
 
 	return $actions;
 }

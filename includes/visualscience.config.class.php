@@ -142,13 +142,13 @@ class Config {
 	public function saveSentValues () {
 		$this->emptyOldValues();
 		$this->saveFields();
-		$nbUsersPerPage = intval(filter_xss(check_plain($_POST['nbUsersPerPage'])));
-		$nbUsersPerAjax = intval(filter_xss(check_plain($_POST['nbUsersPerAjax'])));
+		$nbUsersPerPage = filter_xss(check_plain($_POST['nbUsersPerPage']));
+		$nbUsersPerAjax = filter_xss(check_plain($_POST['nbUsersPerAjax']));
 		if (isset($nbUsersPerPage) && $nbUsersPerPage !== 0) {
-			variable_set('visualscience_user_per_search_page', $nbUsersPerPage);
+			$this->updateNbUsersPerPage($nbUsersPerPage);
 		}
 		if (isset($nbUsersPerAjax) && $nbUsersPerAjax !== 0) {
-			variable_set('visualscience_user_sent_per_ajax_request', $nbUsersPerAjax);
+			$this->updateNbUsersPerAjax($nbUsersPerAjax);
 		}
 	}
 
@@ -158,7 +158,14 @@ class Config {
 
 	public function modifyPatternConfig ($field) {
 		$this->updateSearchConfig($field['name'], $field['mini'],$field['full'],$field['first'],$field['last']);
+	}
 
+	public function updateNbUsersPerPage ($value) {
+		variable_set('visualscience_user_per_search_page', intval($value));
+	}
+
+	public function updateNbUsersPerAjax ($value) {
+		variable_set('visualscience_user_sent_per_ajax_request', intval($value));
 	}
 
 	public function checkCompleteField ($field) {
