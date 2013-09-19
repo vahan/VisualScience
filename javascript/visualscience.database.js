@@ -194,7 +194,7 @@
         },
         getFamousPublicationFromLSDB: function (idOfDB) {
             var html = '';
-            for (i = 0; i < 3; i++) {
+            for (i = 0; i < 3 && i < vsDatabase.lsDBOriginal[idOfDB].db.length; i++) {
                 html += '<p style="min-width:250px;"><a href="' + vsDatabase.lsDBOriginal[idOfDB].db[i].url + '" target="_blank">' + vsDatabase.lsDBOriginal[idOfDB].db[i].title + '</a></p>';
             }
             return html;
