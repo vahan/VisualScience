@@ -22,10 +22,7 @@ function visualscience_patterns($data = NULL)  {
 	$action['visualscience_config_numbers'] = array(
 		PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
 		PATTERNS_CREATE => array('visualscience_insert_config_numbers'),
-		PATTERNS_MODIFY => array('visualscience_modify_config_numbers_numbers'),
-		PATTERNS_EXPORT => array(
-			PATTERNS_EXPORT_ALL => 'visualscience_export_config',
-			),
+		PATTERNS_MODIFY => array('visualscience_modify_config_numbers'),
 		);
 
 	return $action;
@@ -41,20 +38,18 @@ function visualscience_patterns_validate($action, $tag, &$data) {
 
 	if (!isset($field['name'])) {
 		$status = PATTERNS_ERR;
-		$msg = t('One of the actions doesn\'t have a field "name".');
+		$msg = t('One of the actions does not have a field "name".');
 	}
 	else if ($tag == 'visualscience_config_numbers') {
 		//Checking for settings: nbUsersPerPage and nbUsersPerAjax.
-			//Semantic: 
+			//Syntax: 
 		if (gettype($field['value']) != 'integer') {
 			$status = PATTERNS_ERR;
 			$msg = t('The field "' . $field['name'] . '" has a wrong value type.');
 		}
-
-			//Syntax Check:
 		if (!isset($field['value'])) {
 			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" doesn\'t have a value.');
+			$msg = t('The field "' . $field['name'] . '" does not have a value.');
 		}
 		if ($field['name'] != 'nbUsersPerAjax' && $field['name'] != 'nbUsersPerPage') {
 			$status = PATTERNS_ERR;
@@ -139,14 +134,28 @@ function visualscience_insert_config($form_id, $form_state) {
 function visualscience_modify_config($form_id, $form_state) {
 	$config = new Config;
 	$field = $form_state['values'];
+	$config->modifyPatternConfig($field);
+}
+
+function visualscience_insert_config_numbers($form_id, $form_state) {
+	$config = new Config;
+	$field = $form_state['values'];
 	if ($field['name'] == 'nbUsersPerPage') {
 		$config->updateNbUsersPerPage($field['value']);
 	}
-	else if ($field['name'] == 'nbUsersPerAjax') {
+	if ($field['name'] == 'nbUsersPerAjax') {
 		$config->updateNbUsersPerAjax($field['value']);
+	}	
+}
+
+function visualscience_modify_config_numbers($form_id, $form_state) {
+	$config = new Config;
+	$field = $form_state['values'];
+	if ($field['name'] == 'nbUsersPerPage') {
+		$config->updateNbUsersPerPage($field['value']);
 	}
-	else {
-		$config->modifyPatternConfig($field);
+	if ($field['name'] == 'nbUsersPerAjax') {
+		$config->updateNbUsersPerAjax($field['value']);
 	}	
 }
 
