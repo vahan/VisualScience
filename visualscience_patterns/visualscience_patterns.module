@@ -19,6 +19,14 @@ function visualscience_patterns($data = NULL)  {
 			PATTERNS_EXPORT_ALL => 'visualscience_export_config',
 			),
 		);
+	$action['visualscience_config_numbers'] = array(
+		PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
+		PATTERNS_CREATE => array('visualscience_insert_config_numbers'),
+		PATTERNS_MODIFY => array('visualscience_modify_config_numbers_numbers'),
+		PATTERNS_EXPORT => array(
+			PATTERNS_EXPORT_ALL => 'visualscience_export_config',
+			),
+		);
 
 	return $action;
 }
@@ -33,9 +41,9 @@ function visualscience_patterns_validate($action, $tag, &$data) {
 
 	if (!isset($field['name'])) {
 		$status = PATTERNS_ERR;
-		$msg = t('A field doesn\'t have a name.');
+		$msg = t('One of the actions doesn\'t have a field "name".');
 	}
-	else if ($field['name'] == 'nbUsersPerPage' || $field['name'] == 'nbUsersPerAjax') {
+	else if ($tag == 'visualscience_config_numbers') {
 		//Checking for settings: nbUsersPerPage and nbUsersPerAjax.
 			//Semantic: 
 		if (gettype($field['value']) != 'integer') {
@@ -47,6 +55,10 @@ function visualscience_patterns_validate($action, $tag, &$data) {
 		if (!isset($field['value'])) {
 			$status = PATTERNS_ERR;
 			$msg = t('The field "' . $field['name'] . '" doesn\'t have a value.');
+		}
+		if ($field['name'] != 'nbUsersPerAjax' && $field['name'] != 'nbUsersPerPage') {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "' . $field['name'] . '" should be either "nbUsersPerAjax" or "nbUsersPerPage".');
 		}
 
 	}
@@ -162,14 +174,14 @@ function visualscience_export_config($args = NULL, &$result = NULL) {
 	}
 
 	$action = array($action_type => array(
-		'tag' => 'visualscience_config',
+		'tag' => 'visualscience_config_numbers',
 		'name' => 'nbUsersPerPage',
 		'value' => variable_get('visualscience_user_per_search_page')
 		));
 	array_push($actions, $action);
 
 	$action = array($action_type => array(
-		'tag' => 'visualscience_config',
+		'tag' => 'visualscience_config_numbers',
 		'name' => 'nbUsersPerAjax',
 		'value' => variable_get('visualscience_user_sent_per_ajax_request')
 		));
