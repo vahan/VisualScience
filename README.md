@@ -13,7 +13,7 @@ Features include:
 +	Patterns Compatible
 
 
-#Tweaks and Hacks
+##Tweaks and Hacks
 Here's a list of some "tweaks and hacks" we had to use, to make things work better, generally because the original ones were having performance issues.
 
  * ** jQuery UI Theme Replacement: ** The file SITE/misc/ui/jquery.ui.theme.css was making the page's checkboxes slow. Therefore we replace it with our own flavoured one. (VisualScience/css/visualscience.jquery.ui.theme.css)

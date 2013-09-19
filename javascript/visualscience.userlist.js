@@ -78,7 +78,7 @@
           var i, len;
           len = d.length;
           for (i = 0; i < len ; i++) {
-            if (regex.test(elem[d])) {
+            if (regex.test(elem[d[i]])) {
               return elem;
             }
           }
