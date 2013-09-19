@@ -67,86 +67,86 @@
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Sensitive)
     */
-      db.addFilter('~s', function registerLikeOperator(d, value, comparator) {
-        var regex;
-        regex = value;
-        regex = RegExp.escape(value);
-        regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
-        regex = new RegExp('^' + regex + '$', 'g');
-        if ('object' === typeof d) {
-          return function(elem) {
-            var i, len;
-            len = d.length;
-            for (i = 0; i < len ; i++) {
-              if (regex.test(elem[d])) {
-                return elem;
-              }
-            }
-          };
-        }
-        else if (d === '*') {
-          return function(elem) {
-            var d, c;
-            for (d in elem) {
-              c = db.getComparator(d);
-              value[d] = value[0]['*'];
-              if (regex.test(elem[d])) {
-                return elem;
-              }
-            }
-          };
-        }
-        else {
-          return function(elem) {
+    db.addFilter('~s', function registerLikeOperator(d, value, comparator) {
+      var regex;
+      regex = value;
+      regex = RegExp.escape(value);
+      regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
+      regex = new RegExp('^' + regex + '$', 'g');
+      if ('object' === typeof d) {
+        return function(elem) {
+          var i, len;
+          len = d.length;
+          for (i = 0; i < len ; i++) {
             if (regex.test(elem[d])) {
               return elem;
             }
-          };
-        }
-      });
+          }
+        };
+      }
+      else if (d === '*') {
+        return function(elem) {
+          var d, c;
+          for (d in elem) {
+            c = db.getComparator(d);
+            value[d] = value[0]['*'];
+            if (regex.test(elem[d])) {
+              return elem;
+            }
+          }
+        };
+      }
+      else {
+        return function(elem) {
+          if (regex.test(elem[d])) {
+            return elem;
+          }
+        };
+      }
+    });
 
 
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Insensitive)
     */
-      db.addFilter('~i', function registerLikeOperator(d, value, comparator) {
-        var regex;
-        regex = value;
-        regex = RegExp.escape(value);
-        regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
-        regex = new RegExp('^' + regex + '$', 'i');
-        if ('object' === typeof d) {
-          return function(elem) {
-            var i, len;
-            len = d.length;
-            for (i = 0; i < len ; i++) {
-              if (regex.test(elem[d[i]])) {
-                return elem;
-              }
+    db.addFilter('~i', function registerLikeOperator(d, value, comparator) {
+      var regex;
+      regex = value;
+      regex = RegExp.escape(value);
+      regex = regex.replace(/%/g, '.*').replace(/_/g, '.');
+      regex = new RegExp('^' + regex + '$', 'i');
+      if ('object' === typeof d) {
+        return function(elem) {
+          var i, len;
+          len = d.length;
+          for (i = 0; i < len ; i++) {
+            if (regex.test(elem[d[i]])) {
+              return elem;
             }
-          };
-        }
-        else if (d === '*') {
-          return function(elem) {
-            var d, c;
-            for (d in elem) {
-              c = db.getComparator(d);
-              value[d] = value[0]['*'];
-              if (regex.test(elem[d])) {
-                return elem;
-              }
-            }
-          };
-        }
-        else {
-          return function(elem) {
+          }
+        };
+      }
+      else if (d === '*') {
+        return function(elem) {
+          var d, c;
+          for (d in elem) {
+            c = db.getComparator(d);
+            value[d] = value[0]['*'];
             if (regex.test(elem[d])) {
               return elem;
             }
-          };
-        }
-      });
-};
+          }
+        };
+      }
+      else {
+        return function(elem) {
+          if (regex.test(elem[d])) {
+            return elem;
+          }
+        };
+      }
+    });
+  };
 
   /*
    * True if the number of users in the main DB (searchDB) is equal or 
@@ -278,7 +278,7 @@
       wildcard = fields || '*';
       operators = Object.keys(searchNDDB.filters);
       operators[0] = '=';
-      for (iter = 0; iter < operators.length; iter++) {
+         for (iter = 0; iter < operators.length; iter++) {
         /*
          * We don't want the the operators containing 'in', as they could 
          * modify the search query in an unexpected way. 
@@ -286,73 +286,73 @@
          * That's also why we changed operators[0] = '=', to avoid having 
          * the E operator.
          */
-         if (!(/[a-z]/.test(operators[iter]))) { // operators[iter].indexOf('in') == -1
-          search = search.replace(new RegExp('\\s*' + operators[iter] + '\\s*', 'g'), ' ' + operators[iter] + ' ');
+           if (!(/[a-z]/.test(operators[iter]))) { // operators[iter].indexOf('in') == -1
+            search = search.replace(new RegExp('\\s*' + operators[iter] + '\\s*', 'g'), ' ' + operators[iter] + ' ');
+          }
+        }
+        filtered = searchNDDB.breed();
+        addLikeOperator(filtered);
+        queries = search.split(' ');
+        if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
+          filtered.select(wildcard, '~i', '%' + queries[0] + '%');
+          iter = 1;
+        }
+        else {
+          filtered.select(queries[0], queries[1], queries[2]);
+          iter = 3;
+        }
+        while (iter < queries.length) {
+         if (queries[iter].toLowerCase() === 'and') {
+
+          if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+            filtered.and(wildcard, '~i', '%' + queries[iter+1] + '%');
+            iter -= 2;
+          }
+          else {
+            filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+          }
+        }
+        else {
+          if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+            filtered.or(wildcard, '~i', '%' + queries[iter+1] + '%');
+            iter -= 2;
+          }
+          else {
+            filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+          }
+
+        }
+        iter += 4;
       }
-    }
-    filtered = searchNDDB.breed();
-    addLikeOperator(filtered);
-    queries = search.split(' ');
-    if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
-      filtered.select(wildcard, '~i', '%' + queries[0] + '%');
-      iter = 1;
-    }
-    else {
-      filtered.select(queries[0], queries[1], queries[2]);
-      iter = 3;
-    }
-    while (iter < queries.length) {
-     if (queries[iter].toLowerCase() === 'and') {
+      return filtered.execute();
+    };
 
-      if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
-        filtered.and(wildcard, '~i', '%' + queries[iter+1] + '%');
-        iter -= 2;
-      }
-      else {
-        filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
-      }
-    }
-    else {
-      if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
-        filtered.or(wildcard, '~i', '%' + queries[iter+1] + '%');
-        iter -= 2;
-      }
-      else {
-        filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
-      }
+    tagMarkNameFields = function (fields) {
+     var first = searchDB.config.first;
+     var last = searchDB.config.last;
+     var formattedFields = new Array();
+     for (var field in fields) {
+      var formatted = formatFieldTitle(fields[field]);
+      if (fields[field] == first) {
+       formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
+     }
+     else if (fields[field] == last) {
+       formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
+     }
+     formattedFields.push(formatted);
 
-    }
-    iter += 4;
-  }
-  return filtered.execute();
-};
+   }
+   return formattedFields;
+ };
 
-tagMarkNameFields = function (fields) {
- var first = searchDB.config.first;
- var last = searchDB.config.last;
- var formattedFields = new Array();
- for (var field in fields) {
-  var formatted = formatFieldTitle(fields[field]);
-  if (fields[field] == first) {
-   formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
- }
- else if (fields[field] == last) {
-   formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
- }
- formattedFields.push(formatted);
+ formatFieldTitle = function (field) {
+   field = field.replace(/_/gi, " ");
+   return field.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+ };
 
-}
-return formattedFields;
-};
-
-formatFieldTitle = function (field) {
- field = field.replace(/_/gi, " ");
- return field.replace(/\w\S*/g, function(txt) {
-  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-});
-};
-
-return {
+ return {
 
   currentNumberOfUsers: function currentNumberOfUsers () {
     return currentSearchNDDB.count();
@@ -390,7 +390,7 @@ return {
     vsInterface.getView('saveSearchDialog.html', function(dialogContent) {
      var parameters = {
       search: search
-    }
+    };
     var content = dialogContent(parameters);
     var button = [{
       text: 'Save',
@@ -425,7 +425,7 @@ return {
 
 getSearchFields: function (type) {
  var result = [];
- if (type != 0) {
+ if (type !== 0) {
   for (var field in searchDB.config.fields) {
    if (searchDB.config.fields[field].mini == 1) {
     result.push(searchDB.config.fields[field].name);
@@ -434,7 +434,7 @@ getSearchFields: function (type) {
 }
 else {
   for (var field in searchDB.config.fields) {
-   result.push(searchDB.config.fields[field].name)
+   result.push(searchDB.config.fields[field].name);
  }
 }
 return result;
