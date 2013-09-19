@@ -187,7 +187,7 @@
             createFullNDDB();
             vsUserlist.search();
             store.onquotaerror = function () {
-              vsInterface.dialog(vsText.dbTooLargeError, null, null, null, '40%');
+              vsInterface.dialog(vsText.dbTooLargeError, vsText.loadDBTitle, null, null, '40%');
             };
             store.localStorage('vsSearchDB', searchDB);
           }
