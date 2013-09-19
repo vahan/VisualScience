@@ -96,14 +96,24 @@
  }
 
  .visualscience-left {
- 	width:48%;
+ 	width:49%;
  }
  .visualscience-right {
- 	width:48%;
+ 	width:49%;
  	float:right;
  }
  .scrollable {
- 	overflow-y:scroll;
+ 	overflow-y:hidden;
+ }
+
+ .scrollable:first-child {
+ 	width:90%;
+ 	display:inline-table;
+ 	display:inline-block;
+ }
+
+ .scrollable:hover  {
+ 	overflow-y:auto;
  }
  ::-webkit-scrollbar {
  	width:8px;
@@ -139,8 +149,12 @@
  	margin:10px;
  }
 
+ .vs-userlist-table {
+ 	width: 100%;
+ }
+
  #visualscience-container .vs-userlist-table thead tr th {
- 	color:black;//rgb(213, 22, 17);
+ 	color:black;
  	font-size:13px;
  	padding:5px;
 
@@ -168,4 +182,7 @@
  	border-bottom: solid black 1px;
  	margin: 0px;
  	padding: 8px;
+ }
+ .vsLongButton {
+ 	width:100%;
  }

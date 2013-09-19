@@ -7,7 +7,10 @@ class Config {
 
 	private function getIntroduction () {
 		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Note that every field that is in the minimized table will also be in the full one. And the last name and full name are required in the mini table.<br /> <b>At the moment, the full table option is not used, but we are working hard on it.<b>');
+	}
 
+	private function getNumberSettingsHTML () {
+		return '<table><tr><td>' .t('Number of users to display on first search (Default: 150) :'). '</td><td><input type="number" name="nbUsersPerPage" id="nbUsersPerPage" value="' .variable_get('visualscience_user_per_search_page', 150). '" /></td><td>' .t('Number of users sent for each Ajax request (Default: 500) :'). '</td><td><input type="number" name="nbUsersPerAjax" id="nbUsersPerAjax" value="' .variable_get('visualscience_user_sent_per_ajax_request', 500). '" /></td></tr></table>';
 	}
 
 	private function createRows ($list, $oldList) {
@@ -126,19 +129,27 @@ class Config {
 
 	public function getHtmlConfigPage () {
 		$fieldsList = $this->getListOfFields();
-
 		$oldFields = $this->getSelectedFields();
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($fieldsList, $oldFields);
+		$numberSettings = $this->getNumberSettingsHTML();
 		$saveButton = $this->createSaveButton();
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
-		return $formStart.$intro.$fieldsTable.$saveButton.$formEnd;
+		return $formStart.$intro.$fieldsTable.$numberSettings.$saveButton.$formEnd;
 	}
 
 	public function saveSentValues () {
 		$this->emptyOldValues();
 		$this->saveFields();
+		$nbUsersPerPage = filter_xss(check_plain($_POST['nbUsersPerPage']));
+		$nbUsersPerAjax = filter_xss(check_plain($_POST['nbUsersPerAjax']));
+		if (isset($nbUsersPerPage) && $nbUsersPerPage !== 0) {
+			$this->updateNbUsersPerPage($nbUsersPerPage);
+		}
+		if (isset($nbUsersPerAjax) && $nbUsersPerAjax !== 0) {
+			$this->updateNbUsersPerAjax($nbUsersPerAjax);
+		}
 	}
 
 	public function insertPatternConfig ($field) {
@@ -147,7 +158,14 @@ class Config {
 
 	public function modifyPatternConfig ($field) {
 		$this->updateSearchConfig($field['name'], $field['mini'],$field['full'],$field['first'],$field['last']);
+	}
 
+	public function updateNbUsersPerPage ($value) {
+		variable_set('visualscience_user_per_search_page', intval($value));
+	}
+
+	public function updateNbUsersPerAjax ($value) {
+		variable_set('visualscience_user_sent_per_ajax_request', intval($value));
 	}
 
 	public function checkCompleteField ($field) {

@@ -28,8 +28,8 @@ function visualscience_menu() {
     'title' => 'Visual Science',
     'description' => 'Visual Science description',
     'page callback' => 'visualscience_page',
-    'page arguments' => array(true),
-    'access callback' => TRUE,
+    'access arguments' => array('access visualscience'),
+    // 'access callback' => TRUE,
     'weight' => 30,
     );
 
@@ -37,7 +37,7 @@ function visualscience_menu() {
     'title' => 'VisualScience Users Access',
     'description' => 'Get Users of VisualScience',
     'page callback' => 'visualscience_users',
-    'access arguments' => array('access content'),
+    'access arguments' => array('access visualscience'),
     'type' => MENU_CALLBACK,
     );
 
@@ -61,7 +61,7 @@ function visualscience_menu() {
     'title' => 'VisualScience Attachment Access',
     'description' => 'Access a file uploaded from VisualScience',
     'page callback' => 'visualscience_get_file_with_id',
-    'access callback' => TRUE,
+    // 'access callback' => TRUE,
     'type' => MENU_CALLBACK,
     );
 
@@ -84,17 +84,6 @@ function visualscience_menu() {
   return $items;
 }
 
-// function visualscience_upload_form($form, &$form_state) {
-//   // if (!isset($_FILES['visualscience_upload_file'])) {
-//   //   $form = drupal_get_form('visualscience_get_upload_form');
-//   //   print drupal_render($form);
-//   // }
-//   // else {
-//   //   return visualscience_get_upload_form($form, $form_state);
-//   // }
-//   return drupal_get_form('visualscience_get_upload_form');
-// } 
-// 
 function visualscience_upload_form($form, &$form_state) {
   $upload = new Upload;
   return $upload->visualscience_upload_form($form, $form_state);
@@ -142,6 +131,16 @@ function visualscience_config_page($clear = TRUE) {
 function visualscience_users() {
   $search = new Search;
   $from = intval($_GET['userId']);
-  $database = $search->getUsersEntries($from, variable_get('visualscience_nuser_loaded', VISUALSCIENCE_NUSER_LOADED));
+  $database = $search->getUsersEntries($from, variable_get('visualscience_user_sent_per_ajax_request', 1000));
   echo $database;
+}
+
+/*
+ * We want to change the CSS of jQuery, because when using the selector they propose, we don't have the expected performance. 
+ * (Really slow with > 10'000 checkboxes)
+ */
+function visualscience_css_alter(&$css) {
+  if (isset($css['misc/ui/jquery.ui.theme.css'])) {
+    $css['misc/ui/jquery.ui.theme.css']['data'] = drupal_get_path('module', 'visualscience') . '/css/visualscience.jquery.ui.theme.css';
+  }
 }

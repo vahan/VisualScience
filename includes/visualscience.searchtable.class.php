@@ -123,9 +123,8 @@ class Search {
 
 	public function getHtmlSearchBar ($searchValue= "") {
 		$safeSearchVal = $this->ensureSearchSafety($searchValue);
-
 		return '<div align="center">
-		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main visualscience-search" id="visualscience-search-bar" onKeyUp="vsUserlist.search();" />
+		<input type="search" placeholder="Search..." val="'.$safeSearchVal.'" class="visualscience-search-main visualscience-search" id="visualscience-search-bar" " onKeyUp="vsUserlist.search();" />
 		<div style="width:98%;" align="left">
 		<p class="visualscience-right" align="right" style="display:inline;max-width:30%;">'.l(t("Help"), "admin/help/visualscience").'</p>
 		<p class="clickable" style="display:inline;max-width:30%;text-align:center;" align="center"><a onClick="vsUserlist.reloadUserDatabase(0);">Reload User Database</a></p>
@@ -172,6 +171,7 @@ class Search {
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.utils.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
+		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.text.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.message.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.csv.js');
@@ -191,8 +191,10 @@ class Search {
 		$fields = $this->getFieldsFromConfig();
 		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
 		$total = $this->getCountOfUsers();
+		$nbUsersPerPage = $from == 0 ? variable_get('visualscience_user_per_search_page', 150) : 150;
+		$nbUserPerAjax = $from == 0 ? variable_get('visualscience_user_sent_per_ajax_request', 500) : 500;
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
-		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "total": '.$total.'}';
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "total": '.$total.'}';
 		return $searchDB;
 	}
 }
