@@ -61,7 +61,7 @@
  				row.setAttribute('class', classes);
  				vsDatabase.removeSelectedUserId(userId);
  			}
-		 	vsSearch.updateActionBar();
+ 			vsSearch.updateActionBar();
  		},
 
 		/*
@@ -203,7 +203,7 @@
 		 	vsSearch.updateActionBar();
 		 },
 
-		 updateActionBar: function() {
+		 updateActionBar: function(idOfThisTab) {
 		 	var nbSelected, nbShown, total;
 		 	nbSelected = vsDatabase.getSelectedUsers().length;
 		 	nbShown = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
@@ -212,6 +212,13 @@
 		 	document.getElementById('action-bar-displayed').innerText = nbShown + '/' + total;
 		 	document.getElementById('action-bar-selected').textContent = nbSelected
 		 	document.getElementById('action-bar-displayed').textContent = nbShown + '/' + total;
+
+		 	// Uncomment to allow table sorting. (Doesn't work once you've clicked on "Show More Users".)
+		 	// if (nbShown <= vsSearch.nbUsersHideOptions) {
+		 	// 	setTimeout(function makeSortable() {
+		 	// 		vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
+		 	// 	}, 100);
+		 	// }
 		 },
 
 		/*

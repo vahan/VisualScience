@@ -67,7 +67,6 @@
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Sensitive)
     */
-    // db.query.registerOperator('~s', function registerLikeOperator(d, value, comparator) {
       db.addFilter('~s', function registerLikeOperator(d, value, comparator) {
         var regex;
         regex = value;
@@ -110,7 +109,6 @@
    /*
     * These lines add the SQL Like operator to an NDDB.(Case Insensitive)
     */
-    // db.query.registerOperator('~i', function registerLikeOperator(d, value, comparator) {
       db.addFilter('~i', function registerLikeOperator(d, value, comparator) {
         var regex;
         regex = value;
@@ -356,7 +354,7 @@ formatFieldTitle = function (field) {
 
 return {
 
-  currentNumberOfUsers: function totalNumberOfUsers () {
+  currentNumberOfUsers: function currentNumberOfUsers () {
     return currentSearchNDDB.count();
   },
 

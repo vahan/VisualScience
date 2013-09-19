@@ -5,7 +5,7 @@
 
  var vsInterface = (function() {
 
-   var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
+     var tabbedInterfaceExists, tabbedInterface, tabId, createTabbedInterface, listOfViews, overlayModal, nameMaxLength;
 
     //This variable checks if the whole tabbed interface has been created yet.
     tabbedInterfaceExists = false;
@@ -190,21 +190,15 @@
                 firstTab.html(tabTitleContent);
             }
             vsSearch.createUserSearchResult(searchObject, idOfThisTab, function insertNewUserlist(content) {
-                var fast, nbUserShown;
+                var fast;
 
                 fast = function fast() {
                     vsUtils.insertFastHTML('visualscience-search-tab-content-' + idOfThisTab, content);
-                    vsSearch.updateActionBar();
+                    vsSearch.updateActionBar(idOfThisTab);
                 };
                 setTimeout(fast, 1);
 
                 vsSearch.makeActionBarMoveable(idOfThisTab);
-                nbUserShown = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
-                if (nbUserShown <= vsSearch.nbUsersHideOptions) {
-                    setTimeout(function makeSortable() {
-                        vsUtils.makeTableSortable('visualscience-user_list-result-' + idOfThisTab);
-                    }, 100);
-                }
             });
         },
 
