@@ -7,7 +7,10 @@ class Config {
 
 	private function getIntroduction () {
 		return t('Here you will be able to choose which fields you want to show when the user opens the VisualScience module. Note that every field that is in the minimized table will also be in the full one. And the last name and full name are required in the mini table.');
+	}
 
+	private function getNumberSettingsHTML () {
+		return '<table><tr><td>' .t('Number of users to display on first search (Default: 150) :'). '</td><td><input type="number" name="nbUsersPerPage" id="nbUsersPerPage" value="' .variable_get('visualscience_user_per_search_page', 150). '" /></td><td>' .t('Number of users sent for each Ajax request (Default: 500) :'). '</td><td><input type="number" name="nbUsersPerAjax" id="nbUsersPerAjax" value="' .variable_get('visualscience_user_sent_per_ajax_request', 500). '" /></td></tr></table>';
 	}
 
 	private function createRows ($list, $oldList) {
@@ -126,14 +129,14 @@ class Config {
 
 	public function getHtmlConfigPage () {
 		$fieldsList = $this->getListOfFields();
-
 		$oldFields = $this->getSelectedFields();
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($fieldsList, $oldFields);
+		$numberSettings = $this->getNumberSettingsHTML();
 		$saveButton = $this->createSaveButton();
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
-		return $formStart.$intro.$fieldsTable.$saveButton.$formEnd;
+		return $formStart.$intro.$fieldsTable.$numberSettings.$saveButton.$formEnd;
 	}
 
 	public function saveSentValues () {

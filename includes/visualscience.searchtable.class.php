@@ -192,6 +192,7 @@ class Search {
 		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
 		$total = $this->getCountOfUsers();
 		$nbUsersPerPage = $from == 0 ? variable_get('visualscience_user_per_search_page', 150) : 150;
+		$nbUserPerAjax = $from == 0 ? variable_get('visualscience_user_sent_per_ajax_request', 500) : 500;
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
 		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "total": '.$total.'}';
 		return $searchDB;
