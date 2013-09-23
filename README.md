@@ -1,6 +1,6 @@
 # VisualScience
 
-A module providing an easy-to-use intuitive search interface for your Drupal Database. With just a single search box and advanced autocomplete you can get the targeted list of entities (users or nodes) within several seconds. You can also save your searches to have quick access to commonly used lists. **No configuration needed!**
+A module providing an easy-to-use intuitive search interface for your Drupal Database. With just a single search box you can get the targeted list of entities (users or nodes) within seconds. **No configuration needed!**
 
 Features include:
 +	Powerful search-engine with SQl-like functionnalities
