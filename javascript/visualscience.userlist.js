@@ -11,7 +11,7 @@
 
 
    maxAutocompleteEntries = 5;
-   delayBeforeTableCreation = 1;//3000
+   delayBeforeTableCreation = 1000;
    maxNumberOfTableEntries = 150;
 
    /*
@@ -31,9 +31,9 @@
 	        //Timeout so that the views have time to load.
           setTimeout(function () {
             //Barrier waiting for the first ajax user request to arrive.
-            while (!firstQueryArrived)!
-             vsUserlist.search();
-         }, delayBeforeTableCreation);
+            while (!vsInterface.viewsAreLoaded());
+            vsUserlist.search();
+          }, delayBeforeTableCreation);
         }
         else {
           vsUserlist.reloadUserDatabase();
@@ -178,11 +178,6 @@
               maxNumberOfTableEntries = response.nbUsersPerPage;
               for (var i = response.howMany; i < response.total; i += response.howMany) {
                 getSearchDataFromServer(i);
-              }
-              for (var i = 0; i < response.config.fields.length; i++) {
-                if (response.config.fields[i].name === 'mail') {
-                  vsUserlist.emailAvailable = true;
-                }
               }
             }
             for (var user in response.users) {
@@ -361,7 +356,13 @@ formatFieldTitle = function (field) {
 
 return {
 
-  emailAvailable: false,
+  emailAvailable: function () {
+    for (var i = 0; i < searchDB.config.fields.length; i++) {
+      if (searchDB.config.fields[i].name === 'mail') {
+        return true;
+      }
+    }
+  },
 
   currentNumberOfUsers: function currentNumberOfUsers () {
     return currentSearchNDDB.count();

@@ -71,6 +71,10 @@
             jQuery(overlayModal).dialog("destroy");
         },
 
+        viewsAreLoaded : function () {
+            return vsDatabase.htmlViewsDB.length >= listOfViews.length;
+        },
+
         dialog: function (content, title, buttons, callback, width, height) {
             jQuery(overlayModal).dialog('destroy');
             jQuery(overlayModal).html(content);

@@ -94,7 +94,7 @@ var vsSearch = (function () {
             var parameters = {
                 idOfThisTab: idOfThisTab,
                 installFolder: vsUtils.getInstallFolder(),
-                emailAvailable: vsUserlist.emailAvailable
+                emailAvailable: vsUserlist.emailAvailable()
             };
             return actionBar(parameters);
         },
