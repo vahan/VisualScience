@@ -177,6 +177,11 @@
               for (var i = response.howMany; i < response.total; i += response.howMany) {
                 getSearchDataFromServer(i);
               }
+              for (var i=0; i < response.config.fields.length; i++) {
+                if (response.config.fields[i].name === 'mail') {
+                  vsUserlist.emailAvailable = true;
+                }
+              }
             }
             for (var user in response.users) {
              searchDB.users.push(response.users[user]);
@@ -353,6 +358,8 @@
  };
 
  return {
+
+  emailAvailable: false,
 
   currentNumberOfUsers: function currentNumberOfUsers () {
     return currentSearchNDDB.count();
