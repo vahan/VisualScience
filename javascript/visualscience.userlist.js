@@ -166,7 +166,7 @@
           vsUtils.getUsersPath(),
           {
             userId: from
-          }, 
+          },
           function(data) {
             var response = jQuery.parseJSON(data);
             jQuery('#vs-db-loading').progressbar({
@@ -177,7 +177,7 @@
               for (var i = response.howMany; i < response.total; i += response.howMany) {
                 getSearchDataFromServer(i);
               }
-              for (var i=0; i < response.config.fields.length; i++) {
+              for (var i = 0; i < response.config.fields.length; i++) {
                 if (response.config.fields[i].name === 'mail') {
                   vsUserlist.emailAvailable = true;
                 }
@@ -369,6 +369,10 @@
     return maxNumberOfTableEntries;
   },
 
+  totalNumberOfUsers :function totalNumberOfUsers () {
+    return searchNDDB.count();
+  },
+
   getUserFromId: function(id) {
     return searchNDDB.select('id', '=', id).execute().fetch()[0];
   },
@@ -448,7 +452,7 @@ return result;
 },
 
 getCurrentUsersFrom: function(from, howMany) {
-  return currentSearchNDDB.db.splice(from, howMany);
+  return currentSearchNDDB.breed().db.splice(from, howMany);
 }
 };
 })();

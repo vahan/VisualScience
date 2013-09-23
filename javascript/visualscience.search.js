@@ -23,7 +23,7 @@ var vsSearch = (function () {
             }
             html.push('</tr>');
         }
-        html.push('</tbody></table></div><br /><div align="center"><input type="button" class="vsLongButton" value="' + vsText.addMoreUsers + '" onclick="vsSearch.showMoreUsers(\'visualscience-user_list-result-' + parameters.tabId + '\', ' + parameters.showHowMany + ', this); return false;"  /></div>');
+        html.push('</tbody></table></div><br /><div align="center"><input type="button" class="vsLongButton" value="' + vsText.addMoreUsers + '" onclick="vsSearch.showMoreUsers(\'visualscience-user_list-result-' + parameters.tabId + '\', ' + parameters.showHowMany + ', this); return false;" ' + ( parameters.users.length <= parameters.showHowMany ? 'disabled':'') + '  /></div>');
         //Comment form here until .join() to disable display options.
         //  if (parameters.displayOptions) {
         // 	html.push('<fieldset class="collapsible form-wrapper" id="edit-fields"><legend><span class="fieldset-legend"><a onClick="jQuery(\'#edit-fields > .fieldset-wrapper\').slideToggle();">Choose fields to show</a></span></legend><div class="fieldset-wrapper" style="display:none;"><div style="max-height: 300px; overflow: auto">');
@@ -180,9 +180,9 @@ var vsSearch = (function () {
 
 
         showMoreUsers: function (table, from, button) {
-            var tbody, nbRows, users, user, i, j, row, cell, actionbarContainer;
+            var tbody, users, user, i, j, row, cell, actionbarContainer;
             users = vsUserlist.getCurrentUsersFrom(from, vsUserlist.getNumberUsersPerPage());
-            table = document.getElementById(table)
+            table = document.getElementById(table);
             tbody = table.getElementsByTagName('tbody')[0];
             for (i = 0; i < users.length; i++) {
                 user = users[i];
@@ -197,19 +197,24 @@ var vsSearch = (function () {
                 row.innerHTML = cell;
             }
             button.setAttribute('onclick', 'vsSearch.showMoreUsers(\'' + table.id + '\', ' + (from + vsUserlist.getNumberUsersPerPage()) + ', this); return false;');
+            button.disabled = from + vsUserlist.getNumberUsersPerPage() >= vsUserlist.currentNumberOfUsers() ? true: false;
             vsSearch.makeActionBarMoveable(0);
             vsSearch.updateActionBar();
         },
 
         updateActionBar: function (idOfThisTab) {
-            var nbSelected, nbShown, total;
+            var nbSelected, nbShown, total, totalFull;
             nbSelected = vsDatabase.getSelectedUsers().length;
             nbShown = document.getElementById('visualscience-user_list-result-0').getElementsByTagName('tbody')[0].getElementsByTagName("tr").length;
             total = vsUserlist.currentNumberOfUsers();
-            document.getElementById('action-bar-selected').innerText = nbSelected
+            nbShown = nbShown > total ? total : nbShown;
+            totalFull = vsUserlist.totalNumberOfUsers();
+            document.getElementById('action-bar-selected').innerText = nbSelected;
             document.getElementById('action-bar-displayed').innerText = nbShown + '/' + total;
-            document.getElementById('action-bar-selected').textContent = nbSelected
+            document.getElementById('action-bar-total').innerText = totalFull;
+            document.getElementById('action-bar-selected').textContent = nbSelected;
             document.getElementById('action-bar-displayed').textContent = nbShown + '/' + total;
+            document.getElementById('action-bar-total').textContent = totalFull;
 
             // Uncomment to allow table sorting. (Doesn't work once you've clicked on "Show More Users".)
             // if (nbShown <= vsSearch.nbUsersHideOptions) {
