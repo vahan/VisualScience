@@ -11,7 +11,7 @@
 
 
    maxAutocompleteEntries = 5;
-   delayBeforeTableCreation = 3000;
+   delayBeforeTableCreation = 1;//3000
    maxNumberOfTableEntries = 150;
 
    /*
@@ -30,7 +30,9 @@
       createFullNDDB();
 	        //Timeout so that the views have time to load.
           setTimeout(function () {
-           vsUserlist.search();
+            //Barrier waiting for the first ajax user request to arrive.
+            while (!firstQueryArrived)!
+             vsUserlist.search();
          }, delayBeforeTableCreation);
         }
         else {
@@ -283,7 +285,7 @@
       wildcard = fields || '*';
       operators = Object.keys(searchNDDB.filters);
       operators[0] = '=';
-         for (iter = 0; iter < operators.length; iter++) {
+      for (iter = 0; iter < operators.length; iter++) {
         /*
          * We don't want the the operators containing 'in', as they could 
          * modify the search query in an unexpected way. 
@@ -293,71 +295,71 @@
          */
            if (!(/[a-z]/.test(operators[iter]))) { // operators[iter].indexOf('in') == -1
             search = search.replace(new RegExp('\\s*' + operators[iter] + '\\s*', 'g'), ' ' + operators[iter] + ' ');
-          }
         }
-        filtered = searchNDDB.breed();
-        addLikeOperator(filtered);
-        queries = search.split(' ');
-        if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
-          filtered.select(wildcard, '~i', '%' + queries[0] + '%');
-          iter = 1;
-        }
-        else {
-          filtered.select(queries[0], queries[1], queries[2]);
-          iter = 3;
-        }
-        while (iter < queries.length) {
-         if (queries[iter].toLowerCase() === 'and') {
-
-          if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
-            filtered.and(wildcard, '~i', '%' + queries[iter+1] + '%');
-            iter -= 2;
-          }
-          else {
-            filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
-          }
-        }
-        else {
-          if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
-            filtered.or(wildcard, '~i', '%' + queries[iter+1] + '%');
-            iter -= 2;
-          }
-          else {
-            filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
-          }
-
-        }
-        iter += 4;
       }
-      return filtered.execute();
-    };
+      filtered = searchNDDB.breed();
+      addLikeOperator(filtered);
+      queries = search.split(' ');
+      if (!queries[1] || queries[1].toLowerCase() === 'and' || queries[1].toLowerCase() === 'or') {
+        filtered.select(wildcard, '~i', '%' + queries[0] + '%');
+        iter = 1;
+      }
+      else {
+        filtered.select(queries[0], queries[1], queries[2]);
+        iter = 3;
+      }
+      while (iter < queries.length) {
+       if (queries[iter].toLowerCase() === 'and') {
 
-    tagMarkNameFields = function (fields) {
-     var first = searchDB.config.first;
-     var last = searchDB.config.last;
-     var formattedFields = new Array();
-     for (var field in fields) {
-      var formatted = formatFieldTitle(fields[field]);
-      if (fields[field] == first) {
-       formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
-     }
-     else if (fields[field] == last) {
-       formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
-     }
-     formattedFields.push(formatted);
+        if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+          filtered.and(wildcard, '~i', '%' + queries[iter+1] + '%');
+          iter -= 2;
+        }
+        else {
+          filtered.and(queries[iter+1], queries[iter+2], queries[iter+3]);
+        }
+      }
+      else {
+        if (!queries[iter+2] || queries[iter+2].toLowerCase() === 'and' || queries[iter+2].toLowerCase() === 'or') {
+          filtered.or(wildcard, '~i', '%' + queries[iter+1] + '%');
+          iter -= 2;
+        }
+        else {
+          filtered.or(queries[iter+1], queries[iter+2], queries[iter+3]);
+        }
 
+      }
+      iter += 4;
+    }
+    return filtered.execute();
+  };
+
+  tagMarkNameFields = function (fields) {
+   var first = searchDB.config.first;
+   var last = searchDB.config.last;
+   var formattedFields = new Array();
+   for (var field in fields) {
+    var formatted = formatFieldTitle(fields[field]);
+    if (fields[field] == first) {
+     formatted = '<span class="visualscience-search-field-first">'+formatted+'</span>';
    }
-   return formattedFields;
- };
+   else if (fields[field] == last) {
+     formatted = '<span class="visualscience-search-field-last">'+formatted+'</span>';
+   }
+   formattedFields.push(formatted);
 
- formatFieldTitle = function (field) {
-   field = field.replace(/_/gi, " ");
-   return field.replace(/\w\S*/g, function(txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  });
- };
+ }
+ return formattedFields;
+};
 
- return {
+formatFieldTitle = function (field) {
+ field = field.replace(/_/gi, " ");
+ return field.replace(/\w\S*/g, function(txt) {
+  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+});
+};
+
+return {
 
   emailAvailable: false,
 
