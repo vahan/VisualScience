@@ -92,13 +92,14 @@
                     var messageTab = msgTabLayout(parameters);
                     jQuery('#message-tab-' + thisTabId).html(messageTab);
                     vsUtils.loadCLEditor('visualscience-message-input-' + thisTabId);
-                    vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId);
+                    vsUtils.loadDrupalHTMLUploadForm('no', 'upload-form-' + thisTabId, thisTabId, '#message-tab-');
                     vsUtils.loadUploadScripts('upload-button-' + thisTabId);
                     if (!vsUtils.isLoggedIn()) {
                         jQuery('#visualscience-send-message-button-' + thisTabId).attr({
                             disabled: true,
                             value: vsText.pleaseLogin
                         });
+                        vsInterface.closeTab('#message-tab-' + thisTabId);
                     }
                 });
             } else {
