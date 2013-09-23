@@ -223,6 +223,7 @@
             //Now we want to delete the database in the array of NDDB
             var tabNb = parseInt(tabIndex.match(/[0-9]*$/));
             vsDatabase.lsDB[tabNb] = 'not_available';
+            vsLivingscience.updateAllLSTabsListing();
         }
     };
 

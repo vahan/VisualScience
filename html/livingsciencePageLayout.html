@@ -1,4 +1,4 @@
-<div onclick="vsLscomparison.getListOfTabsForLSComparison({{thisTabId}})">
+<div>
 	<div id="ls-result-options-{{thisTabId}}">
 		<fieldset class="collapsible form-wrapper">
 			<legend>
@@ -39,12 +39,12 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr onclick="vsLscomparison.getListOfTabsForLSComparison({{thisTabId}})" >
 							<td>
 								<label for="comparison-ls-result-{{thisTabId}}">Compare with</label>
 							</td>
-							<td onclick="vsLscomparison.getListOfTabsForLSComparison({{thisTabId}})">
-								<select onclick="vsLscomparison.getListOfTabsForLSComparison({{thisTabId}})" onchange="vsLscomparison.compareLSTabsTogether({{thisTabId}})" id="comparison-ls-result-{{thisTabId}}" name="comparison-ls-result-{{thisTabId}}">
+							<td>
+								<select onchange="vsLscomparison.compareLSTabsTogether({{thisTabId}})" id="comparison-ls-result-{{thisTabId}}" name="comparison-ls-result-{{thisTabId}}">
 									<option value="nothing">Select a tab...</option>
 								</select>
 							</td>

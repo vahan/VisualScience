@@ -2,8 +2,8 @@
  * @file
  * File that manages everything linked with the Livingscience tab.
  */
-var vsLivingscience;
-vsLivingscience = (function () {
+ var vsLivingscience;
+ vsLivingscience = (function () {
     var setWidthForMapsAndRelations, livingscience, lslist, lsmap, lsrelations, onLivingScienceResults;
     // We have to wait until the livingscience.nocache.js file is loaded.
     jQuery(window).load(function () {
@@ -27,7 +27,7 @@ vsLivingscience = (function () {
      * (More infos: https://github.com/nodeGame/NDDB)
      * Then, thanks to this database, we generate the nice table in the div under the tab.
      */
-    onLivingScienceResults = function (listOfPublications, idDivUnderTab, thisTabId) {
+     onLivingScienceResults = function (listOfPublications, idDivUnderTab, thisTabId) {
         if (vsDatabase.lsDB[thisTabId] === 'not_available') {
             return false;
         }
@@ -46,11 +46,12 @@ vsLivingscience = (function () {
         jQuery('a[href="#livingscience-tab-' + thisTabId + '"]').bind('click', function () {
             vsLivingscience.actualizeLivingScienceDisplay(vsDatabase.lsDB[thisTabId], thisTabId);
         });
+        vsLivingscience.updateAllLSTabsListings();
     };
     /*
      * This function sets the layout for the maps and relations div
      */
-    setWidthForMapsAndRelations = function (listId, mapId, relationsId) {
+     setWidthForMapsAndRelations = function (listId, mapId, relationsId) {
         var setWidth = jQuery('#' + vsInterface.getTabbedInterface()).width() / 2;
         setWidth -= setWidth * 1 / 10;
         jQuery('#' + mapId + ', #' + relationsId).css({
@@ -64,12 +65,20 @@ vsLivingscience = (function () {
     };
 
     return {
+
+        updateAllLSTabsListings: function () {
+            var iter;
+            for (iter = 0; iter < vsDatabase.lsDB.length; iter++) {
+                vsLscomparison.getListOfTabsForLSComparison(iter);
+            }
+        },
+
         /*
          * In this function we create a new LivingScience tab, with the names the end-user checkd in the userlist.
          * idOfTheTab is the id of the tab where the livingscience request was sent. The optional parameter selectedUsers
          * is usefull when you already know which are the selected users and is a string separated with ORs (and only ORs).
          */
-        createTabLivingScience: function (idOfTheTab, selectedUsers) {
+         createTabLivingScience: function (idOfTheTab, selectedUsers) {
             var iter;
             if (selectedUsers == undefined) {
                 selectedUsers = vsSearch.getSelectedUsersFromSearchTable(idOfTheTab);
@@ -104,7 +113,7 @@ vsLivingscience = (function () {
          * location is the div where to insert the content (usually the div of the tab.) and
          * thisTabId is the id of the tab we are working on, or a unique id for different divs.
          */
-        generateLivingScienceFromDB: function (database, location, thisTabId) {
+         generateLivingScienceFromDB: function (database, location, thisTabId) {
             var nbResults = database.length;
             vsInterface.getView('livingsciencePageLayout.html', function (livingsciencePageContent) {
                 var parameters = {
@@ -126,7 +135,7 @@ vsLivingscience = (function () {
         /*
          * Actualizes the display of a LivingScience result.
          */
-        actualizeLivingScienceDisplay: function (database, thisTabId) {
+         actualizeLivingScienceDisplay: function (database, thisTabId) {
             livingscience = new ch.ethz.livingscience.gwtclient.api.LivingScienceSearch();
             lslist = new ch.ethz.livingscience.gwtclient.api.LivingScienceList();
             lsrelations = new ch.ethz.livingscience.gwtclient.api.LivingScienceRelations();
@@ -142,7 +151,7 @@ vsLivingscience = (function () {
          * What we do here is that we recreate a new NDDB, with the new wanted parameters, and the
          * previous NDDB as a base.
          */
-        changeNumberOfDisplayedLSPublications: function (thisTabId) {
+         changeNumberOfDisplayedLSPublications: function (thisTabId) {
             var numberOfPublications = jQuery('#nb-pubs-ls-result-' + thisTabId).val();
             if (numberOfPublications == 'all') {
                 numberOfPublications = vsDatabase.lsDB[thisTabId].length;
@@ -160,7 +169,7 @@ vsLivingscience = (function () {
         /*
          * This function returns the name displayed in a LS tab.
          */
-        getLSTabName: function (idOfTheTab) {
+         getLSTabName: function (idOfTheTab) {
             var tabName = jQuery('a[href|="#livingscience-tab-' + idOfTheTab + '"]').text();
             tabName = tabName.substring(1, tabName.length - 1);
             return tabName;
@@ -172,42 +181,42 @@ vsLivingscience = (function () {
          * howMany is the number of entries to display,
          * and location is where to insert the content once it is created (without #)
          */
-        generatePublicationsDiv: function (database, start, howMany, location) {
+         generatePublicationsDiv: function (database, start, howMany, location) {
             var publicationsToShow = new Array();
             for (var i = start;
                 (i <= start + howMany) && (i <= database.db.length - 1); i++) {
                 publicationsToShow.push(database.db[i].livingscienceID);
-            }
-            lslist.generateList(publicationsToShow, location);
-        },
+        }
+        lslist.generateList(publicationsToShow, location);
+    },
 
         /*
          * Generates the design of the LS Relations graph and puts it into an already existing div.
          * database is the NDDB data,
          * location is the id without # of where to insert it
          */
-        generateRelationsDiv: function (database, start, howMany, location) {
+         generateRelationsDiv: function (database, start, howMany, location) {
             var publicationsToShow = new Array();
             for (var i = start;
                 (i <= start + howMany) && (i <= database.length - 1); i++) {
                 publicationsToShow.push(database.db[i].livingscienceID);
-            }
-            lsrelations.set(publicationsToShow, location);
-        },
+        }
+        lsrelations.set(publicationsToShow, location);
+    },
 
         /*
          * Generates the design of the LS Map graph and puts it into an already existing div.
          * database is the NDDB data,
          * location is the id without # of where to insert it
          */
-        generateMapDiv: function (database, start, howMany, location) {
+         generateMapDiv: function (database, start, howMany, location) {
             var publicationsToShow = new Array();
             for (var i = start;
                 (i <= start + howMany) && (i <= database.length - 1); i++) {
                 publicationsToShow.push(database.db[i].livingscienceID);
-            }
-            lsmap.set(publicationsToShow, location);
         }
-    };
+        lsmap.set(publicationsToShow, location);
+    }
+};
 
 })();
