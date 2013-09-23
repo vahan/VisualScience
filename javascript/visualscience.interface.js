@@ -72,7 +72,7 @@
         },
 
         viewsAreLoaded : function () {
-            return vsDatabase.htmlViewsDB.length >= listOfViews.length;
+            return Object.keys(vsDatabase.htmlViewsDB).length >= listOfViews.length;
         },
 
         dialog: function (content, title, buttons, callback, width, height) {

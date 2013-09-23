@@ -29,8 +29,8 @@
       searchDB = store('vsSearchDB');
       createFullNDDB();
       var launchSearch = function launchSearch() {
-        if (!vsInterface.viewsAreLoaded()) {
-          launchSearch();
+        if ( !(vsInterface.viewsAreLoaded()) ) {
+          setTimeout(launchSearch, delayBeforeTableCreation);
         }
         else {
           vsUserlist.search();
