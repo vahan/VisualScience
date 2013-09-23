@@ -1,10 +1,10 @@
 /*
  * @file
  * File that manages everything linked with the storing of data.
- */
+ */    var selectedUsers, uploadDB, numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
+
  var vsDatabase = (function () {
 
-    var selectedUsers, uploadDB, numberOfPublicationsForLivingScience, firstPublicationForLivingScience, optionsForNDDB, lsDB, lsDBOriginal, db;
 
     //This variable will store every file that will be uploaded. The first part of the array represent the tab, and the second is the index of the file
     uploadDB = new Array();

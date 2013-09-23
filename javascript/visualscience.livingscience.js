@@ -28,6 +28,9 @@ vsLivingscience = (function () {
      * Then, thanks to this database, we generate the nice table in the div under the tab.
      */
     onLivingScienceResults = function (listOfPublications, idDivUnderTab, thisTabId) {
+        if (vsDatabase.lsDB[thisTabId] === 'not_available') {
+            return false;
+        }
         listOfPublications = lslist.getPubs(listOfPublications);
         if (listOfPublications.length === 0) {
             vsInterface.closeTab('#livingscience-tab-' + thisTabId);

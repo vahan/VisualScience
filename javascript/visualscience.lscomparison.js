@@ -135,7 +135,7 @@
          	var tabs = new Array();
          	var oldI = 0;
          	for (var i = 0; i <= vsDatabase.lsDB.length; i++) {
-         		if (vsDatabase.lsDB[i] != undefined && i != tabNotWanted) {
+         		if (vsDatabase.lsDB[i] != 'not_available' && vsDatabase.lsDB[i] != undefined && i != tabNotWanted) {
          			tabs[oldI] = new Array();
          			var tabName = vsLivingscience.getLSTabName(i);
          			tabs[oldI][0] = tabName;
