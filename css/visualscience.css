@@ -103,18 +103,9 @@
  	float:right;
  }
  .scrollable {
- 	overflow-y:hidden;
- }
-
- .scrollable:first-child {
- 	width:90%;
- 	display:inline-table;
- 	display:inline-block;
- }
-
- .scrollable:hover  {
  	overflow-y:auto;
  }
+ 
  ::-webkit-scrollbar {
  	width:8px;
  }
