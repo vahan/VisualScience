@@ -2,12 +2,15 @@
  * @file
  * File that manages everything linked with the message tab.
  */
-var vsMessage = (function () {
-    var createRecipientsDiv, insertEmailIntoRecipientsDiv, getRecipientsOfMessage, renameMessageTab;
+ var vsMessage = (function () {
+    var createRecipientsDiv, insertEmailIntoRecipientsDiv, getRecipientsOfMessage, renameMessageTab, maxNameLength;
+
+    maxNameLength = 25;
+
     /*
      * The recipients div for messages and conferences
      */
-    createRecipientsDiv = function (thisTabId, selectedUsers, selectedUsersEmail) {
+     createRecipientsDiv = function (thisTabId, selectedUsers, selectedUsersEmail) {
         var recipientsLayout = vsInterface.getView('msgRecipientsLayout.html', function (data) {
             return data;
         });
@@ -16,7 +19,7 @@ var vsMessage = (function () {
             users.push({
                 id: i,
                 email: selectedUsersEmail[i],
-                name: selectedUsers[i],
+                name: selectedUsers[i].length > maxNameLength ? selectedUsers[i].substring(0, maxNameLength - 3) + '...' : selectedUsers[i],
                 tab: thisTabId
             }); //Have to put tab, otherwise not well interpreted into handlebars' view
         }
@@ -42,7 +45,7 @@ var vsMessage = (function () {
     /*
      * Gets the name and email of every recipients of a message.
      */
-    getRecipientsOfMessage = function (thisTabId) {
+     getRecipientsOfMessage = function (thisTabId) {
         var recipientsEmailAndName = new Array();
         jQuery('p[id*="visualscience-recipients-entry-' + thisTabId + '"]').each(function (i) {
             recipientsEmailAndName[i] = new Array(2);
@@ -71,7 +74,7 @@ var vsMessage = (function () {
         /*
          * This function creates a new Tab where it is possible to send a message to the selected user(s)
          */
-        createTabSendMessage: function (idOfTheTab) {
+         createTabSendMessage: function (idOfTheTab) {
             selectedUsers = vsSearch.getSelectedUsersFromSearchTable(idOfTheTab);
             if (selectedUsers.length > 0) {
                 var selectedUsersEmail = vsSearch.getSelectedUsersEmailFromSearchTable(idOfTheTab);
@@ -105,7 +108,8 @@ var vsMessage = (function () {
         /*
          * Get informations and send them to the server through ajax
          */
-        sendVisualscienceMessage: function (thisTabId) {
+         sendVisualscienceMessage: function (thisTabId) {
+            debugger;
             var mailURL = vsUtils.getSendMailURL();
             jQuery('#visualscience-send-message-button-' + thisTabId).attr({
                 'value': 'Sending Message... Please wait',
@@ -115,11 +119,10 @@ var vsMessage = (function () {
             var messageVal = jQuery('#visualscience-message-input-' + thisTabId).val();
             var attachmentJson = vsUtils.getJsonOfAttachments(thisTabId);
             var recipientsArray = getRecipientsOfMessage(thisTabId);
-            var flagAllDone = false;
             if (recipientsArray.length < 1) {
                 vsInterface.dialog(vsText.insertOneRecipient);
                 jQuery('#visualscience-send-message-button-' + thisTabId).attr({
-                    'value': 'Send Message',
+                    'value': vsText.sendMessage,
                     'disabled': false
                 });
                 return false;
@@ -154,22 +157,21 @@ var vsMessage = (function () {
                                 'disabled': false
                             });
                         }
+                        else {
+                            jQuery('#visualscience-send-message-button-' + thisTabId).attr({
+                                'value': vsText.messageSent,
+                                'disabled': false
+                            });
+                        }
                     }
                 });
-                if (i == recipientsArray.length - 1) {
-                    flagAllDone = true;
-                }
-            }
-            while (!flagAllDone); //Barrier to wait until all the requests has been made
-            jQuery('#visualscience-send-message-button-' + thisTabId).attr({
-                'value': vsText.messageSent,
-                'disabled': false
-            });
+}
+            
         },
         /*
          * Gets the value of the email to add and insert it into the div
          */
-        addRecipientForMessage: function (thisTabId) {
+         addRecipientForMessage: function (thisTabId) {
             var email = jQuery('#visualscience-message-add-recipient-email-' + thisTabId).val();
             if (email.indexOf('@') != -1) {
                 var nbRecipients = parseInt(jQuery('#visualscience-message-add-recipient-button-' + thisTabId).attr('nbRecipients'));

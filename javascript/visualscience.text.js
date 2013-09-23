@@ -53,4 +53,5 @@
  	userList: 'User List',
  	users: 'Users',
  	waitLoadingDB: 'Loading the user database... This happens only the first time.',
+ 	sendMessage: 'Send Message',
  };
