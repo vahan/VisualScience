@@ -8,7 +8,7 @@
  	activityPeriod: 'Period of activity',
  	addMoreUsers: 'Show More Users',
  	coauthors: 'Co-Authors',
- 	comparisonInterface: 'Comparison Interface',
+ 	comparisonInterface: 'Comparison',
  	confAfterToday: 'The conference cannot be scheduled before current date and time.',
  	conferenceScriptNotLoaded: 'The script file for conferences is not yet to loaded. Please try again later.',
  	csvScriptNotLoaded: 'The script file for CSV export is not yet loaded. Please try again later.',
@@ -42,6 +42,7 @@
  	selectOneUser: 'Please select at least one user.',
  	selectTab: 'Select a tab...',
  	sendingFile: 'Progress: Sending File... Please Wait.',
+ 	sendMessage: 'Send Message',
  	statistics: 'Statistics',
  	titleError: 'You have to set a title.',
  	titleUserNameUndefined: 'No First or Last name',
@@ -53,5 +54,4 @@
  	userList: 'User List',
  	users: 'Users',
  	waitLoadingDB: 'Loading the user database... This happens only the first time.',
- 	sendMessage: 'Send Message',
  };

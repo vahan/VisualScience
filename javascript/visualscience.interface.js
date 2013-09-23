@@ -221,7 +221,7 @@
          closeTab: function (tabIndex) {
             jQuery('#' + tabbedInterface).tabs('remove', tabIndex);
             //Now we want to delete the database in the array of NDDB
-            var tabNb = parseInt(tabIndex.charAt(tabIndex.length - 1));
+            var tabNb = parseInt(tabIndex.match(/[0-9]*$/));
             vsDatabase.lsDB[tabNb] = 'not_available';
         }
     };
