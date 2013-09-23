@@ -32,10 +32,10 @@
         vsUtils.makeTableSortable('ls-compare-statistics-table-' + idOfThisTab);
     };
     getComparisonTableStatistics = function (idOfTab, object) {
-    	var table = '<table id="ls-compare-statistics-table-' + idOfTab + '" style="display:inline-block;max-width:100%;overflow-x:scroll;" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th></th>';
+    	var table = '<div style="max-width:100%;overflow-x:scroll;"><table id="ls-compare-statistics-table-' + idOfTab + '" style="display:inline-block;" class="tablesorter sticky-enabled table-select-processed tableheader-processed sticky-table"><thead><tr><th></th>';
 
     	jQuery.each(object.fields, function (i) {
-    		table += '<th>' + object.fields[i][0] + '</th>';
+    		table += '<th style="margin-right:5px;margin-left:5px;padding-right:5px;padding-left:5px;min-width:125px;">' + object.fields[i][0] + '</th>';
     	});
 
     	table += '</tr></thead><tbody>';
@@ -48,7 +48,7 @@
     		table += '</tr>'
     	});
 
-    	table += '</tbody></table>';
+    	table += '</tbody></table></div>';
     	return table;
     };
     getSprikiColor = function (idColor) {
