@@ -11,7 +11,7 @@
 
 
    maxAutocompleteEntries = 5;
-   delayBeforeTableCreation = 1000;
+   delayBeforeTableCreation = 100;
    maxNumberOfTableEntries = 150;
 
    /*
@@ -28,18 +28,21 @@
      if (typeof store != 'undefined' && store('vsSearchDB')) {
       searchDB = store('vsSearchDB');
       createFullNDDB();
-	        //Timeout so that the views have time to load.
-          setTimeout(function () {
-            //Barrier waiting for the first ajax user request to arrive.
-            while (!vsInterface.viewsAreLoaded());
-            vsUserlist.search();
-          }, delayBeforeTableCreation);
+      var launchSearch = function launchSearch() {
+        if (!vsInterface.viewsAreLoaded()) {
+          launchSearch();
         }
         else {
-          vsUserlist.reloadUserDatabase();
+          vsUserlist.search();
         }
-        //startAutoComplete();
-      });
+      };
+      setTimeout(launchSearch, delayBeforeTableCreation);
+    }
+    else {
+      vsUserlist.reloadUserDatabase();
+    }
+    //startAutoComplete();
+  });
 
     /*
      * You only need full table, because when fetching you pass the array of fields you are interested in.
