@@ -14,17 +14,24 @@
             var url = vsUtils.getCSVURL();
             var finalTable = '';
             var tableId = 'visualscience-user_list-result-' + idOfThisTab;
+            var isOneUser = false;
             //Through the head of the table
             jQuery('#' + tableId + ' > thead > tr > th').each(function (i) {
             	i++;
             	if (i != 1) {
             		if (i == 2) {
             			finalTable += jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text().replace(' ', '-');
-            		} else {
-            			finalTable += ',' + jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text().replace(' ', '-');
-            		}
-            	}
-            });
+                        isOneUser = true;
+                    } 
+                    else {
+                       finalTable += ',' + jQuery('#' + tableId + ' > thead > tr > th:nth-child(' + i + ')').text().replace(' ', '-');
+                   }
+               }
+           });
+            if (!isOneUser) {
+                vsInterface.dialog(vsText.selectOneUser);
+                return false;
+            }
             finalTable += newLineCharacter;
             //Through the body of table
             jQuery('#' + tableId + ' > tbody > tr').each(function (index) {
