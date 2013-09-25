@@ -26,7 +26,7 @@
 
    jQuery(document).ready(function() {
      if (typeof store != 'undefined' && store('vsSearchDB')) {
-      searchDB = store('vsSearchDB');
+      searchDB = store(Drupal.settings.basePath + 'vsSearchDB');
       createFullNDDB();
       var launchSearch = function launchSearch() {
         if ( !(vsInterface.viewsAreLoaded()) ) {
@@ -194,7 +194,7 @@
             store.onquotaerror = function () {
               vsInterface.dialog(vsText.dbTooLargeError, vsText.loadDBTitle, null, null, '40%');
             };
-            store.localStorage('vsSearchDB', searchDB);
+            store.localStorage(Drupal.settings.basePath + 'vsSearchDB', searchDB);
           }
         });
 };
