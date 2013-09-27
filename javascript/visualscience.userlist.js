@@ -4,15 +4,15 @@
  *
  * Note that it also provide the searching functions.
  */
+ var maxUserIdInServer, nbUsersInServerDB, nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
+
  var vsUserlist = (function() {
  	"use strict";
-
-   var nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
-
 
    maxAutocompleteEntries = 5;
    delayBeforeTableCreation = 100;
    maxNumberOfTableEntries = 150;
+   nbUsersInServerDB = 0; //Changed when first Ajax request arrives.
 
    /*
     * Saves a user-defined search into the server, only for this user. 
@@ -174,19 +174,21 @@
           },
           function(data) {
             var response = jQuery.parseJSON(data);
-            jQuery('#vs-db-loading').progressbar({
-             value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/response.total)*100
-           });
             if (response.from == 0) {
+              nbUsersInServerDB = response.nbUsersInServerDB;
+              maxUserIdInServer = response.total;
               maxNumberOfTableEntries = response.nbUsersPerPage;
               for (var i = response.howMany; i < response.total; i += response.howMany) {
                 getSearchDataFromServer(i);
               }
             }
+            jQuery('#vs-db-loading').progressbar({
+             value: jQuery('#vs-db-loading').progressbar('value') + (response.howMany/maxUserIdInServer)*100
+           });
             for (var user in response.users) {
              searchDB.users.push(response.users[user]);
            }
-           if (allRequestHaveArrived(response.total)) {
+           if (allRequestHaveArrived(nbUsersInServerDB)) {
             vsInterface.closeDialog();
             searchDB.config = response.config;
             createFullNDDB();
