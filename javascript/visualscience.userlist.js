@@ -4,10 +4,10 @@
  *
  * Note that it also provide the searching functions.
  */
- var maxUserIdInServer, nbUsersInServerDB, nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
-
  var vsUserlist = (function() {
- 	"use strict";
+   var maxUserIdInServer, nbUsersInServerDB, nddbSelSearchAll, addLikeOperator, currentSearchNDDB, tagMarkNameFields, getFilteredDatabase, getSearchDataFromServer, allRequestHaveArrived, createFullNDDB, searchNDDB, maxNumberOfTableEntries, getUsersFor, mergeUsersSelections, findBestLogicalOperator, getLogicalCondition, sendSearchToSave, startAutoComplete, searchDB, maxAutocompleteEntries, delayBeforeTableCreation, getSearchResult, formatFieldTitle;
+
+   "use strict";
 
    maxAutocompleteEntries = 5;
    delayBeforeTableCreation = 100;
