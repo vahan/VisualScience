@@ -133,6 +133,7 @@ class Config {
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($fieldsList, $oldFields);
 		$numberSettings = $this->getNumberSettingsHTML();
+		$buttonSettings = $this->getButtonSettings();
 		$saveButton = $this->createSaveButton();
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
