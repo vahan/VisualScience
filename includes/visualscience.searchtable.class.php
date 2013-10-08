@@ -206,15 +206,24 @@ class Search {
 			$nbUsersPerPage = variable_get('visualscience_user_per_search_page', 150);
 			$nbUserPerAjax = variable_get('visualscience_user_sent_per_ajax_request', 500);
 			$nbUsersinServerDB = $this->getCountOfUsers();
+			$showMessagesButton = variable_get('visualscience_show_messages_button');
+			$showCSVButton = variable_get('visualscience_show_csv_button');
+			$showLivingScienceButton = variable_get('visualscience_show_livingscience_button');
+			// $showConferenceButton = variable_get('visualscience_show_conference_button');
+			$showConferenceButton = 0;
 		}
 		else {
 			$maxId = 0;
 			$nbUsersPerPage = 150;
 			$nbUserPerAjax = 500;
 			$nbUsersinServerDB = 0;
+			$showMessagesButton = true;
+			$showCSVButton = true;
+			$showLivingScienceButton = true;
+			$showConferenceButton = true;
 		}
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
-		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "nbUsersInServerDB": ' .$nbUsersinServerDB. ', "total": '.$maxId.'}';
+		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "nbUsersInServerDB": ' .$nbUsersinServerDB. ', "total": '.$maxId.', "csv": ' .$showCSVButton. ', "messages": ' .$showMessagesButton. ', "livingscience": ' .$showLivingScienceButton. ', "conference": ' .$showConferenceButton. ' }';
 		return $searchDB;
 	}
 }

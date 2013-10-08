@@ -25,8 +25,18 @@
    };
 
    jQuery(document).ready(function() {
-     if (typeof store != 'undefined' && store('vsSearchDB')) {
+     if (typeof store != 'undefined' && store(Drupal.settings.basePath + 'vsSearchDB')) {
+
       searchDB = store(Drupal.settings.basePath + 'vsSearchDB');
+
+      nbUsersInServerDB = store(Drupal.settings.basePath + 'nbUsersInServerDB');
+      maxUserIdInServer = store(Drupal.settings.basePath + 'maxUserIdInServer');
+      maxNumberOfTableEntries = store(Drupal.settings.basePath + 'maxNumberOfTableEntries');
+      vsUserlist.showCSVButton = store(Drupal.settings.basePath + 'showCSVButton');
+      vsUserlist.showMessagesButton = store(Drupal.settings.basePath + 'showMessagesButton');
+      vsUserlist.showLSButton = store(Drupal.settings.basePath + 'showLSButton');
+      vsUserlist.showConferenceButton = store(Drupal.settings.basePath + 'showConferenceButton');
+
       createFullNDDB();
       var launchSearch = function launchSearch() {
         if ( !(vsInterface.viewsAreLoaded()) ) {
@@ -167,7 +177,6 @@
        * tries to store them into the localStorage of the browser. (Throws exception if it can't.) 
        */
        getSearchDataFromServer = function (from) {
-        console.time('Request n°' + from);
         jQuery.get(
           vsUtils.getUsersPath(),
           {
@@ -175,11 +184,14 @@
           },
           function(data) {
             var response = jQuery.parseJSON(data);
-            console.timeEnd('Request n°' + response.from);
             if (response.from == 0) {
               nbUsersInServerDB = response.nbUsersInServerDB;
               maxUserIdInServer = response.total;
               maxNumberOfTableEntries = response.nbUsersPerPage;
+              vsUserlist.showCSVButton = response.csv;
+              vsUserlist.showMessagesButton = response.messages;
+              vsUserlist.showLSButton = response.livingscience;
+              vsUserlist.showConferenceButton = response.conference;
               for (var i = response.howMany; i < response.total; i += response.howMany) {
                 getSearchDataFromServer(i);
               }
@@ -198,6 +210,14 @@
             store.onquotaerror = function () {
               vsInterface.dialog(vsText.dbTooLargeError, vsText.loadDBTitle, null, null, '40%');
             };
+            store.localStorage(Drupal.settings.basePath + 'nbUsersInServerDB', nbUsersInServerDB);
+            store.localStorage(Drupal.settings.basePath + 'maxUserIdInServer', maxUserIdInServer);
+            store.localStorage(Drupal.settings.basePath + 'maxNumberOfTableEntries', maxNumberOfTableEntries);
+            store.localStorage(Drupal.settings.basePath + 'showCSVButton', vsUserlist.showCSVButton);
+            store.localStorage(Drupal.settings.basePath + 'showMessagesButton', vsUserlist.showMessagesButton);
+            store.localStorage(Drupal.settings.basePath + 'showLSButton', vsUserlist.showLSButton);
+            store.localStorage(Drupal.settings.basePath + 'showConferenceButton', vsUserlist.showConferenceButton);
+            //This store MUST be last. (Other wise chech in jQuery(document).ready doesn't work)
             store.localStorage(Drupal.settings.basePath + 'vsSearchDB', searchDB);
           }
         });
@@ -370,6 +390,14 @@ return {
       }
     }
   },
+
+  showMessagesButton: true,
+
+  showCSVButton: true,
+
+  showLSButton: true,
+
+  showConferenceButton: false,
 
   currentNumberOfUsers: function currentNumberOfUsers () {
     return currentSearchNDDB.count();

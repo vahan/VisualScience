@@ -94,7 +94,10 @@ var vsSearch = (function () {
             var parameters = {
                 idOfThisTab: idOfThisTab,
                 installFolder: vsUtils.getInstallFolder(),
-                emailAvailable: vsUserlist.emailAvailable()
+                emailAvailable: vsUserlist.emailAvailable() && vsUserlist.showMessagesButton,
+                showCSV: vsUserlist.showCSVButton,
+                showLS: vsUserlist.showLSButton,
+                showConference: vsUserlist.showConferenceButton,
             };
             return actionBar(parameters);
         },

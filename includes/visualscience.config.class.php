@@ -117,6 +117,44 @@ class Config {
 		return $final;
 	}
 
+	private function saveNumbersSettings () {
+		$nbUsersPerPage = filter_xss(check_plain($_POST['nbUsersPerPage']));
+		$nbUsersPerAjax = filter_xss(check_plain($_POST['nbUsersPerAjax']));
+		if (isset($nbUsersPerPage) && $nbUsersPerPage !== 0) {
+			$this->updateNbUsersPerPage($nbUsersPerPage);
+		}
+		if (isset($nbUsersPerAjax) && $nbUsersPerAjax !== 0) {
+			$this->updateNbUsersPerAjax($nbUsersPerAjax);
+		}
+	}
+
+	private function saveVisibilitySettings () {
+		if (isset($_POST['vs_show_csv'])) {
+			variable_set('visualscience_show_csv_button', 1);
+		}
+		else {
+			variable_set('visualscience_show_csv_button', 0);
+		}
+		if (isset($_POST['vs_show_messages'])) {
+			variable_set('visualscience_show_messages_button', 1);
+		}
+		else {
+			variable_set('visualscience_show_messages_button', 0);
+		}
+		if (isset($_POST['vs_show_livingscience'])) {
+			variable_set('visualscience_show_livingscience_button', 1);
+		}
+		else {
+			variable_set('visualscience_show_livingscience_button', 0);
+		}
+		if (isset($_POST['vs_show_conference'])) {
+			variable_set('visualscience_show_conference_button', 1);
+		}
+		else {
+			variable_set('visualscience_show_conference_button', 0);
+		}
+	}
+
 	private function saveFields () {
 		$fieldsList = $this->getListOfFields();
 		foreach ($fieldsList as $field) {
@@ -156,14 +194,9 @@ class Config {
 	public function saveSentValues () {
 		$this->emptyOldValues();
 		$this->saveFields();
-		$nbUsersPerPage = filter_xss(check_plain($_POST['nbUsersPerPage']));
-		$nbUsersPerAjax = filter_xss(check_plain($_POST['nbUsersPerAjax']));
-		if (isset($nbUsersPerPage) && $nbUsersPerPage !== 0) {
-			$this->updateNbUsersPerPage($nbUsersPerPage);
-		}
-		if (isset($nbUsersPerAjax) && $nbUsersPerAjax !== 0) {
-			$this->updateNbUsersPerAjax($nbUsersPerAjax);
-		}
+
+		$this->saveNumbersSettings();
+		$this->saveVisibilitySettings();
 	}
 
 	public function insertPatternConfig ($field) {
