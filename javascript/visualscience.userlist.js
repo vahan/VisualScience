@@ -30,6 +30,12 @@
       searchDB = store(Drupal.settings.basePath + 'vsSearchDB');
 
       nbUsersInServerDB = store(Drupal.settings.basePath + 'nbUsersInServerDB');
+
+      if (searchDB.users.length < nbUsersInServerDB) {
+        vsUserlist.reloadUserDatabase();
+        return false;
+      }
+
       maxUserIdInServer = store(Drupal.settings.basePath + 'maxUserIdInServer');
       maxNumberOfTableEntries = store(Drupal.settings.basePath + 'maxNumberOfTableEntries');
       vsUserlist.showCSVButton = store(Drupal.settings.basePath + 'showCSVButton');
