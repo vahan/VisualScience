@@ -13,6 +13,19 @@ class Config {
 		return '<table><tr><td>' .t('Number of users to display on first search (Default: 150) :'). '</td><td><input type="number" name="nbUsersPerPage" id="nbUsersPerPage" value="' .variable_get('visualscience_user_per_search_page', 150). '" /></td><td>' .t('Number of users sent for each Ajax request (Default: 500) :'). '</td><td><input type="number" name="nbUsersPerAjax" id="nbUsersPerAjax" value="' .variable_get('visualscience_user_sent_per_ajax_request', 500). '" /></td></tr></table>';
 	}
 
+	private function getButtonSettingsHTML () {
+		$csv = variable_get('visualscience_show_csv_button') ? 'checked' : '';
+		$messages = variable_get('visualscience_show_messages_button') ? 'checked' : '';
+		$livingscience = variable_get('visualscience_show_livingscience_button') ? 'checked' : '';
+		$conference = variable_get('visualscience_show_conference_button') ? 'checked' : '';
+		$buttons_with_conferences = '<table><tbody><tr><td>Messages Button:</td><td><input type="checkbox" name="vs_show_messages" id="vs_show_messages" ' .$messages. ' /></td><td>Export CSV Button:</td><td><input type="checkbox" name="vs_show_csv" id="vs_show_csv" ' .$csv. ' /></td><td>LivngScience Button:
+		</td><td><input type="checkbox" name="vs_show_livingscience" id="vs_show_livingscience" ' .$livingscience. ' /></td><td>Conference Button:</td><td><input type="checkbox" name="vs_show_conference" id="vs_show_conference" ' .$conference. ' /></td></tr></tbody></table>';
+
+		$buttons = '<table><tbody><tr><td>Messages Button:</td><td><input type="checkbox" name="vs_show_messages" id="vs_show_messages" ' .$messages. ' /></td><td>Export CSV Button:</td><td><input type="checkbox" name="vs_show_csv" id="vs_show_csv" ' .$csv. ' /></td><td>LivngScience Button:
+		</td><td><input type="checkbox" name="vs_show_livingscience" id="vs_show_livingscience" ' .$livingscience. ' /></td></tr></tbody></table>';
+		return $buttons;
+	}
+
 	private function createRows ($list, $oldList) {
 		$rows = array();
 		foreach ($list as $l) {
@@ -133,11 +146,11 @@ class Config {
 		$intro = $this->getIntroduction();
 		$fieldsTable = $this->createFieldsTable($fieldsList, $oldFields);
 		$numberSettings = $this->getNumberSettingsHTML();
-		$buttonSettings = $this->getButtonSettings();
+		$buttonSettings = $this->getButtonSettingsHTML();
 		$saveButton = $this->createSaveButton();
 		$formStart = '<form action="" method="POST" id="visualscience_config_form" >';
 		$formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
-		return $formStart.$intro.$fieldsTable.$numberSettings.$saveButton.$formEnd;
+		return $formStart.$intro.$fieldsTable.$numberSettings.$buttonSettings.$saveButton.$formEnd;
 	}
 
 	public function saveSentValues () {
@@ -154,7 +167,7 @@ class Config {
 	}
 
 	public function insertPatternConfig ($field) {
-		$this->insertIntoSearchConfig($field['name'], $field['mini'],$field['full'],$field['first'],$field['last']);
+		$this->insertIntoSearchConfig($field['name'], $field['mini'], $field['full'], $field['first'],$field['last']);
 	}
 
 	public function modifyPatternConfig ($field) {

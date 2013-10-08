@@ -201,10 +201,18 @@ class Search {
 		$final = $from + $howMany;
 		$fields = $this->getFieldsFromConfig();
 		$jsonUsersAndFields = $this->getJsonUsersFields($fields, $from, $final);
-		$maxId = $from == 0 ? $this->getMaxUserId(): 0;
-		$nbUsersinServerDB = $from == 0 ? $this->getCountOfUsers() : 0;
-		$nbUsersPerPage = $from == 0 ? variable_get('visualscience_user_per_search_page', 150) : 150;
-		$nbUserPerAjax = $from == 0 ? variable_get('visualscience_user_sent_per_ajax_request', 500) : 500;
+		if ($from == 0) {
+			$maxId = $this->getMaxUserId();
+			$nbUsersPerPage = variable_get('visualscience_user_per_search_page', 150);
+			$nbUserPerAjax = variable_get('visualscience_user_sent_per_ajax_request', 500);
+			$nbUsersinServerDB = $this->getCountOfUsers();
+		}
+		else {
+			$maxId = 0;
+			$nbUsersPerPage = 150;
+			$nbUserPerAjax = 500;
+			$nbUsersinServerDB = 0;
+		}
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
 		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "nbUsersInServerDB": ' .$nbUsersinServerDB. ', "total": '.$maxId.'}';
 		return $searchDB;

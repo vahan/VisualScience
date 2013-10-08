@@ -225,4 +225,10 @@ function visualscience_install() {
   //Setting some persistent variables that can be changed in the config page.
   variable_set('visualscience_user_sent_per_ajax_request', 500);
   variable_set('visualscience_user_per_search_page', 150);
+
+  //Settings for visibility of actionbar's buttons
+  variable_set('visualscience_show_csv_button', true);
+  variable_set('visualscience_show_messages_button', true);
+  variable_set('visualscience_show_livingscience_button', true);
+  variable_set('visualscience_show_conference_button', true);
 }

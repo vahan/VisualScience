@@ -167,13 +167,15 @@
        * tries to store them into the localStorage of the browser. (Throws exception if it can't.) 
        */
        getSearchDataFromServer = function (from) {
-         jQuery.get(
+        console.time('Request n°' + from);
+        jQuery.get(
           vsUtils.getUsersPath(),
           {
             userId: from
           },
           function(data) {
             var response = jQuery.parseJSON(data);
+            console.timeEnd('Request n°' + response.from);
             if (response.from == 0) {
               nbUsersInServerDB = response.nbUsersInServerDB;
               maxUserIdInServer = response.total;
