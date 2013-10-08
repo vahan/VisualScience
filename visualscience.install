@@ -227,8 +227,8 @@ function visualscience_install() {
   variable_set('visualscience_user_per_search_page', 150);
 
   //Settings for visibility of actionbar's buttons
-  variable_set('visualscience_show_csv_button', true);
-  variable_set('visualscience_show_messages_button', true);
-  variable_set('visualscience_show_livingscience_button', true);
-  variable_set('visualscience_show_conference_button', true);
+  variable_set('visualscience_show_csv_button', 1);
+  variable_set('visualscience_show_messages_button', 1);
+  variable_set('visualscience_show_livingscience_button', 1);
+  variable_set('visualscience_show_conference_button', 1);
 }

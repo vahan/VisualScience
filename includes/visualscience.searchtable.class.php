@@ -217,10 +217,10 @@ class Search {
 			$nbUsersPerPage = 150;
 			$nbUserPerAjax = 500;
 			$nbUsersinServerDB = 0;
-			$showMessagesButton = true;
-			$showCSVButton = true;
-			$showLivingScienceButton = true;
-			$showConferenceButton = true;
+			$showMessagesButton = 1;
+			$showCSVButton = 1;
+			$showLivingScienceButton = 1;
+			$showConferenceButton = 1;
 		}
 		$jsonDisplayConfig = $this->getJsonDisplayConfig($fields);
 		$searchDB = '{"users": '.$jsonUsersAndFields.', "config":'.$jsonDisplayConfig.', "from": '.$from.',  "howMany":'.$howMany.', "nbUsersPerPage": ' .$nbUsersPerPage. ', "nbUsersInServerDB": ' .$nbUsersinServerDB. ', "total": '.$maxId.', "csv": ' .$showCSVButton. ', "messages": ' .$showMessagesButton. ', "livingscience": ' .$showLivingScienceButton. ', "conference": ' .$showConferenceButton. ' }';
