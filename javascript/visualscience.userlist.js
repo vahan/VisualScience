@@ -180,11 +180,16 @@ var vsUserlist = (function() {
    * tries to store them into the localStorage of the browser. (Throws exception if it can't.)
    */
   getSearchDataFromServer = function(from) {
-    jQuery.get(
-      vsUtils.getUsersPath(), {
+    jQuery.ajax({
+      type: 'GET',
+      url: vsUtils.getUsersPath(),
+      data: {
         userId: from
       },
-      function(data) {
+      error: function(data) {
+        vsInterface.dialog(vsText.errorLoadingUsers, vsText.loadDBTitle, null, null, '40%');
+      },
+      success: function(data) {
         var response = jQuery.parseJSON(data);
         if (response.from == 0) {
           nbUsersInServerDB = response.nbUsersInServerDB;
@@ -219,10 +224,11 @@ var vsUserlist = (function() {
           store.localStorage(Drupal.settings.basePath + 'showMessagesButton', vsUserlist.showMessagesButton);
           store.localStorage(Drupal.settings.basePath + 'showLSButton', vsUserlist.showLSButton);
           store.localStorage(Drupal.settings.basePath + 'showConferenceButton', vsUserlist.showConferenceButton);
-          //This store MUST be last. (Other wise chech in jQuery(document).ready doesn't work)
+          //This store MUST be last. (Other wise check in jQuery(document).ready doesn't work)
           store.localStorage(Drupal.settings.basePath + 'vsSearchDB', searchDB);
         }
-      });
+      }
+    });
   };
 
   /*

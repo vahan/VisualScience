@@ -16,6 +16,7 @@
  	doubleCheckForm: 'Some errors were found in the form, please check your inputs.',
  	emailNotEnabled: 'The email field has to be enabled to use this function.',
  	enterValidEmail: 'Please enter a valid email address.',
+    errorLoadingUsers: 'Oops, cannot reach the user server. Please click on "Reload User Database" or contact the administrator.',
  	errorSendingMail: 'There was a problem while sending the email. Please try again later.',
  	errorServerSendingMessage: 'An error occured on the server side while sending the message. Please contact the administrator if this happens again.',
  	fileErrorTitle: 'File Error',
