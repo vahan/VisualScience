@@ -183,7 +183,6 @@ class Search {
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.database.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.interface.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.text.js');
-		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.search.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.message.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.csv.js');
 		drupal_add_js(drupal_get_path('module', 'visualscience') .'/javascript/visualscience.userlist.js');
