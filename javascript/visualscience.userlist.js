@@ -68,7 +68,6 @@ var vsUserlist = (function() {
       user = searchDB.users[id];
       user.id = id;
       if (user.first !== '' || user.last !== '') {
-        debugger;
         searchNDDB.insert(user);
       }
     }
