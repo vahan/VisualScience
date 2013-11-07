@@ -11,273 +11,273 @@ require_once drupal_get_path('module', 'visualscience') . '/includes/visualscien
 require_once drupal_get_path('module', 'visualscience') . '/includes/visualscience.config.class.php';
 
 function visualscience_patterns($data = NULL)  {
-	$action['visualscience_config'] = array(
-		PATTERNS_INFO   => t('Modify Configuration for VisualScience'),
-		PATTERNS_CREATE => array('visualscience_insert_config'),
-		PATTERNS_MODIFY => array('visualscience_modify_config'),
-		PATTERNS_EXPORT => array(
-			PATTERNS_EXPORT_ALL => 'visualscience_export_config',
-			),
-		);
-	$action['visualscience_config_numbers'] = array(
-		PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
-		PATTERNS_CREATE => array('visualscience_insert_config_numbers'),
-		PATTERNS_MODIFY => array('visualscience_modify_config_numbers'),
-		);
-	$action['visualscience_config_actionbar'] = array(
-		PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
-		PATTERNS_CREATE => array('visualscience_insert_config_actionbar'),
-		PATTERNS_MODIFY => array('visualscience_modify_config_actionbar'),
-		);
+  $action['visualscience_config'] = array(
+    PATTERNS_INFO   => t('Modify Configuration for VisualScience'),
+    PATTERNS_CREATE => array('visualscience_insert_config'),
+    PATTERNS_MODIFY => array('visualscience_modify_config'),
+    PATTERNS_EXPORT => array(
+      PATTERNS_EXPORT_ALL => 'visualscience_export_config',
+      ),
+    );
+  $action['visualscience_config_numbers'] = array(
+    PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
+    PATTERNS_CREATE => array('visualscience_insert_config_numbers'),
+    PATTERNS_MODIFY => array('visualscience_modify_config_numbers'),
+    );
+  $action['visualscience_config_actionbar'] = array(
+    PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
+    PATTERNS_CREATE => array('visualscience_insert_config_actionbar'),
+    PATTERNS_MODIFY => array('visualscience_modify_config_actionbar'),
+    );
 
-	return $action;
+  return $action;
 }
 
 function visualscience_patterns_validate($action, $tag, &$data) {
-	$config = new Config;
-	$field = $data;
-	$uncomplete_field = $config->checkCompletefield($field);
-	$result = array();
-	$status = PATTERNS_SUCCESS;
-	$msg = 'An error occured in your file.';
+  $config = new Config;
+  $field = $data;
+  $uncomplete_field = $config->checkCompletefield($field);
+  $result = array();
+  $status = PATTERNS_SUCCESS;
+  $msg = 'An error occured in your file.';
 
-	if (!isset($field['name'])) {
-		$status = PATTERNS_ERR;
-		$msg = t('One of the actions does not have a field "name".');
-	}
-	else if ($tag == 'visualscience_config_numbers') {
-		//Checking for settings: nbUsersPerPage and nbUsersPerAjax.
-			//Syntax: 
-		if (gettype($field['value']) != 'integer') {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" has a wrong value type.');
-		}
-		if (!isset($field['value'])) {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" does not have a value.');
-		}
-		if ($field['name'] != 'nbUsersPerAjax' && $field['name'] != 'nbUsersPerPage') {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" should be either "nbUsersPerAjax" or "nbUsersPerPage".');
-		}
-	}
-	else if ($tag == 'visualscience_config_actionbar') {
-		//Checking for settings: actionbar's buttons
-			//Syntax: 
-		if (gettype($field['value']) != 'integer') {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" has a wrong value type.');
-		}
-		if (!isset($field['value'])) {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" does not have a value.');
-		}
-		if ($field['name'] != 'showMessagesButton' && $field['name'] != 'showCSVButton' && $field['name'] != 'showLivingScienceButton' && $field['name'] != 'showConferenceButton') {
-			$status = PATTERNS_ERR;
-			$msg = t('The field "' . $field['name'] . '" should be one of the following: showMessagesButton, showCSVButton, showLivingScienceButton or showConferenceButton');
-		}
+  if (!isset($field['name'])) {
+    $status = PATTERNS_ERR;
+    $msg = t('One of the actions does not have a field "name".');
+  }
+  elseif ($tag == 'visualscience_config_numbers') {
+    //Checking for settings: nbUsersPerPage and nbUsersPerAjax.
+      //Syntax: 
+    if (gettype($field['value']) != 'integer') {
+      $status = PATTERNS_ERR;
+      $msg = t('The field "' . $field['name'] . '" has a wrong value type.');
+    }
+    if (!isset($field['value'])) {
+      $status = PATTERNS_ERR;
+      $msg = t('The field "' . $field['name'] . '" does not have a value.');
+    }
+    if ($field['name'] != 'nbUsersPerAjax' && $field['name'] != 'nbUsersPerPage') {
+      $status = PATTERNS_ERR;
+      $msg = t('The field "' . $field['name'] . '" should be either "nbUsersPerAjax" or "nbUsersPerPage".');
+    }
+  }
+  elseif ($tag == 'visualscience_config_actionbar') {
+    //Checking for settings: actionbar's buttons
+      //Syntax: 
+    if (gettype($field['value']) != 'integer') {
+      $status = PATTERNS_ERR;
+      $msg = t('The field "' . $field['name'] . '" has a wrong value type.');
+    }
+    if (!isset($field['value'])) {
+      $status = PATTERNS_ERR;
+      $msg = t('The field "' . $field['name'] . '" does not have a value.');
+    }
+    if ($field['name'] != 'showMessagesButton' && $field['name'] != 'showCSVButton' && $field['name'] != 'showLivingScienceButton' && $field['name'] != 'showConferenceButton') {
+      $status = PATTERNS_ERR;
+      $msg = t('The field "' . $field['name'] . '" should be one of the following: showMessagesButton, showCSVButton, showLivingScienceButton or showConferenceButton');
+    }
 
-	}
-	else {
-		//Here we check for every field in the MySQL Table.
-		if ($action == PATTERNS_CREATE) {
-		//Semantic Checking
-			if (!$config->fieldExistsInDB($field)) {
-				$msg = '';
-			}
-			else {
-				$msg = t('The field already exists in the database.');
-				$result[] = array(
-					PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "' . $field['name'] . '" already exists in the database.')
-					);
-			}
+  }
+  else {
+    //Here we check for every field in the MySQL Table.
+    if ($action == PATTERNS_CREATE) {
+    //Semantic Checking
+      if (!$config->fieldExistsInDB($field)) {
+        $msg = '';
+      }
+      else {
+        $msg = t('The field already exists in the database.');
+        $result[] = array(
+          PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field "' . $field['name'] . '" already exists in the database.')
+          );
+      }
 
-		//Syntax Checking:
-			if (!$uncomplete_field) {
-				if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
-					$msg = '';
-				}
-				else {
-					$status = PATTERNS_ERR;
-					$msg = t('The field "' . $wrong_value_type . '" has a wrong value type for "' . $field['name'] . '".');
-				}
-			}
-			else {
-				$status = PATTERNS_ERR;
-				$msg = t('The field "' . $uncomplete_field . '" is not defined for "' . $field['name'] . '".');
-			}
-		}
+    //Syntax Checking:
+      if (!$uncomplete_field) {
+        if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
+          $msg = '';
+        }
+        else {
+          $status = PATTERNS_ERR;
+          $msg = t('The field "' . $wrong_value_type . '" has a wrong value type for "' . $field['name'] . '".');
+        }
+      }
+      else {
+        $status = PATTERNS_ERR;
+        $msg = t('The field "' . $uncomplete_field . '" is not defined for "' . $field['name'] . '".');
+      }
+    }
 
-		if ($action == PATTERNS_MODIFY) {
-			//Semantic Check:
-			if ($config->fieldExistsInDB($field)) {
-			}
-			else {
-				$msg = t('The field "' . $field['name'] . '" does not already exist in the database.');
-				$result[] = array(
-					PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field ' . $field['name'] . ' does not already exist in the database.')
-					);
-			}
+    if ($action == PATTERNS_MODIFY) {
+      //Semantic Check:
+      if ($config->fieldExistsInDB($field)) {
+      }
+      else {
+        $msg = t('The field "' . $field['name'] . '" does not already exist in the database.');
+        $result[] = array(
+          PATTERNS_WARNING_ELEMENT_UNDEFINED => t('The field ' . $field['name'] . ' does not already exist in the database.')
+          );
+      }
 
-			//Syntax Checking
-			if (!$uncomplete_field) {
-				if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
-					$msg = '';
-				}
-				else {
-					$status = PATTERNS_ERR;
-					$msg = t('The field "' . $wrong_value_type . '" has a wrong value type for ' . $field['name'] . '.');
-				}
-			}
-			else {
-				$status = PATTERNS_ERR;
-				$msg = t('The field "' . $uncomplete_field . '" is not defined for ' . $field['name'] . '.');
-			}
-		}
-	}
-	return patterns_results($status, $msg, $result);
+      //Syntax Checking
+      if (!$uncomplete_field) {
+        if (!($wrong_value_type = $config->checkCorrectValueTypes($field))) {
+          $msg = '';
+        }
+        else {
+          $status = PATTERNS_ERR;
+          $msg = t('The field "' . $wrong_value_type . '" has a wrong value type for ' . $field['name'] . '.');
+        }
+      }
+      else {
+        $status = PATTERNS_ERR;
+        $msg = t('The field "' . $uncomplete_field . '" is not defined for ' . $field['name'] . '.');
+      }
+    }
+  }
+  return patterns_results($status, $msg, $result);
 }
 
 function visualscience_insert_config($form_id, $form_state) {
-	$config = new Config;
-	$field = $form_state['values'];
-	if ($field['name'] == 'nbUsersPerPage') {
-		$config->updateNbUsersPerPage($field['value']);
-	}
-	else if ($field['name'] == 'nbUsersPerAjax') {
-		$config->updateNbUsersPerAjax($field['value']);
-	}
-	else {
-		$config->insertPatternConfig($field);
-	}
+  $config = new Config;
+  $field = $form_state['values'];
+  if ($field['name'] == 'nbUsersPerPage') {
+    $config->updateNbUsersPerPage($field['value']);
+  }
+  elseif ($field['name'] == 'nbUsersPerAjax') {
+    $config->updateNbUsersPerAjax($field['value']);
+  }
+  else {
+    $config->insertPatternConfig($field);
+  }
 }
 
 function visualscience_modify_config($form_id, $form_state) {
-	$config = new Config;
-	$field = $form_state['values'];
-	$config->modifyPatternConfig($field);
+  $config = new Config;
+  $field = $form_state['values'];
+  $config->modifyPatternConfig($field);
 }
 
 function visualscience_insert_config_numbers($form_id, $form_state) {
-	$config = new Config;
-	$field = $form_state['values'];
-	if ($field['name'] == 'nbUsersPerPage') {
-		$config->updateNbUsersPerPage($field['value']);
-	}
-	if ($field['name'] == 'nbUsersPerAjax') {
-		$config->updateNbUsersPerAjax($field['value']);
-	}	
+  $config = new Config;
+  $field = $form_state['values'];
+  if ($field['name'] == 'nbUsersPerPage') {
+    $config->updateNbUsersPerPage($field['value']);
+  }
+  if ($field['name'] == 'nbUsersPerAjax') {
+    $config->updateNbUsersPerAjax($field['value']);
+  } 
 }
 
 function visualscience_modify_config_numbers($form_id, $form_state) {
-	$config = new Config;
-	$field = $form_state['values'];
-	if ($field['name'] == 'nbUsersPerPage') {
-		$config->updateNbUsersPerPage($field['value']);
-	}
-	if ($field['name'] == 'nbUsersPerAjax') {
-		$config->updateNbUsersPerAjax($field['value']);
-	}	
+  $config = new Config;
+  $field = $form_state['values'];
+  if ($field['name'] == 'nbUsersPerPage') {
+    $config->updateNbUsersPerPage($field['value']);
+  }
+  if ($field['name'] == 'nbUsersPerAjax') {
+    $config->updateNbUsersPerAjax($field['value']);
+  } 
 }
 
 function visualscience_insert_config_actionbar($form_id, $form_state) {
-	$field = $form_state['values'];
-	if ($field['name'] == 'showMessagesButton') {
-		variable_set('visualscience_show_messages_button', $field['value']);
-	}
-	if ($field['name'] == 'showCSVButton') {
-		variable_set('visualscience_show_csv_button', $field['value']);
-	}
-	if ($field['name'] == 'showLivingScienceButton') {
-		variable_set('visualscience_show_livingscience_button', $field['value']);
-	}
-	if ($field['name'] == 'showConferenceButton') {
-		variable_set('visualscience_show_conference_button', $field['value']);
-	}
+  $field = $form_state['values'];
+  if ($field['name'] == 'showMessagesButton') {
+    variable_set('visualscience_show_messages_button', $field['value']);
+  }
+  if ($field['name'] == 'showCSVButton') {
+    variable_set('visualscience_show_csv_button', $field['value']);
+  }
+  if ($field['name'] == 'showLivingScienceButton') {
+    variable_set('visualscience_show_livingscience_button', $field['value']);
+  }
+  if ($field['name'] == 'showConferenceButton') {
+    variable_set('visualscience_show_conference_button', $field['value']);
+  }
 }
 
 function visualscience_modify_config_actionbar($form_id, $form_state) {
-	$field = $form_state['values'];
-	if ($field['name'] == 'showMessagesButton') {
-		variable_set('visualscience_show_messages_button', $field['value']);
-	}
-	if ($field['name'] == 'showCSVButton') {
-		variable_set('visualscience_show_csv_button', $field['value']);
-	}
-	if ($field['name'] == 'showLivingScienceButton') {
-		variable_set('visualscience_show_livingscience_button', $field['value']);
-	}
-	if ($field['name'] == 'showConferenceButton') {
-		variable_set('visualscience_show_conference_button', $field['value']);
-	}
+  $field = $form_state['values'];
+  if ($field['name'] == 'showMessagesButton') {
+    variable_set('visualscience_show_messages_button', $field['value']);
+  }
+  if ($field['name'] == 'showCSVButton') {
+    variable_set('visualscience_show_csv_button', $field['value']);
+  }
+  if ($field['name'] == 'showLivingScienceButton') {
+    variable_set('visualscience_show_livingscience_button', $field['value']);
+  }
+  if ($field['name'] == 'showConferenceButton') {
+    variable_set('visualscience_show_conference_button', $field['value']);
+  }
 }
 
 function visualscience_export_config($args = NULL, &$result = NULL) {
-	$actions = array();
-	$action_type = PATTERNS_MODIFY; // pre-init 
-	
-	if (isset($args['type']) && $args['type'] == PATTERNS_CREATE) {
-		$action_type = PATTERNS_CREATE;
-	}
+  $actions = array();
+  $action_type = PATTERNS_MODIFY; // pre-init 
+  
+  if (isset($args['type']) && $args['type'] == PATTERNS_CREATE) {
+    $action_type = PATTERNS_CREATE;
+  }
 
-	$search = new Search;
-	$fields =  $search->getPatternConfiguration();
-	foreach ($fields as $field) {
-		$action = array($action_type => array(
-			'tag' => 'visualscience_config', 
-			'name' => $field['name'], 
-			'mini' => $field['mini'], 
-			'full' => $field['full'], 
-			'first' => $field['first'], 
-			'last' => $field['last']
-			));
+  $search = new Search;
+  $fields =  $search->getPatternConfiguration();
+  foreach ($fields as $field) {
+    $action = array($action_type => array(
+      'tag' => 'visualscience_config', 
+      'name' => $field['name'], 
+      'mini' => $field['mini'], 
+      'full' => $field['full'], 
+      'first' => $field['first'], 
+      'last' => $field['last']
+      ));
 
-		array_push($actions, $action);
-	}
+    array_push($actions, $action);
+  }
 
-	/* Configuration Numbers */
-	$action = array($action_type => array(
-		'tag' => 'visualscience_config_numbers',
-		'name' => 'nbUsersPerPage',
-		'value' => variable_get('visualscience_user_per_search_page')
-		));
-	array_push($actions, $action);
+  /* Configuration Numbers */
+  $action = array($action_type => array(
+    'tag' => 'visualscience_config_numbers',
+    'name' => 'nbUsersPerPage',
+    'value' => variable_get('visualscience_user_per_search_page')
+    ));
+  array_push($actions, $action);
 
-	$action = array($action_type => array(
-		'tag' => 'visualscience_config_numbers',
-		'name' => 'nbUsersPerAjax',
-		'value' => variable_get('visualscience_user_sent_per_ajax_request')
-		));
-	array_push($actions, $action);
+  $action = array($action_type => array(
+    'tag' => 'visualscience_config_numbers',
+    'name' => 'nbUsersPerAjax',
+    'value' => variable_get('visualscience_user_sent_per_ajax_request')
+    ));
+  array_push($actions, $action);
 
-	/* Configuration ActionBar */ 
-	$action = array($action_type => array(
-		'tag' => 'visualscience_config_actionbar',
-		'name' => 'showMessagesButton',
-		'value' => variable_get('visualscience_show_messages_button')
-		));
-	array_push($actions, $action);
+  /* Configuration ActionBar */ 
+  $action = array($action_type => array(
+    'tag' => 'visualscience_config_actionbar',
+    'name' => 'showMessagesButton',
+    'value' => variable_get('visualscience_show_messages_button')
+    ));
+  array_push($actions, $action);
 
-	$action = array($action_type => array(
-		'tag' => 'visualscience_config_actionbar',
-		'name' => 'showCSVButton',
-		'value' => variable_get('visualscience_show_csv_button')
-		));
-	array_push($actions, $action);
+  $action = array($action_type => array(
+    'tag' => 'visualscience_config_actionbar',
+    'name' => 'showCSVButton',
+    'value' => variable_get('visualscience_show_csv_button')
+    ));
+  array_push($actions, $action);
 
-	$action = array($action_type => array(
-		'tag' => 'visualscience_config_actionbar',
-		'name' => 'showLivingScienceButton',
-		'value' => variable_get('visualscience_show_livingscience_button')
-		));
-	array_push($actions, $action);
+  $action = array($action_type => array(
+    'tag' => 'visualscience_config_actionbar',
+    'name' => 'showLivingScienceButton',
+    'value' => variable_get('visualscience_show_livingscience_button')
+    ));
+  array_push($actions, $action);
 
-	$action = array($action_type => array(
-		'tag' => 'visualscience_config_actionbar',
-		'name' => 'showConferenceButton',
-		'value' => variable_get('visualscience_show_conference_button')
-		));
-	array_push($actions, $action);
+  $action = array($action_type => array(
+    'tag' => 'visualscience_config_actionbar',
+    'name' => 'showConferenceButton',
+    'value' => variable_get('visualscience_show_conference_button')
+    ));
+  array_push($actions, $action);
 
-	return $actions;
+  return $actions;
 }
