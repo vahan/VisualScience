@@ -24,6 +24,11 @@ function visualscience_patterns($data = NULL)  {
 		PATTERNS_CREATE => array('visualscience_insert_config_numbers'),
 		PATTERNS_MODIFY => array('visualscience_modify_config_numbers'),
 		);
+	$action['visualscience_config_actionbar'] = array(
+		PATTERNS_INFO   => t('Modify Configuration Numbers for VisualScience'),
+		PATTERNS_CREATE => array('visualscience_insert_config_actionbar'),
+		PATTERNS_MODIFY => array('visualscience_modify_config_actionbar'),
+		);
 
 	return $action;
 }
@@ -54,6 +59,22 @@ function visualscience_patterns_validate($action, $tag, &$data) {
 		if ($field['name'] != 'nbUsersPerAjax' && $field['name'] != 'nbUsersPerPage') {
 			$status = PATTERNS_ERR;
 			$msg = t('The field "' . $field['name'] . '" should be either "nbUsersPerAjax" or "nbUsersPerPage".');
+		}
+	}
+	else if ($tag == 'visualscience_config_actionbar') {
+		//Checking for settings: actionbar's buttons
+			//Syntax: 
+		if (gettype($field['value']) != 'integer') {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "' . $field['name'] . '" has a wrong value type.');
+		}
+		if (!isset($field['value'])) {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "' . $field['name'] . '" does not have a value.');
+		}
+		if ($field['name'] != 'showMessagesButton' && $field['name'] != 'showCSVButton' && $field['name'] != 'showLivingScienceButton' && $field['name'] != 'showConferenceButton') {
+			$status = PATTERNS_ERR;
+			$msg = t('The field "' . $field['name'] . '" should be one of the following: showMessagesButton, showCSVButton, showLivingScienceButton or showConferenceButton');
 		}
 
 	}
@@ -159,6 +180,38 @@ function visualscience_modify_config_numbers($form_id, $form_state) {
 	}	
 }
 
+function visualscience_insert_config_actionbar($form_id, $form_state) {
+	$field = $form_state['values'];
+	if ($field['name'] == 'showMessagesButton') {
+		variable_set('visualscience_show_messages_button', $field['value']);
+	}
+	if ($field['name'] == 'showCSVButton') {
+		variable_set('visualscience_show_csv_button', $field['value']);
+	}
+	if ($field['name'] == 'showLivingScienceButton') {
+		variable_set('visualscience_show_livingscience_button', $field['value']);
+	}
+	if ($field['name'] == 'showConferenceButton') {
+		variable_set('visualscience_show_conference_button', $field['value']);
+	}
+}
+
+function visualscience_modify_config_actionbar($form_id, $form_state) {
+	$field = $form_state['values'];
+	if ($field['name'] == 'showMessagesButton') {
+		variable_set('visualscience_show_messages_button', $field['value']);
+	}
+	if ($field['name'] == 'showCSVButton') {
+		variable_set('visualscience_show_csv_button', $field['value']);
+	}
+	if ($field['name'] == 'showLivingScienceButton') {
+		variable_set('visualscience_show_livingscience_button', $field['value']);
+	}
+	if ($field['name'] == 'showConferenceButton') {
+		variable_set('visualscience_show_conference_button', $field['value']);
+	}
+}
+
 function visualscience_export_config($args = NULL, &$result = NULL) {
 	$actions = array();
 	$action_type = PATTERNS_MODIFY; // pre-init 
@@ -182,6 +235,7 @@ function visualscience_export_config($args = NULL, &$result = NULL) {
 		array_push($actions, $action);
 	}
 
+	/* Configuration Numbers */
 	$action = array($action_type => array(
 		'tag' => 'visualscience_config_numbers',
 		'name' => 'nbUsersPerPage',
@@ -193,6 +247,35 @@ function visualscience_export_config($args = NULL, &$result = NULL) {
 		'tag' => 'visualscience_config_numbers',
 		'name' => 'nbUsersPerAjax',
 		'value' => variable_get('visualscience_user_sent_per_ajax_request')
+		));
+	array_push($actions, $action);
+
+	/* Configuration ActionBar */ 
+	$action = array($action_type => array(
+		'tag' => 'visualscience_config_actionbar',
+		'name' => 'showMessagesButton',
+		'value' => variable_get('visualscience_show_messages_button')
+		));
+	array_push($actions, $action);
+
+	$action = array($action_type => array(
+		'tag' => 'visualscience_config_actionbar',
+		'name' => 'showCSVButton',
+		'value' => variable_get('visualscience_show_csv_button')
+		));
+	array_push($actions, $action);
+
+	$action = array($action_type => array(
+		'tag' => 'visualscience_config_actionbar',
+		'name' => 'showLivingScienceButton',
+		'value' => variable_get('visualscience_show_livingscience_button')
+		));
+	array_push($actions, $action);
+
+	$action = array($action_type => array(
+		'tag' => 'visualscience_config_actionbar',
+		'name' => 'showConferenceButton',
+		'value' => variable_get('visualscience_show_conference_button')
 		));
 	array_push($actions, $action);
 
