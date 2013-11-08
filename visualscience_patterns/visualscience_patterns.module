@@ -1,15 +1,20 @@
-<?php 
+<?php
 
 /**
-* @file
-* The Patterns implementation of the VisualScience Module.
-*
-* Automatically import pattern-formatted settings for VisualScience.
-*/
+  * @file
+  * The Patterns implementation of the VisualScience Module.
+  *
+  * Automatically import pattern-formatted settings for VisualScience.
+  */
 
 require_once drupal_get_path('module', 'visualscience') . '/includes/visualscience.searchtable.class.php';
 require_once drupal_get_path('module', 'visualscience') . '/includes/visualscience.config.class.php';
 
+/**
+ * Enables patterns import and export
+ * @param  array $data Provided by the patterns module
+ * @return array       The different possible actions
+ */
 function visualscience_patterns($data = NULL)  {
   $action['visualscience_config'] = array(
     PATTERNS_INFO   => t('Modify Configuration for VisualScience'),
@@ -33,6 +38,13 @@ function visualscience_patterns($data = NULL)  {
   return $action;
 }
 
+/**
+ * Validation process for submitted patterns, called for each entry of data
+ * @param  array $action actions, generated above
+ * @param  string $tag    the tag of the current action to process
+ * @param  array $data   data of field to process
+ * @return page         page showing wether the current data passed the test or not
+ */
 function visualscience_patterns_validate($action, $tag, &$data) {
   $config = new Config;
   $field = $data;
@@ -47,7 +59,7 @@ function visualscience_patterns_validate($action, $tag, &$data) {
   }
   elseif ($tag == 'visualscience_config_numbers') {
     //Checking for settings: nbUsersPerPage and nbUsersPerAjax.
-      //Syntax: 
+      //Syntax:
     if (gettype($field['value']) != 'integer') {
       $status = PATTERNS_ERR;
       $msg = t('The field "' . $field['name'] . '" has a wrong value type.');
@@ -63,7 +75,7 @@ function visualscience_patterns_validate($action, $tag, &$data) {
   }
   elseif ($tag == 'visualscience_config_actionbar') {
     //Checking for settings: actionbar's buttons
-      //Syntax: 
+      //Syntax:
     if (gettype($field['value']) != 'integer') {
       $status = PATTERNS_ERR;
       $msg = t('The field "' . $field['name'] . '" has a wrong value type.');
@@ -138,6 +150,12 @@ function visualscience_patterns_validate($action, $tag, &$data) {
   return patterns_results($status, $msg, $result);
 }
 
+/**
+ * Inserts the configuration fields into the db
+ * @param  integer $form_id    id of the form (Drupal)
+ * @param  form $form_state Drupal-generated
+ * @return none             nothing returned
+ */
 function visualscience_insert_config($form_id, $form_state) {
   $config = new Config;
   $field = $form_state['values'];
@@ -152,12 +170,24 @@ function visualscience_insert_config($form_id, $form_state) {
   }
 }
 
+/**
+ * Modifies a current configuration in the db
+ * @param  integer $form_id    id of the form (Durpal)
+ * @param  form $form_state Drupal-generated
+ * @return none             nothing returned
+ */
 function visualscience_modify_config($form_id, $form_state) {
   $config = new Config;
   $field = $form_state['values'];
   $config->modifyPatternConfig($field);
 }
 
+/**
+ * Sets value for number settings
+ * @param  integer $form_id    id of the form
+ * @param  form $form_state Drupal-generated
+ * @return none             nothing returned
+ */
 function visualscience_insert_config_numbers($form_id, $form_state) {
   $config = new Config;
   $field = $form_state['values'];
@@ -166,9 +196,15 @@ function visualscience_insert_config_numbers($form_id, $form_state) {
   }
   if ($field['name'] == 'nbUsersPerAjax') {
     $config->updateNbUsersPerAjax($field['value']);
-  } 
+  }
 }
 
+/**
+ * Modifies the numbers settings
+ * @param  integer $form_id    id of the form
+ * @param  form $form_state Drupal-generated
+ * @return none             nothing returned
+ */
 function visualscience_modify_config_numbers($form_id, $form_state) {
   $config = new Config;
   $field = $form_state['values'];
@@ -177,9 +213,15 @@ function visualscience_modify_config_numbers($form_id, $form_state) {
   }
   if ($field['name'] == 'nbUsersPerAjax') {
     $config->updateNbUsersPerAjax($field['value']);
-  } 
+  }
 }
 
+/**
+ * Insert configuration settings for the actionbar
+ * @param  integer $form_id    id of form
+ * @param  form $form_state Drupal-generated
+ * @return none             nothing returned
+ */
 function visualscience_insert_config_actionbar($form_id, $form_state) {
   $field = $form_state['values'];
   if ($field['name'] == 'showMessagesButton') {
@@ -196,6 +238,12 @@ function visualscience_insert_config_actionbar($form_id, $form_state) {
   }
 }
 
+/**
+ * Modifies the configuration numbers for the actionbar
+ * @param  integer $form_id    id of form
+ * @param  form $form_state Drupal-generated
+ * @return none             nothing returned
+ */
 function visualscience_modify_config_actionbar($form_id, $form_state) {
   $field = $form_state['values'];
   if ($field['name'] == 'showMessagesButton') {
@@ -212,10 +260,16 @@ function visualscience_modify_config_actionbar($form_id, $form_state) {
   }
 }
 
+/**
+ * Creates the content to export the current configuration
+ * @param  array $args   Drupal-generated
+ * @param  object $result Drupal-generated
+ * @return array         Of all the actions patterns has to do to recreate the same configuration
+ */
 function visualscience_export_config($args = NULL, &$result = NULL) {
   $actions = array();
-  $action_type = PATTERNS_MODIFY; // pre-init 
-  
+  $action_type = PATTERNS_MODIFY; // pre-init
+
   if (isset($args['type']) && $args['type'] == PATTERNS_CREATE) {
     $action_type = PATTERNS_CREATE;
   }
@@ -224,11 +278,11 @@ function visualscience_export_config($args = NULL, &$result = NULL) {
   $fields =  $search->getPatternConfiguration();
   foreach ($fields as $field) {
     $action = array($action_type => array(
-      'tag' => 'visualscience_config', 
-      'name' => $field['name'], 
-      'mini' => $field['mini'], 
-      'full' => $field['full'], 
-      'first' => $field['first'], 
+      'tag' => 'visualscience_config',
+      'name' => $field['name'],
+      'mini' => $field['mini'],
+      'full' => $field['full'],
+      'first' => $field['first'],
       'last' => $field['last']
       ));
 
@@ -250,7 +304,7 @@ function visualscience_export_config($args = NULL, &$result = NULL) {
     ));
   array_push($actions, $action);
 
-  /* Configuration ActionBar */ 
+  /* Configuration ActionBar */
   $action = array($action_type => array(
     'tag' => 'visualscience_config_actionbar',
     'name' => 'showMessagesButton',
