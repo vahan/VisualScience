@@ -1,14 +1,14 @@
 <?php
 
 /**
-* @file
-* Some general settings, such as the Help Page and a function to define the permissions.
-* TODO: replace both functions.
-*/
+ * @file
+ * Some general settings, such as the Help Page and a function to define the permissions.
+ * TODO: replace both functions.
+ */
 
 
 /**
- * Implements hook_help()
+ * Implements hook_help().
  * TODO: Write a user friendly help
  */
 function visualscience_help($path, $arg) {
@@ -35,7 +35,7 @@ function visualscience_help($path, $arg) {
 }
 
 /**
- * Implementes hook_permission()
+ * Implementes hook_permission().
  * 
  */
 function visualscience_permission() {

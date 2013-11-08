@@ -11,10 +11,9 @@
 include_once 'includes/visualscience.utils.inc';
 
 /**
-* 
-* Implementation of hook_schema().
-* @return array  the created schema
-*/
+ * Implements hook_schema().
+ * @return array  the created schema
+ */
 function visualscience_schema() {
   //table for saved searches  Seb: Keep it, just in case you need to save the searches.
  /* $schema[visualscience_get_save_table_name()] = array(
@@ -151,7 +150,7 @@ return $schema;
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function visualscience_uninstall() {
   drupal_uninstall_schema('visualscience');
@@ -161,7 +160,7 @@ function visualscience_uninstall() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function visualscience_install() {
   //drupal_install_schema('visualscience');

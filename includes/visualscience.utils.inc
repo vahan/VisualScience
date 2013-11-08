@@ -1,10 +1,10 @@
 <?php
 
 /**
- * //Seb:
- * Check for the functions about how he gets the fields for the table.(visualscience_get_user_data())
  * @file
  * This file contains several helping functions that are used for the module 
+ * //Seb:
+ * Check for the functions about how he gets the fields for the table.(visualscience_get_user_data())
  */
 
 /**
@@ -63,5 +63,5 @@ function visualscience_get_all_fields() {
  * @param $haystack
  */
 function in_arrayi($needle, $haystack) {
- return in_array(strtolower($needle), array_map('strtolower', $haystack));
+  return in_array(strtolower($needle), array_map('strtolower', $haystack));
 }

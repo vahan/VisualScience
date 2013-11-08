@@ -10,20 +10,20 @@ class Message {
    */
   public function visualscience_send_message() {
     $subject =  check_plain($_POST['subject']);
-    $email = check_plain($_POST['recipients']['email']);
-    $name =  check_plain($_POST['recipients']['name']);
+    $email = $_POST['recipients']['email'];
+    $name =  $_POST['recipients']['name'];
     $message =  check_plain($_POST['message']);
     $attachments=  $_POST['attachments'];// [0][0] will give the name of object n°0, while [0][1] will give its URL
     if ($attachments[0]) {
       $attachmentsText = t('<br /><h3>Attached Files</h3>');
       foreach ($attachments as $entry) {
-        $attachmentsText .= t('- <a href="'.$entry[1].'" _target="blank">'.$entry[0].'</a><br />');
+        $attachmentsText .= t('- <a href="' . $entry[1] . '" _target="blank">' . $entry[0] . '</a><br />');
       }
     }
     else {
       $attachmentsText = '';
     }
-    $final_text = $message.$attachmentsText;
+    $final_text = $message . check_plain($attachmentsText);
 
 
     global $user;
@@ -48,12 +48,12 @@ class Message {
   //If no errors, let's add file access to the user.
     if ($message['result'] == 1) {
     //getting user id from email.
-      $users = db_query('SELECT uid FROM {users} WHERE mail = :mail LIMIT 1', array(':mail' => $email,));
+      $users = db_query('SELECT uid FROM {users} WHERE mail = :mail LIMIT 1', array(':mail' => $email, ));
     //In the "impossible" case where two emails are the same in the db
       $users = $users->fetchObject();
       $uid = $users->uid;
     //actually adding the access to the user.
-      if (!is_null($uid) && isset($uid)) {  
+      if (!is_null($uid) && isset($uid)) {
         foreach ($attachments as $file) {
           $query = db_insert('visualscience_uploaded_files')->fields(array(
             'uid' => $uid,

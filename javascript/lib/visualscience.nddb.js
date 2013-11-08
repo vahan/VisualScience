@@ -1,3 +1,8 @@
+/**
+ * @file
+ * The NDDB library that provides a client-side SQL-like storage.
+ */
+
 // vim: ts=4 sts=4 sw=4 expandtab
 // -- kriskowal Kris Kowal Copyright (C) 2009-2011 MIT License
 // -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
