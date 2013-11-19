@@ -48,7 +48,7 @@ class Message {
   //If no errors, let's add file access to the user.
     if ($message['result'] == 1) {
     //getting user id from email.
-      $users = db_query('SELECT uid FROM {users} WHERE mail = :mail LIMIT 1', array(':mail' => $email, ));
+      $users = db_query_range('SELECT uid FROM {users} WHERE mail = :mail', 0, 1, array(':mail' => $email, ));
     //In the "impossible" case where two emails are the same in the db
       $users = $users->fetchObject();
       $uid = $users->uid;
@@ -71,6 +71,11 @@ class Message {
     }
   }
 
+  /**
+   * Sanitzes the content of an array recursively
+   * @param  array $unSafeArray the array to sanitize.
+   * @return array              the array sanitized
+   */
   private function sanitizeArray($unSafeArray) {
     $safeArray = array();
     foreach ($unSafeArray as $entry) {
