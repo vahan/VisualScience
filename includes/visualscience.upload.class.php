@@ -66,7 +66,7 @@ class Upload {
     }
     else {
       drupal_set_message(t('Please log in to access uploaded files.'), 'warning');
-      header( 'Location: ' . $base_url . '/user?destination=' . substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/visualscience/file') + 1) );
+      header( 'Location: ' . $base_url . '/user?destination=' . substr(request_uri(), strpos(request_uri(), '/visualscience/file') + 1) );
     }
   }
 

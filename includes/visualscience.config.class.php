@@ -268,8 +268,10 @@ class Config {
     $numberSettings = $this->getNumberSettingsHTML();
     $buttonSettings = $this->getButtonSettingsHTML();
     $saveButton = $this->createSaveButton();
+    $csrfToken = drupal_get_token(substr('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', mt_rand(0, 50) , 1) . substr(md5(time()), 1));
     $formStart = '<form action="" method="POST" id="visualscience_config_form" >';
-    $formEnd = '<input type="hidden" name="visualscience_config_form" /></form>';
+    $formEnd = '<input type="hidden" name="visualscience_config_form" /><input type="hidden" value="' . $csrfToken . '" name="visualscience_config_csrf_token" /></form>';
+    setcookie('csrfTokenValue', $csrfToken, time() + (86400));
     return $formStart . $intro . $fieldsTable . $numberSettings . $buttonSettings . $saveButton . $formEnd;
   }
 

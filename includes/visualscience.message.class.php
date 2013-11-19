@@ -10,10 +10,10 @@ class Message {
    */
   public function visualscience_send_message() {
     $subject =  check_plain($_POST['subject']);
-    $email = $_POST['recipients']['email'];
-    $name =  $_POST['recipients']['name'];
+    $email = check_plain($_POST['recipients']['email']);
+    $name =  check_plain($_POST['recipients']['name']);
     $message =  check_plain($_POST['message']);
-    $attachments=  $_POST['attachments'];// [0][0] will give the name of object n°0, while [0][1] will give its URL
+    $attachments =  $this->sanitizeArray($_POST['attachments']);// [0][0] will give the name of object n°0, while [0][1] will give its URL
     if ($attachments[0]) {
       $attachmentsText = t('<br /><h3>Attached Files</h3>');
       foreach ($attachments as $entry) {
@@ -69,5 +69,18 @@ class Message {
     else {
       echo '0';
     }
+  }
+
+  private function sanitizeArray($unSafeArray) {
+    $safeArray = array();
+    foreach ($unSafeArray as $entry) {
+      if (gettype($entry) == 'array') {
+        array_push($safeArray, $this->sanitizeArray($entry));
+      }
+      else {
+        array_push($safeArray, check_plain($entry));
+      }
+    }
+    return $safeArray;
   }
 }
