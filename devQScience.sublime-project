@@ -1,0 +1,11 @@
+{
+	"folders":
+	[
+		{
+			"path": "/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience"
+		},
+		{
+			"path": "/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo"
+		}
+	]
+}

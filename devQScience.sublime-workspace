@@ -1,0 +1,1487 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"inner",
+				"innerHTML"
+			],
+			[
+				"nbU",
+				"nbUsersInServerDB	Default"
+			],
+			[
+				"join",
+				"joinKeywords	Default"
+			],
+			[
+				"publi",
+				"publication	Default"
+			],
+			[
+				"array",
+				"arrayIntersect	Default"
+			],
+			[
+				"escape",
+				"escapeRegExp	Default"
+			],
+			[
+				"oth",
+				"otherWords	Default"
+			],
+			[
+				"compa",
+				"compareNumbers	Default"
+			],
+			[
+				"te",
+				"text	.text"
+			],
+			[
+				"extr",
+				"extractKeywords	Default"
+			],
+			[
+				"bu",
+				"buttons"
+			],
+			[
+				"nb",
+				"nbUsersInServerDB	Default"
+			],
+			[
+				"pu",
+				"publication	Default"
+			],
+			[
+				"paper",
+				"papersNDDB	Default"
+			],
+			[
+				"html",
+				"htmlTable	Default"
+			],
+			[
+				"lau",
+				"launchSearch	Default"
+			],
+			[
+				"tab",
+				"tabLocation	Default"
+			],
+			[
+				"this",
+				"thisTabId	Default"
+			],
+			[
+				"tota",
+				"totalFull	Default"
+			],
+			[
+				"vsU",
+				"vsUserlist	Default"
+			],
+			[
+				"$act",
+				"$action"
+			],
+			[
+				"nbUse",
+				"nbUsersPerPage"
+			],
+			[
+				"max",
+				"maxNumberOfTableEntries	Default"
+			],
+			[
+				"variable",
+				"variable_set"
+			],
+			[
+				"living",
+				"livingscience-tab"
+			],
+			[
+				"selec",
+				"selectedUsers	Default"
+			],
+			[
+				"nbS",
+				"nbShown	Default"
+			],
+			[
+				"total",
+				"totalNumberOfUsers	Default"
+			],
+			[
+				"fil",
+				"filtered	Default"
+			],
+			[
+				"toLo",
+				"toLowerCase()	String"
+			],
+			[
+				"it",
+				"iter	Default"
+			],
+			[
+				"sear",
+				"searchNDDB	Default"
+			],
+			[
+				"quer",
+				"queries	Default"
+			],
+			[
+				"used",
+				"usedOperation	Default"
+			],
+			[
+				"opera",
+				"operations	Default"
+			],
+			[
+				"query",
+				"queryRest	Default"
+			],
+			[
+				"subs",
+				"substring()	String"
+			],
+			[
+				"spl",
+				"splitted	Default"
+			],
+			[
+				"oper",
+				"operators	Default"
+			],
+			[
+				"curr",
+				"currentQuery	Default"
+			],
+			[
+				"iter",
+				"iter2	Default"
+			],
+			[
+				"brea",
+				"breakQueryInThree	Default"
+			],
+			[
+				"exe",
+				"execute	Default"
+			],
+			[
+				"getSe",
+				"getSelectedUsers	Default"
+			],
+			[
+				"sele",
+				"selectedUsers	Default"
+			],
+			[
+				"inn",
+				"innerText"
+			],
+			[
+				"action",
+				"action-bar-container"
+			],
+			[
+				"getElement",
+				"getElementById()	Document"
+			],
+			[
+				"getElements",
+				"getElementsByClassName()"
+			],
+			[
+				"inser",
+				"insertRow()	Table"
+			],
+			[
+				"getElem",
+				"getElementsByTagName()"
+			],
+			[
+				"getE",
+				"getElementsByClassName	Default"
+			],
+			[
+				"getEle",
+				"getElementsByTagName()"
+			],
+			[
+				"Number",
+				"NumberUsersPerPage	Default"
+			],
+			[
+				"fiel",
+				"fields	Default"
+			],
+			[
+				"NUm",
+				"NumberUsersPerPage	Default"
+			],
+			[
+				"currentS",
+				"currentSearchNDDB	Default"
+			],
+			[
+				"insert",
+				"insertRow()	Table"
+			],
+			[
+				"show",
+				"showHowMany	Default"
+			],
+			[
+				"Numb",
+				"NumberOfUsersShowedFirst	Default"
+			],
+			[
+				"sea",
+				"searchNDDB	Default"
+			],
+			[
+				"id",
+				"id"
+			],
+			[
+				"complete",
+				"completeNamesArray	Default"
+			],
+			[
+				"click",
+				"clickTarget	Default"
+			],
+			[
+				"geE",
+				"getElementsByTagName()"
+			],
+			[
+				"clas",
+				"className"
+			],
+			[
+				"form",
+				"form_state"
+			],
+			[
+				"visu",
+				"visualscience_upload_form"
+			],
+			[
+				"visual",
+				"visualscience_upload_form"
+			],
+			[
+				"requ",
+				"requestDataHasArrived	Default"
+			],
+			[
+				"tot",
+				"total	Default"
+			],
+			[
+				"loca",
+				"localStorage	Default"
+			],
+			[
+				"db",
+				"vs-db-loading"
+			],
+			[
+				"json",
+				"jsonDisplayConfig"
+			],
+			[
+				"getSea",
+				"getSearchDataFromServer	Default"
+			],
+			[
+				"root",
+				"rootFolder	Default"
+			],
+			[
+				"func",
+				"funcCode	Default"
+			],
+			[
+				"full",
+				"fullNDDB	Default"
+			],
+			[
+				"mini",
+				"miniNDDB	Default"
+			],
+			[
+				"find",
+				"findBestLogicalOperator	Default"
+			],
+			[
+				"merge",
+				"mergeUsersSelections	Default"
+			],
+			[
+				"value",
+				"valueSearched	Default"
+			],
+			[
+				"searched",
+				"searchedField	Default"
+			],
+			[
+				"usr",
+				"users	Default"
+			],
+			[
+				"index",
+				"indexOf()	Array"
+			],
+			[
+				"logi",
+				"logiFunction	Default"
+			],
+			[
+				"sym",
+				"symbols	Default"
+			],
+			[
+				"left",
+				"leftFields	Default"
+			],
+			[
+				"merged",
+				"mergedFields	Default"
+			],
+			[
+				"push",
+				"push()	Array"
+			],
+			[
+				"getUser",
+				"getUsersFor	Default"
+			],
+			[
+				"sub",
+				"substring()	String"
+			],
+			[
+				"Pattern",
+				"PATTERNS_MODIFY"
+			],
+			[
+				"Patterns",
+				"PATTERNS_CREATE"
+			],
+			[
+				"forma",
+				"formattedFields	Default"
+			],
+			[
+				"visualscience",
+				"visualscience_search_config"
+			],
+			[
+				"exis",
+				"existLastField"
+			],
+			[
+				"exi",
+				"existFirstField"
+			],
+			[
+				"ex",
+				"existFirst"
+			],
+			[
+				"spli",
+				"split()	String"
+			],
+			[
+				"fie",
+				"fieldsInTable	Default"
+			],
+			[
+				"las",
+				"lastIndex	Default"
+			],
+			[
+				"firs",
+				"firstIndex	Default"
+			],
+			[
+				"inde",
+				"indexOf()	Array"
+			],
+			[
+				"fields",
+				"fieldsInTable	Default"
+			],
+			[
+				"getSearch",
+				"getSearchFields	Default"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"class",
+				"classToFind	Default"
+			],
+			[
+				"comple",
+				"completeNamesArray	Default"
+			],
+			[
+				"table",
+				"tableId	Default"
+			],
+			[
+				"sin",
+				"singleUser	Default"
+			],
+			[
+				"first",
+				"firstTab	Default"
+			],
+			[
+				"isIn",
+				"isInterfaceCreated	Default"
+			],
+			[
+				"user",
+				"users	Default"
+			],
+			[
+				"searc",
+				"searchDB	Default"
+			],
+			[
+				"setTime",
+				"setTimeout()	Window"
+			],
+			[
+				"dialo",
+				"dialogNumber	Default"
+			],
+			[
+				"josn",
+				"jsonDisplayConfig"
+			],
+			[
+				"con",
+				"config"
+			],
+			[
+				"field",
+				"fieldName"
+			],
+			[
+				"us",
+				"users"
+			],
+			[
+				"users",
+				"usersIds"
+			],
+			[
+				"array_p",
+				"array_push"
+			],
+			[
+				"print",
+				"print_r"
+			],
+			[
+				"exec",
+				"execute"
+			],
+			[
+				"lis",
+				"listFiedlds"
+			],
+			[
+				"name",
+				"name"
+			],
+			[
+				"search",
+				"searchDB"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/JSLint/JSLint.sublime-build",
+	"command_palette":
+	{
+		"height": 138.0,
+		"selected_items":
+		[
+			[
+				"php",
+				"Set Syntax: PHP"
+			],
+			[
+				"css",
+				"Set Syntax: CSS"
+			],
+			[
+				"side",
+				"View: Toggle Side Bar"
+			],
+			[
+				"handle",
+				"Set Syntax: Handlebars"
+			],
+			[
+				"error",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"lint",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"handl",
+				"Set Syntax: Handlebars"
+			],
+			[
+				"lin",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"tabs",
+				"View: Toggle Tabs"
+			],
+			[
+				"html",
+				"Set Syntax: HTML5"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"doct",
+				"Snippet: DOCTYPE HTML"
+			],
+			[
+				"web ins",
+				"Web Inspector"
+			],
+			[
+				"web ",
+				"Web Inspector"
+			],
+			[
+				"jquery s",
+				"Set Syntax: jQuery (JavaScript)"
+			],
+			[
+				"hand",
+				"Set Syntax: Handlebars"
+			],
+			[
+				"packa",
+				"Package Control: Remove Package"
+			],
+			[
+				"jsl",
+				"JSLint"
+			],
+			[
+				"js",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"sublimeLinter",
+				"Preferences: SublimeLinter Settings – Default"
+			],
+			[
+				"sideb",
+				"View: Toggle Side Bar"
+			],
+			[
+				"sidebar",
+				"View: Toggle Side Bar"
+			],
+			[
+				"set java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"upd",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"git chan",
+				"Git: Change Branch"
+			],
+			[
+				"git chec",
+				"Git: Change Branch"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"script",
+				"Snippet: <script>"
+			],
+			[
+				"package dis",
+				"Package Control: Discover Packages"
+			],
+			[
+				"javasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"handleb",
+				"Set Syntax: Handlebars"
+			],
+			[
+				"indent",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"discover",
+				"Package Control: Discover Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"push",
+				"Git: Push"
+			],
+			[
+				"git comi",
+				"Git: Quick Commit"
+			],
+			[
+				"git com",
+				"Git: Commit"
+			],
+			[
+				"git commit",
+				"Set Syntax: Git Commit Message"
+			],
+			[
+				"commit",
+				"Git: Commit history"
+			],
+			[
+				"",
+				"Git: Commit"
+			],
+			[
+				"code",
+				"Snippet: CodeIgniter Controller"
+			],
+			[
+				"git",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"each",
+				"Snippet: $.each()"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": true,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.searchtable.class.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.message.class.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/stringToCSV.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.cssAlter.class.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/visualscience.module",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/css/visualscience.jquery.ui.theme.css.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/css/visualscience.jquery.ui.theme.css",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.csv.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.interface.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/javascript/vijo.api.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/visualscience.install",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/actionBar.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.search.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.userlist.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.config.class.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.database.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/vijo.install",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/javascript/vijo.data.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/php/vijo.main.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/css/vijo.main.css",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/javascript/vijo.main.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.utils.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/javascript/lib/vijo.handlebars.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.handlebars.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/php/vijo.utils.class.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/vijo.module",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/javascript/vijo.text.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/javascript/vijo.nddb.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/vijo.info",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/visualscience.info",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/ViJo/README.md",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/some_work.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/README.md",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.jquery.ui.theme.css.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.livingscience.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/livingsciencePageLayout.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.message.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.text.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.lscomparison.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.upload.class.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/css/visualscience.css",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/sprikiComparisonLayout.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/lsComparisonPubsLayout.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/lsComparisonLayout.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/msgTabLayout.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/msgNewRecipientsEntry.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.conference.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/visualscience.config.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/visualscience_patterns/visualscience_patterns.module",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.settings.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.nddb.js",
+		"/home/seba-1511/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/seba-1511/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
+		"/opt/lampp/htdocs/Booter/assets/js/booter.utils.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/tableUserSearch.html",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/devQScience.sublime-project",
+		"/home/seba-1511/Desktop/firstLatexDocument.tex",
+		"/home/seba-1511/Desktop/test.html",
+		"/opt/lampp/htdocs/devQScience/misc/ui/jquery.ui.theme.css",
+		"/opt/lampp/htdocs/devQScience/modules/system/system.theme.css",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns.module",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/d2d/d2d_patterns/d2d_patterns.module",
+		"/home/seba-1511/Desktop/testing.js",
+		"/home/seba-1511/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/home/seba-1511/.config/sublime-text-2/Packages/User/JavaScript.sublime-settings",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.jquery.cleditor.min.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.jquery.form.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.jquery.layout.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.jquery.tablesorter.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.jquery.timeentry.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/javascript/lib/visualscience.shim.IE9.js",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/html/msgRecipientsLayout.html",
+		"/opt/lampp/htdocs/QScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.upload.class.php",
+		"/opt/lampp/htdocs/QScience/profiles/qscience_profile/modules/custom/visualscience/visualscience.module",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/d2d/d2d.module",
+		"/home/seba-1511/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/seba-1511/.config/sublime-text-2/Packages/User/Package Control.sublime-settings",
+		"/home/seba-1511/.config/sublime-text-2/Packages/SublimeLinter/SublimeLinter.sublime-settings",
+		"/home/seba-1511/Desktop/test.py",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/Notes.rtf",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.utils.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/visualscience_patterns/visualscience_patterns.info",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/includes/visualscience.patterns.php",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/d2d/d2d_patterns/d2d_patterns.info",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/d2d/includes/d2d.api.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/taxonomy.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/custom/visualscience/devQScience.sublime-workspace",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/user.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/toolbar.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/block.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/system.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/shortcut.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/pathauto.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/node.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/menu.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/field.inc",
+		"/opt/lampp/htdocs/devQScience/profiles/qscience_profile/modules/contrib/patterns/patterns_components/components/color.inc",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/Notes.rtf",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/visualscience.install",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/includes/visualscience.searchtable.class.php",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/README.md",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/includes/visualscience.utils.inc",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.utils.js",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.userlist.js",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/html/actionBar.html",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/css/visualscience.css",
+		"/opt/lampp/htdocs/tooski/README.md",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.interface.js",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.search.js",
+		"/opt/lampp/htdocs/tooski/application/views/more/qui.php",
+		"/opt/lampp/htdocs/tooski/application/config/config.php",
+		"/opt/lampp/htdocs/tooski/application/views/team/photos_view.php",
+		"/opt/lampp/htdocs/tooski/application/models/teamevents_model.php",
+		"/opt/lampp/htdocs/tooski/application/controllers/team.php",
+		"/opt/lampp/htdocs/tooski/application/controllers/teamload.php",
+		"/opt/lampp/htdocs/tooski/application/views/team/load/calendar_list.php",
+		"/opt/lampp/htdocs/tooski/application/views/team/calendar.php",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.livingscience.js",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/visualscience.module",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/html/tableUserSearch.html",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.message.js",
+		"/opt/lampp/htdocs/tooski/application/views/widget/lastNews.php",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/includes/visualscience.settings.inc",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/includes/visualscience.config.class.php",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.config.js",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/javascript/visualscience.lscomparison.js",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/includes/visualscience.message.class.php",
+		"/opt/lampp/htdocs/QScience/sites/all/modules/visualscience/visualscience.info"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"/misc/ui/images/",
+			"images/",
+			"ffffff",
+			"csv",
+			"csvta",
+			"222222",
+			"variable_set",
+			"variable_get",
+			"false",
+			"true",
+			"emailAvailable",
+			"actionbar",
+			"\"",
+			"update",
+			"getMaxUserId",
+			"total",
+			"allRe",
+			"\"",
+			"	",
+			"\"",
+			"visualscience",
+			"store",
+			"update",
+			"emailAvailable",
+			"search()",
+			"search",
+			"manageNewSearch",
+			"createUserSearchResult",
+			"createActionBar",
+			"emailAvailable",
+			"actionBar(",
+			"vsLscomparison",
+			"compareLSTabs",
+			"table",
+			"ls-compare-ta",
+			"ls-compare-pub",
+			"statistics",
+			"name",
+			"currentSearch",
+			"actionBar(",
+			"dbTooLargeError",
+			"waitLoad",
+			"dbTooLargeError",
+			"waitLoadingDB",
+			"1",
+			"getFam",
+			"updateAc",
+			"header",
+			"sortable",
+			"insertPatternConfig",
+			"checkCo",
+			"checkCor",
+			"check",
+			"visualscience_user_sent_per_ajax_request",
+			"visualscience_user_per_search_page",
+			"insertIntoSearchConfig",
+			"getUsersEntries",
+			"saveFields",
+			"150",
+			"NumberUsersPerPage",
+			"150",
+			"maxNumberOfTableEntries",
+			"createFull",
+			"getSearchDataFromServer",
+			"reloadUserDatabase",
+			"search(",
+			"search",
+			"getSearchResult",
+			"maxNumberOfTableEntries",
+			"150",
+			"VISUALSCIENCE_NUSER_LOADED",
+			"debugger",
+			"<>",
+			"wildcard",
+			"getFilteredDatabase",
+			"sortable",
+			"that",
+			"register",
+			"registerF",
+			"registerO",
+			"register",
+			"url",
+			"scrollable resetCSS",
+			"showMoreUsers",
+			"Show More Users",
+			"registerLik",
+			"debugger",
+			"console",
+			"displayed",
+			"toLowerCase",
+			"reindent",
+			"selected:",
+			"selected",
+			"escape",
+			"addLikeOperator",
+			"scroll",
+			"addLikeOperator",
+			"debu",
+			"debugger",
+			"usedOperation",
+			"splitted",
+			"currentQuery",
+			"fast",
+			"currSearch",
+			"getFilterFunction",
+			"filter",
+			"makeActionB",
+			"makeAction",
+			"fast",
+			"getSearchFields",
+			"filtered",
+			"NumberOfUsersShowedFirst",
+			"fast",
+			"currentSearchNDDB",
+			"current",
+			"getSearchResult",
+			"nbUsers",
+			"getHTMLSearchTable",
+			"vsU",
+			"'",
+			"' ",
+			"valid",
+			"An error occured on the",
+			"vsText",
+			"text",
+			"createTab",
+			"create",
+			"f"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"<?php echo $base_path; ?>misc/ui/images/",
+			"/misc/ui/images/",
+			"'",
+			"    ",
+			"'",
+			"vijo",
+			"    ",
+			"el",
+			"{{tabId}}",
+			"vsInterface.dialog",
+			"Conference",
+			"conference",
+			"Conference",
+			"thisTabId",
+			"d1d1d1",
+			"b3b3b3",
+			"{{idOfThisTab}}",
+			"{{thisTabId}}"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 112.0
+	},
+	"output.git":
+	{
+		"height": 112.0
+	},
+	"output.jslint_result_view":
+	{
+		"height": 186.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 100.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"search",
+				"visualscience/includes/visualscience.searchtable.class.php"
+			],
+			[
+				"messa",
+				"visualscience/includes/visualscience.message.class.php"
+			],
+			[
+				"csv",
+				"visualscience/javascript/visualscience.csv.js"
+			],
+			[
+				"interfa",
+				"visualscience/javascript/visualscience.interface.js"
+			],
+			[
+				"mod",
+				"visualscience/visualscience.module"
+			],
+			[
+				"modl",
+				"visualscience/visualscience.module"
+			],
+			[
+				"install",
+				"visualscience/visualscience.install"
+			],
+			[
+				"api",
+				"ViJo/javascript/vijo.api.js"
+			],
+			[
+				"userlist",
+				"visualscience/javascript/visualscience.userlist.js"
+			],
+			[
+				"userlis",
+				"visualscience/javascript/visualscience.userlist.js"
+			],
+			[
+				"utils",
+				"visualscience/javascript/visualscience.utils.js"
+			],
+			[
+				"read",
+				"README.md"
+			],
+			[
+				"modu",
+				"visualscience.module"
+			],
+			[
+				"searchcl",
+				"includes/visualscience.searchtable.class.php"
+			],
+			[
+				"css",
+				"css/visualscience.jquery.ui.theme.css"
+			],
+			[
+				"livin",
+				"javascript/visualscience.livingscience.js"
+			],
+			[
+				"inter",
+				"javascript/visualscience.interface.js"
+			],
+			[
+				"layout",
+				"html/livingsciencePageLayout.html"
+			],
+			[
+				"livings",
+				"javascript/visualscience.livingscience.js"
+			],
+			[
+				"text",
+				"javascript/visualscience.text.js"
+			],
+			[
+				"action",
+				"html/actionBar.html"
+			],
+			[
+				"living",
+				"javascript/visualscience.livingscience.js"
+			],
+			[
+				"vsda",
+				"javascript/visualscience.database.js"
+			],
+			[
+				"lscompar",
+				"html/sprikiComparisonLayout.html"
+			],
+			[
+				"lscompa",
+				"html/lsComparisonPubsLayout.html"
+			],
+			[
+				"compa",
+				"javascript/visualscience.lscomparison.js"
+			],
+			[
+				"comparis",
+				"html/lsComparisonLayout.html"
+			],
+			[
+				"uplad",
+				"includes/visualscience.upload.class.php"
+			],
+			[
+				"up",
+				"includes/visualscience.message.class.php"
+			],
+			[
+				"module",
+				"visualscience.module"
+			],
+			[
+				"message",
+				"includes/visualscience.message.class.php"
+			],
+			[
+				"msgn",
+				"html/msgNewRecipientsEntry.html"
+			],
+			[
+				"searchtab",
+				"includes/visualscience.searchtable.class.php"
+			],
+			[
+				"userli",
+				"javascript/visualscience.userlist.js"
+			],
+			[
+				"data",
+				"javascript/visualscience.database.js"
+			],
+			[
+				"config.cla",
+				"includes/visualscience.config.class.php"
+			],
+			[
+				"readm",
+				"README.md"
+			],
+			[
+				"side",
+				"javascript/visualscience.database.js"
+			],
+			[
+				"visualuserlist",
+				"javascript/visualscience.userlist.js"
+			],
+			[
+				"config",
+				"includes/visualscience.config.class.php"
+			],
+			[
+				"conf",
+				"includes/visualscience.config.class.php"
+			],
+			[
+				"php",
+				"includes/visualscience.searchtable.class.php"
+			],
+			[
+				"settings",
+				"includes/visualscience.settings.inc"
+			],
+			[
+				"nddb.js",
+				"javascript/lib/visualscience.nddb.js"
+			],
+			[
+				"patterns",
+				"visualscience_patterns/visualscience_patterns.module"
+			],
+			[
+				"nddb",
+				"javascript/lib/visualscience.nddb.js"
+			],
+			[
+				"jquery.ui.css",
+				"css/visualscience.jquery.ui.theme.css"
+			],
+			[
+				"vstex",
+				"javascript/visualscience.text.js"
+			],
+			[
+				"databa",
+				"javascript/visualscience.database.js"
+			],
+			[
+				"sea",
+				"javascript/visualscience.search.js"
+			],
+			[
+				"search.",
+				"javascript/visualscience.search.js"
+			],
+			[
+				"searc",
+				"html/tableUserSearch.html"
+			],
+			[
+				"searcht",
+				"includes/visualscience.searchtable.class.php"
+			],
+			[
+				"mes",
+				"javascript/visualscience.message.js"
+			],
+			[
+				"databas",
+				"javascript/visualscience.database.js"
+			],
+			[
+				"readme",
+				"README.md"
+			],
+			[
+				"",
+				"html/tableUserSearch.html"
+			],
+			[
+				"user",
+				"html/tableUserSearch.html"
+			],
+			[
+				"search.js",
+				"javascript/visualscience.search.js"
+			],
+			[
+				"tab",
+				"html/tableUserSearch.html"
+			],
+			[
+				"htm",
+				"html/tableUserSearch.html"
+			],
+			[
+				"table",
+				"html/tableUserSearch.html"
+			],
+			[
+				"handle",
+				"javascript/lib/visualscience.handlebars.js"
+			],
+			[
+				"messages",
+				"javascript/visualscience.message.js"
+			],
+			[
+				"js",
+				"javascript/visualscience.conference.js"
+			],
+			[
+				"searchta",
+				"includes/visualscience.searchtable.class.php"
+			],
+			[
+				"msg",
+				"html/msgRecipientsLayout.html"
+			],
+			[
+				"msgrec",
+				"html/msgNewRecipientsEntry.html"
+			],
+			[
+				"uti",
+				"javascript/visualscience.utils.js"
+			],
+			[
+				"upload",
+				"includes/visualscience.upload.class.php"
+			],
+			[
+				".modu",
+				"visualscience.module"
+			],
+			[
+				"message.c",
+				"includes/visualscience.message.class.php"
+			],
+			[
+				"mess",
+				"javascript/visualscience.message.js"
+			],
+			[
+				"sear",
+				"includes/visualscience.searchtable.class.php"
+			],
+			[
+				"instal",
+				"visualscience.install"
+			],
+			[
+				"userl",
+				"javascript/visualscience.userlist.js"
+			],
+			[
+				"a",
+				"html/actionBar.html"
+			],
+			[
+				"tableu",
+				"html/tableUserSearch.html"
+			],
+			[
+				"recip",
+				"html/msgRecipientsLayout.html"
+			],
+			[
+				"visual",
+				"visualscience.module"
+			],
+			[
+				"some",
+				"some_work.js"
+			],
+			[
+				"html",
+				"html/tableUserSearch.html"
+			],
+			[
+				"util",
+				"javascript/visualscience.utils.js"
+			],
+			[
+				"interface",
+				"javascript/visualscience.interface.js"
+			],
+			[
+				"info",
+				"visualscience.info"
+			],
+			[
+				"pattern",
+				"visualscience_patterns/visualscience_patterns.info"
+			],
+			[
+				"utils.in",
+				"visualscience/includes/visualscience.utils.inc"
+			],
+			[
+				"vsuser",
+				"visualscience/javascript/visualscience.userlist.js"
+			],
+			[
+				"visu",
+				"visualscience/css/visualscience.css"
+			],
+			[
+				"livingscience",
+				"visualscience/html/livingsciencePageLayout.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/opt/lampp/htdocs/PersHo.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 280.0,
+	"status_bar_visible": true
+}

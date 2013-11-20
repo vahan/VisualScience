@@ -1,3 +1,7 @@
+/*
+ * @file 
+ * The layout plugin for jQuery.
+ */
 /**
  * @preserve jquery.layout 1.3.0 - Release Candidate 29.15
  * $Date: 2011-06-25 08:00:00 (Sat, 25 Jun 2011) $
