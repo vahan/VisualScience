@@ -98,10 +98,10 @@ class Upload {
         $id = $result->fid;
         $vsURL = drupal_get_path('module', 'visualscience');
         if (strpos($vsURL, '?')) { // Handling the clean url problem
-          drupal_set_message(t('The file has been uploaded to:') . check_plain($base_url) . '/visualscience/file&id=' . check_plain($id));
+          drupal_set_message(t('The file has been uploaded to: @url', array('@url' => check_plain($base_url) . '/visualscience/file&id=' . check_plain($id))));
         }
         else {
-          drupal_set_message(t('The file has been uploaded to:') . check_plain($base_url) . '/visualscience/file?id=' . check_plain($id));
+          drupal_set_message(t('The file has been uploaded to: @url', array('@url' => check_plain($base_url) . '/visualscience/file?id=' . check_plain($id))));
         }
       }
       else {
